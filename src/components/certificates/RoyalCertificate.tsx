@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -6,14 +5,14 @@ import { useToast } from '@/hooks/use-toast';
 import { Crown, Award, Calendar, Shield, Download, Twitter, ExternalLink, Wallet, Trophy, Coins } from 'lucide-react';
 import { UserProfile } from '@/types/user-consolidated';
 import { formatDate } from '@/utils/formatters';
-import { safeToString } from '@/utils/safeToString';
+import { safeToString } from '@/utils/typeConverters';
 import html2canvas from 'html2canvas';
 import RoyalDecoration from '@/components/ui/royal-decoration';
 import { SpendAmount } from '@/components/ui/theme-components';
 import { motion } from 'framer-motion';
 import MedievalIcon from '@/components/ui/medieval-icon';
 import { UserProfile as UserProfileUser } from '@/types/user';
-import { ensureStringId } from '@/utils/typeConverters';
+import { toTeamColor } from '@/utils/typeConverters';
 
 interface RoyalCertificateProps {
   user: UserProfile;
@@ -38,8 +37,8 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
   const getTeamColor = (team: string | null | undefined) => {
     switch (team) {
       case 'red': return 'bg-royal-crimson/20 text-royal-crimson';
-      case 'green': return 'bg-royal-gold/20 text-royal-gold';
       case 'blue': return 'bg-royal-navy/20 text-royal-navy';
+      case 'green': return 'bg-royal-gold/20 text-royal-gold';
       default: return 'bg-white/10 text-white';
     }
   };
@@ -107,23 +106,21 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
     try {
       // Convert user to compatible format
       const userForService: UserProfileUser = {
-        id: ensureStringId(user.id),
+        id: safeToString(user.id),
         username: user.username,
         displayName: user.displayName || user.username,
         profileImage: user.profileImage || '',
         bio: user.bio || '',
-        joinedDate: user.joinedDate,
-        // Changed from using achievements (which is not in UserProfile)
-        // to an empty array as a safe default
+        joinedDate: user.joinedDate || user.joinDate || user.createdAt || new Date().toISOString(),
         isVerified: user.isVerified || false,
         following: Array.isArray(user.following) ? user.following : [],
         followers: Array.isArray(user.followers) ? user.followers : [],
-        team: user.team as any,
+        team: toTeamColor(user.team as any),
         tier: user.tier,
         rank: user.rank || 0,
         previousRank: user.previousRank || 0,
         totalSpent: user.totalSpent,
-        amountSpent: user.amountSpent,
+        amountSpent: user.amountSpent || user.totalSpent || 0,
         walletBalance: user.walletBalance || 0
       };
       

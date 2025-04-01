@@ -8,7 +8,7 @@ import Login from '@/pages/Login';
 import Signup from '@/pages/SignUp';
 import Settings from '@/pages/Settings';
 import SoundProvider from '@/hooks/sounds/SoundProvider';
-import { AuthProvider } from '@/contexts/auth'; // Import AuthProvider
+import { AuthProvider } from '@/contexts/auth';
 
 const App: React.FC = () => {
   return (

@@ -1,260 +1,263 @@
-
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import { AuthContext } from '../AuthContext';
-import { authReducer } from './authReducer';
-import { AuthProviderProps, AuthState } from './types';
-import { useNavigate } from 'react-router-dom';
-import { 
-  loginWithEmail, 
-  registerWithEmail, 
-  logoutUser, 
-  updateUserData,
-  fetchUserProfile 
-} from './authService';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated';
 import { TeamColor } from '@/types/team';
 import { toTeamColor } from '@/utils/typeConverters';
 
-const initialState: AuthState = {
-  user: null,
-  isAuthenticated: false,
-  isLoading: true,
-  error: null,
-};
+// Create a context for auth state
+export const AuthContext = createContext<AuthContextType | null>(null);
 
-// Fix for the login success handler with proper TeamColor type
-const handleLoginSuccess = (user: any): UserProfile => {
-  // Convert string team to TeamColor if it exists
-  const teamValue = user.team as string;
-  let team: TeamColor | null = null;
-  
-  if (teamValue) {
-    team = toTeamColor(teamValue);
+// Default user data
+const defaultUser: UserProfile = {
+  id: '',
+  username: '',
+  displayName: '',
+  email: '',
+  profileImage: '',
+  bio: '',
+  joinedDate: new Date().toISOString(),
+  tier: 'free',
+  team: null,
+  rank: 0,
+  previousRank: 0,
+  totalSpent: 0,
+  amountSpent: 0,
+  walletBalance: 0,
+  settings: {
+    profileVisibility: 'public',
+    allowProfileLinks: true,
+    theme: 'dark',
+    notifications: true,
+    emailNotifications: false,
+    marketingEmails: false,
+    soundEffects: true,
+    showRank: true,
+    darkMode: true,
+    showBadges: true,
+    showTeam: true,
+    showSpending: true
   }
-  
-  return {
-    ...user,
-    team,
-    // Ensure socialLinks is treated as an array if it's not already
-    socialLinks: Array.isArray(user.socialLinks) ? user.socialLinks : []
-  };
 };
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
-  const navigate = useNavigate();
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Check for stored auth token on initial load
+    // Check for existing auth token in localStorage
     const checkAuth = async () => {
-      dispatch({ type: 'AUTH_START' });
-      
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const user = await fetchUserProfile();
-          
-          if (user) {
-            // Process user data to ensure proper types
-            const processedUser = handleLoginSuccess(user);
-            
-            dispatch({ 
-              type: 'AUTH_SUCCESS', 
-              payload: processedUser 
-            });
-          } else {
-            dispatch({ type: 'AUTH_LOGOUT' });
-            localStorage.removeItem('authToken');
-          }
-        } else {
-          dispatch({ type: 'AUTH_LOGOUT' });
+          // For demo purposes, just create a mock user
+          setUser({
+            ...defaultUser,
+            id: '1',
+            username: 'demo_user',
+            displayName: 'Demo User',
+            email: 'demo@example.com',
+            joinedDate: new Date().toISOString(),
+            profileImage: '/avatars/default.png',
+            tier: 'premium',
+            team: toTeamColor('blue'), // Convert to valid TeamColor
+            rank: 42,
+            previousRank: 45,
+            totalSpent: 1250,
+            amountSpent: 1250,
+            walletBalance: 500,
+          });
         }
       } catch (error) {
-        console.error("Authentication Error:", error);
-        dispatch({ 
-          type: 'AUTH_FAIL', 
-          payload: error.message || 'Failed to authenticate'
-        });
+        console.error('Auth check failed:', error);
       } finally {
-        dispatch({ type: 'CLEAR_ERROR' });
+        setIsLoading(false);
       }
     };
 
     checkAuth();
   }, []);
 
+  // Login function
   const login = async (email: string, password: string): Promise<boolean> => {
-    dispatch({ type: 'LOGIN_START' });
-    
+    setIsLoading(true);
     try {
-      const response = await loginWithEmail(email, password);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 800));
       
-      if (response.success && response.user) {
-        dispatch({ 
-          type: 'LOGIN_SUCCESS', 
-          payload: handleLoginSuccess(response.user)
-        });
-        return true;
-      } else {
-        dispatch({ 
-          type: 'LOGIN_FAILURE', 
-          payload: 'Invalid credentials' 
-        });
-        return false;
-      }
-    } catch (error: any) {
-      console.error('Login error:', error);
-      dispatch({ 
-        type: 'LOGIN_FAILURE', 
-        payload: error.message || 'Login failed' 
-      });
-      return false;
-    } finally {
-      dispatch({ type: 'CLEAR_ERROR' });
-    }
-  };
-
-  const register = async (username: string, email: string, password: string): Promise<boolean> => {
-    dispatch({ type: 'REGISTER_START' });
-    
-    try {
-      const response = await registerWithEmail(username, email, password);
-      
-      if (response.success && response.user) {
-        // Process user data before dispatching
-        const processedUser = handleLoginSuccess(response.user);
+      // For demo, any non-empty values will succeed
+      if (email && password) {
+        localStorage.setItem('authToken', 'mock-jwt-token');
         
-        dispatch({ 
-          type: 'REGISTER_SUCCESS', 
-          payload: processedUser 
+        setUser({
+          ...defaultUser,
+          id: '1',
+          username: email.split('@')[0],
+          displayName: email.split('@')[0],
+          email: email,
+          profileImage: '/avatars/default.png',
+          joinedDate: new Date().toISOString(),
+          tier: 'premium',
+          team: toTeamColor('blue'),  // Convert string to valid TeamColor
+          rank: 42,
+          previousRank: 45,
+          totalSpent: 1250,
+          amountSpent: 1250,
+          walletBalance: 500,
         });
+        
+        setIsLoading(false);
         return true;
-      } else {
-        dispatch({ 
-          type: 'REGISTER_FAILURE', 
-          payload: 'Registration failed' 
-        });
-        return false;
       }
-    } catch (error: any) {
-      console.error('Registration error:', error);
-      dispatch({ 
-        type: 'REGISTER_FAILURE', 
-        payload: error.message || 'Registration failed' 
-      });
+      
+      setIsLoading(false);
       return false;
-    } finally {
-      dispatch({ type: 'CLEAR_ERROR' });
+    } catch (error) {
+      console.error('Login failed:', error);
+      setIsLoading(false);
+      return false;
     }
   };
 
-  const updateUserProfile = async (updates: Partial<UserProfile>): Promise<boolean> => {
-    if (!state.user) return false;
-    
+  // Register function
+  const register = async (username: string, email: string, password: string): Promise<boolean> => {
+    setIsLoading(true);
     try {
-      dispatch({ type: 'AUTH_START' });
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // For demo, any non-empty values will succeed
+      if (username && email && password) {
+        localStorage.setItem('authToken', 'mock-jwt-token');
+        
+        setUser({
+          ...defaultUser,
+          id: '1',
+          username: username,
+          displayName: username,
+          email: email,
+          profileImage: '/avatars/default.png',
+          joinedDate: new Date().toISOString(),
+          tier: 'basic',
+          team: null,
+          rank: 999,
+          previousRank: 999,
+          totalSpent: 0,
+          amountSpent: 0,
+          walletBalance: 100, // Starter balance
+        });
+        
+        setIsLoading(false);
+        return true;
+      }
+      
+      setIsLoading(false);
+      return false;
+    } catch (error) {
+      console.error('Registration failed:', error);
+      setIsLoading(false);
+      return false;
+    }
+  };
+
+  // Logout function
+  const logout = async (): Promise<void> => {
+    setIsLoading(true);
+    try {
+      // Clear auth token
+      localStorage.removeItem('authToken');
+      setUser(null);
+    } catch (error) {
+      console.error('Logout failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Update user
+  const updateUser = async (updates: Partial<UserProfile>): Promise<boolean> => {
+    try {
+      if (!user) return false;
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       // Process team color if it exists in the updates
       if (updates.team && typeof updates.team === 'string') {
         updates.team = toTeamColor(updates.team);
       }
       
-      const updatedUser = await updateUserData({
-        ...state.user,
-        ...updates
-      });
-      
-      dispatch({ 
-        type: 'UPDATE_PROFILE_SUCCESS', 
-        payload: updatedUser 
+      setUser(prevUser => {
+        if (!prevUser) return null;
+        return { ...prevUser, ...updates };
       });
       
       return true;
-    } catch (error: any) {
-      console.error('Profile update error:', error);
-      dispatch({ 
-        type: 'AUTH_FAIL', 
-        payload: error.message || 'Failed to update profile' 
-      });
+    } catch (error) {
+      console.error('Update user failed:', error);
       return false;
-    } finally {
-      dispatch({ type: 'CLEAR_ERROR' });
     }
   };
 
-  const logout = async (): Promise<void> => {
-    logoutUser();
-    dispatch({ type: 'LOGOUT' });
-    return Promise.resolve();
-  };
-
-  const signOut = async (): Promise<void> => {
-    logoutUser();
-    dispatch({ type: 'AUTH_LOGOUT' });
-    return Promise.resolve();
-  };
-
+  // Award a cosmetic item to the user
   const awardCosmetic = async (category: string, itemId: string, notify: boolean = true): Promise<boolean> => {
-    if (!state.user) return false;
-
     try {
-      // Update user's cosmetics
-      const userCosmetics = state.user.cosmetics || {};
+      if (!user) return false;
       
-      // Ensure the category exists as an array
-      if (!userCosmetics[category]) {
-        userCosmetics[category] = [];
-      }
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Add the item if it doesn't exist - fixed type issue by ensuring categoryItems is an array before using indexOf
-      const categoryItems = userCosmetics[category];
-      if (Array.isArray(categoryItems)) {
-        const itemExists = categoryItems.findIndex(item => item === itemId) !== -1;
-        if (!itemExists) {
-          // Create a new array with the new item (to maintain immutability)
-          userCosmetics[category] = [...categoryItems, itemId];
+      // Update user cosmetics
+      setUser(prevUser => {
+        if (!prevUser) return null;
+        
+        const updatedCosmetics = { ...(prevUser.cosmetics || {}) };
+        
+        // Initialize the category array if it doesn't exist
+        if (!updatedCosmetics[category]) {
+          updatedCosmetics[category] = [];
         }
-      } else {
-        // Handle the case where categoryItems is not an array
-        userCosmetics[category] = [itemId];
-      }
-
-      // Update user profile with new cosmetics
-      const updatedUser = {
-        ...state.user,
-        cosmetics: userCosmetics,
-        // In a real app, we would deduct the cost from wallet balance
-        // walletBalance: state.user.walletBalance - itemPrice
-      };
-
-      dispatch({
-        type: 'UPDATE_USER',
-        payload: updatedUser
+        
+        // Add the item to the category if it doesn't already exist
+        if (Array.isArray(updatedCosmetics[category]) && !updatedCosmetics[category].includes(itemId)) {
+          updatedCosmetics[category] = [...updatedCosmetics[category], itemId];
+        }
+        
+        return {
+          ...prevUser,
+          cosmetics: updatedCosmetics,
+          // Reduce wallet balance to simulate purchase
+          walletBalance: prevUser.walletBalance ? prevUser.walletBalance - 50 : 0
+        };
       });
-
+      
       return true;
-    } catch (error: any) {
-      console.error('Award cosmetic error:', error);
+    } catch (error) {
+      console.error('Award cosmetic failed:', error);
       return false;
     }
+  };
+
+  // Provide auth context value
+  const contextValue: AuthContextType = {
+    user,
+    isAuthenticated: !!user,
+    isLoading,
+    login,
+    signIn: login, // Alias for login
+    register,
+    logout,
+    signOut: logout, // Alias for logout
+    updateUser,
+    updateUserProfile: updateUser, // Alias for updateUser
+    awardCosmetic,
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user: state.user,
-        isAuthenticated: state.isAuthenticated,
-        isLoading: state.isLoading,
-        login,
-        signIn: login,
-        register,
-        logout,
-        signOut,
-        updateUser: updateUserProfile,
-        updateUserProfile,
-        awardCosmetic,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

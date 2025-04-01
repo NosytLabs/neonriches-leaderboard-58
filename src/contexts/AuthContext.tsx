@@ -63,7 +63,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             joinedDate: new Date().toISOString(),
             profileImage: '/avatars/default.png',
             tier: 'premium',
-            team: 'blue' as TeamColor, // Cast as TeamColor
+            team: toTeamColor('blue'), // Convert to valid TeamColor
             rank: 42,
             previousRank: 45,
             totalSpent: 1250,
@@ -101,7 +101,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           profileImage: '/avatars/default.png',
           joinedDate: new Date().toISOString(),
           tier: 'premium',
-          team: 'blue' as TeamColor, // Cast as TeamColor
+          team: toTeamColor('blue'),  // Convert string to valid TeamColor
           rank: 42,
           previousRank: 45,
           totalSpent: 1250,

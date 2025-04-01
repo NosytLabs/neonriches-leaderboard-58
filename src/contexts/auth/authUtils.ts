@@ -1,6 +1,8 @@
+
 import { UserProfile } from '@/types/user';
 import { UserCosmetics } from '@/types/cosmetics';
 import { ProfileBoost } from '@/types/user';
+import { toTeamColor } from '@/utils/typeConverters';
 
 /**
  * Creates a default user object with initial values
@@ -135,9 +137,11 @@ export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: strin
   }
   
   // Add cosmetic if it doesn't already exist
-  const currentItems = cosmetics[propertyName] as string[];
-  if (Array.isArray(currentItems) && !currentItems.includes(cosmeticId)) {
-    cosmetics[propertyName] = [...currentItems, cosmeticId];
+  if (Array.isArray(cosmetics[propertyName])) {
+    const currentItems = cosmetics[propertyName] as string[];
+    if (!currentItems.includes(cosmeticId)) {
+      cosmetics[propertyName] = [...currentItems, cosmeticId];
+    }
   }
   
   return cosmetics;

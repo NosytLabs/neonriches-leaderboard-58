@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { UserProfile } from '@/types/user-consolidated';
-import { ensureStringId } from '@/utils/typeConverters';
+import { safeToString } from '@/utils/typeConverters';
 
 interface ProfileBoostedContentProps {
   user: UserProfile;
@@ -21,7 +21,7 @@ const ProfileBoostedContent = ({
   children
 }: ProfileBoostedContentProps) => {
   // Convert user to the proper type to avoid type errors
-  const userId = ensureStringId(user.id);
+  const userId = safeToString(user.id);
   
   // Get active boosts. In a real app, would determine if boosts are active,
   // here we'll just assume all boosts in the array are active.
