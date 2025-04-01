@@ -10,7 +10,7 @@ import {
   getMockeryDescription,
   getMockeryActionPrice 
 } from '@/utils/mockeryUtils';
-import { getDiscountedShamePrice } from '@/utils/shameUtils';
+import { getDiscountedShamePrice } from '../utils/shameUtils';
 import { getInitials } from '@/utils/stringUtils';
 
 interface ShameModalProps {
@@ -74,11 +74,11 @@ const ShameModal: React.FC<ShameModalProps> = ({
               <span className="font-medium">
                 {hasDiscount ? (
                   <span className="flex items-center">
-                    <span className="line-through text-white/50 mr-2">${regularPrice.toFixed(2)}</span>
-                    <span className="text-emerald-400">${finalPrice.toFixed(2)}</span>
+                    <span className="line-through text-white/50 mr-2">${regularPrice}</span>
+                    <span className="text-emerald-400">${finalPrice}</span>
                   </span>
                 ) : (
-                  <span>${finalPrice.toFixed(2)}</span>
+                  <span>${finalPrice}</span>
                 )}
               </span>
             </div>

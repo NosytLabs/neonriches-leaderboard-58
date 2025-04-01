@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MockeryAction } from '@/types/mockery-types';
 import { cn } from '@/lib/utils';
-import { getMockeryDescription } from '@/utils/mockery/mockery-descriptions';
+import { getMockeryDescription } from '@/utils/mockeryUtils';
 
 interface MockeryEffectProps {
   username: string;

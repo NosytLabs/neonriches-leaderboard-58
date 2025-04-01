@@ -12,7 +12,6 @@ import { useSound } from '@/hooks/use-sound';
 import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
-import { convertToLegacyUser } from '@/utils/typeConversion';
 import { UserProfile } from '@/types/user-consolidated';
 
 const EnhancedDashboard = () => {
@@ -74,13 +73,12 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Convert user to legacy format for components that require it
-  // Fix: Make sure the user has totalSpent property
-  const updatedUser: UserProfile = {
-    ...user,
-    totalSpent: user.totalSpent || user.amountSpent || 0
+  // Convert user to the required format with totalSpent
+  const consolidatedUser: UserProfile = {
+    ...user as any,
+    totalSpent: user.totalSpent || user.amountSpent || 0,
+    amountSpent: user.amountSpent || user.totalSpent || 0
   };
-  const legacyUser = convertToLegacyUser(updatedUser);
 
   const handleSpend = () => {
     toast({
@@ -101,7 +99,7 @@ const EnhancedDashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <DashboardWelcome user={legacyUser} />
+      <DashboardWelcome user={consolidatedUser} />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid grid-cols-5 w-full bg-black/20">
@@ -130,7 +128,7 @@ const EnhancedDashboard = () => {
         <div className="mt-6">
           <TabsContent value="overview">
             <OverviewTab 
-              user={legacyUser}
+              user={consolidatedUser}
               onSpend={handleSpend} 
               onPaymentSuccess={handlePaymentSuccess} 
             />
@@ -141,7 +139,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="team">
-            <TeamStatusCard user={legacyUser} />
+            <TeamStatusCard user={consolidatedUser} />
           </TabsContent>
           
           <TabsContent value="achievements">
@@ -149,7 +147,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="upgrade">
-            <CashThroneUpgrade user={legacyUser} />
+            <CashThroneUpgrade user={consolidatedUser} />
           </TabsContent>
         </div>
       </Tabs>

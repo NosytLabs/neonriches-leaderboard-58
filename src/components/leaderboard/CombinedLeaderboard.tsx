@@ -1,14 +1,29 @@
+
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UserCircle, Users, TrendingUp, Medal, Crown } from "lucide-react";
+import { UserCircle, Users, TrendingUp, Medal, Crown, Trophy, Coins } from "lucide-react";
 import LeaderboardList from "./components/LeaderboardList";
-import LeaderboardSummary from "./components/LeaderboardSummary";
-import { getLeaderboardUsers } from "@/services/leaderboardService";
 import { UserProfile } from '@/types/user-consolidated';
-import { ensureStringId } from '@/utils/typeConverters';
+import { useAuth } from '@/hooks/useAuth';
+import { useSound } from '@/hooks/use-sound';
+import { MockeryAction } from '@/types/mockery-types';
+import { ensureNumber } from '@/utils/stringUtils';
+
+interface CombinedLeaderboardProps {
+  maxVisible?: number;
+  showFilters?: boolean;
+  showTabs?: boolean;
+  compact?: boolean;
+  hideOnMobile?: boolean;
+  currentUserId?: string;
+  className?: string;
+  initialTab?: string;
+}
 
 const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
   maxVisible = 10,
@@ -48,7 +63,7 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
             rank: index + 1,
             totalSpent: Math.floor(10000 / (index + 1)), 
             amountSpent: Math.floor(10000 / (index + 1)), // Adding amountSpent to match UserProfile type
-            previousRank: ensureNumber(Math.floor(Math.random() * 20)), // Convert to number
+            previousRank: ensureNumber(Math.floor(Math.random() * 20)),
             joinedDate: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
             isVerified: index < 3,
             walletBalance: Math.floor(Math.random() * 1000),
@@ -83,16 +98,16 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
     sound.playSound('notification');
   };
   
-  const handleConfirmShame = (userId: string, type: MockeryAction) => {
+  const handleConfirmShame = (userId: string) => {
     setShowModal(false);
     sound.playSound('mockery');
-    console.log(`Applied ${type} to user ${userId}`);
+    console.log(`Applied ${shameAction} to user ${userId}`);
     // In a real app, this would call an API to apply the shame effect
   };
   
   const sortLeaderboardData = () => {
     // Sort by total spent, highest first
-    return sortBy(leaderboardData, user => -user.totalSpent);
+    return [...leaderboardData].sort((a, b) => b.totalSpent - a.totalSpent);
   };
   
   const loadMoreUsers = (count: number = 10) => {
@@ -193,6 +208,11 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
       </Card>
     </div>
   );
+};
+
+// Placeholder for ShameModalWrapper until we implement it
+const ShameModalWrapper: React.FC<any> = ({ showModal, selectedUser, shameAction, onOpenChange, onConfirm }) => {
+  return null;
 };
 
 export default CombinedLeaderboard;

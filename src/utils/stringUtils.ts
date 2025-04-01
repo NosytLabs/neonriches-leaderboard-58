@@ -88,3 +88,15 @@ export const getInitials = (name: string, count: number = 2): string => {
     .slice(0, count)
     .join('');
 };
+
+/**
+ * Ensure a value is a number
+ * @param value The value to convert to number
+ * @param defaultValue Default value if conversion fails
+ * @returns A number
+ */
+export const ensureNumber = (value: any, defaultValue: number = 0): number => {
+  if (value === null || value === undefined) return defaultValue;
+  const num = Number(value);
+  return isNaN(num) ? defaultValue : num;
+};
