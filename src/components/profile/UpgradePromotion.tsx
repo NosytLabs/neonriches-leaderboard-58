@@ -34,11 +34,11 @@ const UpgradePromotion: React.FC = () => {
       setIsLoading({ ...isLoading, [tier.id]: true });
       
       const priceId = billingInterval === 'yearly' ? tier.yearlyPriceId : tier.priceId;
-      // Fix argument number - assume the API's 3rd parameter might be optional or have a default value
-      const result = await createSubscription(priceId, billingInterval);
+      // Add empty string as the third parameter
+      const result = await createSubscription(priceId, billingInterval, '');
       
       if (result?.subscriptionId) {
-        // Fix URL redirect - update according to the actual return value
+        // Use subscriptionId from result instead of URL
         window.location.href = `/subscription/success?id=${result.subscriptionId}`;
       } else {
         throw new Error("Failed to create subscription session");
@@ -87,8 +87,13 @@ const UpgradePromotion: React.FC = () => {
     return Math.round(((monthlyCost - yearlyCost) / monthlyCost) * 100);
   };
 
-  // Convert SUBSCRIPTION_TIERS object to array for mapping
-  const subscriptionTiersArray = Object.values(SUBSCRIPTION_TIERS);
+  // Convert SUBSCRIPTION_TIERS to an array and add recommended property
+  const subscriptionTiersArray = Object.values(SUBSCRIPTION_TIERS).map(tier => ({
+    ...tier,
+    recommended: tier.id === 'premium', // Set the premium tier as recommended
+    priceId: `price_${tier.id}_monthly`, // Add priceId property
+    yearlyPriceId: `price_${tier.id}_yearly` // Add yearlyPriceId property
+  }));
 
   return (
     <div className="w-full max-w-6xl mx-auto py-6">

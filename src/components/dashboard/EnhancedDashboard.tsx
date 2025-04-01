@@ -13,7 +13,6 @@ import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
-import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
 import { UserProfile } from '@/types/user';
 
 const EnhancedDashboard = () => {
