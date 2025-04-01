@@ -124,48 +124,56 @@ export const getTeamBenefits = (team: string): string[] => {
         'Pride of the Red: Access to exclusive Red team cosmetics',
         'Discounted weapons and armor in the Royal Armory'
       ];
+    
     case 'blue':
       return [
         'Wisdom of the seas: +15% experience gain',
         'Strategic advantage: Reduced cooldown on special abilities',
         'Access to the Blue Library of hidden knowledge'
       ];
+    
     case 'green':
       return [
         'Growth multiplier: +20% resource gathering',
         'Natural healing: Health regeneration +5%',
         'Access to Green team exclusive planting areas'
       ];
+    
     case 'gold':
       return [
         'Midas touch: 10% chance of double gold from activities',
         'Royal discount: 5% off all marketplace purchases',
         'Access to the Golden Vault investment opportunities'
       ];
+    
     case 'purple':
       return [
         'Mystery bonus: Random buffs during special events',
         'Royal connections: Higher chance of rare item drops',
         'Access to the Purple Palace exclusive areas'
       ];
+    
     case 'silver':
       return [
         'Enhanced defense: +10% armor effectiveness',
         'Resilience: 15% reduced effect from negative status effects',
         'Access to Silver exclusive crafting recipes'
       ];
+    
     case 'bronze':
       return [
         'Sturdy foundation: +15% max health',
         'Craftsman's touch: 10% reduced crafting costs',
         'Access to Bronze exclusive mining areas'
       ];
+    
     case 'neutral':
       return [
         'Diplomatic immunity: Can't be attacked in certain zones',
         'Flexibility: Can temporarily join any team event',
         'Access to Neutral-only quests and missions'
       ];
+    
     case 'none':
     default:
       return [
