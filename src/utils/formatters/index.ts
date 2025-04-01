@@ -1,91 +1,129 @@
 
 /**
- * Format a dollar amount with proper currency symbol
- * @param amount The amount to format
- * @returns Formatted currency string
+ * Formatters index file to export all formatting utilities
  */
-export const formatCurrency = (amount: number): string => {
+
+/**
+ * Format a number as currency with $ symbol
+ */
+export const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
+};
+
+/**
+ * Format a number with commas
+ */
+export const formatNumber = (value: number): string => {
+  return new Intl.NumberFormat('en-US').format(value);
+};
+
+/**
+ * Format a number as a percentage
+ */
+export const formatPercent = (value: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'percent',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  }).format(value / 100);
+};
+
+/**
+ * Format a number as currency without cents
+ */
+export const formatDollarAmount = (value: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
-  }).format(amount);
+  }).format(value);
 };
 
 /**
- * Format a number with commas
- * @param num The number to format
- * @returns Formatted number string
+ * Format a number of bytes to a human-readable file size
  */
-export const formatNumber = (num: number): string => {
-  return new Intl.NumberFormat('en-US').format(num);
-};
-
-/**
- * Format an address for display (truncate the middle)
- * @param address Full address string
- * @param startChars Characters to show at start
- * @param endChars Characters to show at end
- * @returns Formatted address string
- */
-export const formatAddress = (address: string, startChars = 4, endChars = 4): string => {
-  if (!address) return '';
-  if (address.length <= startChars + endChars) return address;
+export const formatFileSize = (bytes: number): string => {
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+  let value = bytes;
+  let unitIndex = 0;
   
-  return `${address.slice(0, startChars)}...${address.slice(-endChars)}`;
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex++;
+  }
+  
+  return `${value.toFixed(1)} ${units[unitIndex]}`;
 };
 
 /**
- * Format a date to a human readable string
- * @param date Date to format
- * @returns Formatted date string
+ * Format a rank with the appropriate suffix (1st, 2nd, 3rd, etc.)
  */
-export const formatDate = (date: Date | string): string => {
-  if (!date) return '';
+export const formatRankWithSuffix = (rank: number): string => {
+  if (rank >= 11 && rank <= 13) {
+    return `${rank}th`;
+  }
   
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return dateObj.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
+  const lastDigit = rank % 10;
+  switch (lastDigit) {
+    case 1: return `${rank}st`;
+    case 2: return `${rank}nd`;
+    case 3: return `${rank}rd`;
+    default: return `${rank}th`;
+  }
 };
 
 /**
- * Format a date to display relative time (e.g. "2 hours ago")
- * @param date Date to format
- * @returns Relative time string
+ * Format a duration in milliseconds to a human-readable string
  */
-export const formatRelativeTime = (date: Date | string): string => {
-  if (!date) return '';
+export const formatDuration = (milliseconds: number): string => {
+  const seconds = Math.floor(milliseconds / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
   
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  if (days > 0) {
+    return `${days}d ${hours % 24}h`;
+  } else if (hours > 0) {
+    return `${hours}h ${minutes % 60}m`;
+  } else if (minutes > 0) {
+    return `${minutes}m ${seconds % 60}s`;
+  } else {
+    return `${seconds}s`;
+  }
+};
+
+/**
+ * Format a date to a relative time string (e.g., "2 days ago")
+ */
+export const formatTimeAgo = (date: string | Date): string => {
   const now = new Date();
-  const diffMs = now.getTime() - dateObj.getTime();
+  const past = new Date(date);
+  const diffMs = now.getTime() - past.getTime();
   
-  // Convert to seconds
-  const diffSec = Math.floor(diffMs / 1000);
+  const seconds = Math.floor(diffMs / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(months / 12);
   
-  if (diffSec < 60) return 'Just now';
-  
-  // Convert to minutes
-  const diffMin = Math.floor(diffSec / 60);
-  if (diffMin < 60) return `${diffMin} minute${diffMin > 1 ? 's' : ''} ago`;
-  
-  // Convert to hours
-  const diffHr = Math.floor(diffMin / 60);
-  if (diffHr < 24) return `${diffHr} hour${diffHr > 1 ? 's' : ''} ago`;
-  
-  // Convert to days
-  const diffDays = Math.floor(diffHr / 24);
-  if (diffDays < 30) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-  
-  // Convert to months
-  const diffMonths = Math.floor(diffDays / 30);
-  if (diffMonths < 12) return `${diffMonths} month${diffMonths > 1 ? 's' : ''} ago`;
-  
-  // Convert to years
-  const diffYears = Math.floor(diffMonths / 12);
-  return `${diffYears} year${diffYears > 1 ? 's' : ''} ago`;
+  if (years > 0) {
+    return years === 1 ? '1 year ago' : `${years} years ago`;
+  } else if (months > 0) {
+    return months === 1 ? '1 month ago' : `${months} months ago`;
+  } else if (days > 0) {
+    return days === 1 ? '1 day ago' : `${days} days ago`;
+  } else if (hours > 0) {
+    return hours === 1 ? '1 hour ago' : `${hours} hours ago`;
+  } else if (minutes > 0) {
+    return minutes === 1 ? '1 minute ago' : `${minutes} minutes ago`;
+  } else {
+    return seconds <= 5 ? 'just now' : `${seconds} seconds ago`;
+  }
 };

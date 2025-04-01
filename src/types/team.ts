@@ -43,6 +43,14 @@ export interface TeamTheme {
   background?: string; // Added for backward compatibility
 }
 
+// Alias for backward compatibility
+export type TeamType = TeamColor;
+
+/**
+ * Convert a string to a TeamColor type if valid, otherwise return a default
+ * @param input The team string to convert
+ * @returns A valid TeamColor value
+ */
 export function asTeamColor(input: string | TeamColor | undefined | null): TeamColor {
   const validColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
   

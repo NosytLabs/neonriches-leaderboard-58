@@ -3,19 +3,17 @@
  * Mockery type definitions
  */
 
-// Define core mockery action types
-export type MockeryAction = 
-  | 'tomatoes' 
-  | 'eggs' 
-  | 'crown'
-  | 'jester'
-  | 'stocks'
-  | 'putridEggs'
-  | 'silence'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'shame'
-  | 'protection';
+// Re-export the core mockery action types from mockery.d.ts
+export type { 
+  MockeryAction,
+  MockeryTier,
+  MockeryItem,
+  MockeryResponse,
+  MockeryStats
+} from './mockery';
+
+// Import TeamColor for proper typing
+import { TeamColor } from './team';
 
 // Simple mockery event structure
 export interface MockeryEvent {
@@ -55,5 +53,3 @@ export interface MockedUser {
 
 // For backward compatibility
 export type ShameAction = MockeryAction;
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
