@@ -1,42 +1,63 @@
 
-import { TeamColor as MockeryTeamColor, MockeryAction as MockeryActionType } from './mockery';
+/**
+ * Types of mockery actions that can be performed
+ */
+export type MockeryAction = 
+  | 'tomatoes'
+  | 'eggs'
+  | 'putridEggs'
+  | 'crown'
+  | 'stocks'
+  | 'jester'
+  | 'shame'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection'
+  | 'taunt'
+  | 'mock'
+  | 'challenge'
+  | 'joust'
+  | 'duel';
 
-// Export types properly with export type
-export type TeamColor = MockeryTeamColor;
-export type MockeryAction = MockeryActionType;
-
-export interface MockedUser {
+/**
+ * Mockery target types
+ */
+export type MockeryTarget = {
   id: string;
-  userId: string;
   username: string;
-  displayName: string;
-  profileImage: string;
-  tier: string;
-  team: TeamColor | string;
-  action: MockeryAction;
-  appliedBy: string;
-  appliedAt: string;
-  expiresAt: string;
-  reason?: string;
-}
+  displayName?: string;
+  profileImage?: string;
+  rank?: number;
+  tier?: string;
+};
 
+/**
+ * Mockery event interface
+ */
 export interface MockeryEvent {
   id: string;
-  type: MockeryAction;
   action: MockeryAction;
   targetId: string;
-  appliedBy: string;
-  timestamp?: string;
+  fromId: string;
+  timestamp: string;
+  isAnonymous: boolean;
+  message?: string;
+  duration?: number;
 }
 
-export type MockeryTier = 
-  | 'common' 
-  | 'uncommon' 
-  | 'rare' 
-  | 'epic' 
-  | 'legendary'
-  | 'royal'
-  | 'basic'
-  | 'premium'
-  | 'silver'
-  | 'bronze';
+/**
+ * Available mockery effects
+ */
+export interface MockeryEffect {
+  id: string;
+  name: string;
+  action: MockeryAction;
+  description: string;
+  price: number;
+  tier: string;
+  requiredRank?: number;
+  duration?: number;
+  icon?: string;
+  cssClass?: string;
+}
