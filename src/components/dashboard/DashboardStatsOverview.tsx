@@ -1,10 +1,11 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated';
 import { TrendingUp, DollarSign, Trophy, Crown, BarChart, Users } from 'lucide-react';
 import ProfileBoostedContent from '@/components/ui/ProfileBoostedContent';
 import { getTeamBgColorClass, getTeamTextColorClass } from '@/lib/colors';
+import { safeToLocaleString } from '@/utils/safeToString';
 
 interface DashboardStatsOverviewProps {
   user: UserProfile;
@@ -23,7 +24,7 @@ const DashboardStatsOverview: React.FC<DashboardStatsOverviewProps> = ({ user })
             <div>
               <p className="text-sm text-white/70">Total Spent</p>
               <ProfileBoostedContent user={user} type="text">
-                <p className="text-2xl font-bold">${user.amountSpent.toFixed(2)}</p>
+                <p className="text-2xl font-bold">${safeToLocaleString(user.amountSpent || user.totalSpent || 0)}</p>
               </ProfileBoostedContent>
             </div>
           </div>
@@ -40,7 +41,7 @@ const DashboardStatsOverview: React.FC<DashboardStatsOverviewProps> = ({ user })
             <div>
               <p className="text-sm text-white/70">Current Rank</p>
               <ProfileBoostedContent user={user} type="text">
-                <p className="text-2xl font-bold">#{user.rank}</p>
+                <p className="text-2xl font-bold">#{user.rank || 'N/A'}</p>
               </ProfileBoostedContent>
             </div>
           </div>

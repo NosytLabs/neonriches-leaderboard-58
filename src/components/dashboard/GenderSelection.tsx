@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated';
 import { Crown, Wand2, Sparkles, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Gender } from '@/types/user-consolidated';
 
 type RoyalTitle = 'king' | 'queen' | 'jester' | 'noble';
 
@@ -115,7 +116,7 @@ const GenderSelection: React.FC<GenderSelectionProps> = ({ userProfile, onGender
         </div>
         
         <div className="mt-4 text-center text-xs text-white/50">
-          <p>Your current rank: #{userProfile.rank} • Spend streak: {userProfile.spendStreak ?? 0} weeks</p>
+          <p>Your current rank: #{userProfile.rank || 'N/A'} • Spend streak: {userProfile.spendStreak ?? 0} weeks</p>
         </div>
       </CardContent>
     </Card>

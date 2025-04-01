@@ -72,6 +72,7 @@ export interface MockeryEvent {
   isAnonymous: boolean;
   message?: string;
   duration?: number;
+  type?: string;
 }
 
 /**

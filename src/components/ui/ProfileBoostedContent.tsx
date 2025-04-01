@@ -30,7 +30,10 @@ const ProfileBoostedContent = ({
   // Extract CSS classes from boosts
   const boostClasses = activeBoosts
     .filter(boost => boost.isActive)
-    .map(boost => boost.cssClass || '')
+    .map(boost => {
+      // Check if boost has cssClass property
+      return boost.cssClass || '';
+    })
     .filter(Boolean);
   
   // Combine all classes

@@ -59,12 +59,12 @@ export interface UserSettings {
   darkMode: boolean;
   soundEffects: boolean;
   showBadges: boolean;
-  newFollowerAlerts?: boolean;
-  teamNotifications?: boolean;
   showTeam: boolean;
   showSpending: boolean;
   showEmailOnProfile?: boolean;
   rankChangeAlerts?: boolean;
+  newFollowerAlerts?: boolean;
+  teamNotifications?: boolean;
   language?: string;
   publicProfile?: boolean;
   shameAlerts?: boolean;
@@ -113,6 +113,7 @@ export interface ProfileBoost {
   icon?: string;
   isActive: boolean;
   effectId?: string;
+  cssClass?: string;
 }
 
 /**
@@ -125,12 +126,12 @@ export interface UserProfile {
   email?: string;
   profileImage?: string;
   bio?: string;
-  joinedDate: string;  // Made this required to match User type
+  joinedDate: string;  // Made required to match User type
   joinDate?: string;
   joinedAt?: string;
   createdAt?: string;
   totalSpent: number;
-  amountSpent: number;  // Made this required to match User type
+  amountSpent: number;  // Made required to match User type
   spentAmount?: number;  // Legacy field - use totalSpent instead
   walletBalance?: number;
   rank?: number;
@@ -152,8 +153,8 @@ export interface UserProfile {
   subscription?: any;
   settings?: UserSettings;
   gender?: string;
-  followers?: number | string[];
-  following?: number | string[];
+  followers?: string[];  // Changed to only accept string[] to avoid type issues
+  following?: string[];  // Changed to only accept string[] to avoid type issues
   badges?: string[];
   rankChange?: number;
   spendChange?: number;
@@ -165,6 +166,7 @@ export interface UserProfile {
   teamRank?: number;
   boostCount?: number;
   purchasedFeatures?: string[];
+  profileImages?: any[];
   certificateNFT?: {
     id?: string;
     mintAddress?: string;
@@ -174,7 +176,6 @@ export interface UserProfile {
     isVerified?: boolean;
   };
   socialLinks?: any[] | Record<string, string>;
-  profileImages?: any[];
 }
 
 /**
