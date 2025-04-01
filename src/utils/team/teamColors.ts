@@ -1,64 +1,50 @@
 
 import { TeamColor } from '@/types/team';
 
-/**
- * Convert a string to a TeamColor type if valid, otherwise return a default
- * @param input The team string to convert
- * @returns A valid TeamColor value
- */
-export function asTeamColor(input: string | TeamColor | undefined | null): TeamColor {
-  const validColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
-  
-  if (!input) return 'neutral';
-  
-  const normalized = input.toLowerCase() as TeamColor;
-  return validColors.includes(normalized) ? normalized : 'neutral';
-}
+export const teamColors: Record<TeamColor, string> = {
+  red: '#FF4136',
+  blue: '#0074D9',
+  green: '#2ECC40',
+  gold: '#FFDC00',
+  purple: '#B10DC9',
+  none: '#85144b',
+  neutral: '#AAAAAA',
+  silver: '#C0C0C0',
+  bronze: '#CD7F32'
+};
 
-/**
- * Get the CSS color class for a team
- * @param team The team to get color for
- * @returns The CSS color class
- */
-export function getTeamColor(team: TeamColor | string | null | undefined): string {
-  const teamColor = asTeamColor(team as TeamColor);
-  
-  const colorMap: Record<TeamColor, string> = {
-    'red': '#ef4444',
-    'blue': '#3b82f6',
-    'green': '#22c55e',
-    'gold': '#f59e0b',
-    'purple': '#a855f7',
-    'none': '#6b7280',
-    'neutral': '#6b7280'
-  };
-  
-  return colorMap[teamColor];
-}
+export const teamHexColors: Record<TeamColor, string> = {
+  red: '#FF4136',
+  blue: '#0074D9',
+  green: '#2ECC40',
+  gold: '#FFDC00',
+  purple: '#B10DC9',
+  none: '#85144b',
+  neutral: '#AAAAAA',
+  silver: '#C0C0C0',
+  bronze: '#CD7F32'
+};
 
-/**
- * Get the CSS border color class for a team
- * @param team The team to get border color for
- * @returns The CSS border color class
- */
-export function getTeamBorderColor(team: TeamColor | string | null | undefined): string {
-  const teamColor = asTeamColor(team as TeamColor);
-  
-  const borderMap: Record<TeamColor, string> = {
-    'red': 'border-red-500',
-    'blue': 'border-blue-500',
-    'green': 'border-green-500',
-    'gold': 'border-amber-500',
-    'purple': 'border-purple-500',
-    'none': 'border-gray-500',
-    'neutral': 'border-gray-500'
-  };
-  
-  return borderMap[teamColor];
-}
+export const teamTailwindColors: Record<TeamColor, string> = {
+  red: 'text-red-500',
+  blue: 'text-blue-500',
+  green: 'text-green-500',
+  gold: 'text-yellow-500',
+  purple: 'text-purple-500',
+  none: 'text-gray-500',
+  neutral: 'text-gray-400',
+  silver: 'text-gray-300',
+  bronze: 'text-amber-700'
+};
 
-export default {
-  asTeamColor,
-  getTeamColor,
-  getTeamBorderColor
+export const teamTailwindBgColors: Record<TeamColor, string> = {
+  red: 'bg-red-500',
+  blue: 'bg-blue-500',
+  green: 'bg-green-500',
+  gold: 'bg-yellow-500',
+  purple: 'bg-purple-500',
+  none: 'bg-gray-500',
+  neutral: 'bg-gray-400',
+  silver: 'bg-gray-300',
+  bronze: 'bg-amber-700'
 };

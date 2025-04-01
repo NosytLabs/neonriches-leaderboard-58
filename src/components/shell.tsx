@@ -1,16 +1,23 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import Header from './Header';
+import Footer from './Footer';
 
 interface ShellProps {
   children: React.ReactNode;
-  className?: string;
+  transparent?: boolean;
 }
 
-export const Shell = ({ children, className }: ShellProps) => {
+const Shell: React.FC<ShellProps> = ({ children, transparent = false }) => {
   return (
-    <div className={cn("min-h-screen bg-gradient-to-b from-black to-gray-900", className)}>
-      {children}
+    <div className="flex flex-col min-h-screen">
+      <Header transparent={transparent} />
+      <main className="flex-1">
+        {children}
+      </main>
+      <Footer />
     </div>
   );
 };
+
+export default Shell;

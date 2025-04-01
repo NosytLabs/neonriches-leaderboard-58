@@ -1,3 +1,4 @@
+
 import { UserProfile } from '@/types/user';
 import { UserCosmetics } from '@/types/cosmetics';
 import { ProfileBoost } from '@/types/user';
@@ -132,14 +133,14 @@ export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: strin
   
   // Initialize the property as an array if it doesn't exist
   if (!cosmetics[propertyName]) {
-    cosmetics[propertyName] = [] as string[];
+    cosmetics[propertyName] = [];
   }
   
   // Add cosmetic if it doesn't already exist
   if (Array.isArray(cosmetics[propertyName])) {
     const currentItems = cosmetics[propertyName] as string[];
     if (!currentItems.includes(cosmeticId)) {
-      cosmetics[propertyName] = [...currentItems, cosmeticId] as any;
+      cosmetics[propertyName] = [...currentItems, cosmeticId];
     }
   }
   

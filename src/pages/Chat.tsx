@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Shell from '@/components/Shell';
+import { Shell } from '@/components/ui/Shell';
 import PageSEO from '@/components/common/PageSEO';
 import TeamChatRoom from '@/components/chat/TeamChatRoom';
 import ChatHeader from '@/components/chat/ChatHeader';

@@ -2,82 +2,117 @@
 import { TeamColor } from '@/types/team';
 
 /**
- * Converts a string to a valid TeamColor enum value
- * @param value The string value to convert
- * @returns A valid TeamColor enum value
+ * Converts a string to a valid TeamColor
+ * @param value String value to convert
+ * @returns Valid TeamColor value
  */
-export function toTeamColor(value: string | TeamColor): TeamColor {
-  // Create array of valid team colors
+export const toTeamColor = (value: string | null | undefined): TeamColor | null => {
+  if (!value) return null;
+  
+  const normalizedValue = value.toLowerCase().trim();
+  
   const validTeamColors: TeamColor[] = [
-    'red', 'blue', 'green', 'gold', 'purple', 'none', 
-    'neutral', 'silver', 'bronze'
+    'red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze'
   ];
   
-  // Check if value is already a valid TeamColor
-  if (typeof value === 'string' && validTeamColors.includes(value as TeamColor)) {
-    return value as TeamColor;
+  if (validTeamColors.includes(normalizedValue as TeamColor)) {
+    return normalizedValue as TeamColor;
   }
   
-  // Default to 'none' if invalid
-  return 'none';
-}
-
-/**
- * Type guard to check if a value is a valid TeamColor
- * @param value The value to check
- * @returns True if the value is a valid TeamColor
- */
-export function isTeamColor(value: any): value is TeamColor {
-  const validTeamColors: TeamColor[] = [
-    'red', 'blue', 'green', 'gold', 'purple', 'none', 
-    'neutral', 'silver', 'bronze'
-  ];
-  
-  return typeof value === 'string' && validTeamColors.includes(value as TeamColor);
-}
-
-/**
- * Safe conversion of any ID type to string
- * @param id The ID to convert
- * @returns A string representation of the ID
- */
-export function ensureStringId(id: string | number | undefined | null): string {
-  if (id === undefined || id === null) return '';
-  return String(id);
-}
-
-/**
- * Converts a value to a valid TeamColor, similar to toTeamColor but with different fallback
- * @param value The value to convert
- * @returns A valid team color or null if conversion fails
- */
-export function safeTeamColor(value: any): TeamColor | null {
-  // Create array of valid team colors
-  const validTeamColors: TeamColor[] = [
-    'red', 'blue', 'green', 'gold', 'purple', 'none', 
-    'neutral', 'silver', 'bronze'
-  ];
-  
-  // Check if value is already a valid TeamColor
-  if (typeof value === 'string' && validTeamColors.includes(value as TeamColor)) {
-    return value as TeamColor;
+  // Handle legacy or alternative names
+  switch (normalizedValue) {
+    case 'crimson': return 'red';
+    case 'azure': return 'blue';
+    case 'emerald': return 'green';
+    case 'golden': return 'gold';
+    case 'violet': return 'purple';
+    case 'unaffiliated': return 'none';
+    case 'balanced': return 'neutral';
+    case 'sterling': return 'silver';
+    case 'bronze': return 'bronze';
+    default: return 'none';
   }
+};
+
+/**
+ * Safely converts a value to a valid TeamColor or returns a default
+ * @param value Value to convert
+ * @param defaultValue Default value to use if conversion fails
+ * @returns Valid TeamColor
+ */
+export const safeTeamColor = (value: any, defaultValue: TeamColor = 'none'): TeamColor => {
+  const converted = toTeamColor(value?.toString());
+  return converted || defaultValue;
+};
+
+/**
+ * Checks if a value is a valid TeamColor
+ * @param value Value to check
+ * @returns Boolean indicating if value is a valid TeamColor
+ */
+export const isTeamColor = (value: any): value is TeamColor => {
+  if (typeof value !== 'string') return false;
   
-  return null;
-}
+  const validTeamColors: TeamColor[] = [
+    'red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze'
+  ];
+  
+  return validTeamColors.includes(value as TeamColor);
+};
 
 /**
- * Safely convert a string to a valid TeamColor for use in CSS classes
+ * Ensures that an ID is always a string
+ * @param id ID that might be a number or string
+ * @returns String ID
  */
-export function teamColorToClass(value: string | TeamColor | null | undefined): string {
-  const color = toTeamColor(value as string);
-  return `team-${color}`;
-}
+export const ensureStringId = (id: string | number): string => {
+  return id.toString();
+};
 
 /**
- * Safely convert any value to a string
+ * Converts a string to CamelCase
+ * @param str Input string
+ * @returns Camel cased string
  */
-export function safeToString(value: any): string {
-  if (value === null || value === undefined) return '';
-  return String(value);
-}
+export const toCamelCase = (str: string): string => {
+  return str
+    .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => 
+      index === 0 ? word.toLowerCase() : word.toUpperCase()
+    )
+    .replace(/\s+/g, '');
+};
+
+/**
+ * Converts a string to PascalCase
+ * @param str Input string
+ * @returns Pascal cased string
+ */
+export const toPascalCase = (str: string): string => {
+  return str
+    .replace(/(?:^\w|[A-Z]|\b\w)/g, (word) => word.toUpperCase())
+    .replace(/\s+/g, '');
+};
+
+/**
+ * Converts a string to kebab-case
+ * @param str Input string
+ * @returns Kebab cased string
+ */
+export const toKebabCase = (str: string): string => {
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/\s+/g, '-')
+    .toLowerCase();
+};
+
+/**
+ * Converts a string to snake_case
+ * @param str Input string
+ * @returns Snake cased string
+ */
+export const toSnakeCase = (str: string): string => {
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1_$2')
+    .replace(/\s+/g, '_')
+    .toLowerCase();
+};

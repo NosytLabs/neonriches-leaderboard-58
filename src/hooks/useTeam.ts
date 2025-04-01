@@ -1,43 +1,79 @@
 
-import { useMemo } from 'react';
-import { TeamColor, TeamType, TeamData, TeamTheme } from '@/types/team';
-import teamService from '@/services/TeamService';
+import { useState } from 'react';
+import { TeamColor, TeamData } from '@/types/team';
+import { useAuth } from '@/hooks/useAuth';
+import { teamService } from '@/services/teamService';
 
-/**
- * Custom hook for team-related functionality
- * This provides a convenient way to access team data in components
- */
-export const useTeam = (teamId?: TeamType | TeamColor) => {
-  // Memoize team data to prevent unnecessary recalculations
-  const team = useMemo(() => {
-    if (teamId) {
-      return teamService.getTeam(teamId);
+const useTeam = () => {
+  const { user, updateUser } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  const currentTeam = user?.team || 'none';
+  
+  const changeTeam = async (newTeam: TeamColor): Promise<boolean> => {
+    if (!user) {
+      setError('You must be logged in to change teams');
+      return false;
     }
-    return null;
-  }, [teamId]);
-
-  // Memoize team theme to prevent unnecessary recalculations
-  const theme = useMemo(() => {
-    if (teamId) {
-      return teamService.getTeamTheme(teamId);
+    
+    if (newTeam === user.team) {
+      return true; // Already on this team
     }
-    return null;
-  }, [teamId]);
-
-  // Get all teams
-  const allTeams = useMemo(() => teamService.getAllTeams(), []);
-
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // In a real app, this would be an API call
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Update user with new team
+      const success = await updateUser({
+        ...user,
+        team: newTeam
+      });
+      
+      if (!success) {
+        setError('Failed to update team');
+        return false;
+      }
+      
+      return true;
+    } catch (err) {
+      setError('An error occurred while changing teams');
+      console.error('Team change error:', err);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const getTeamColor = (team: TeamColor): string => {
+    return teamService.getTeamColor(team);
+  };
+  
+  const getTeamName = (team: TeamColor): string => {
+    return teamService.getTeamName(team);
+  };
+  
+  const getTeamMotto = (team: TeamColor): string => {
+    return teamService.getTeamMotto(team);
+  };
+  
+  const getTeamBenefits = (team: TeamColor): string[] => {
+    return teamService.getTeamBenefit(team);
+  };
+  
   return {
-    team,
-    theme,
-    allTeams,
-    // Utility methods
-    getTeam: teamService.getTeam.bind(teamService),
-    getTeamName: teamService.getTeamName.bind(teamService),
-    getTeamColor: teamService.getTeamColor.bind(teamService),
-    getTeamMotto: teamService.getTeamMotto.bind(teamService),
-    getTeamBenefit: teamService.getTeamBenefit.bind(teamService),
-    getTeamTheme: teamService.getTeamTheme.bind(teamService)
+    currentTeam,
+    changeTeam,
+    isLoading,
+    error,
+    getTeamColor,
+    getTeamName,
+    getTeamMotto,
+    getTeamBenefits
   };
 };
 

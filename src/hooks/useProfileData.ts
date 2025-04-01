@@ -49,7 +49,6 @@ export const useProfileData = (userId: string, userContext?: UserProfile | null)
             profileImage: `https://source.unsplash.com/random/?portrait&${userId}`,
             rank: Math.floor(Math.random() * 100) + 1,
             amountSpent: Math.floor(Math.random() * 5000),
-            spentAmount: Math.floor(Math.random() * 5000),
             totalSpent: Math.floor(Math.random() * 5000),
             walletBalance: Math.floor(Math.random() * 1000),
             tier: Math.random() > 0.7 ? 'pro' : 'basic',
@@ -71,7 +70,7 @@ export const useProfileData = (userId: string, userContext?: UserProfile | null)
               theme: []
             },
             socialLinks: [],
-            profileImages: [],
+            bio: '',
             createdAt: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
             profileBoosts: []
           };

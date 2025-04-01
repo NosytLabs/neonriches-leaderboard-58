@@ -1,3 +1,4 @@
+
 import { TeamColor } from '@/types/team';
 
 // Add missing properties
