@@ -1,48 +1,98 @@
 
-import { MedievalColor, Size } from '@/types/common';
-import { MedievalIconColor, MedievalIconSize } from '@/types/ui/decorations/types';
+import { DecorationSize, MedievalIconName, IconSize, IconColor } from '@/components/ui/decorations/types';
 
-export const sizeClasses: Record<Size, string> = {
-  'xs': 'w-4 h-4',
-  'sm': 'w-6 h-6',
-  'md': 'w-8 h-8',
-  'lg': 'w-10 h-10',
-  'xl': 'w-12 h-12',
-  '2xl': 'w-16 h-16',
-  '3xl': 'w-20 h-20',
-  '4xl': 'w-24 h-24'
+/**
+ * Convert decoration size to icon size
+ * @param size The decoration size
+ * @returns Icon size
+ */
+export const toIconSize = (size?: DecorationSize): IconSize => {
+  const sizeMap: Record<DecorationSize, IconSize> = {
+    'xs': 'xs',
+    'sm': 'sm',
+    'md': 'md',
+    'lg': 'lg',
+    'xl': 'xl',
+    '2xl': 'xl',
+    '3xl': '2xl',
+    '4xl': '2xl'
+  };
+  
+  return sizeMap[size || 'md'] || 'md';
 };
 
-export const toMedievalIconColor = (color: MedievalIconColor): string => {
-  const colorMap: Record<MedievalColor, string> = {
-    'default': 'text-gray-200',
-    'bronze': 'text-amber-700',
-    'silver': 'text-gray-300',
+/**
+ * Get CSS classes for decoration size
+ * @param size Decoration size
+ * @returns CSS class string
+ */
+export const getSizeClasses = (size?: DecorationSize): string => {
+  const classes: Record<DecorationSize, string> = {
+    'xs': 'h-4 w-4',
+    'sm': 'h-6 w-6',
+    'md': 'h-8 w-8',
+    'lg': 'h-10 w-10',
+    'xl': 'h-12 w-12',
+    '2xl': 'h-16 w-16',
+    '3xl': 'h-20 w-20',
+    '4xl': 'h-24 w-24'
+  };
+  
+  return classes[size || 'md'] || classes.md;
+};
+
+/**
+ * Get CSS classes for icon color
+ * @param color Icon color
+ * @returns CSS class string
+ */
+export const getIconColorClass = (color?: IconColor): string => {
+  const colorMap: Record<string, string> = {
+    'default': 'text-white',
     'gold': 'text-royal-gold',
-    'royal': 'text-purple-500',
+    'silver': 'text-gray-300',
+    'bronze': 'text-amber-600',
+    'red': 'text-red-500',
+    'blue': 'text-blue-500',
+    'green': 'text-green-500',
     'purple': 'text-purple-500',
-    'green': 'text-emerald-500',
-    'red': 'text-royal-crimson',
-    'blue': 'text-royal-navy',
-    'crimson': 'text-royal-crimson'
+    'crimson': 'text-royal-crimson',
+    'royal': 'text-royal-purple'
   };
   
-  return colorMap[color as MedievalColor] || colorMap.default;
+  return colorMap[color || 'default'] || colorMap.default;
 };
 
-export const getColorClass = (color: MedievalIconColor): string => {
-  const colorMap: Record<MedievalColor, string> = {
-    'default': 'border-gray-300 text-gray-200',
-    'bronze': 'border-amber-700 text-amber-700',
-    'silver': 'border-gray-300 text-gray-300',
-    'gold': 'border-royal-gold text-royal-gold',
-    'royal': 'border-purple-500 text-purple-500',
-    'purple': 'border-purple-500 text-purple-500',
-    'green': 'border-emerald-500 text-emerald-500',
-    'red': 'border-royal-crimson text-royal-crimson',
-    'blue': 'border-royal-navy text-royal-navy',
-    'crimson': 'border-royal-crimson text-royal-crimson'
+/**
+ * Verify if an icon name is a valid MedievalIconName
+ */
+export const isValidMedievalIcon = (iconName?: string): boolean => {
+  if (!iconName) return false;
+  
+  const validIcons: MedievalIconName[] = [
+    'crown', 'scroll', 'shield', 'sword', 'banner',
+    'goblet', 'dragon', 'knight', 'king', 'queen', 
+    'jester', 'wizard', 'coin', 'treasure', 'horse',
+    'fleur', 'chalice', 'throne', 'crossed-swords',
+    'helmet', 'bow', 'arrow', 'candle', 'torch',
+    'flag', 'axe', 'mace', 'castle', 'goblet'
+  ];
+  
+  return validIcons.includes(iconName as MedievalIconName);
+};
+
+/**
+ * Get position classes for decorations
+ */
+export const getPositionClasses = (position?: string): string => {
+  const positionMap: Record<string, string> = {
+    'top-left': 'top-0 left-0',
+    'top-right': 'top-0 right-0',
+    'bottom-left': 'bottom-0 left-0',
+    'bottom-right': 'bottom-0 right-0',
+    'center': 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
+    'top-center': 'top-0 left-1/2 transform -translate-x-1/2'
   };
   
-  return colorMap[color as MedievalColor] || colorMap.default;
+  return positionMap[position || 'top-left'] || positionMap['top-left'];
 };

@@ -1,63 +1,65 @@
 
 import React from 'react';
-import { Egg, Lock, Target, Flame, Crown, User, Volume2, VolumeX, CloudFog, AlertCircle, Shield } from 'lucide-react';
-import { MockeryAction } from '@/types/mockery';
-import TomatoIcon from '@/components/icons/TomatoIcon';
+import { 
+  Crown, 
+  Egg, 
+  AlertCircle, 
+  ShieldCheck, 
+  UserX, 
+  CloudOff, 
+  Award
+} from 'lucide-react';
 
 interface MockeryIconRendererProps {
-  action: MockeryAction;
+  action: string;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
 
+/**
+ * Component to render the appropriate icon for each mockery action
+ */
 const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({ 
   action, 
-  size = 'md',
+  size = 'md', 
   className = '' 
 }) => {
-  const sizeMap = {
-    'sm': 16,
-    'md': 20,
-    'lg': 24
+  const getSizeClass = () => {
+    switch (size) {
+      case 'sm': return 'h-4 w-4';
+      case 'lg': return 'h-6 w-6';
+      case 'md':
+      default: return 'h-5 w-5';
+    }
   };
   
-  const iconSize = sizeMap[size];
+  const iconClass = `${getSizeClass()} ${className}`;
   
   switch (action) {
     case 'tomatoes':
-      return <TomatoIcon size={iconSize} className={`text-red-500 ${className}`} />;
+      return <AlertCircle className={`${iconClass} text-red-500`} />;
     case 'eggs':
-      return <Egg size={iconSize} className={`text-amber-300 ${className}`} />;
-    case 'stocks':
-      return <Lock size={iconSize} className={`text-slate-400 ${className}`} />;
-    case 'crown':
-      return <Crown size={iconSize} className={`text-royal-gold ${className}`} />;
-    case 'jester':
-      return <User size={iconSize} className={`text-purple-400 ${className}`} />;
+      return <Egg className={`${iconClass} text-yellow-500`} />;
     case 'putridEggs':
-      return <Egg size={iconSize} className={`text-green-400 ${className}`} />;
-    case 'silence':
-      return <VolumeX size={iconSize} className={`text-blue-400 ${className}`} />;
-    case 'courtJester':
-      return <User size={iconSize} className={`text-pink-400 ${className}`} />;
-    case 'smokeBomb':
-      return <CloudFog size={iconSize} className={`text-gray-400 ${className}`} />;
+      return <Egg className={`${iconClass} text-green-500`} />;
+    case 'crown':
+      return <Crown className={`${iconClass} text-royal-gold`} />;
+    case 'stocks':
+      return <Award className={`${iconClass} text-amber-600`} />;
+    case 'jester':
+      return <Award className={`${iconClass} text-purple-500`} />;
     case 'shame':
-      return <AlertCircle size={iconSize} className={`text-red-400 ${className}`} />;
+      return <UserX className={`${iconClass} text-royal-crimson`} />;
+    case 'silence':
+      return <UserX className={`${iconClass} text-gray-400`} />;
+    case 'courtJester':
+      return <Award className={`${iconClass} text-indigo-400`} />;
+    case 'smokeBomb':
+      return <CloudOff className={`${iconClass} text-gray-600`} />;
     case 'protection':
-      return <Shield size={iconSize} className={`text-emerald-400 ${className}`} />;
-    case 'taunt':
-      return <Volume2 size={iconSize} className={`text-yellow-400 ${className}`} />;
-    case 'mock':
-      return <User size={iconSize} className={`text-teal-400 ${className}`} />;
-    case 'challenge':
-      return <Flame size={iconSize} className={`text-orange-400 ${className}`} />;
-    case 'joust':
-      return <Target size={iconSize} className={`text-indigo-400 ${className}`} />;
-    case 'duel':
-      return <Target size={iconSize} className={`text-red-600 ${className}`} />;
+      return <ShieldCheck className={`${iconClass} text-green-400`} />;
     default:
-      return <Target size={iconSize} className={`text-gray-400 ${className}`} />;
+      return <AlertCircle className={`${iconClass} text-gray-400`} />;
   }
 };
 

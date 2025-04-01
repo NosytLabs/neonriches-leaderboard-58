@@ -1,129 +1,76 @@
 
 /**
- * Safely converts a value to a string
- * This is especially useful for dealing with mixed string|number types
+ * Safe conversion to string, handling null/undefined values
  * @param value The value to convert to a string
- * @returns The string representation of the value
+ * @param defaultValue Default value to return if value is null/undefined
+ * @returns A string
  */
-export const safeToString = (value: any): string => {
+export const safeToString = (value: any, defaultValue: string = ''): string => {
   if (value === null || value === undefined) {
-    return '';
+    return defaultValue;
   }
-  
   return String(value);
 };
 
 /**
- * Safely converts a string value to a number
- * @param value The string to convert
- * @param defaultValue The default value to return if conversion fails
- * @returns A number or the default value
+ * Safely converts a value to a localized string representation
+ * @param value The value to convert
+ * @param defaultValue The default value if conversion fails
+ * @returns A localized string representation of the value
  */
-export const safeToNumber = (value: string | number | undefined, defaultValue: number = 0): number => {
-  if (value === undefined || value === null || value === '') {
+export const safeToLocaleString = (value: any, defaultValue: string = ''): string => {
+  if (value === null || value === undefined) {
     return defaultValue;
   }
   
-  const num = typeof value === 'string' ? parseFloat(value) : value;
-  return isNaN(num) ? defaultValue : num;
-};
-
-/**
- * Safely truncates a string to the specified length
- * @param str The string to truncate
- * @param maxLength The maximum length of the string
- * @param suffix The suffix to add if the string is truncated
- * @returns The truncated string
- */
-export const truncateString = (str: string, maxLength: number, suffix: string = '...'): string => {
-  if (!str) return '';
-  if (str.length <= maxLength) return str;
+  try {
+    if (typeof value === 'number') {
+      return value.toLocaleString();
+    }
+    
+    const num = Number(value);
+    if (!isNaN(num)) {
+      return num.toLocaleString();
+    }
+  } catch (e) {
+    // Ignore conversion errors and return the value as-is or default
+  }
   
-  return str.substring(0, maxLength - suffix.length) + suffix;
+  return safeToString(value, defaultValue);
 };
 
 /**
- * Formats a display handle from a username
- * @param username The username to format
- * @returns The formatted handle
- */
-export const formatHandle = (username: string): string => {
-  if (!username) return '';
-  return username.startsWith('@') ? username : `@${username}`;
-};
-
-/**
- * Gets initials from a name string
- * @param name The name to get initials from
- * @param count The maximum number of initials to return
+ * Gets initials from a string (usually a name)
+ * @param text The text to extract initials from
+ * @param length Maximum number of initials to return
  * @returns The initials
  */
-export const getInitials = (name: string, count: number = 2): string => {
-  if (!name) return '';
+export const getInitials = (text: string, length: number = 2): string => {
+  if (!text) return '';
   
-  return name
-    .split(' ')
-    .map(part => part.charAt(0))
-    .filter(char => char.length > 0)
-    .slice(0, count)
-    .join('')
-    .toUpperCase();
-};
-
-/**
- * Safely converts a value to a locale string
- * @param value The value to convert
- * @param options Intl.NumberFormatOptions
- * @returns The formatted string
- */
-export const safeToLocaleString = (value: any, options?: Intl.NumberFormatOptions): string => {
-  if (value === null || value === undefined) {
-    return '';
+  const words = text.trim().split(/\s+/);
+  
+  if (words.length === 1) {
+    return text.substring(0, length).toUpperCase();
   }
   
-  const num = typeof value === 'string' ? parseFloat(value) : value;
-  if (isNaN(num)) return '';
-  
-  try {
-    return num.toLocaleString(undefined, options);
-  } catch (error) {
-    return String(value);
+  return words
+    .slice(0, length)
+    .map(word => word.charAt(0).toUpperCase())
+    .join('');
+};
+
+/**
+ * Truncate a string and add ellipsis if needed
+ * @param text The text to truncate
+ * @param maxLength Maximum length before truncation
+ * @param suffix The suffix to add after truncation (default: "...")
+ * @returns The truncated string
+ */
+export const truncateText = (text: string, maxLength: number, suffix: string = '...'): string => {
+  if (!text || text.length <= maxLength) {
+    return text || '';
   }
-};
-
-/**
- * Formats a number as currency
- * @param amount The amount to format
- * @param currency The currency code
- * @returns Formatted currency string
- */
-export const formatCurrency = (amount: number | string, currency: string = 'USD'): string => {
-  const numAmount = safeToNumber(amount);
-  return safeToLocaleString(numAmount, {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-};
-
-/**
- * Capitalizes the first letter of a string
- * @param str The string to capitalize
- * @returns The capitalized string
- */
-export const capitalize = (str: string): string => {
-  if (!str) return '';
-  return str.charAt(0).toUpperCase() + str.slice(1);
-};
-
-/**
- * Formats a number of items with the correct plural form
- * @param count The number of items
- * @param singular The singular form of the word
- * @param plural The plural form of the word
- * @returns Formatted count with the correct word form
- */
-export const pluralize = (count: number, singular: string, plural: string): string => {
-  return `${count} ${count === 1 ? singular : plural}`;
+  
+  return text.substring(0, maxLength) + suffix;
 };

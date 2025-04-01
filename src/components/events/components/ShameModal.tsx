@@ -38,7 +38,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
   hasDiscount = false
 }) => {
   const regularPrice = getShameActionPrice(shameType);
-  const finalPrice = hasDiscount ? getDiscountedShamePrice(shameType) : regularPrice;
+  const finalPrice = hasDiscount ? getDiscountedShamePrice(shameType, targetUser.tier) : regularPrice;
   
   return (
     <DialogContent className="sm:max-w-md glass-morphism border-white/10">

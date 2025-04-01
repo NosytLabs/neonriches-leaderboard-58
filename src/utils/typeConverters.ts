@@ -1,4 +1,3 @@
-
 import { safeToString } from './stringUtils';
 import { TeamColor } from '@/types/mockery';
 
@@ -133,4 +132,40 @@ export const safeJsonParse = <T>(jsonString: string, defaultValue: T): T => {
   } catch (e) {
     return defaultValue;
   }
+};
+
+/**
+ * Ensures a value is a string array, handling different input types
+ * @param value The value to convert to a string array
+ * @returns A string array
+ */
+export const ensureStringArray = (value: any): string[] => {
+  if (!value) return [];
+  
+  if (Array.isArray(value)) {
+    return value.map(safeToString);
+  }
+  
+  if (typeof value === 'number') {
+    return [value.toString()];
+  }
+  
+  if (typeof value === 'string') {
+    return [value];
+  }
+  
+  return [];
+};
+
+/**
+ * Ensures an ID is represented as a string
+ * @param id The ID that might be a number or string
+ * @returns The ID as a string
+ */
+export const ensureStringId = (id: string | number | undefined): string => {
+  if (id === undefined || id === null) {
+    return '';
+  }
+  
+  return typeof id === 'number' ? id.toString() : id;
 };

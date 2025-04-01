@@ -20,7 +20,7 @@ export interface BaseDecorationProps {
   // Style for special decorations
   style?: React.CSSProperties;
   // Position property for corner decorations
-  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
+  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center' | 'top-center';
 }
 
 export type DecorationProps = BaseDecorationProps;
@@ -53,9 +53,11 @@ export type MedievalIconName =
   | 'torch'
   | 'flag'
   | 'axe'
-  | 'mace';
+  | 'mace'
+  | 'castle'
+  | 'goblet';
 
-export type MedievalIconColor = 
+export type IconColor = 
   | 'default'
   | 'gold'
   | 'silver'
@@ -65,7 +67,10 @@ export type MedievalIconColor =
   | 'green'
   | 'purple'
   | 'crimson'
-  | 'royal';
+  | 'royal'
+  | string;
+
+export type MedievalIconColor = IconColor;
 
 export type DecorationSize = 
   | 'xs' 
@@ -113,12 +118,12 @@ export const toMedievalIconColor = (color?: string): MedievalIconColor => {
     'crimson', 'royal'
   ];
   
-  if (!color || !validColors.includes(color as MedievalIconColor)) {
-    return 'default';
-  }
-  
-  return color as MedievalIconColor;
+  if (!color) return 'default';
+  return color;
 };
 
 // Type for icon sizes that matches iconProps
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+
+// Add MedievalIconSize type alias for backward compatibility
+export type MedievalIconSize = IconSize;

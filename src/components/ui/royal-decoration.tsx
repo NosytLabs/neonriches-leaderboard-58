@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { DecorationProps, DecorationSize } from '@/types/ui/decorations/types';
+import { DecorationProps, DecorationSize } from '@/components/ui/decorations/types';
 
 const RoyalDecoration: React.FC<DecorationProps> = ({
   size = 'md',
@@ -13,6 +13,9 @@ const RoyalDecoration: React.FC<DecorationProps> = ({
   children,
   type,
   variant,
+  container,
+  border,
+  icon,
   ...props
 }) => {
   const getPositionClasses = () => {
@@ -27,6 +30,8 @@ const RoyalDecoration: React.FC<DecorationProps> = ({
         return 'bottom-0 right-0';
       case 'center':
         return 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2';
+      case 'top-center':
+        return 'top-0 left-1/2 transform -translate-x-1/2';
       default:
         return 'top-0 left-0';
     }
