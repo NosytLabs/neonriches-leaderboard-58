@@ -16,6 +16,7 @@ const defaultSettings: SettingsContextType = {
     showTeam: true,
     showSpending: true,
     showRank: true,
+    darkMode: true, // Added this required property
     allowProfileLinks: true,
     marketingEmails: false,
     showEmailOnProfile: false,

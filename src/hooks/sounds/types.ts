@@ -9,21 +9,25 @@ export type SoundType =
   | 'purchase'
   | 'deposit'
   | 'withdrawal'
-  | 'level_up'
+  | 'levelUp'
   | 'boost'
   | 'message'
   | 'mockery'
   | 'coinDrop'
   | 'shame'
   | 'fanfare'
-  | 'levelUp'
   | 'royal'
   | 'protection'
   | 'sparkle'
   | 'royalAnnouncement'
   | 'trumpet'
   | 'medallion'
-  | 'seal';
+  | 'seal'
+  | 'transfer'
+  | 'unlock'
+  | 'team'
+  | 'rank_up'
+  | 'reward';
 
 export interface SoundOptions {
   volume?: number;
@@ -62,6 +66,9 @@ export interface PremiumSoundPackDetails {
 export interface UseSoundHook extends SoundFunction {
   toggleSounds: () => void;
   isSoundEnabled: boolean;
+  toggleMuted: () => boolean | void; // Fixed this to include both possible return types
+  setVolume: (volume: number) => void;
+  currentVolume: number;
 }
 
 export interface SoundConfig {

@@ -1,17 +1,17 @@
 
 import { useState, useCallback } from 'react';
-import { SoundType, SoundOptions } from '@/types/sound-types';
+import { SoundType, SoundOptions, UseSoundHook } from '@/hooks/sounds/types';
 import { useSoundsConfig } from './use-sounds-config';
 
 /**
  * Custom hook for playing sound effects
  */
-export const useSound = () => {
-  const { soundConfig, toggleSounds } = useSoundsConfig();
+export const useSound = (): UseSoundHook => {
+  const { soundConfig, toggleSounds, toggleMuted, setVolume } = useSoundsConfig();
   const [volume, setVolumeState] = useState(soundConfig.volume || 0.5);
   
   // Basic sound paths
-  const soundPaths: Record<string, string> = {
+  const soundPaths: Record<SoundType, string> = {
     coin: '/sounds/coin.mp3',
     success: '/sounds/success.mp3',
     error: '/sounds/error.mp3',
@@ -34,14 +34,12 @@ export const useSound = () => {
     protection: '/sounds/protection.mp3',
     transfer: '/sounds/transfer.mp3',
     unlock: '/sounds/unlock.mp3',
-    noblesLaugh: '/sounds/nobles-laugh.mp3',
+    royalAnnouncement: '/sounds/royal-announcement.mp3',
     team: '/sounds/team.mp3',
     rank_up: '/sounds/rank-up.mp3',
     trumpet: '/sounds/trumpet.mp3',
     medallion: '/sounds/medallion.mp3',
-    seal: '/sounds/seal.mp3',
-    swordClash: '/sounds/sword-clash.mp3',
-    royalAnnouncement: '/sounds/royal-announcement.mp3'
+    seal: '/sounds/seal.mp3'
   };
   
   /**
@@ -100,8 +98,8 @@ export const useSound = () => {
     toggleSounds,
     isSoundEnabled: !soundConfig.muted && soundConfig.enabled,
     currentVolume: volume,
-    toggleMuted: () => {}, // Added stub for toggleMuted
-    setVolume: () => {} // Added stub for setVolume
+    toggleMuted, // Now properly exported from useSoundsConfig
+    setVolume // Now properly exported from useSoundsConfig
   };
 };
 

@@ -1,6 +1,7 @@
 
 import { useContext } from 'react';
 import { useSettings } from '@/contexts/SettingsContext';
+import { SoundConfig } from '@/types/settings';
 
 // This hook is a wrapper around the sound settings portion of useSettings
 // for compatibility with existing components

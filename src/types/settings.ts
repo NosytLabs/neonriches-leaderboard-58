@@ -16,6 +16,11 @@ export interface UserSettings {
   showEmailOnProfile: boolean;
   rankChangeAlerts: boolean;
   allowMessages?: boolean; // Adding this optional property
+  newFollowerAlerts?: boolean;
+  teamNotifications?: boolean;
+  language?: string;
+  publicProfile?: boolean;
+  shameAlerts?: boolean;
 }
 
 // Sound Configuration

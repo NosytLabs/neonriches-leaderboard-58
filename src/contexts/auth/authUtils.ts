@@ -35,36 +35,33 @@ export const getDefaultUser = (email: string, username: string): UserProfile => 
     profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${username}`,
     bio: '',
     tier: 'bronze',
-    role: 'user',
     team: null,
     rank: 0,
     walletBalance: 5.00, // Starting balance
     totalSpent: 0,
-    spentAmount: 0,
     amountSpent: 0,
     joinedDate: now,
-    createdAt: now,
-    updatedAt: now,
     isVerified: false,
     cosmetics,
-    activeTitle: 'newcomer',
     spendStreak: 0,
-    gender: 'male',
-    profileViews: 0,
-    profileClicks: 0,
-    followers: [] as string[],
-    following: [] as string[],
-    isVIP: false,
+    following: [], // Initialize as empty array
+    followers: [], // Initialize as empty array
     settings: {
       showRank: true,
       showTeam: true,
       showSpending: true,
       showEmailOnProfile: false,
-      allowMessages: true,
-      emailNotifications: false,
       darkMode: true,
-      language: 'en',
-      rankChangeAlerts: false
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'dark',
+      notifications: true,
+      emailNotifications: false,
+      marketingEmails: false,
+      soundEffects: true,
+      showBadges: true,
+      rankChangeAlerts: false,
+      allowMessages: true // Optional property
     },
     profileBoosts: []
   };
@@ -135,7 +132,7 @@ export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: strin
   
   // Add cosmetic if it doesn't already exist
   const currentItems = cosmetics[propertyName] as string[];
-  if (!currentItems.includes(cosmeticId)) {
+  if (Array.isArray(currentItems) && !currentItems.includes(cosmeticId)) {
     cosmetics[propertyName] = [...currentItems, cosmeticId];
   }
   
