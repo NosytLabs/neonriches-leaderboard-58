@@ -1,3 +1,4 @@
+
 // Authentication utility functions and constants
 import { UserTier, UserProfile, TeamColor } from '@/types/user';
 import { ProfileBoost } from '@/types/boost';
@@ -173,7 +174,9 @@ export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: strin
   
   // Add cosmetic if it doesn't already exist
   if (cosmetics[cosmeticKey] && !cosmetics[cosmeticKey].includes(cosmeticId)) {
-    cosmetics[cosmeticKey] = [...cosmetics[cosmeticKey], cosmeticId];
+    // Using type assertion to ensure TypeScript understands this is a string array
+    const currentItems = cosmetics[cosmeticKey] as string[];
+    cosmetics[cosmeticKey] = [...currentItems, cosmeticId];
   }
   
   return cosmetics;

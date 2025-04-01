@@ -168,7 +168,9 @@ export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: strin
   
   // Add cosmetic if it doesn't already exist
   if (Array.isArray(cosmetics[cosmeticKey]) && !cosmetics[cosmeticKey].includes(cosmeticId)) {
-    cosmetics[cosmeticKey] = [...(cosmetics[cosmeticKey] as string[]), cosmeticId];
+    // Using type assertion to ensure TypeScript understands this is a string array
+    const currentItems = cosmetics[cosmeticKey] as string[];
+    cosmetics[cosmeticKey] = [...currentItems, cosmeticId];
   }
   
   return cosmetics;
