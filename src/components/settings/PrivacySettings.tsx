@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { Eye, Shield, DollarSign, Users } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import SettingsLayout from './SettingsLayout';
-import { useSettings } from '@/contexts/SettingsContext';
+import { useSettings } from '@/hooks/useSettings';
 import { Button } from '@/components/ui/button';
 
 const PrivacySettings: React.FC = () => {

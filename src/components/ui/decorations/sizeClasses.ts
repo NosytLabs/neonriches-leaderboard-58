@@ -1,15 +1,18 @@
 
-import { DecorationSize } from '@/types/ui/decorations/types';
+import { MedievalIconSize } from '@/types/ui/icon-types';
 
-export const sizeClasses: Record<DecorationSize, string> = {
-  'xs': 'w-6 h-6',
-  'sm': 'w-8 h-8',
-  'md': 'w-12 h-12',
-  'lg': 'w-16 h-16',
-  'xl': 'w-24 h-24',
-  '2xl': 'w-32 h-32',
-  '3xl': 'w-48 h-48',
-  '4xl': 'w-64 h-64'
+export type DecorationSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
+export interface SizeClass {
+  container: string;
+  border: string;
+  icon: MedievalIconSize;
+}
+
+export const sizeClasses: Record<DecorationSize, SizeClass> = {
+  xs: { container: 'w-6 h-6', border: 'border-1', icon: 'xs' },
+  sm: { container: 'w-8 h-8', border: 'border-1', icon: 'sm' },
+  md: { container: 'w-12 h-12', border: 'border-2', icon: 'md' },
+  lg: { container: 'w-16 h-16', border: 'border-2', icon: 'lg' },
+  xl: { container: 'w-24 h-24', border: 'border-3', icon: 'xl' }
 };
-
-export default sizeClasses;

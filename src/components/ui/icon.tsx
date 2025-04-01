@@ -7,15 +7,17 @@ import { IconProps } from '@/types/ui/icon-types';
  * Icon component for using Lucide icons with consistent styling
  */
 const Icon = React.forwardRef<SVGSVGElement, IconProps>(
-  ({ name, size = 'md', color = 'default', className, style = 'default', ...props }, ref) => {
+  ({ name, icon, size = 'md', color = 'default', className, animated, style = 'default', ...props }, ref) => {
     return (
       <IconSystem
         ref={ref}
         name={name}
+        icon={icon}
         size={size}
         color={color}
-        className={className}
+        animated={animated}
         style={style}
+        className={className}
         {...props}
       />
     );

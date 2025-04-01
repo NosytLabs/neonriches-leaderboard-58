@@ -20,6 +20,8 @@ export const adaptIconColor = (color: IconColor | string): MedievalIconColor => 
     case 'blue': return 'blue';
     case 'green': return 'green';
     case 'purple': return 'purple';
+    case 'crimson': return 'crimson';
+    case 'emerald': return 'emerald';
     default: return 'gold';
   }
 };
@@ -43,7 +45,8 @@ export const adaptIconSize = (size: IconSize | number | string): MedievalIconSiz
       case 'md': return 'md';
       case 'lg': return 'lg';
       case 'xl': return 'xl';
-      case '2xl': return 'xl';
+      case '2xl': return '2xl';
+      case '3xl': return '3xl';
       default: return 'md';
     }
   }
@@ -55,6 +58,7 @@ export const adaptIconSize = (size: IconSize | number | string): MedievalIconSiz
  * Convert a string name to a medieval icon name
  */
 export const adaptIconName = (name: string): MedievalIconName => {
+  // Map of common names to MedievalIconName values
   const medievalIconMap: Record<string, MedievalIconName> = {
     'crown': 'crown',
     'shield': 'shield',
@@ -70,7 +74,9 @@ export const adaptIconName = (name: string): MedievalIconName => {
     'jester': 'jester',
     'wizard': 'wizard',
     'coin': 'coin',
+    'coins': 'coins',
     'treasure': 'treasure',
+    'treasure-chest': 'treasure-chest',
     'horse': 'horse',
     'fleur': 'fleur',
     'chalice': 'chalice',
@@ -84,13 +90,24 @@ export const adaptIconName = (name: string): MedievalIconName => {
     'flag': 'flag',
     'axe': 'axe',
     'mace': 'mace',
-    'key': 'key'
+    'key': 'key',
+    'tower': 'tower',
+    // Support for capitalized variants
+    'Crown': 'Crown',
+    'Scroll': 'Scroll',
+    'Shield': 'Shield',
+    'Coins': 'Coins',
+    'Sparkles': 'Sparkles',
+    'Trophy': 'Trophy',
+    'Users': 'Users',
+    'User': 'User'
   };
   
-  const sanitizedName = name.toLowerCase();
+  const sanitizedName = typeof name === 'string' ? name : '';
   return medievalIconMap[sanitizedName] || 'crown';
 };
 
+// Use these functions for type adapting
 export default {
   adaptIconColor,
   adaptIconSize,

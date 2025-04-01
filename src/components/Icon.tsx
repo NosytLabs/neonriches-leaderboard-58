@@ -4,13 +4,16 @@ import { IconProps } from '@/types/ui/icon-types';
 import IconSystem from './ui/icon-system';
 
 const Icon = React.forwardRef<SVGSVGElement, IconProps>(
-  ({ name, size = 'md', color = 'default', className, ...props }, ref) => {
+  ({ icon, name, size = 'md', color = 'default', className, animated, style = 'default', ...props }, ref) => {
     return (
       <IconSystem
         ref={ref}
+        icon={icon}
         name={name}
         size={size}
         color={color}
+        animated={animated}
+        style={style}
         className={className}
         {...props}
       />

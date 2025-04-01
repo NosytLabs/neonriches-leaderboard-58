@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Volume2, VolumeX, Music, VolumeX as VolumeMute, Crown } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
@@ -6,7 +5,7 @@ import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import SettingsLayout from './SettingsLayout';
-import { useSettings } from '@/contexts/SettingsContext';
+import { useSettings } from '@/hooks/useSettings';
 import { useSound } from '@/hooks/sounds/use-sound';
 import { Badge } from '@/components/ui/badge';
 

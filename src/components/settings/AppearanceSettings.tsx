@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Paintbrush, Monitor, Sun, Moon, Crown } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import SettingsLayout from './SettingsLayout';
-import { useSettings } from '@/contexts/SettingsContext';
+import { useSettings } from '@/hooks/useSettings';
 import { motion } from 'framer-motion';
 
 const AppearanceSettings: React.FC = () => {

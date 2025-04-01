@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Accessibility, Type, Zap, Eye } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
@@ -36,8 +35,6 @@ const AccessibilitySettings: React.FC = () => {
   };
   
   const saveChanges = () => {
-    // This function would batch any pending changes and save them at once
-    // Currently, our changes are applied immediately with individual toggles
     toast({
       title: "Settings Saved",
       description: "Your accessibility settings have been updated.",

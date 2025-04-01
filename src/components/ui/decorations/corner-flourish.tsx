@@ -3,7 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import MedievalIcon from '@/components/ui/medieval-icon';
 import { BaseDecorationProps } from '@/types/ui/decorations/types';
-import { adaptIconSize, adaptIconColor } from '@/utils/iconTypeAdapter';
+import { sizeClasses } from './sizeClasses';
 
 const CornerFlourish: React.FC<BaseDecorationProps> = ({
   color = 'gold',
@@ -11,15 +11,6 @@ const CornerFlourish: React.FC<BaseDecorationProps> = ({
   animate = false,
   className
 }) => {
-  // Define size classes directly
-  const sizeClasses = {
-    xs: { container: 'w-6 h-6', border: 'border-1', icon: 'xs' as const },
-    sm: { container: 'w-8 h-8', border: 'border-1', icon: 'sm' as const },
-    md: { container: 'w-12 h-12', border: 'border-2', icon: 'md' as const },
-    lg: { container: 'w-16 h-16', border: 'border-2', icon: 'lg' as const },
-    xl: { container: 'w-24 h-24', border: 'border-3', icon: 'xl' as const }
-  };
-  
   const sizeClass = sizeClasses[size];
   
   return (
@@ -41,8 +32,9 @@ const CornerFlourish: React.FC<BaseDecorationProps> = ({
       )} style={{ transform: 'rotate(-45deg)', opacity: 0.2 }}>
         <MedievalIcon 
           name="scroll" 
-          size={adaptIconSize(sizeClass.icon)} 
-          color={adaptIconColor(color)} 
+          size={sizeClass.icon} 
+          color={color as any} 
+          animated={animate}
         />
       </div>
     </div>
