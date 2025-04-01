@@ -101,11 +101,11 @@ export interface UserCosmetics {
 export interface ProfileBoost {
   id: string;
   type: string;
-  level: number; // Changed from optional to required to match user.d.ts
+  level: number; // Required to match user.d.ts
   startDate: string;
   endDate: string;
   appliedBy?: string;
-  strength?: number;
+  strength: number; // Changed from optional to required to match user.d.ts
   name?: string;
   description?: string;
   duration?: number;
@@ -209,7 +209,7 @@ export interface SocialLink {
   verified?: boolean;
   primary?: boolean;
   clicks?: number;
-  title?: string; // Added to match the version in user.d.ts
+  title: string; // Changed from optional to required to match usage in components
   label?: string;
   type?: string;
 }

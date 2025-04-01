@@ -14,7 +14,7 @@ import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
 import { UserProfile } from '@/types/user';
-import { User as ConsolidatedUserProfile } from '@/types/user-consolidated';
+import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -76,11 +76,23 @@ const EnhancedDashboard = () => {
   }
 
   // First ensure totalSpent and amountSpent properties
-  const userWithRequired = ensureTotalSpent(user as UserProfile);
+  const userWithRequired = ensureTotalSpent(user as unknown as UserProfile);
   
   // Then adapt to ensure all other properties are correctly set
   // Convert to the ConsolidatedUserProfile type to match the components' expectations
   const standardUser = adaptToStandardUserProfile(userWithRequired) as unknown as ConsolidatedUserProfile;
+
+  // Now the profile boosts should have the correct types
+  const enhancedUserForProps = {
+    ...standardUser,
+    profileBoosts: standardUser.profileBoosts?.map(boost => ({
+      ...boost,
+      // Make sure required properties are present to satisfy both interfaces
+      strength: boost.strength || 1,
+      isActive: boost.isActive ?? true,
+      level: boost.level || 1
+    })) || []
+  };
 
   const handleSpend = () => {
     toast({
@@ -100,14 +112,14 @@ const EnhancedDashboard = () => {
   };
 
   // Create component props with appropriate type casting
-  const welcomeProps = { user: standardUser };
+  const welcomeProps = { user: enhancedUserForProps };
   const overviewProps = { 
-    user: standardUser,
+    user: enhancedUserForProps,
     onSpend: handleSpend, 
     onPaymentSuccess: handlePaymentSuccess 
   };
-  const teamProps = { user: standardUser };
-  const upgradeProps = { user: standardUser };
+  const teamProps = { user: enhancedUserForProps };
+  const upgradeProps = { user: enhancedUserForProps };
 
   return (
     <div className="container mx-auto px-4 py-6">

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { SocialLink } from '@/types/user';
+import { SocialLink } from '@/types/user-consolidated'; // Import from user-consolidated.ts
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Trash, Plus } from 'lucide-react';
 
@@ -29,7 +29,7 @@ const SocialMediaLinksEditor: React.FC<SocialMediaLinksEditorProps> = ({
       id: `link-${Date.now()}`, // Generate a string ID
       platform: '',
       url: '',
-      title: '', // Using title property which is now valid
+      title: '', // Using title property which is now required
     };
     
     onChange([...links, newLink]);

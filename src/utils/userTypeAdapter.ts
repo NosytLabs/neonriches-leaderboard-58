@@ -25,7 +25,7 @@ export const adaptToStandardUserProfile = (user: UserProfile & { totalSpent: num
         ...boost,
         level: boost.level || 1, // Ensure level is always provided
         isActive: boost.isActive ?? true,
-        strength: boost.strength ?? 1,
+        strength: boost.strength || 1, // Ensure strength is always provided
         appliedBy: boost.appliedBy ?? 'system'
       }))
     : [];
@@ -37,7 +37,7 @@ export const adaptToStandardUserProfile = (user: UserProfile & { totalSpent: num
     team: user.team || 'none',
     profileBoosts: adaptedProfileBoosts,
     // Use joinedDate as the standard field for when user joined
-    joinedDate: user.joinedDate || user.joinDate || user.joinedAt || user.createdAt || new Date().toISOString()
+    joinedDate: user.joinedDate || new Date().toISOString() // Removed references to joinDate, joinedAt, createdAt
   };
 };
 
