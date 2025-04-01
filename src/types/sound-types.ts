@@ -32,7 +32,8 @@ export type SoundType =
   | 'trumpets'
   | 'withdrawal'
   | 'transfer'
-  | 'unlock';
+  | 'unlock'
+  | 'team';
 
 export interface SoundCategory {
   name: string;
@@ -53,6 +54,7 @@ export interface SoundOptions {
   loop?: boolean;
   playbackRate?: number;
   onEnd?: () => void;
+  [key: string]: any; // Allow any additional properties
 }
 
 export interface SoundConfig {
@@ -61,6 +63,8 @@ export interface SoundConfig {
   effects: Record<string, boolean>;
   music: boolean;
   musicVolume: number;
+  muted?: boolean;
+  premium?: boolean;
 }
 
 export interface UseAudioReturn {
@@ -87,6 +91,10 @@ export interface UseSoundHook {
   setVolume: (volume: number) => void;
   currentVolume?: number;
   play?: (type: SoundType, options?: SoundOptions) => void;
+  isMuted?: boolean;
+  toggleMute?: () => boolean;
+  setMuted?: (muted: boolean) => void;
+  volume?: number;
 }
 
 // Premium sound pack details

@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { TeamType } from '@/types/team';
+import { useNotificationSounds } from '@/hooks/sounds/use-notification-sounds';
 
 interface TeamChatRoomProps {
   team: TeamType;
@@ -9,6 +10,8 @@ interface TeamChatRoomProps {
 }
 
 const TeamChatRoom: React.FC<TeamChatRoomProps> = ({ team, user, limit = 50 }) => {
+  const { playSound } = useNotificationSounds();
+  
   // Convert string to TeamType if needed
   const teamValue = typeof team === 'string' ? team as TeamType : team;
   

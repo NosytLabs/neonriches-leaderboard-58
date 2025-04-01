@@ -33,10 +33,10 @@ const mockDecrees = [
 export default function RoyalDecrees() {
   const [decrees, setDecrees] = useState(mockDecrees);
   const [expandedDecree, setExpandedDecree] = useState<string | null>(null);
-  const { playNotificationSound, playClick } = useNotificationSounds();
+  const { playSound } = useNotificationSounds();
   
   const toggleDecree = (id: string) => {
-    playClick();
+    playSound('click');
     if (expandedDecree === id) {
       setExpandedDecree(null);
     } else {
@@ -63,47 +63,30 @@ export default function RoyalDecrees() {
         <CardDescription>Official announcements from the Royal Court</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {decrees.map((decree) => (
-          <div key={decree.id} className="space-y-2">
+        {decrees.map(decree => (
+          <div 
+            key={decree.id}
+            className={`p-4 rounded-lg transition-all ${
+              expandedDecree === decree.id
+                ? 'bg-royal-gold/10'
+                : 'bg-black/10 hover:bg-black/20'
+            } ${decree.isNew ? 'border-l-4 border-royal-gold' : ''}`}
+          >
             <div 
-              className={`
-                p-3 rounded-lg cursor-pointer transition-colors
-                ${decree.isNew ? 'bg-royal-gold/10 border border-royal-gold/30' : 'bg-black/20 border border-white/10 hover:bg-black/30'}
-                ${expandedDecree === decree.id ? 'bg-black/30' : ''}
-              `}
+              className="flex justify-between items-center cursor-pointer"
               onClick={() => toggleDecree(decree.id)}
             >
-              <div className="flex justify-between items-center">
-                <h4 className="font-medium text-white">
-                  {decree.title}
-                  {decree.isNew && (
-                    <span className="ml-2 text-xs bg-royal-gold text-black px-2 py-0.5 rounded-full">
-                      New
-                    </span>
-                  )}
-                </h4>
-                <span className="text-xs text-gray-400">
-                  {new Date(decree.date).toLocaleDateString()}
-                </span>
-              </div>
-              
-              {expandedDecree === decree.id && (
-                <div className="mt-2 text-sm text-gray-300">
-                  {decree.content}
-                </div>
-              )}
+              <h3 className={`font-medium ${decree.isNew ? 'text-royal-gold' : 'text-white'}`}>
+                {decree.title}
+              </h3>
+              <span className="text-sm text-white/60">{decree.date}</span>
             </div>
+            
+            {expandedDecree === decree.id && (
+              <p className="mt-3 text-white/80">{decree.content}</p>
+            )}
           </div>
         ))}
-        
-        <Button 
-          variant="link" 
-          size="sm" 
-          className="text-royal-gold w-full mt-2"
-          onClick={() => playClick()}
-        >
-          View All Royal Decrees
-        </Button>
       </CardContent>
     </Card>
   );

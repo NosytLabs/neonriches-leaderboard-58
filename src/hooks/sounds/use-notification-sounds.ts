@@ -3,7 +3,7 @@ import { useSound } from './use-sound';
 import { SoundOptions, SoundType } from '@/types/sound-types';
 
 export const useNotificationSounds = () => {
-  const { playSound } = useSound();
+  const sound = useSound();
 
   const playNotificationSound = (type: string = 'notification', options?: SoundOptions) => {
     const soundOptions: SoundOptions = {
@@ -11,38 +11,39 @@ export const useNotificationSounds = () => {
       ...options
     };
 
+    // Convert string type to SoundType and play appropriate sound
     switch (type) {
       case 'achievement':
-        playSound('achievement', soundOptions);
+        sound.playSound('achievement', soundOptions);
         break;
       case 'message':
-        playSound('message', soundOptions);
+        sound.playSound('message', soundOptions);
         break;
       case 'alert':
-        playSound('notification', soundOptions);
+        sound.playSound('notification', soundOptions);
         break;
       case 'success':
-        playSound('success', soundOptions);
+        sound.playSound('success', soundOptions);
         break;
       case 'error':
-        playSound('error', soundOptions);
+        sound.playSound('error', soundOptions);
         break;
       case 'reward':
-        playSound('reward', soundOptions);
+        sound.playSound('reward', soundOptions);
         break;
       default:
-        playSound('notification', soundOptions);
+        sound.playSound('notification', soundOptions);
         break;
     }
   };
 
-  // Add missing methods that components are trying to use
+  // Directly call sound.playSound instead of recursive call
   const playSound = (type: SoundType, options?: SoundOptions) => {
-    return playSound(type, options);
+    sound.playSound(type, options);
   };
 
   const playClick = () => {
-    playSound('click', { volume: 0.4 });
+    sound.playSound('click', { volume: 0.4 });
   };
 
   return { 

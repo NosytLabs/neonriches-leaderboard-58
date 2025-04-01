@@ -7,7 +7,7 @@ import { SoundType, SoundOptions } from '@/types/sound-types';
  */
 export const useSound = () => {
   const [muted, setMuted] = useState(false);
-  const [volume, setVolume] = useState(0.5);
+  const [volume, setVolumeState] = useState(0.5);
   
   // Basic sound paths
   const soundPaths: Record<string, string> = {
@@ -34,7 +34,15 @@ export const useSound = () => {
     protection: '/sounds/protection.mp3',
     transfer: '/sounds/transfer.mp3',
     unlock: '/sounds/unlock.mp3',
-    noblesLaugh: '/sounds/nobles-laugh.mp3'
+    noblesLaugh: '/sounds/nobles-laugh.mp3',
+    team: '/sounds/team.mp3',
+    rank_up: '/sounds/rank-up.mp3',
+    trumpets: '/sounds/trumpets.mp3',
+    trumpet: '/sounds/trumpet.mp3',
+    medallion: '/sounds/medallion.mp3',
+    seal: '/sounds/seal.mp3',
+    swordClash: '/sounds/sword-clash.mp3',
+    royalAnnouncement: '/sounds/royal-announcement.mp3'
   };
   
   /**
@@ -87,7 +95,22 @@ export const useSound = () => {
   const changeVolume = useCallback((newVolume: number) => {
     // Ensure volume is between 0 and 1
     const clampedVolume = Math.max(0, Math.min(1, newVolume));
-    setVolume(clampedVolume);
+    setVolumeState(clampedVolume);
+  }, []);
+
+  /**
+   * Stop a sound (placeholder implementation)
+   */
+  const stopSound = useCallback((type?: SoundType) => {
+    // Simple placeholder implementation
+    console.log(`Stopping sound: ${type || 'all'}`);
+  }, []);
+
+  /**
+   * Toggle sound enabled status
+   */
+  const toggleSounds = useCallback(() => {
+    setMuted(prev => !prev);
   }, []);
 
   // Add a compatibility method for the play function that some components are using
@@ -102,7 +125,11 @@ export const useSound = () => {
     toggleMute,
     setMuted,
     volume,
-    setVolume: changeVolume
+    setVolume: changeVolume,
+    stopSound,
+    toggleSounds,
+    isSoundEnabled: !muted,
+    currentVolume: volume
   };
 };
 
