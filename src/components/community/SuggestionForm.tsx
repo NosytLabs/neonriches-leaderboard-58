@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
+import { useNotificationSounds } from '@/hooks/sounds/use-notification-sounds';
 
 const SuggestionForm: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -15,7 +16,7 @@ const SuggestionForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
-  const { playSound } = useNotificationSounds();
+  const { playNotificationSound } = useNotificationSounds();
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,13 +36,13 @@ const SuggestionForm: React.FC = () => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      playSound('success');
+      playNotificationSound('success');
       setStatus('success');
       setTitle('');
       setDescription('');
       setCategory('feature');
     } catch (error: any) {
-      playSound('error');
+      playNotificationSound('error');
       setStatus('error');
       setErrorMessage(error.message || 'Failed to submit suggestion');
     } finally {

@@ -1,6 +1,6 @@
 
 import { useSound } from './use-sound';
-import { SoundOptions } from '@/types/user-types';
+import { SoundOptions, SoundType } from '@/types/sound-types';
 
 export const useNotificationSounds = () => {
   const { playSound } = useSound();
@@ -36,7 +36,20 @@ export const useNotificationSounds = () => {
     }
   };
 
-  return { playNotificationSound };
+  // Add missing methods that components are trying to use
+  const playSound = (type: SoundType, options?: SoundOptions) => {
+    return playSound(type, options);
+  };
+
+  const playClick = () => {
+    playSound('click', { volume: 0.4 });
+  };
+
+  return { 
+    playNotificationSound,
+    playSound,
+    playClick
+  };
 };
 
 export default useNotificationSounds;

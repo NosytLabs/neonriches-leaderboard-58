@@ -14,9 +14,9 @@ export type SoundType =
   | 'fanfare'
   | 'levelUp'
   | 'shame'
+  | 'reward'
   | 'protection'
   | 'sparkle'
-  // Premium sound types
   | 'royalAnnouncement'
   | 'trumpet'
   | 'medallion'
@@ -28,10 +28,11 @@ export type SoundType =
   | 'level_up'
   | 'message'
   | 'rank_up'
-  | 'reward'
   | 'royal'
   | 'trumpets'
-  | 'withdrawal';
+  | 'withdrawal'
+  | 'transfer'
+  | 'unlock';
 
 export interface SoundCategory {
   name: string;
@@ -85,7 +86,7 @@ export interface UseSoundHook {
   isSoundEnabled: boolean;
   setVolume: (volume: number) => void;
   currentVolume?: number;
-  play?: (type: SoundType, options?: SoundOptions) => void;  // For backward compatibility
+  play?: (type: SoundType, options?: SoundOptions) => void;
 }
 
 // Premium sound pack details
@@ -95,17 +96,12 @@ export interface PremiumSoundPackDetails {
   description: string;
   price: number;
   sounds: SoundType[];
-  preview: SoundType;
-  tier: string;
+  preview: string;
+  previewSound?: SoundType;
+  icon: string;
+  features?: string[];
+  tier?: string;
 }
-
-// Audio-specific types
-export type AudioOptions = {
-  volume?: number;
-  loop?: boolean;
-  playbackRate?: number;
-  onEnd?: () => void;
-};
 
 // Notification sound options
 export interface NotificationSoundOptions {

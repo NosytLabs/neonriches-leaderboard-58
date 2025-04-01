@@ -33,10 +33,10 @@ const mockDecrees = [
 export default function RoyalDecrees() {
   const [decrees, setDecrees] = useState(mockDecrees);
   const [expandedDecree, setExpandedDecree] = useState<string | null>(null);
-  const sounds = useNotificationSounds();
+  const { playNotificationSound, playClick } = useNotificationSounds();
   
   const toggleDecree = (id: string) => {
-    sounds.playClick();
+    playClick();
     if (expandedDecree === id) {
       setExpandedDecree(null);
     } else {
@@ -100,7 +100,7 @@ export default function RoyalDecrees() {
           variant="link" 
           size="sm" 
           className="text-royal-gold w-full mt-2"
-          onClick={() => sounds.playClick()}
+          onClick={() => playClick()}
         >
           View All Royal Decrees
         </Button>

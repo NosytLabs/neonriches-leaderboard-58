@@ -1,7 +1,7 @@
 
 import { useState, useCallback } from 'react';
-import { useSound } from '@/hooks/use-sound';
-import { SoundOptions } from '@/types/user-types';
+import { useSound } from '@/hooks/sounds/use-sound';
+import { SoundOptions } from '@/types/sound-types';
 
 export interface FloatingCoinsOptions {
   count?: number;
@@ -122,7 +122,7 @@ const useFloatingCoins = () => {
     }, count * 50 + 2000);
   }, [createCoin, playSound]);
 
-  // Add the createBurst method to fix the errors
+  // Add the createBurst method that's being used in other components
   const createBurst = useCallback((count: number = 5) => {
     triggerCoins({
       count,

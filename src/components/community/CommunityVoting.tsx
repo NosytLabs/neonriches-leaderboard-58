@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
-import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
+import { useNotificationSounds } from '@/hooks/sounds/use-notification-sounds';
 import { motion } from 'framer-motion';
 
 const mockProposals = [
@@ -77,7 +76,7 @@ const CommunityVoting: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("active");
   const [userVotes, setUserVotes] = useState<Record<number, 'up' | 'down' | null>>({});
   const { toast } = useToast();
-  const { playSound } = useNotificationSounds();
+  const { playNotificationSound } = useNotificationSounds();
   
   const handleVote = (proposalId: number, voteType: 'up' | 'down') => {
     if (userVotes[proposalId] === voteType) {
@@ -86,7 +85,7 @@ const CommunityVoting: React.FC = () => {
         [proposalId]: null
       }));
       
-      playSound('click');
+      playNotificationSound('click');
       toast({
         title: "Vote Removed",
         description: "Your vote has been removed from this proposal.",
@@ -97,7 +96,7 @@ const CommunityVoting: React.FC = () => {
         [proposalId]: voteType
       }));
       
-      playSound(voteType === 'up' ? 'success' : 'error');
+      playNotificationSound(voteType === 'up' ? 'success' : 'error');
       toast({
         title: "Vote Recorded",
         description: `You ${voteType === 'up' ? 'supported' : 'opposed'} this royal proposal.`,

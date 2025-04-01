@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useToast } from './use-toast';
 import { useAuth } from './useAuth';
+import { useSound } from './sounds/use-sound';
 
 interface WishingWellHookResult {
   amount: number;
@@ -15,12 +16,7 @@ const useWishingWell = (): WishingWellHookResult => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const { toast } = useToast();
   const { user, updateUserProfile } = useAuth();
-  
-  // Import the sound hook properly
-  const playSound = () => {
-    // Simplified implementation - this would be replaced with actual sound playback
-    console.log('Playing coin drop sound');
-  };
+  const { playSound } = useSound();
 
   const handleSubmit = async (): Promise<void> => {
     if (!user) {
@@ -67,7 +63,7 @@ const useWishingWell = (): WishingWellHookResult => {
           title: 'Wishing Well Success',
           description: `You threw ${amount} coins into the Wishing Well!`,
         });
-        playSound();
+        playSound('coinDrop', { volume: 0.5 });
       } else {
         toast({
           title: 'Wishing Well Error',

@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { SoundType, SoundOptions } from '@/types/user-types';
+import { SoundType, SoundOptions } from '@/types/sound-types';
 
 /**
  * Custom hook for playing sound effects
@@ -89,9 +89,15 @@ export const useSound = () => {
     const clampedVolume = Math.max(0, Math.min(1, newVolume));
     setVolume(clampedVolume);
   }, []);
+
+  // Add a compatibility method for the play function that some components are using
+  const play = useCallback((type: SoundType, options?: SoundOptions) => {
+    playSound(type, options);
+  }, [playSound]);
   
   return {
     playSound,
+    play,
     isMuted: muted,
     toggleMute,
     setMuted,
