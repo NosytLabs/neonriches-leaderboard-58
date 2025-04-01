@@ -5,13 +5,10 @@ import { Button } from '@/components/ui/button';
 import RoyalButton from '@/components/ui/royal-button';
 import { Crown, Trophy, ArrowRight, Coins } from 'lucide-react';
 import { formatCurrency } from '@/utils/formatters';
-import SpotlightSection from '@/components/home/SpotlightSection';
-import useMockLeaderboard from '@/hooks/useMockLeaderboard';
 
 // This component serves as the main landing page
 const Index = () => {
-  const { loading, mockLeaderboardData } = useMockLeaderboard();
-  const topSpenders = mockLeaderboardData.slice(0, 3);
+  const totalMoneyWasted = Math.floor(Math.random() * 1000000) + 500000;
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/90 relative overflow-hidden">
@@ -40,7 +37,7 @@ const Index = () => {
           <div className="mt-4 text-lg text-royal-gold">
             <span className="font-medium">Total Money Wasted: </span>
             <span className="font-bold">
-              {formatCurrency(Math.floor(Math.random() * 1000000) + 500000)}
+              {formatCurrency(totalMoneyWasted)}
             </span>
           </div>
           
@@ -69,11 +66,6 @@ const Index = () => {
             </Link>
           </div>
         </div>
-        
-        {/* Spotlight Section */}
-        {!loading && topSpenders.length > 0 && (
-          <SpotlightSection spotlightUsers={topSpenders} />
-        )}
         
         {/* Feature cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
