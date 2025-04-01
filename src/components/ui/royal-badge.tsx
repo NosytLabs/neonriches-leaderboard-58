@@ -1,10 +1,14 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Badge, BadgeProps } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/badge';
 
-export interface RoyalBadgeProps extends BadgeProps {
-  variant?: 'default' | 'gold' | 'royal' | 'crimson' | 'navy' | 'purple';
+// Define custom variant types
+export type RoyalBadgeVariant = 'default' | 'gold' | 'royal' | 'crimson' | 'navy' | 'purple';
+
+export interface RoyalBadgeProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'variant'> {
+  variant?: RoyalBadgeVariant;
+  className?: string;
 }
 
 const RoyalBadge = React.forwardRef<HTMLDivElement, RoyalBadgeProps>(
@@ -19,9 +23,13 @@ const RoyalBadge = React.forwardRef<HTMLDivElement, RoyalBadgeProps>(
     };
 
     return (
-      <Badge
+      <div
         ref={ref}
-        className={cn(variantClasses[variant], className)}
+        className={cn(
+          "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+          variantClasses[variant],
+          className
+        )}
         {...props}
       />
     );

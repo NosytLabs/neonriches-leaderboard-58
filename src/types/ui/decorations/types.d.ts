@@ -13,6 +13,8 @@ export interface DecorationProps {
   className?: string;
   position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
   children?: ReactNode;
+  animated?: boolean;
+  animate?: boolean;
 }
 
 // Alias for backward compatibility

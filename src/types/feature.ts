@@ -1,5 +1,6 @@
 
-export type Feature = 
+// String identifiers for features
+export type FeatureId = 
   | 'analytics' 
   | 'link-tracking' 
   | 'advanced-profiling' 
@@ -18,8 +19,19 @@ export type Feature =
   | 'marketing-royal'
   | 'marketing_dashboard';
 
+// Full feature interface
+export interface Feature {
+  id: FeatureId;
+  name: string;
+  description: string;
+  tier: 'free' | 'basic' | 'premium' | 'royal';
+  icon: string;
+  category: 'analytics' | 'branding' | 'visibility' | 'engagement';
+  price?: number;
+}
+
 export interface FeatureInfo {
-  id: Feature;
+  id: FeatureId;
   name: string;
   description: string;
   tier: 'free' | 'basic' | 'premium' | 'royal';
@@ -35,10 +47,10 @@ export interface FeatureAccessResponse {
 }
 
 export interface FeaturesState {
-  unlocked: Feature[];
+  unlocked: FeatureId[];
   isLoading: boolean;
   recent: {
-    feature: Feature;
+    feature: FeatureId;
     timestamp: string;
   }[];
 }

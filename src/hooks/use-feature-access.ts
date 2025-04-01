@@ -1,17 +1,17 @@
 
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { Feature, FeatureAccessResponse } from '@/types/feature';
+import { FeatureId, Feature, FeatureAccessResponse } from '@/types/feature';
 
 export interface FeatureAccessHookResult {
   isLoading: boolean;
   unlockFeature: (feature: Feature) => Promise<FeatureAccessResponse>;
   isUnlocking: boolean;
   accessError: string | null;
-  hasAccess: (feature: Feature) => boolean;
+  hasAccess: (featureId: FeatureId) => boolean;
   isUserPro: boolean;
-  canAccessFeature: (feature: Feature) => boolean;
-  purchaseFeatureIndividually: (featureId: Feature) => Promise<{success: boolean, url?: string}>;
+  canAccessFeature: (featureId: FeatureId) => boolean;
+  purchaseFeatureIndividually: (featureId: FeatureId) => Promise<{success: boolean, url?: string}>;
 }
 
 /**
@@ -33,7 +33,7 @@ export const useFeatureAccess = (): FeatureAccessHookResult => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // For testing purposes, we'll "unlock" all features except one
-      if (feature === 'royal-wishing-well') {
+      if (feature.id === 'royal-wishing-well') {
         setAccessError('This feature requires a subscription upgrade.');
         return {
           success: false,
@@ -46,7 +46,7 @@ export const useFeatureAccess = (): FeatureAccessHookResult => {
       return {
         success: true,
         subscriptionId: 'mock-sub-123',
-        redirectUrl: `/features/${feature}`
+        redirectUrl: `/features/${feature.id}`
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -61,9 +61,9 @@ export const useFeatureAccess = (): FeatureAccessHookResult => {
   }, []);
 
   // A function to check if a user has access to a feature
-  const hasAccess = useCallback((feature: Feature): boolean => {
+  const hasAccess = useCallback((featureId: FeatureId): boolean => {
     // For demo, let's say the user has access to these features
-    const availableFeatures: Feature[] = [
+    const availableFeatures: FeatureId[] = [
       'analytics',
       'link-tracking',
       'status-boosts',
@@ -72,18 +72,18 @@ export const useFeatureAccess = (): FeatureAccessHookResult => {
       'marketing-basic'
     ];
     
-    return availableFeatures.includes(feature);
+    return availableFeatures.includes(featureId);
   }, []);
 
-  const canAccessFeature = useCallback((feature: Feature): boolean => {
-    return hasAccess(feature);
+  const canAccessFeature = useCallback((featureId: FeatureId): boolean => {
+    return hasAccess(featureId);
   }, [hasAccess]);
   
   // Mock function to check if user is pro
   const isUserPro = true;
   
   // Mock function to purchase feature individually
-  const purchaseFeatureIndividually = useCallback(async (featureId: Feature): Promise<{success: boolean, url?: string}> => {
+  const purchaseFeatureIndividually = useCallback(async (featureId: FeatureId): Promise<{success: boolean, url?: string}> => {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     
@@ -106,4 +106,4 @@ export const useFeatureAccess = (): FeatureAccessHookResult => {
 };
 
 // Export the Feature type
-export type { Feature };
+export type { FeatureId, Feature };

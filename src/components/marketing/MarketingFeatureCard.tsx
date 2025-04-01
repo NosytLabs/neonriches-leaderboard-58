@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { LucideIcon } from 'lucide-react';
 import { useSound } from '@/hooks/use-sound';
-import { useFeatureAccess, Feature } from '@/hooks/use-feature-access';
+import { useFeatureAccess, Feature, FeatureId } from '@/hooks/use-feature-access';
 
 interface MarketingFeatureCardProps {
   feature: Feature;
@@ -85,12 +85,17 @@ const MarketingFeatureCard: React.FC<MarketingFeatureCardProps> = ({
       </CardHeader>
       <CardContent className="pt-6">
         <div className="space-y-2">
-          {feature.tier.map((tier, i) => (
+          {Array.isArray(feature.tier) ? feature.tier.map((tier, i) => (
             <div key={i} className="flex items-center text-sm">
               <div className="w-2 h-2 rounded-full bg-indigo-400 mr-2" />
               <span>{tier}</span>
             </div>
-          ))}
+          )) : (
+            <div className="flex items-center text-sm">
+              <div className="w-2 h-2 rounded-full bg-indigo-400 mr-2" />
+              <span>{feature.tier}</span>
+            </div>
+          )}
         </div>
       </CardContent>
       <CardFooter>
@@ -104,7 +109,7 @@ const MarketingFeatureCard: React.FC<MarketingFeatureCardProps> = ({
             disabled={purchasing}
             className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
           >
-            {purchasing ? "Processing..." : `Unlock for $${feature.price}`}
+            {purchasing ? "Processing..." : `Unlock for $${feature.price || 9.99}`}
           </Button>
         )}
       </CardFooter>
