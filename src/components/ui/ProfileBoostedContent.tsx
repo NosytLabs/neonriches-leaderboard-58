@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { UserProfile } from '@/types/user-consolidated';
 import { RocketIcon, CrownIcon, StarIcon } from 'lucide-react';

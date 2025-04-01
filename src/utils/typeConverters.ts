@@ -2,6 +2,24 @@
 import { TeamColor } from '@/types/team';
 
 /**
+ * Convert any value to TeamColor safely
+ * @param team - Team value to convert
+ * @returns Valid TeamColor
+ */
+export const toTeamColor = (team: TeamColor | string | null | undefined): TeamColor => {
+  if (!team) return 'none';
+  
+  const validColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze'];
+  const normalizedTeam = String(team).toLowerCase() as TeamColor;
+  
+  if (validColors.includes(normalizedTeam)) {
+    return normalizedTeam;
+  }
+  
+  return 'none';
+};
+
+/**
  * Convert any value to string safely
  * @param value - Value to convert to string
  * @returns String representation of the value
@@ -23,62 +41,21 @@ export const safeToString = (value: any): string => {
 };
 
 /**
- * Helper function to convert a string to a valid TeamColor
- * @param team - Team string to convert
- * @returns Valid TeamColor
- */
-export const toTeamColor = (team: string | TeamColor | null | undefined): TeamColor => {
-  if (!team) return 'none';
-  
-  // Handle case insensitivity
-  const normalizedTeam = typeof team === 'string' ? team.toLowerCase() : team;
-  
-  switch (normalizedTeam) {
-    case 'red':
-    case 'blue':
-    case 'green':
-    case 'gold':
-    case 'purple':
-    case 'none':
-    case 'neutral':
-    case 'silver':
-    case 'bronze':
-      return normalizedTeam as TeamColor;
-    default:
-      return 'none';
-  }
-};
-
-/**
- * Helper function to ensure IDs are always strings
- * @param id - ID to convert to string
+ * Ensures a value is a valid string ID
+ * @param id - Value to convert to a string ID
  * @returns String ID
  */
-export const ensureStringId = (id: string | number | null | undefined): string => {
-  if (id === null || id === undefined) {
+export const ensureStringId = (id: any): string => {
+  if (!id) {
     return '';
   }
   return String(id);
 };
 
 /**
- * Helper alias for toTeamColor
- * @param team - Team value to convert
- * @returns Valid TeamColor
+ * Safely convert any value to TeamColor and provide tailwind class
+ * Similar to getTeamColor but doesn't require importing teamUtils
  */
-export const safeTeamColor = toTeamColor;
-
-/**
- * Ensure a value is a number
- * @param value - Value to convert to number
- * @param defaultValue - Default value if conversion fails
- * @returns Number value
- */
-export const ensureNumber = (value: any, defaultValue = 0): number => {
-  if (value === null || value === undefined) {
-    return defaultValue;
-  }
-  
-  const num = Number(value);
-  return isNaN(num) ? defaultValue : num;
+export const safeTeamColor = (team: any): TeamColor => {
+  return toTeamColor(team);
 };

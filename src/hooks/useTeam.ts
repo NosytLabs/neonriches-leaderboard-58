@@ -11,6 +11,9 @@ const useTeam = () => {
   
   const currentTeam = user?.team || 'none';
   
+  // Define mock team data for the Teams page
+  const allTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'neutral', 'silver', 'bronze', 'none'];
+  
   const changeTeam = async (newTeam: TeamColor): Promise<boolean> => {
     if (!user) {
       setError('You must be logged in to change teams');
@@ -57,7 +60,8 @@ const useTeam = () => {
     getTeamColor,
     getTeamName,
     getTeamMotto,
-    getTeamBenefits
+    getTeamBenefits,
+    allTeams
   };
 };
 

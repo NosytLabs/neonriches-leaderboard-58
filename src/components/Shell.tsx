@@ -5,10 +5,12 @@ interface ShellProps {
   children: ReactNode;
 }
 
-export const Shell: React.FC<ShellProps> = ({ children }) => {
+const Shell: React.FC<ShellProps> = ({ children }) => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {children}
     </div>
   );
 };
+
+export default Shell;

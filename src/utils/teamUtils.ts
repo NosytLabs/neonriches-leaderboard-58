@@ -43,5 +43,21 @@ export const getTeamBorderColor = (team: TeamColor | string | null | undefined):
   return colorMap[safeTeam] || colorMap.none;
 };
 
+export const getTeamTailwindBgColor = (team: TeamColor | string | null | undefined): string => {
+  const safeTeam = toTeamColor(team);
+  const colorMap: Record<TeamColor, string> = {
+    red: 'border-red-500',
+    blue: 'border-blue-500',
+    green: 'border-green-500',
+    gold: 'border-yellow-400',
+    purple: 'border-purple-500',
+    none: 'border-gray-400',
+    neutral: 'border-gray-400',
+    silver: 'border-slate-400',
+    bronze: 'border-amber-600'
+  };
+  return colorMap[safeTeam] || colorMap.none;
+};
+
 // Alias for toTeamColor to maintain backward compatibility
 export const asTeamColor = toTeamColor;
