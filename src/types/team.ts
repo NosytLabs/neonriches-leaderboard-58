@@ -1,4 +1,11 @@
 
+/**
+ * Unified team types to ensure consistency across the application
+ */
+
+/**
+ * TeamColor for the application - the primary team type used throughout the app
+ */
 export type TeamColor = 
   | 'red' 
   | 'blue' 
@@ -10,83 +17,19 @@ export type TeamColor =
   | 'silver'
   | 'bronze';
 
-export type TeamStyleVariant = 
-  | 'default'
-  | 'minimal'
-  | 'bordered'
-  | 'pill'
-  | 'outline';
-
-export interface TeamMember {
-  id: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  joinedDate: string;
-  rank?: number;
-  contribution?: number;
-  role?: 'leader' | 'officer' | 'member' | 'recruit';
-}
-
-export interface TeamStats {
-  totalMembers: number;
-  totalSpent: number;
-  weeklySpent: number;
-  globalRank: number;
-  winStreak: number;
-  wins: number;
-  losses: number;
-}
-
-export interface TeamTheme {
-  primary: string;
-  secondary: string;
-  accent: string;
-  text: string;
-  border: string;
-  background: string;
-  backgroundSecondary: string;
-  hoverBg: string;
-  activeBg: string;
-}
-
+/**
+ * Team interface representing a team entity
+ */
 export interface Team {
-  id: TeamColor;
+  id: string;
   name: string;
-  description: string;
-  shortDescription: string;
-  color: string;
+  color: TeamColor;
   members: number;
-  totalSpent: number;
-  rank: number;
-  icon: string;
-  banner: string;
-  motto: string;
-  stats: TeamStats;
-  theme: TeamTheme;
-}
-
-// Add the TeamData interface that's required by components
-export interface TeamData {
-  id: TeamColor;
-  name: string;
-  description: string;
-  motto: string;
-  color: string;
-  members: number;
-  historicalNote?: string;
-  absurdStat?: string;
-  benefits?: string[];
-  securityGuarantee?: string;
-  totalContribution?: number;
+  leader?: string;
+  totalSpent?: number;
   rank?: number;
-  logo?: string;
-  bannerImage?: string;
-  leaderUsername?: string;
-  emblemUrl?: string;  // Added emblemUrl property
-  nftJoke?: string;    // Added nftJoke property
-  cryptoRoast?: string; // Added cryptoRoast property
+  description?: string;
 }
 
-// Add TeamType as an alias for TeamColor for backwards compatibility
+// Backwards compatibility exports
 export type TeamType = TeamColor;

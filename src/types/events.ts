@@ -1,3 +1,4 @@
+
 export type EventType = 
   | 'standard'
   | 'featured'
@@ -117,8 +118,8 @@ export interface EventLeaderboard {
   lastUpdated: string;
 }
 
-// Update EventDetails to make it compatible with Event
-export interface EventDetails extends Omit<Event, 'rewards'> {
+// Fix EventDetails to make it compatible with Event
+export interface EventDetails extends Omit<Event, 'rewards' | 'prizes'> {
   rules: string[];
   prizes: Array<{
     rank: string;

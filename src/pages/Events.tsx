@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Shell } from '@/components/ui/Shell';
 import { PageHeader } from '@/components/ui/page-header';
@@ -9,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { events, eventDetails } from '@/components/events/data';
 import { useToast } from '@/hooks/use-toast';
+import { EventDetails } from '@/types/events';
 
 export default function EventsPage() {
   const allEvents = events;
@@ -57,6 +59,13 @@ export default function EventsPage() {
       variant: "success"
     });
   };
+
+  // Ensure all events have the required properties for EventDetails
+  const eventsWithDetails: EventDetails[] = allEvents.map(event => ({
+    ...event,
+    rules: event.rules || [],
+    prizes: event.prizes || []
+  }));
   
   return (
     <Shell>
@@ -75,10 +84,7 @@ export default function EventsPage() {
           </div>
           
           <div className="lg:col-span-1 space-y-8">
-            <UpcomingEvents events={allEvents.map(event => ({
-              ...event,
-              rules: event.rules || [] // Ensure rules property exists
-            }))} maxEvents={4} />
+            <UpcomingEvents events={eventsWithDetails} maxEvents={4} />
             
             <Card className="border-royal-gold/20 glass-morphism">
               <CardHeader>

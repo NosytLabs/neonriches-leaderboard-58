@@ -1,19 +1,26 @@
 
-import { toast, ExtendedToastProps } from '@/hooks/use-toast';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/components/ui/use-toast';
+import { ExtendedToastProps } from '@/types/toast-extended';
 
 /**
- * Create a toast notification with standard styling
+ * Show a toast notification using the standardized format
  */
-export const createToast = (props: ExtendedToastProps) => {
-  return toast(props);
+export const showToast = (props: ExtendedToastProps) => {
+  // Convert ReactNode title to string if needed
+  const sanitizedProps = {
+    ...props,
+    // Ensure title is string compatible
+    title: props.title ? (typeof props.title === 'string' ? props.title : String(props.title)) : undefined
+  };
+  
+  return toast(sanitizedProps as any);
 };
 
 /**
- * Create a success toast
+ * Show a success toast
  */
-export const createSuccessToast = (title: string, description?: string) => {
-  return toast({
+export const showSuccessToast = (title: string, description?: string) => {
+  return showToast({
     title,
     description,
     variant: 'success'
@@ -21,10 +28,10 @@ export const createSuccessToast = (title: string, description?: string) => {
 };
 
 /**
- * Create an error toast
+ * Show an error toast
  */
-export const createErrorToast = (title: string, description?: string) => {
-  return toast({
+export const showErrorToast = (title: string, description?: string) => {
+  return showToast({
     title,
     description,
     variant: 'destructive'
@@ -32,43 +39,12 @@ export const createErrorToast = (title: string, description?: string) => {
 };
 
 /**
- * Create a warning toast
+ * Show a royal toast for premium features
  */
-export const createWarningToast = (title: string, description?: string) => {
-  return toast({
-    title,
-    description,
-    variant: 'outline'
-  });
-};
-
-/**
- * Create an info toast
- */
-export const createInfoToast = (title: string, description?: string) => {
-  return toast({
-    title,
-    description,
-    variant: 'secondary'
-  });
-};
-
-/**
- * Create a royal toast
- */
-export const createRoyalToast = (title: string, description?: string) => {
-  return toast({
+export const showRoyalToast = (title: string, description?: string) => {
+  return showToast({
     title,
     description,
     variant: 'royal'
   });
-};
-
-export default {
-  createToast,
-  createSuccessToast,
-  createErrorToast,
-  createWarningToast,
-  createInfoToast,
-  createRoyalToast
 };
