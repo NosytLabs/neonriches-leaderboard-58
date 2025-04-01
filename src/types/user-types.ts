@@ -64,3 +64,6 @@ export interface UserSettings {
   publicProfile?: boolean;
   shameAlerts?: boolean;
 }
+
+// Explicitly export TeamColor
+export { TeamColor };

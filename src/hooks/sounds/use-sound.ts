@@ -23,6 +23,7 @@ export const useSound = (): UseSoundHook => {
     mockery: '/sounds/mockery.mp3',
     fanfare: '/sounds/fanfare.mp3',
     levelUp: '/sounds/level-up.mp3',
+    level_up: '/sounds/level-up.mp3',
     shame: '/sounds/shame.mp3',
     reward: '/sounds/reward.mp3',
     boost: '/sounds/boost.mp3',
@@ -39,7 +40,15 @@ export const useSound = (): UseSoundHook => {
     rank_up: '/sounds/rank-up.mp3',
     trumpet: '/sounds/trumpet.mp3',
     medallion: '/sounds/medallion.mp3',
-    seal: '/sounds/seal.mp3'
+    seal: '/sounds/seal.mp3',
+    swordClash: '/sounds/sword-clash.mp3',
+    noblesLaugh: '/sounds/nobles-laugh.mp3',
+    parchmentUnfurl: '/sounds/parchment-unfurl.mp3',
+    pageChange: '/sounds/page-change.mp3',
+    wish: '/sounds/wish.mp3',
+    inkScribble: '/sounds/ink-scribble.mp3',
+    hover: '/sounds/hover.mp3',
+    advertisement: '/sounds/advertisement.mp3'
   };
   
   /**
@@ -98,8 +107,8 @@ export const useSound = (): UseSoundHook => {
     toggleSounds,
     isSoundEnabled: !soundConfig.muted && soundConfig.enabled,
     currentVolume: volume,
-    toggleMuted, // Now properly exported from useSoundsConfig
-    setVolume // Now properly exported from useSoundsConfig
+    toggleMuted, // Properly exported from useSoundsConfig
+    setVolume // Properly exported from useSoundsConfig
   };
 };
 

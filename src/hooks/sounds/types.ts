@@ -67,8 +67,8 @@ export interface UseSoundHook {
   resumeSound?: (type?: SoundType) => void;
   isPlaying?: (type: SoundType) => boolean;
   isSoundEnabled: boolean;
-  toggleSounds: () => void;
-  toggleMuted: () => void; // Fixed return type
+  toggleSounds: () => boolean;
+  toggleMuted: () => boolean;
   setVolume: (volume: number) => void;
   currentVolume: number;
 }

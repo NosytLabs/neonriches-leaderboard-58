@@ -10,7 +10,7 @@ interface SoundProviderProps {
   children: ReactNode;
 }
 
-export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
+const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
   const soundFunctions = useSound();
   
   return (

@@ -1,30 +1,43 @@
 
-// TeamColor is the primary type for team identifiers
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze';
+export type TeamColor = 
+  | 'red' 
+  | 'blue' 
+  | 'green' 
+  | 'gold' 
+  | 'purple' 
+  | 'none' 
+  | 'neutral'
+  | 'silver'
+  | 'bronze';
 
-// TeamType is an alias for TeamColor for backward compatibility
-export type TeamType = TeamColor;
+export type TeamStyleVariant = 
+  | 'default'
+  | 'minimal'
+  | 'bordered'
+  | 'pill'
+  | 'outline';
 
-// Team data structure
-export interface TeamData {
+export interface TeamMember {
   id: string;
-  name: string;
-  color: string;
-  description: string;
-  members: number;
-  emblemUrl: string;
-  motto: string;
-  benefits: string[]; // Change this to string[] to match teamData usage
-  securityGuarantee: string;
-  historicalNote: string;
-  absurdStat: string;
-  nftJoke: string;
-  cryptoRoast: string;
-  totalContribution?: number;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  joinedDate: string;
   rank?: number;
+  contribution?: number;
+  role?: 'leader' | 'officer' | 'member' | 'recruit';
 }
 
-// Team theme styling
+export interface TeamStats {
+  totalMembers: number;
+  totalSpent: number;
+  weeklySpent: number;
+  globalRank: number;
+  winStreak: number;
+  wins: number;
+  losses: number;
+}
+
 export interface TeamTheme {
   primary: string;
   secondary: string;
@@ -37,36 +50,18 @@ export interface TeamTheme {
   activeBg: string;
 }
 
-// Team is an alias for TeamColor for backward compatibility
-export type Team = TeamColor;
-
-export interface TeamMember {
-  userId: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  joinDate: string;
-  contribution: number;
+export interface Team {
+  id: TeamColor;
+  name: string;
+  description: string;
+  shortDescription: string;
+  color: string;
+  members: number;
+  totalSpent: number;
   rank: number;
-  role?: string;
-  isActive: boolean;
-  tier?: string;
-}
-
-export interface TeamLeaderboardEntry {
-  teamId: string;
-  teamName: string;
-  teamColor: TeamColor;
-  memberCount: number;
-  totalContribution: number;
-  rank: number;
-  previousRank?: number;
-  logo?: string;
-}
-
-export interface TeamSelectionProps {
-  selectedTeam: TeamColor | null;
-  onTeamSelect: (team: TeamColor) => void;
-  teams: TeamData[];
-  user?: any;
+  icon: string;
+  banner: string;
+  motto: string;
+  stats: TeamStats;
+  theme: TeamTheme;
 }

@@ -3,8 +3,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/auth';
 import { useToast } from '@/hooks/use-toast';
 import { SoundType } from '@/hooks/sounds/types';
-import { PremiumSoundPackDetails } from '@/types/sound-types';
 import { premiumSoundPacks } from '@/hooks/sounds/premium-sound-assets';
+import { PremiumSoundPackDetails } from '@/hooks/sounds/types';
 
 // Helper function to adapt premium sound packs to the required interface
 const adaptSoundPacks = (): PremiumSoundPackDetails[] => {
@@ -45,7 +45,7 @@ export const usePremiumSounds = () => {
             isPurchased: userPacks.includes(`sound_pack_${pack.id}`)
           }));
           
-          setSoundPacks(updatedPacks);
+          setSoundPacks(updatedPacks as PremiumSoundPackDetails[]);
         }
       } catch (error) {
         console.error('Error fetching premium sound packs:', error);

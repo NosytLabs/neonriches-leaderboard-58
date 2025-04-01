@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect, useReducer } from 'react';
 import { AuthContext } from '../index';
 import { authReducer } from './authReducer';
-import { AuthProviderProps, AuthState, UserProfile } from './types';
+import { AuthProviderProps, AuthState } from './types';
 import { useNavigate } from 'react-router-dom';
 import { 
   loginWithEmail, 
@@ -10,7 +11,8 @@ import {
   updateUserData,
   fetchUserProfile 
 } from './authService';
-import { TeamColor } from '@/types/user-types';
+import { UserProfile } from '@/types/user';
+import { TeamColor } from '@/types/team';
 
 const initialState: AuthState = {
   user: null,

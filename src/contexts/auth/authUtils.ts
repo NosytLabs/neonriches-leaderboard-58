@@ -1,4 +1,3 @@
-
 import { UserProfile } from '@/types/user';
 import { UserCosmetics } from '@/types/cosmetics';
 import { ProfileBoost } from '@/types/user';
@@ -61,7 +60,12 @@ export const getDefaultUser = (email: string, username: string): UserProfile => 
       soundEffects: true,
       showBadges: true,
       rankChangeAlerts: false,
-      allowMessages: true // Optional property
+      allowMessages: true,
+      newFollowerAlerts: false,
+      teamNotifications: false,
+      language: 'en',
+      publicProfile: true,
+      shameAlerts: false
     },
     profileBoosts: []
   };

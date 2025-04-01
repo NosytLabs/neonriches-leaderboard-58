@@ -28,6 +28,12 @@ export interface SocialLink {
   title: string; // Make title required to match usage in components
   icon?: string;
   clicks?: number;
+  username?: string;
+  display?: string;
+  verified?: boolean;
+  primary?: boolean;
+  label?: string;
+  type?: string;
 }
 
 export type TeamType = TeamColor;
@@ -84,6 +90,10 @@ export interface UserSettings {
   rankChangeAlerts?: boolean;
   newFollowerAlerts?: boolean;
   teamNotifications?: boolean;
+  language?: string;
+  allowMessages?: boolean;
+  publicProfile?: boolean;
+  shameAlerts?: boolean;
 }
 
 export interface UserProfile {
@@ -102,6 +112,7 @@ export interface UserProfile {
   rank?: number;
   totalSpent: number; // Make this required to match
   amountSpent: number; // Make this required to match
+  spentAmount?: number; // For backward compatibility
   walletBalance?: number;
   previousRank?: number;
   spendStreak?: number;
@@ -111,6 +122,7 @@ export interface UserProfile {
   certificateNFT?: {
     mintAddress: string; // Make mintAddress required
     mintDate: string;    // Make mintDate required
+    mintedAt?: string;   // Add for compatibility
   };
   gender?: string;
   profileViews?: number;
@@ -123,9 +135,18 @@ export interface UserProfile {
   role?: string;
   email?: string;
   boostCount?: number;
-  socialLinks?: SocialLink[];
+  socialLinks?: SocialLink[] | Record<string, string>;
   badges?: string[]; // Add badges property
   achievements?: string[]; // Add achievements property
+  
+  // Compatibility with old code
+  joinDate?: string;
+  joinedAt?: string;
+  createdAt?: string;
+  avatarUrl?: string;
+  isAdmin?: boolean;
+  isProtected?: boolean;
+  isFounder?: boolean;
 }
 
 // Adding User type alias to fix import errors
