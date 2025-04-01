@@ -4,7 +4,7 @@ import { Egg, Crown, Smile, Lock, Skull, VolumeX, Glasses, Cloud, Shield, Target
 import React from 'react';
 
 // Icon component for tomatoes
-export const TomatoIcon: React.FC<{ className?: string }> = ({ className }) => (
+const TomatoIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg
     className={className}
     width="24"
