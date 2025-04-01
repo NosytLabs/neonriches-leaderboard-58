@@ -1,5 +1,4 @@
 
-// This component is a consistent casing version of Shell.tsx
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';

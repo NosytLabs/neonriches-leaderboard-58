@@ -12,8 +12,11 @@ import { AuthProvider } from '@/contexts/auth';
 import { HelmetProvider } from 'react-helmet-async';
 
 const App: React.FC = () => {
+  // Create a context object for react-helmet-async
+  const helmetContext = {};
+
   return (
-    <HelmetProvider>
+    <HelmetProvider context={helmetContext}>
       <AuthProvider>
         <SoundProvider>
           <Routes>

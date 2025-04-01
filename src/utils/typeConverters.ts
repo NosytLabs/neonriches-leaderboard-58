@@ -1,17 +1,5 @@
 
 /**
- * Safely converts a value to a string
- * @param value - The value to convert to a string
- * @returns The string representation of the value
- */
-export const safeToString = (value: any): string => {
-  if (value === null || value === undefined) {
-    return '';
-  }
-  return String(value);
-};
-
-/**
  * Ensures that an ID is a string
  * @param id - The ID to ensure is a string
  * @returns The ID as a string
