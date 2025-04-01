@@ -8,8 +8,8 @@ interface TeamBadgeProps {
   team: TeamColor | string | null;
   size?: 'sm' | 'md' | 'lg';
   showLabel?: boolean;
+  showName?: boolean; // This prop is necessary
   className?: string;
-  showName?: boolean; // Added this prop to fix errors in consuming components
 }
 
 /**
@@ -19,8 +19,8 @@ const TeamBadge: React.FC<TeamBadgeProps> = ({
   team, 
   size = 'md', 
   showLabel = true,
-  className = '',
-  showName = true // Default to true for backwards compatibility
+  showName = true, // Default to true for backwards compatibility
+  className = ''
 }) => {
   if (!team || team === 'none' || team === 'neutral') {
     return null;

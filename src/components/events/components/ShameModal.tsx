@@ -2,13 +2,13 @@
 import React from 'react';
 import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { MockeryAction, TeamColor } from '@/types/mockery';
+import { MockeryAction, TeamColor } from '@/types/mockery-types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Crown, ShieldCheck, Coins } from 'lucide-react';
 import { 
   getMockeryName, 
   getMockeryDescription,
-  getShameActionPrice,
+  getMockeryActionPrice,
   getDiscountedShamePrice 
 } from '@/utils/mockeryUtils';
 import { getInitials } from '@/utils/stringUtils';
@@ -37,7 +37,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
   onCancel,
   hasDiscount = false
 }) => {
-  const regularPrice = getShameActionPrice(shameType);
+  const regularPrice = getMockeryActionPrice(shameType);
   const finalPrice = hasDiscount ? getDiscountedShamePrice(shameType, targetUser.tier) : regularPrice;
   
   return (

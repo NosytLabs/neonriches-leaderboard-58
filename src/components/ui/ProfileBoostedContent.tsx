@@ -1,44 +1,48 @@
 
 import React from 'react';
-import { UserProfile } from '@/types/user';
-import useProfileBoost from '@/hooks/use-profile-boost';
+import { cn } from '@/lib/utils';
+import { UserProfile } from '@/types/user-consolidated';
+import { ensureStringId } from '@/utils/typeConverters';
 
 interface ProfileBoostedContentProps {
-  user?: UserProfile;
-  children: React.ReactNode;
+  user: UserProfile;
+  type?: 'text' | 'profile' | 'content';
   className?: string;
-  type?: string;
+  children: React.ReactNode;
 }
 
-const ProfileBoostedContent: React.FC<ProfileBoostedContentProps> = ({ 
-  user, 
-  children,
-  className = '',
-  type = 'default'
-}) => {
-  const boostManager = useProfileBoost(user);
+/**
+ * Wraps content and applies boost effects based on user profile boosts
+ */
+const ProfileBoostedContent = ({
+  user,
+  type = 'content',
+  className,
+  children
+}: ProfileBoostedContentProps) => {
+  // Convert user to the proper type to avoid type errors
+  const userId = ensureStringId(user.id);
   
-  // If no user or no active boosts, just render children normally
-  if (!user || !boostManager.activeBoosts.length) {
-    return <div className={className}>{children}</div>;
-  }
+  // Get active boosts. In a real app, would determine if boosts are active,
+  // here we'll just assume all boosts in the array are active.
+  const activeBoosts = user.profileBoosts || [];
   
-  const getBoostClasses = () => {
-    let classes = '';
-    
-    // Add classes based on active boosts
-    boostManager.activeBoosts.forEach(boost => {
-      const boostEffect = boostManager.getBoostEffect(boost.effectId?.toString() || '');
-      if (boostEffect?.cssClass) {
-        classes += ` ${boostEffect.cssClass}`;
-      }
-    });
-    
-    return classes.trim();
-  };
+  // Extract CSS classes from boosts
+  const boostClasses = activeBoosts
+    .filter(boost => boost.isActive)
+    .map(boost => boost.cssClass || '')
+    .filter(Boolean);
+  
+  // Combine all classes
+  const classNames = cn(
+    className,
+    ...boostClasses,
+    type === 'profile' && 'profile-boosted',
+    type === 'text' && 'text-boosted',
+  );
   
   return (
-    <div className={`${getBoostClasses()} ${className}`}>
+    <div className={classNames} data-user-id={userId}>
       {children}
     </div>
   );

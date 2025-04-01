@@ -1,14 +1,19 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { AlertCircle, ShieldAlert, Crown, Clock, Filter } from 'lucide-react';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
 
-// Import properly from shameUtils
-import { hasWeeklyDiscount } from '@/utils/shameUtils';
-import { getDiscountedShamePrice } from '@/utils/shameUtils';
-import { getMockeryName, getMockeryDescription, getMockeryActionIconColor } from '@/utils/mockeryUtils';
+// Import properly from mockeryUtils
+import { hasWeeklyDiscount, getDiscountedShamePrice } from '@/utils/shameUtils';
+import { 
+  getMockeryName, 
+  getMockeryDescription, 
+  getMockeryActionIconColor,
+  getMockeryActionPrice
+} from '@/utils/mockeryUtils';
 
 interface MockeryEffectsShowcaseProps {
   onSelectMockery: (action: MockeryAction) => void;
@@ -93,7 +98,8 @@ interface MockeryConfirmationModalProps {
 }
 
 const MockeryConfirmationModal: React.FC<MockeryConfirmationModalProps> = ({ action, hasDiscount, onConfirm, onCancel }) => {
-  const discountedPrice = hasDiscount ? getDiscountedShamePrice(action) : null;
+  const regularPrice = getMockeryActionPrice(action);
+  const discountedPrice = hasDiscount ? getDiscountedShamePrice(action, 'basic') : null;
   
   return (
     <div className="glass-morphism border-white/10 p-6 rounded-lg">
@@ -108,11 +114,11 @@ const MockeryConfirmationModal: React.FC<MockeryConfirmationModalProps> = ({ act
         
         {discountedPrice !== null ? (
           <div className="flex items-center">
-            <span className="text-sm text-white/60 line-through mr-2">$10</span>
+            <span className="text-sm text-white/60 line-through mr-2">${regularPrice}</span>
             <span className="text-lg font-semibold text-emerald-400">${discountedPrice.toFixed(2)}</span>
           </div>
         ) : (
-          <span className="text-lg font-semibold">$10</span>
+          <span className="text-lg font-semibold">${regularPrice}</span>
         )}
       </div>
       

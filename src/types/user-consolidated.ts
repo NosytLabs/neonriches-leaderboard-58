@@ -1,5 +1,5 @@
 
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
 
 /**
  * User tier types for the application
@@ -58,11 +58,11 @@ export interface UserSettings {
   showRank: boolean;
   darkMode: boolean;
   soundEffects: boolean;
+  showBadges: boolean;
   newFollowerAlerts?: boolean;
   teamNotifications?: boolean;
   showTeam: boolean;
   showSpending: boolean;
-  showBadges: boolean;
   showEmailOnProfile?: boolean;
   rankChangeAlerts?: boolean;
   language?: string;
@@ -125,12 +125,12 @@ export interface UserProfile {
   email?: string;
   profileImage?: string;
   bio?: string;
-  joinedDate?: string;
+  joinedDate: string;  // Made this required to match User type
   joinDate?: string;
   joinedAt?: string;
   createdAt?: string;
   totalSpent: number;
-  amountSpent?: number;  // Legacy field - use totalSpent instead
+  amountSpent: number;  // Made this required to match User type
   spentAmount?: number;  // Legacy field - use totalSpent instead
   walletBalance?: number;
   rank?: number;
@@ -138,6 +138,7 @@ export interface UserProfile {
   tier: UserTier | string;
   team?: TeamColor | string | null;
   isVerified?: boolean;
+  isFollowing?: boolean;
   isFounder?: boolean;
   isVIP?: boolean;
   isProtected?: boolean;
@@ -162,7 +163,7 @@ export interface UserProfile {
   isOnline?: boolean;
   isPro?: boolean;
   teamRank?: number;
-  isFollowing?: boolean;
+  boostCount?: number;
   purchasedFeatures?: string[];
   certificateNFT?: {
     id?: string;

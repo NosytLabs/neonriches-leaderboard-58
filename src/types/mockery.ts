@@ -1,76 +1,46 @@
 
-export type MockeryAction = 
-  | 'taunt'
-  | 'shame'
-  | 'jester'
-  | 'mock'
-  | 'challenge'
-  | 'joust'
-  | 'duel'
-  | 'tomatoes'
-  | 'eggs'
-  | 'crown'
-  | 'stocks'
-  | 'putridEggs'
-  | 'silence'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'protection';
+import { TeamColor, MockeryAction, MockeryTier } from './mockery-types';
 
-export type MockeryTier = 
-  | 'common' 
-  | 'uncommon' 
-  | 'rare' 
-  | 'epic' 
-  | 'legendary'
-  | 'royal'
-  | 'basic'
-  | 'premium'
-  | 'silver'
-  | 'bronze';
+export type { TeamColor, MockeryAction, MockeryTier };
 
-// Export TeamColor properly
-export type TeamColor = 
-  | 'red' 
-  | 'blue' 
-  | 'green' 
-  | 'gold' 
-  | 'purple' 
-  | 'none' 
-  | 'neutral'
-  | 'silver'
-  | 'bronze';
-
-export interface MockeryItem {
+/**
+ * Mockery target types
+ */
+export interface MockeryTarget {
   id: string;
-  type: MockeryAction;
-  senderId: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  rank?: number;
+  tier?: string;
+}
+
+/**
+ * Mockery event interface
+ */
+export interface MockeryEvent {
+  id: string;
+  action: MockeryAction;
   targetId: string;
-  message: string;
-  createdAt: string;
-  isPublic: boolean;
-  cost: number;
-  team?: TeamColor;
-  reactions?: number;
+  fromId: string;
+  timestamp: string;
+  isAnonymous: boolean;
+  message?: string;
+  duration?: number;
 }
 
-export interface MockeryResponse {
+/**
+ * Available mockery effects
+ */
+export interface MockeryEffect {
   id: string;
-  mockeryId: string;
-  userId: string;
-  content: string;
-  createdAt: string;
-  isPublic: boolean;
-}
-
-export interface MockeryStats {
-  sentCount: number;
-  receivedCount: number;
-  responseRate: number;
-  favoriteType: MockeryAction;
-  topTarget?: {
-    userId: string;
-    username: string;
-    count: number;
-  };
+  name: string;
+  action: MockeryAction;
+  description: string;
+  price: number;
+  tier: string;
+  requiredRank?: number;
+  duration?: number;
+  icon?: string;
+  cssClass?: string;
 }

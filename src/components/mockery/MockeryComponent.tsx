@@ -4,10 +4,16 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Crown, Shield, AlertTriangle } from 'lucide-react';
-import { getMockeryName, getMockeryDescription, getMockeryTier, getMockeryCost, getMockeryTierColorClass, getMockeryActionIcon } from '@/utils/mockeryUtils';
-import { MockeryAction } from '@/types/mockery';
+import { 
+  getMockeryName, 
+  getMockeryDescription, 
+  getMockeryActionPrice,
+  getMockeryTier,
+  getMockeryTierColorClass,
+  getMockeryActionIcon
+} from '@/utils/mockeryUtils';
+import { MockeryAction } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
-import MockeryIconRenderer from '@/components/mockery/components/MockeryIconRenderer';
 
 const MockeryComponent = () => {
   const { toast } = useToast();
@@ -44,8 +50,9 @@ const MockeryComponent = () => {
             {mockeryActions.map((action) => {
               const name = getMockeryName(action);
               const tier = getMockeryTier(action);
-              const price = getMockeryCost(action);
+              const price = getMockeryActionPrice(action);
               const tierColorClass = getMockeryTierColorClass(tier);
+              const ActionIcon = getMockeryActionIcon(action);
               
               return (
                 <div 
@@ -54,7 +61,7 @@ const MockeryComponent = () => {
                   onClick={() => handleMockery(action)}
                 >
                   <div className="flex items-center mb-2">
-                    <MockeryIconRenderer action={action} size="sm" className="mr-2" />
+                    <ActionIcon className="h-5 w-5 mr-2" />
                     <span className="font-medium text-sm">{name}</span>
                   </div>
                   <div className="flex justify-between items-center">
