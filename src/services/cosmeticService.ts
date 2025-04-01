@@ -6,7 +6,7 @@ export const getCosmeticById = (id: string): CosmeticItem => {
   return {
     id,
     name: `Cosmetic ${id}`,
-    category: 'borders', // Updated to match allowed CosmeticCategory values
+    category: 'border', // Updated to match allowed CosmeticCategory values
     type: 'profile',
     rarity: 'rare',
     description: 'A beautiful cosmetic item',
@@ -14,7 +14,8 @@ export const getCosmeticById = (id: string): CosmeticItem => {
     imageSrc: '/assets/cosmetics/borders/rare.png',
     cssClass: 'border-royal-gold',
     cost: 50,
-    price: 50 // Required field now
+    price: 50, // Required field now
+    enabled: true // Add required field
   };
 };
 
@@ -25,7 +26,7 @@ export const awardRandomCosmetic = (
 ): { cosmeticItem: CosmeticItem, rarity: CosmeticRarity } => {
   // Mock implementation
   const rarities: CosmeticRarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
-  const categories: CosmeticCategory[] = ['borders', 'colors', 'fonts', 'emojis', 'titles', 'backgrounds', 'effects'];
+  const categories: CosmeticCategory[] = ['border', 'color', 'font', 'emoji', 'title', 'background', 'effect', 'badge', 'theme'];
   
   // Determine rarity based on amount spent
   let rarityWeights = [
@@ -77,19 +78,21 @@ export const awardRandomCosmetic = (
   }
   
   // Select category (respect preferred if provided)
-  const selectedCategory = (preferredCategory as CosmeticCategory) || categories[Math.floor(Math.random() * categories.length)];
+  const validCategory = preferredCategory && categories.includes(preferredCategory as CosmeticCategory) 
+    ? preferredCategory as CosmeticCategory 
+    : categories[Math.floor(Math.random() * categories.length)];
   
   // Generate a unique ID based on category and rarity
-  const uniqueId = `${selectedCategory}_${selectedRarity}_${Date.now()}`;
+  const uniqueId = `${validCategory}_${selectedRarity}_${Date.now()}`;
   
   // Return a mock cosmetic item
   return {
     cosmeticItem: {
       id: uniqueId,
-      name: `${selectedRarity.charAt(0).toUpperCase() + selectedRarity.slice(1)} ${selectedCategory}`,
+      name: `${selectedRarity.charAt(0).toUpperCase() + selectedRarity.slice(1)} ${validCategory}`,
       description: `A ${selectedRarity} cosmetic item for your profile`,
-      category: selectedCategory,
-      type: selectedCategory.slice(0, -1), // Remove 's' from end
+      category: validCategory,
+      type: validCategory, // Use category as type
       rarity: selectedRarity,
       price: selectedRarity === 'legendary' ? 100 : 
              selectedRarity === 'epic' ? 75 :
@@ -99,7 +102,8 @@ export const awardRandomCosmetic = (
             selectedRarity === 'epic' ? 75 :
             selectedRarity === 'rare' ? 50 :
             selectedRarity === 'uncommon' ? 30 : 20,
-      cssClass: `${selectedRarity}-${selectedCategory}-item`
+      cssClass: `${selectedRarity}-${validCategory}-item`,
+      enabled: true
     },
     rarity: selectedRarity
   };

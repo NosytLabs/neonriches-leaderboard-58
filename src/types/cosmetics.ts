@@ -1,6 +1,18 @@
 
 export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique' | 'royal';
-export type CosmeticCategory = 'title' | 'border' | 'background' | 'effect' | 'theme' | 'badge' | 'emoji' | 'color' | 'font' | 'appearance' | 'profile' | 'interaction';
+export type CosmeticCategory = 
+  | 'title'
+  | 'border' 
+  | 'background' 
+  | 'effect' 
+  | 'theme' 
+  | 'badge' 
+  | 'emoji' 
+  | 'color' 
+  | 'font' 
+  | 'appearance' 
+  | 'profile' 
+  | 'interaction';
 
 export interface CosmeticItem {
   id: string;
@@ -22,15 +34,15 @@ export interface CosmeticItem {
 }
 
 export interface UserCosmetics {
-  border?: string[];
-  color?: string[];
-  font?: string[];
-  emoji?: string[];
-  title?: string[];
-  background?: string[];
-  effect?: string[];
-  badge?: string[];
-  theme?: string[];
+  border: string[];
+  color: string[];
+  font: string[];
+  emoji: string[];
+  title: string[];
+  background: string[];
+  effect: string[];
+  badge: string[];
+  theme: string[];
   activeBorder?: string;
   activeColor?: string;
   activeFont?: string;

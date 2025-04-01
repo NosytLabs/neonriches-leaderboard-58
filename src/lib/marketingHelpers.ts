@@ -26,6 +26,8 @@ export const calculateVisibilityScore = (rank?: number): number => {
  * Premium tiers get longer featured time on homepage and other high-traffic areas
  */
 export const getFeaturedTimeAllocation = (tier?: UserTier): number => {
+  if (!tier) return 0;
+  
   switch (tier) {
     case 'royal':
     case 'diamond':
@@ -48,6 +50,8 @@ export const getFeaturedTimeAllocation = (tier?: UserTier): number => {
  * Get maximum number of links allowed based on user tier
  */
 export const getMaxLinksAllowed = (tier?: UserTier): number => {
+  if (!tier) return 1;
+  
   switch (tier) {
     case 'royal':
     case 'diamond':
@@ -93,9 +97,9 @@ export const formatProfileForMarketing = (user: UserProfile) => {
     tier: user.tier || 'basic',
     rank: user.rank || 0,
     visibilityScore: calculateVisibilityScore(user.rank),
-    featuredTime: getFeaturedTimeAllocation(user.tier),
-    maxLinks: getMaxLinksAllowed(user.tier),
-    followers: user.followers || 0,
+    featuredTime: getFeaturedTimeAllocation(user.tier as UserTier),
+    maxLinks: getMaxLinksAllowed(user.tier as UserTier),
+    followers: user.followers ? user.followers.length : 0,
     impressions: user.profileViews || 0,
     clicks: user.profileClicks || 0,
     ctr: user.profileViews && user.profileClicks ? 

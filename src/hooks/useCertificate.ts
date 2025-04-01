@@ -78,7 +78,6 @@ export const useCertificate = ({ user, certificateId }: UseCertificateProps) => 
             ...certificate,
             isMinted: true,
             mintAddress: result.mintAddress
-            // We can't add mintedAt here since it's not in the Certificate type
           });
         }
         
@@ -89,7 +88,6 @@ export const useCertificate = ({ user, certificateId }: UseCertificateProps) => 
                 ...cert, 
                 isMinted: true, 
                 mintAddress: result.mintAddress
-                // We can't add mintedAt here since it's not in the Certificate type
               }
             : cert
         );
@@ -169,10 +167,25 @@ export const useCertificate = ({ user, certificateId }: UseCertificateProps) => 
     }
   };
 
-  const generateShareableImage = async (certificateToShare: Certificate): Promise<string | null> => {
+  const generateShareableImage = async (certificateToShare: Certificate): Promise<string> => {
     try {
       const imageUrl = await certificateService.generateShareableImage(certificateToShare, user);
-      return imageUrl;
+      
+      if (imageUrl) {
+        toast({
+          title: 'Image Generated',
+          description: 'Shareable image has been generated successfully.'
+        });
+        return imageUrl;
+      } else {
+        // Fallback in case no URL is returned
+        toast({
+          title: 'Image Generation Limited',
+          description: 'Using default certificate image.',
+          variant: 'destructive'
+        });
+        return certificateToShare.imageUrl || '/images/certificates/default.png';
+      }
     } catch (error) {
       console.error('Error generating shareable image:', error);
       toast({
@@ -180,7 +193,8 @@ export const useCertificate = ({ user, certificateId }: UseCertificateProps) => 
         description: 'Could not generate a shareable image for your certificate.',
         variant: 'destructive'
       });
-      return null;
+      // Return a fallback URL in case of error
+      return certificateToShare.imageUrl || '/images/certificates/default.png';
     }
   };
 

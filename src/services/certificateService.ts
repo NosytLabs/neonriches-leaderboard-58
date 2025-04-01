@@ -118,13 +118,14 @@ export const getUserMintedCertificates = async (userId: string): Promise<Certifi
 
 /**
  * Generates a shareable image for a certificate
+ * Returns a URL string to the generated image
  */
 export const generateShareableImage = async (
   certificate: Certificate,
   user: UserProfile
 ): Promise<string> => {
   // This would normally call an API endpoint to generate a shareable image
-  // For now, we'll just return the certificate's image URL
+  // For now, we'll just return the certificate's image URL or a fallback URL
   
   return certificate.imageUrl || `/api/generate-certificate-image?userId=${user.id}&certificateId=${certificate.id}`;
 };

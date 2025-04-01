@@ -1,6 +1,6 @@
 
 import { useCallback } from 'react';
-import { CosmeticItem, UserCosmeticState } from '@/types/cosmetics';
+import { CosmeticItem, UserCosmetics } from '@/types/cosmetics';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useSound } from '@/hooks/sounds/use-sound';
@@ -36,38 +36,26 @@ export const useCosmeticPurchase = () => {
     
     const newBalance = (user.walletBalance || 0) - item.price;
     
-    // Update user cosmetics
-    const currentCosmetics = user.cosmetics || {
-      unlockedBorders: [],
-      unlockedColors: [],
-      unlockedFonts: [],
-      unlockedEmojis: [],
-      unlockedTitles: [],
-      unlockedBackgrounds: [],
-      unlockedEffects: [],
-      unlockedBadges: [],
-      unlockedThemes: [],
-      borders: [],
-      colors: [],
-      fonts: [],
-      emojis: [],
-      titles: [],
-      backgrounds: [],
-      effects: [],
-      badges: [],
-      themes: []
+    // Initialize user's cosmetics if they don't exist
+    const currentCosmetics: UserCosmetics = user.cosmetics || {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
     };
+
+    // Get the correct category property name
+    const category = item.category;
     
-    const unlockedKey = `unlocked${item.category.charAt(0).toUpperCase() + item.category.slice(1)}s` as keyof UserCosmeticState;
-    const legacyKey = `${item.category}s` as keyof UserCosmeticState;
-    
-    const unlockedArray = [...(currentCosmetics[unlockedKey] as string[] || []), item.id];
-    const legacyArray = [...(currentCosmetics[legacyKey] as string[] || []), item.id];
-    
-    const updatedCosmetics = {
+    // Update the appropriate category
+    const updatedCosmetics: UserCosmetics = {
       ...currentCosmetics,
-      [unlockedKey]: unlockedArray,
-      [legacyKey]: legacyArray
+      [category]: [...(currentCosmetics[category] || []), item.id]
     };
     
     updateUser({
