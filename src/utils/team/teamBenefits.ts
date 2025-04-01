@@ -1,85 +1,62 @@
-
 import { TeamColor } from '@/types/team';
-import { asTeamColor } from './teamColors';
 
-/**
- * Get the benefits for a team
- * @param team The team to get benefits for
- * @returns Array of team benefits
- */
-export function getTeamBenefit(team: TeamColor | string | null | undefined): string[] {
-  const teamColor = asTeamColor(team as TeamColor);
-  
-  const benefitMap: Record<TeamColor, string[]> = {
-    'red': [
-      'Bonus rank points for aggressive spending',
-      'Exclusive access to combat-themed mockery options',
-      'Crimson profile badge and decorations',
-      'Special discount on "Royal Duel" actions'
-    ],
-    'blue': [
-      'Reduced cooling periods between mockery actions',
-      'Access to special analytical spending tools',
-      'Azure profile badge and decorations',
-      'Special discount on "Royal Silence" actions'
-    ],
-    'green': [
-      'Compound interest on rank points (5% annually)',
-      'Special team-only investment packages',
-      'Emerald profile badge and decorations',
-      'Special discount on "Growth Promotion" actions'
-    ],
-    'gold': [
-      'Royal exposure boost on the leaderboard',
-      'Unique golden frame around profile picture',
-      'Gold profile badge and decorations',
-      'Special discount on "Crown" mockery actions'
-    ],
-    'purple': [
-      'Ability to create special team challenges',
-      'Exclusive purple royal aesthetic options',
-      'Amethyst profile badge and decorations',
-      'Special discount on "Court Jester" actions'
-    ],
-    'none': [
-      'Complete independence from team politics',
-      'Unique lone wolf profile indicators',
-      'Special discount on "Rogue" actions',
-      'Ability to join any team event as a mercenary'
-    ],
-    'neutral': [
-      'Complete independence from team politics',
-      'Unique lone wolf profile indicators',
-      'Special discount on "Rogue" actions',
-      'Ability to join any team event as a mercenary'
-    ]
-  };
-  
-  return benefitMap[teamColor];
-}
+// Add missing properties
+export const teamBenefits: Record<TeamColor, string[]> = {
+  red: ['Team-exclusive chat', 'Crimson cosmetics', 'Special discount on packages'],
+  blue: ['Team-exclusive chat', 'Navy cosmetics', 'Bonus on first deposit'],
+  green: ['Team-exclusive chat', 'Emerald cosmetics', 'Increased daily rewards'],
+  gold: ['Team-exclusive chat', 'Royal cosmetics', 'Elite status features'],
+  purple: ['Team-exclusive chat', 'Violet cosmetics', 'Mystical profile effects'],
+  none: ['Basic chat access', 'Standard cosmetics', 'Normal rewards'],
+  neutral: ['Multi-team chat access', 'Neutral cosmetics', 'Balanced rewards'],
+  silver: ['Silver team benefits', 'Silver cosmetics', 'Silver rewards'],
+  bronze: ['Bronze team benefits', 'Bronze cosmetics', 'Bronze rewards']
+};
 
-/**
- * Get the security guarantee for a team
- * @param team The team to get security guarantee for
- * @returns The team security guarantee
- */
-export function getTeamSecurityGuarantee(team: TeamColor | string | null | undefined): string {
-  const teamColor = asTeamColor(team as TeamColor);
-  
-  const securityMap: Record<TeamColor, string> = {
-    'red': 'Our security is as strong as our spending: relentless and unwavering.',
-    'blue': 'Protected by the most intellectual encryption algorithms money can buy.',
-    'green': 'Our security grows stronger with every contribution, like a well-tended garden.',
-    'gold': 'Royal-grade protection that shines as bright as our golden coffers.',
-    'purple': 'Security fit for royalty, with enough layers to make an onion jealous.',
-    'none': 'Independent security systems tailored to the lone spender.',
-    'neutral': 'Independent security systems tailored to the lone spender.'
-  };
-  
-  return securityMap[teamColor];
-}
+export const teamDescriptions: Record<TeamColor, string> = {
+  red: 'The Red Team is known for its aggressive spending and competitive spirit.',
+  blue: 'The Blue Team values strategy and collaboration to maximize their impact.',
+  green: 'The Green Team focuses on sustainable growth and long-term investments.',
+  gold: 'The Gold Team represents the elite spenders with exclusive benefits.',
+  purple: 'The Purple Team embraces creativity and unique spending styles.',
+  none: 'No team affiliation, enjoy a balanced experience.',
+  neutral: 'Access to multiple team chats, offering a diverse perspective.',
+  silver: 'The Silver Team is known for its balanced spending and strategic spirit.',
+  bronze: 'The Bronze Team is known for its conservative spending and steady spirit.'
+};
 
-export default {
-  getTeamBenefit,
-  getTeamSecurityGuarantee
+export const teamLore: Record<TeamColor, string> = {
+  red: 'Forged in the fires of competition, the Red Team dominates the arena.',
+  blue: 'United by a shared vision, the Blue Team navigates the tides of fortune.',
+  green: 'Rooted in growth and prosperity, the Green Team cultivates success.',
+  gold: 'Adorned in opulence, the Gold Team reigns supreme in the realm of riches.',
+  purple: 'Embracing the arcane, the Purple Team weaves magic into their spending.',
+  none: 'Unaffiliated, you forge your own path in the kingdom.',
+  neutral: 'A diplomat among teams, you seek harmony in spending.',
+  silver: 'The Silver Team is known for its balanced spending and strategic spirit.',
+  bronze: 'The Bronze Team is known for its conservative spending and steady spirit.'
+};
+
+export const teamColors: Record<TeamColor, string> = {
+  red: '#FF4136',
+  blue: '#0074D9',
+  green: '#2ECC40',
+  gold: '#FFDC00',
+  purple: '#B10DC9',
+  none: '#85144b',
+  neutral: '#AAAAAA',
+  silver: '#C0C0C0',
+  bronze: '#CD7F32'
+};
+
+export const teamIcons: Record<TeamColor, string> = {
+  red: 'fire',
+  blue: 'water',
+  green: 'leaf',
+  gold: 'crown',
+  purple: 'magic',
+  none: 'question',
+  neutral: 'balance',
+  silver: 'trophy',
+  bronze: 'medal'
 };

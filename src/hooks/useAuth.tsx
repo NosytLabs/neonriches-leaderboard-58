@@ -17,7 +17,7 @@ export function useAuth(): AuthContextType {
   }
   
   // Process the user's team property to ensure it's a valid TeamColor
-  if (context.user && context.user.team) {
+  if (context.user && context.user.team && typeof context.user.team === 'string') {
     context.user.team = toTeamColor(context.user.team);
   }
   

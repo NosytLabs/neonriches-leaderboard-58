@@ -14,16 +14,14 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <SoundProvider>
-        <MainLayout>
-          <Routes>
-            <Route path="/" element={<Chat />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/settings" element={<Settings />} />
-          </Routes>
-          <Toaster />
-        </MainLayout>
+        <Routes>
+          <Route path="/" element={<MainLayout><Chat /></MainLayout>} />
+          <Route path="/chat" element={<MainLayout><Chat /></MainLayout>} />
+          <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
+          <Route path="/signup" element={<MainLayout><Signup /></MainLayout>} />
+          <Route path="/settings" element={<MainLayout><Settings /></MainLayout>} />
+        </Routes>
+        <Toaster />
       </SoundProvider>
     </AuthProvider>
   );
