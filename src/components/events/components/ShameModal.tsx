@@ -6,10 +6,10 @@ import { MockeryAction, TeamColor } from '@/types/mockery';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Crown, ShieldCheck, Coins } from 'lucide-react';
 import { 
-  getShameActionPrice, 
-  getDiscountedShamePrice,
   getMockeryName, 
-  getMockeryDescription 
+  getMockeryDescription,
+  getShameActionPrice,
+  getDiscountedShamePrice 
 } from '@/utils/mockeryUtils';
 
 interface ShameModalProps {

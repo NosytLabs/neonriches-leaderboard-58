@@ -162,3 +162,30 @@ export const getMockeryTierColorClass = (tier: string): string => {
       return 'text-gray-400';
   }
 };
+
+// Add the missing functions needed by ShameModal component
+export const getShameActionPrice = (action: MockeryAction): number => {
+  // This can reuse getMockeryCost functionality
+  return getMockeryCost(action);
+};
+
+export const getDiscountedShamePrice = (action: MockeryAction): number => {
+  // Apply a 25% discount to the regular price
+  const regularPrice = getShameActionPrice(action);
+  return Math.floor(regularPrice * 0.75);
+};
+
+export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
+  return action === getWeeklyDiscountedAction();
+};
+
+export const getWeeklyDiscountedAction = (): MockeryAction => {
+  // This week's discounted action is 'stocks'
+  return 'stocks';
+};
+
+// Add utility function to get color for action icon
+export const getMockeryActionIconColor = (action: MockeryAction): string => {
+  const tier = getMockeryTier(action);
+  return getMockeryTierColorClass(tier);
+};

@@ -53,9 +53,9 @@ const UserMenu: React.FC<UserMenuProps> = () => {
 
   // Create a safer wrapper around the user's tier to handle the potential type mismatch
   // This function ensures we only pass a valid tier string to UserBadge
-  const getTierForBadge = (): string => {
+  const getTierForBadge = (): UserTier => {
     // Only return tiers that match the expected types
-    const validTiers: string[] = [
+    const validTiers: UserTier[] = [
       'free', 'basic', 'premium', 'royal', 'legendary',
       'founder', 'noble', 'knight', 'baron', 'viscount', 
       'earl', 'duke', 'prince', 'king', 'emperor', 'whale', 
@@ -65,8 +65,8 @@ const UserMenu: React.FC<UserMenuProps> = () => {
     
     // Check if user.tier is a valid UserTier
     const userTier = user.tier as string;
-    if (userTier && validTiers.includes(userTier)) {
-      return userTier;
+    if (userTier && validTiers.includes(userTier as UserTier)) {
+      return userTier as UserTier;
     }
     
     // Default to 'free' if the tier isn't valid
@@ -74,14 +74,14 @@ const UserMenu: React.FC<UserMenuProps> = () => {
   };
 
   // Handle team value safely for team badge
-  const getTeamForBadge = (): string => {
+  const getTeamForBadge = (): TeamColor => {
     if (!user.team) return 'neutral';
     
-    const validTeams: string[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
+    const validTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
     const userTeam = user.team as string;
     
-    if (validTeams.includes(userTeam)) {
-      return userTeam;
+    if (validTeams.includes(userTeam as TeamColor)) {
+      return userTeam as TeamColor;
     }
     
     return 'neutral';

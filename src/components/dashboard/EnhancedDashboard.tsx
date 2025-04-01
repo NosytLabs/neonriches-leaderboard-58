@@ -12,6 +12,7 @@ import { useSound } from '@/hooks/use-sound';
 import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
+import { convertToLegacyUser } from '@/utils/typeConversion';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -72,6 +73,9 @@ const EnhancedDashboard = () => {
     return null;
   }
 
+  // Convert user to legacy format for components that require it
+  const legacyUser = convertToLegacyUser(user);
+
   const handleSpend = () => {
     toast({
       title: "Spending action",
@@ -91,7 +95,7 @@ const EnhancedDashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <DashboardWelcome user={user} />
+      <DashboardWelcome user={legacyUser} />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid grid-cols-5 w-full bg-black/20">
@@ -120,7 +124,7 @@ const EnhancedDashboard = () => {
         <div className="mt-6">
           <TabsContent value="overview">
             <OverviewTab 
-              user={user} 
+              user={legacyUser}
               onSpend={handleSpend} 
               onPaymentSuccess={handlePaymentSuccess} 
             />
@@ -131,7 +135,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="team">
-            <TeamStatusCard user={user} />
+            <TeamStatusCard user={legacyUser} />
           </TabsContent>
           
           <TabsContent value="achievements">
@@ -139,7 +143,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="upgrade">
-            <CashThroneUpgrade user={user} />
+            <CashThroneUpgrade user={legacyUser} />
           </TabsContent>
         </div>
       </Tabs>

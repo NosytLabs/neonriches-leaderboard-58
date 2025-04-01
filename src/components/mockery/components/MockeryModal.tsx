@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -5,8 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { MockeryAction, MockeryTier } from '@/types/mockery-types';
 import { getMockeryName, getMockeryDescription } from '@/utils/mockery';
-import { getMockeryActionIcon } from '@/utils/mockeryUtils';
-import { getMockeryTier, getMockeryCost } from '@/utils/mockeryUtils';
+import { getMockeryActionIcon, getMockeryTier, getMockeryCost } from '@/utils/mockeryUtils';
 
 interface MockeryModalProps {
   isOpen: boolean;
