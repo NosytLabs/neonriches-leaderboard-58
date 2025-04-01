@@ -1,27 +1,23 @@
 
-import { useContext } from 'react';
-import { SoundConfig } from '@/types/settings';
-import SettingsContext from '@/contexts/SettingsContext';
 import { useSettings } from '@/contexts/SettingsContext';
 
-/**
- * A hook to access sound configuration from the settings context
- */
+// This hook is a wrapper around the sound settings portion of useSettings
+// for compatibility with existing components
 export const useSoundsConfig = () => {
-  const {
+  const { 
     soundConfig,
     toggleSounds,
     toggleMuted,
-    togglePremium,
-    setVolume
+    setVolume,
+    togglePremium
   } = useSettings();
   
   return {
     soundConfig,
     toggleSounds,
     toggleMuted,
-    togglePremium,
-    setVolume
+    setVolume,
+    togglePremium
   };
 };
 
