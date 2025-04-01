@@ -160,22 +160,12 @@ export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: strin
   // Convert category to a valid key
   const cosmeticKey = fieldName as keyof UserCosmetics;
   
-  // Ensure the category exists and is an array
-  if (!cosmetics[cosmeticKey]) {
-    // Create an empty array for this category
-    if (Array.isArray(cosmetics[cosmeticKey])) {
-      // If it's already an array but falsy (e.g. empty), leave it as is
-      // This is to prevent TypeScript errors about assigning to a string & string[]
-    } else {
-      (cosmetics as any)[cosmeticKey] = [];
-    }
-  }
+  // Get the current items or initialize an empty array
+  const currentItems = (cosmetics[cosmeticKey] as string[]) || [];
   
   // Add cosmetic if it doesn't already exist
-  if (Array.isArray(cosmetics[cosmeticKey]) && !cosmetics[cosmeticKey].includes(cosmeticId)) {
-    // Using type assertion to ensure TypeScript understands this is a string array
-    const currentItems = cosmetics[cosmeticKey] as string[];
-    (cosmetics as any)[cosmeticKey] = [...currentItems, cosmeticId];
+  if (!currentItems.includes(cosmeticId)) {
+    cosmetics[cosmeticKey] = [...currentItems, cosmeticId];
   }
   
   return cosmetics;

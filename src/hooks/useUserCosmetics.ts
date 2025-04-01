@@ -21,7 +21,7 @@ export const useUserCosmetics = (
     try {
       if (!user) return false;
       
-      // Cast to our defined UserCosmetics type with required fields
+      // Initialize cosmetics with empty arrays if not present
       const userCosmetics: UserCosmetics = user.cosmetics || { 
         border: [], 
         color: [], 
@@ -50,6 +50,7 @@ export const useUserCosmetics = (
       // Get the correct property name
       const propertyName = categoryMap[category] || category as keyof UserCosmetics;
       
+      // Get the items array or initialize an empty array
       const items = userCosmetics[propertyName] || [];
       
       // Check if cosmetic already exists
@@ -58,10 +59,10 @@ export const useUserCosmetics = (
       }
       
       // Create a new cosmetics object with the updated array
-      const updatedCosmetics = {
+      const updatedCosmetics: UserCosmetics = {
         ...userCosmetics,
         [propertyName]: Array.isArray(items) ? [...items, cosmeticId] : [cosmeticId]
-      } as UserCosmetics;
+      };
       
       await updateUserProfile({
         cosmetics: updatedCosmetics

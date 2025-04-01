@@ -6,16 +6,16 @@ export const getCosmeticById = (id: string): CosmeticItem => {
   return {
     id,
     name: `Cosmetic ${id}`,
-    category: 'border' as CosmeticCategory, // Updated to match allowed CosmeticCategory values
+    category: 'border' as CosmeticCategory,
     type: 'profile',
     rarity: 'rare' as CosmeticRarity,
     description: 'A beautiful cosmetic item',
     imageSrc: '/assets/cosmetics/borders/rare.png',
-    previewUrl: '/assets/cosmetics/borders/rare.png', // Use previewUrl instead of imageUrl
+    previewUrl: '/assets/cosmetics/borders/rare.png',
     cssClass: 'border-royal-gold',
     cost: 50,
-    price: 50, // Required field now
-    enabled: true // Add required field
+    price: 50,
+    enabled: true
   };
 };
 

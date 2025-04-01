@@ -52,11 +52,14 @@ export const useCosmeticPurchase = () => {
     // Get the correct category property name
     const category = item.category;
     
-    // Update the appropriate category with type assertion to ensure TS understands the correct types
-    const updatedCosmetics = {
+    // Get the current items array or initialize an empty array if it doesn't exist
+    const currentItems = (currentCosmetics[category as keyof UserCosmetics] as string[]) || [];
+    
+    // Update the appropriate category with type assertion
+    const updatedCosmetics: UserCosmetics = {
       ...currentCosmetics,
-      [category]: [...(currentCosmetics[category as keyof UserCosmetics] as string[] || []), item.id]
-    } as UserCosmetics;
+      [category]: [...currentItems, item.id]
+    };
     
     updateUser({
       ...user,

@@ -29,21 +29,22 @@ export interface CosmeticItem {
   restrictedTo?: string[];
   icon?: string;
   imageSrc?: string;
-  imageUrl?: string; // Add this to fix imageUrl property errors
-  cost?: number; // Add this for backward compatibility
-  image?: string; // Add this for backward compatibility
+  imageUrl?: string; // For backward compatibility
+  cost?: number; // For backward compatibility
+  image?: string; // For backward compatibility
 }
 
+// Define UserCosmetics with optional properties to match the other definitions
 export interface UserCosmetics {
-  border: string[];
-  color: string[];
-  font: string[];
-  emoji: string[];
-  title: string[];
-  background: string[];
-  effect: string[];
-  badge: string[];
-  theme: string[];
+  border?: string[];
+  color?: string[];
+  font?: string[];
+  emoji?: string[];
+  title?: string[];
+  background?: string[];
+  effect?: string[];
+  badge?: string[];
+  theme?: string[];
   activeBorder?: string;
   activeColor?: string;
   activeFont?: string;
