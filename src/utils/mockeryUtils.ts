@@ -143,7 +143,9 @@ export const getMockeryTier = (action: MockeryAction): string => {
   }
 };
 
-export const getMockeryActionIcon = getMockeryActionIcon;
+// Remove the redundant re-export that's causing the error
+// export const getMockeryActionIcon = getMockeryActionIcon; 
+
 export const getMockeryTierColorClass = (tier: string): string => {
   switch (tier) {
     case 'common':

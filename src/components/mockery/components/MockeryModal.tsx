@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { MockeryAction, MockeryTier } from '@/types/mockery-types';
-import { getMockeryName, getMockeryDescription, getMockeryCost, getMockeryTier } from '@/utils/mockery';
-import { getMockeryActionIcon } from '@/utils/mockery/mockery-icons';
+import { getMockeryName, getMockeryDescription } from '@/utils/mockery';
+import { getMockeryActionIcon } from '@/utils/mockeryUtils';
+import { getMockeryTier, getMockeryCost } from '@/utils/mockeryUtils';
 
 interface MockeryModalProps {
   isOpen: boolean;
