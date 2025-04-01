@@ -1,17 +1,9 @@
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
-import { UserProfile } from '@/types/user';
-import { TeamColor } from '@/types/team';
-
-const supabase = createClient();
+import { UserProfile } from "@/types/user";
+import { TeamColor } from "@/types/team";
 
 export async function getSession() {
   try {
-    const { data, error } = await supabase.auth.getSession();
-    if (error) {
-      console.error("Error getting session:", error);
-      return { data: { session: null } };
-    }
+    const data = { session: null };
     return data;
   } catch (error) {
     console.error("Unexpected error getting session:", error);
@@ -21,18 +13,8 @@ export async function getSession() {
 
 export async function getUserDetails(userId: string): Promise<UserProfile | null> {
   try {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-
-    if (error) {
-      console.error("Error fetching user details:", error);
-      return null;
-    }
-
-    return data as UserProfile;
+    // Mock implementation
+    return mockUser as UserProfile;
   } catch (error) {
     console.error("Unexpected error fetching user details:", error);
     return null;
@@ -41,12 +23,7 @@ export async function getUserDetails(userId: string): Promise<UserProfile | null
 
 export async function loadClientSession() {
   try {
-    const { data, error } = await supabase.auth.getSession();
-    if (error) {
-      console.error("Error loading client session:", error);
-      return { session: null };
-    }
-    return data;
+    return { session: null };
   } catch (error) {
     console.error("Unexpected error loading client session:", error);
     return { session: null };
@@ -57,15 +34,13 @@ export async function accessProtected() {
   const { data } = await getSession();
 
   if (!data.session) {
-    redirect('/sign-in');
+    // Mock redirect
+    console.log("Redirecting to sign-in page");
   }
 }
 
 export async function signOut() {
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    console.error("Error signing out:", error);
-  }
+  console.log("Mock sign out");
 }
 
 export async function register(formData: FormData) {
@@ -73,63 +48,16 @@ export async function register(formData: FormData) {
   const password = String(formData.get('password'));
   const username = String(formData.get('username'));
 
-  const { data: authData, error: authError } = await supabase.auth
-    .signUp({
-      email,
-      password,
-      options: {
-        data: {
-          username,
-        },
-        shouldCreateUser: true,
-      },
-    });
+  console.log(`Mock register: ${username}, ${email}`);
 
-  if (authError) {
-    console.error("Authentication error during registration:", authError);
-    return { success: false, error: authError.message };
-  }
-
-  if (authData.user?.id) {
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .insert({
-        id: authData.user.id,
-        username: username,
-        email: email,
-        displayName: username,
-        joinedAt: new Date().toISOString(),
-        walletBalance: 0,
-        amountSpent: 0,
-        totalSpent: 0,
-        rank: 0,
-        previousRank: 0,
-        team: 'none',
-        tier: 'free',
-      });
-
-    if (profileError) {
-      console.error("Profile creation error:", profileError);
-      return { success: false, error: profileError.message };
-    }
-  }
-
-  return { success: true, data: authData };
+  return { success: true, data: { user: mockUser } };
 }
 
 export async function signIn(formData: FormData) {
   const email = String(formData.get('email'));
   const password = String(formData.get('password'));
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) {
-    console.error("Error signing in:", error);
-    return { success: false, error: error.message };
-  }
+  console.log(`Mock sign in: ${email}`);
 
   return { success: true };
 }

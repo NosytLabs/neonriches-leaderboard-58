@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { verifyMfaCode } from '@/services/authService';
+import { verifyMfaCode } from '@/services/mockAuthService';
 import { Shield, ShieldCheck } from 'lucide-react';
 import FormError from '@/components/auth/FormError';
 

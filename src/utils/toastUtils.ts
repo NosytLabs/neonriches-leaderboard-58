@@ -53,4 +53,3 @@ export const showRoyalToast = (title: string, description?: string) => {
 export const createSuccessToast = showSuccessToast;
 export const createErrorToast = showErrorToast;
 export const createRoyalToast = showRoyalToast;
-

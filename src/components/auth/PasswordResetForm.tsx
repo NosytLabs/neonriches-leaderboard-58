@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { resetPassword } from '@/services/authService';
+import { resetPassword } from '@/services/mockAuthService';
 
 interface PasswordResetFormProps {
   onSuccess?: () => void;
@@ -101,4 +100,3 @@ const PasswordResetForm: React.FC<PasswordResetFormProps> = ({ onSuccess, onCanc
 };
 
 export default PasswordResetForm;
-

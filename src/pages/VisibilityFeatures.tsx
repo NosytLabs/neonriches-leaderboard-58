@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { PageHeader } from '@/components/ui/page-header';
 import Shell from '@/components/Shell';
@@ -12,10 +11,10 @@ export default function VisibilityFeatures() {
 
   return (
     <Shell>
-      <PageHeader
+      <PageHeader 
         title="Visibility Features"
-        description="Enhance your profile visibility and reach a broader audience with these premium features."
-        size="sm"
+        description="Explore how your spending affects your visibility"
+        size="small"
       />
       
       <div className="container max-w-7xl mx-auto">

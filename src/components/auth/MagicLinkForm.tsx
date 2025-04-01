@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { signInWithEmail } from '@/services/authService';
+import { signInWithEmail } from '@/services/mockAuthService';
 import { Mail, Wand2 } from 'lucide-react';
 import FormError from '@/components/auth/FormError';
 

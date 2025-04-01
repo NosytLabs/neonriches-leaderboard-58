@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { signInWithGoogle } from '@/services/authService';
+import { signInWithGoogle } from '@/services/mockAuthService';
 import { ExternalLink } from 'lucide-react';
 
 interface OAuthProvidersProps {

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Shell from '@/components/Shell';
+import Shell from '@/components/ui/shell';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
