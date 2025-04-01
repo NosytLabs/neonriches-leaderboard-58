@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useResponsive } from '@/hooks/use-responsive';
 import { RandomAbsurdFact } from '@/components/ui/random-absurd-fact';
 import { TeamColor } from '@/types/team';
+import { UserProfile } from '@/types/user-consolidated';
 
 const getTeamMotto = (team: string) => {
   switch (team) {
@@ -63,7 +64,7 @@ export type TeamColor = 'red' | 'green' | 'blue';
 
 export interface TeamSelectionProps {
   selectedTeam?: TeamColor;
-  teams: TeamColor[];
+  teams?: TeamColor[];
   onTeamSelect: (team: TeamColor) => Promise<boolean>;
   user?: UserProfile;
 }

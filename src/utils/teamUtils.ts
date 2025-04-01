@@ -1,5 +1,5 @@
 
-import { TeamColor } from '@/types/user-consolidated';
+import { TeamColor } from '@/types/team';
 
 /**
  * Convert a string to a TeamColor type if valid, otherwise return a default

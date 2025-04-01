@@ -1,9 +1,6 @@
 
 export type TeamColor = 
-  | 'red' | 'green' | 'blue' | 'gold' | 'purple' | 'none' | 'neutral'
-  | '#dc2626' | '#2563eb' | '#16a34a' | '#eab308' | '#9333ea' | '#6b7280';
-
-export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
+  | 'red' | 'green' | 'blue' | 'gold' | 'purple' | 'none' | 'neutral';
 
 export interface Team {
   id: string;
@@ -46,11 +43,8 @@ export interface TeamTheme {
   background?: string; // Added for backward compatibility
 }
 
-export function asTeamColor(input: string | TeamColor | undefined): TeamColor {
-  const validColors: TeamColor[] = [
-    'red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral',
-    '#dc2626', '#2563eb', '#16a34a', '#eab308', '#9333ea', '#6b7280'
-  ];
+export function asTeamColor(input: string | TeamColor | undefined | null): TeamColor {
+  const validColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
   
   if (!input) return 'neutral';
   
