@@ -1,93 +1,63 @@
 
 import React from 'react';
-import { BaseDecorationProps } from '@/types/ui/decorations/types';
-import { toMedievalIconColor } from './colorUtils';
-import sizeClasses from './sizeClasses';
+import { cn } from '@/lib/utils';
+import MedievalIcon from '@/components/ui/medieval-icon';
+import { BaseDecorationProps, sizeClasses } from '@/types/ui/decorations/types';
 
-/**
- * A decorative medieval border pattern
- */
-const BorderPattern: React.FC<BaseDecorationProps> = ({ 
-  size = 'md', 
+interface BorderPatternProps extends BaseDecorationProps {
+  pattern?: 'diamonds' | 'crosses' | 'dots' | 'lines';
+  borderWidth?: string;
+}
+
+const BorderPattern: React.FC<BorderPatternProps> = ({
   color = 'gold',
-  className = '',
-  animate,
-  icon
+  size = 'md',
+  className,
+  pattern = 'diamonds',
+  borderWidth = '2px',
 }) => {
-  const sizeClass = sizeClasses[size] || sizeClasses.md;
-  const colorClass = toMedievalIconColor(color);
-  
+  const sizeClass = sizeClasses[size];
+  const patternClass = 
+    pattern === 'diamonds' ? 'bg-[linear-gradient(45deg,transparent_25%,currentColor_25%,currentColor_50%,transparent_50%,transparent_75%,currentColor_75%)]' :
+    pattern === 'crosses' ? 'bg-[repeating-linear-gradient(45deg,currentColor,currentColor_2px,transparent_2px,transparent_10px)]' :
+    pattern === 'dots' ? 'bg-[radial-gradient(circle,currentColor_1px,transparent_1px)]' :
+    'bg-[repeating-linear-gradient(90deg,currentColor,currentColor_1px,transparent_1px,transparent_10px)]';
+
+  const bgSize = 
+    pattern === 'diamonds' ? 'bg-[size:12px_12px]' :
+    pattern === 'crosses' ? 'bg-[size:10px_10px]' :
+    pattern === 'dots' ? 'bg-[size:6px_6px]' :
+    'bg-[size:10px_10px]';
+
+  const colorClass = 
+    color === 'gold' ? 'text-royal-gold/30' :
+    color === 'royal' ? 'text-royal-purple/30' :
+    color === 'crimson' ? 'text-royal-crimson/30' :
+    color === 'navy' ? 'text-royal-navy/30' : 
+    'text-white/20';
+
   return (
-    <div 
-      className={`relative ${sizeClass} ${className} ${animate ? 'animate-pulse-slow' : ''}`}
-      aria-hidden="true"
-    >
-      <svg 
-        viewBox="0 0 100 100" 
-        fill="none" 
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full"
+    <div className={cn("relative p-2", className)}>
+      <div 
+        className={cn(
+          "absolute inset-0 rounded",
+          patternClass,
+          bgSize,
+          colorClass
+        )}
+      ></div>
+      <div 
+        className={cn(
+          "border rounded",
+          colorClass,
+          "relative z-10"
+        )}
+        style={{ borderWidth }}
       >
-        <path 
-          d="M5,5 L95,5 L95,95 L5,95 L5,5 Z" 
-          stroke="currentColor" 
-          strokeWidth="2" 
-          className={`text-${colorClass}`}
-        />
-        <path 
-          d="M10,10 L90,10 L90,90 L10,90 L10,10 Z" 
-          stroke="currentColor" 
-          strokeWidth="1.5" 
-          className={`text-${colorClass} opacity-70`}
-        />
-        <path 
-          d="M5,50 L95,50" 
-          stroke="currentColor" 
-          strokeWidth="1" 
-          className={`text-${colorClass} opacity-50`}
-        />
-        <path 
-          d="M50,5 L50,95" 
-          stroke="currentColor" 
-          strokeWidth="1" 
-          className={`text-${colorClass} opacity-50`}
-        />
-        <circle 
-          cx="50" 
-          cy="50" 
-          r="3" 
-          fill="currentColor" 
-          className={`text-${colorClass}`}
-        />
-        <circle 
-          cx="5" 
-          cy="5" 
-          r="2" 
-          fill="currentColor" 
-          className={`text-${colorClass}`}
-        />
-        <circle 
-          cx="95" 
-          cy="5" 
-          r="2" 
-          fill="currentColor" 
-          className={`text-${colorClass}`}
-        />
-        <circle 
-          cx="5" 
-          cy="95" 
-          r="2" 
-          fill="currentColor" 
-          className={`text-${colorClass}`}
-        />
-        <circle 
-          cx="95" 
-          cy="95" 
-          r="2" 
-          fill="currentColor" 
-          className={`text-${colorClass}`}
-        />
-      </svg>
+        <div className="px-4 py-2">
+          {/* Content slot */}
+        </div>
+      </div>
     </div>
   );
 };

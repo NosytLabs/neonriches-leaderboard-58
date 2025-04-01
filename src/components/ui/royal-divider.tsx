@@ -1,22 +1,14 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { RoyalDividerColor } from '@/types/ui/decorations/types';
-
-export type RoyalDividerVariant = 'line' | 'double' | 'fancy' | 'ornate' | 'crown' | 'simple';
-
-export interface RoyalDividerProps {
-  variant?: RoyalDividerVariant;
-  color?: RoyalDividerColor;
-  className?: string;
-  label?: string;
-}
+import { RoyalDividerColor, RoyalDividerProps } from '@/types/royal-divider-types';
 
 const RoyalDivider: React.FC<RoyalDividerProps> = ({ 
   variant = 'line',
   color = 'default',
   className = '',
-  label
+  label,
+  icon
 }) => {
   const colorClasses = {
     default: 'border-white/20',
@@ -47,7 +39,8 @@ const RoyalDivider: React.FC<RoyalDividerProps> = ({
     return (
       <div className="relative flex items-center w-full py-2">
         <div className={baseClass}></div>
-        <span className="absolute px-2 left-1/2 transform -translate-x-1/2 bg-background text-sm text-muted-foreground">
+        <span className="absolute px-2 left-1/2 transform -translate-x-1/2 bg-background text-sm text-muted-foreground flex items-center">
+          {icon && <div className="mr-1">{icon}</div>}
           {label}
         </span>
       </div>
@@ -57,4 +50,5 @@ const RoyalDivider: React.FC<RoyalDividerProps> = ({
   return <div className={baseClass}></div>;
 };
 
+export { RoyalDivider };
 export default RoyalDivider;

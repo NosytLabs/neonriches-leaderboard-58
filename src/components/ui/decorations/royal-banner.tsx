@@ -2,51 +2,75 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import MedievalIcon from '@/components/ui/medieval-icon';
-import { BaseDecorationProps, sizeClasses, getColorClass } from '@/types/ui/decorations/types';
-import { adaptIconSize, adaptIconColor } from '@/utils/iconTypeAdapter';
-import { MedievalIconName } from '@/types/ui/icon-types';
+import { BaseDecorationProps } from '@/types/ui/decorations/types';
+import { sizeClasses, getColorClass } from '@/types/ui/decorations/types';
 
-const RoyalBanner: React.FC<BaseDecorationProps> = ({
+const RoyalBanner: React.FC<BaseDecorationProps & { text?: string }> = ({
   color = 'gold',
   size = 'md',
-  animate = false,
-  className = ''
+  animated = false,
+  className,
+  text
 }) => {
   const sizeClass = sizeClasses[size];
-  const containerSize = typeof sizeClass === 'object' ? sizeClass.container : sizeClass;
-  const bgColor = getColorClass(color);
-  const borderColor = getColorClass(color, 'border');
-  const animateClass = animate ? 'animate-pulse-slow' : '';
-  
-  const bannerIcons: {name: MedievalIconName, position: string}[] = [
-    { name: "crown", position: 'top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2' },
-    { name: "sword", position: 'bottom-1/4 left-1/4' },
-    { name: "shield", position: 'bottom-1/4 right-1/4' }
-  ];
   
   return (
     <div className={cn(
-      'relative flex items-center justify-center',
-      containerSize,
-      animateClass,
+      'flex items-center justify-center',
+      sizeClass,
       className
     )}>
-      <div className={cn(
-        'absolute inset-0 rounded-sm',
-        'bg-opacity-20',
-        borderColor,
-        'border'
-      )} />
-      
-      {bannerIcons.map((icon, index) => (
-        <div key={index} className={cn('absolute', icon.position)}>
-          <MedievalIcon
-            name={icon.name}
-            size={adaptIconSize(typeof sizeClass === 'object' ? sizeClass.icon : 'md')}
-            color={adaptIconColor(color)}
+      <div className="relative w-full h-full flex items-center justify-center">
+        {/* Banner background */}
+        <div className={cn(
+          'absolute inset-0 flex items-center justify-center',
+          color === 'gold' ? 'bg-royal-gold/20' : 
+          color === 'royal' ? 'bg-royal-purple/20' : 
+          color === 'crimson' ? 'bg-royal-crimson/20' :
+          color === 'navy' ? 'bg-royal-navy/20' :
+          'bg-white/10',
+          'border-t border-b',
+          color === 'gold' ? 'border-royal-gold/30' : 
+          color === 'royal' ? 'border-royal-purple/30' : 
+          color === 'crimson' ? 'border-royal-crimson/30' :
+          color === 'navy' ? 'border-royal-navy/30' :
+          'border-white/20'
+        )}>
+        </div>
+        
+        {/* Banner icon */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <MedievalIcon 
+            name="banner" 
+            size={size === 'xs' ? 'xs' : 
+                 size === 'sm' ? 'sm' : 
+                 size === 'md' ? 'md' : 
+                 size === 'lg' ? 'lg' : 
+                 size === 'xl' ? 'xl' : 'lg'}
+            color={color as any}
+            animated={animated}
           />
         </div>
-      ))}
+        
+        {/* Banner text */}
+        {text && (
+          <span className={cn(
+            'relative z-10 text-center font-semibold',
+            size === 'xs' ? 'text-[8px]' : 
+            size === 'sm' ? 'text-xs' : 
+            size === 'md' ? 'text-sm' : 
+            size === 'lg' ? 'text-base' : 
+            size === 'xl' ? 'text-lg' : 'text-sm',
+            color === 'gold' ? 'text-royal-gold' : 
+            color === 'royal' ? 'text-royal-purple' : 
+            color === 'crimson' ? 'text-royal-crimson' :
+            color === 'navy' ? 'text-royal-navy' :
+            'text-white'
+          )}>
+            {text}
+          </span>
+        )}
+      </div>
     </div>
   );
 };

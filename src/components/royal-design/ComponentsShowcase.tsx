@@ -42,9 +42,9 @@ const ComponentsShowcase: React.FC = () => {
             <div className="space-y-6">
               <RoyalDivider variant="crown" label="ROYAL SECTION" color="gold" />
               <RoyalDivider variant="ornate" label="ANCIENT KNOWLEDGE" color="crimson" />
-              <RoyalDivider variant="line" label="NOBLE WRITINGS" color="navy" />
+              <RoyalDivider variant="line" label="NOBLE WRITINGS" color="royal" />
               <RoyalDivider variant="crown" label="PRECIOUS CONTENT" color="gold" />
-              <RoyalDivider variant="ornate" label="DISTINGUISHED AREA" color="crimson" />
+              <RoyalDivider variant="ornate" label="DISTINGUISHED AREA" color="purple" />
             </div>
           </div>
         </div>

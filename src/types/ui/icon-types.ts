@@ -1,127 +1,68 @@
 
 import { LucideIcon } from 'lucide-react';
 
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
-export type IconColor = 'royal' | 'gold' | 'silver' | 'bronze' | 'red' | 'blue' | 'green' | 'purple' | 'crimson' | 'emerald' | 'default';
+export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+export type MedievalIconSize = IconSize;
 
-export type MedievalIconName = 
-  | 'crown' 
-  | 'shield' 
-  | 'sword' 
-  | 'banner' 
-  | 'scroll' 
-  | 'goblet' 
-  | 'castle'
-  | 'dragon' 
-  | 'knight' 
-  | 'king' 
-  | 'queen' 
-  | 'jester' 
-  | 'wizard' 
-  | 'coin'
-  | 'coins'
-  | 'treasure' 
-  | 'treasure-chest'
-  | 'horse' 
-  | 'fleur' 
-  | 'chalice' 
-  | 'throne' 
-  | 'crossed-swords' 
-  | 'helmet' 
-  | 'bow' 
-  | 'arrow' 
-  | 'candle' 
-  | 'torch' 
-  | 'flag' 
-  | 'axe' 
-  | 'mace'
-  | 'key'
-  | 'tower'
-  | 'Crown'
-  | 'Scroll'
-  | 'Shield'
-  | 'Coins'
-  | 'Sparkles'
-  | 'Trophy'
-  | 'Users'
-  | 'User';
-
-export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
-export type MedievalIconColor = 
+export type IconColor = 
+  | 'default'
   | 'gold' 
   | 'silver' 
   | 'bronze' 
   | 'red' 
   | 'blue' 
   | 'green' 
-  | 'purple'
+  | 'purple' 
+  | 'crimson' 
+  | 'navy' 
   | 'royal'
-  | 'crimson'
-  | 'emerald'
-  | 'default';
+  | string;
 
-export interface MedievalIconProps {
-  name: MedievalIconName;
-  size?: MedievalIconSize;
-  color?: MedievalIconColor;
-  animated?: boolean;
-  className?: string;
-  onClick?: () => void;
-}
+export type MedievalIconColor = IconColor;
+
+export type IconStyle = 'default' | 'medieval' | 'fantasy' | 'royal';
 
 export interface IconProps {
-  name?: string;
-  icon?: LucideIcon | string;
+  icon?: string | LucideIcon;
   size?: IconSize | number;
-  color?: string;
+  color?: IconColor | string;
   className?: string;
-  animated?: boolean;
-  style?: 'default' | 'medieval';
   onClick?: () => void;
+  name?: string;
+  animated?: boolean;
+  style?: IconStyle;
 }
 
-export interface OptimizedImageProps {
-  src: string;
-  alt: string;
-  width?: number;
-  height?: number;
-  sizes?: string;
-  loading?: 'eager' | 'lazy';
-  quality?: number;
-  placeholder?: string;
-  placeholderColor?: string;
+export interface MedievalIconProps {
+  name: string;
+  size?: MedievalIconSize; 
+  color?: MedievalIconColor;
   className?: string;
-  style?: React.CSSProperties;
-  onLoad?: () => void;
-  onError?: () => void;
-  priority?: boolean;
-  objectFit?: string;
-  format?: string;
-  importance?: string;
+  onClick?: () => void;
+  animated?: boolean;
 }
 
-// Icon size mapping
-export const iconSizeMap: Record<MedievalIconSize, string> = {
-  'xs': 'w-3 h-3',
-  'sm': 'w-4 h-4',
+// Map of size values to Tailwind classes
+export const iconSizeMap: Record<IconSize, string> = {
+  'xs': 'w-4 h-4',
+  'sm': 'w-5 h-5',
   'md': 'w-6 h-6',
   'lg': 'w-8 h-8',
   'xl': 'w-10 h-10',
-  '2xl': 'w-12 h-12',
-  '3xl': 'w-16 h-16'
+  '2xl': 'w-12 h-12'
 };
 
-// Icon color mapping
-export const iconColorMap: Record<MedievalIconColor, string> = {
+// Map of color values to Tailwind classes
+export const iconColorMap: Record<IconColor, string> = {
   'default': 'text-white',
   'gold': 'text-royal-gold',
   'silver': 'text-gray-300',
-  'bronze': 'text-amber-700',
+  'bronze': 'text-amber-600',
   'red': 'text-red-500',
   'blue': 'text-blue-500',
   'green': 'text-green-500',
   'purple': 'text-purple-500',
-  'royal': 'text-royal-purple',
   'crimson': 'text-royal-crimson',
-  'emerald': 'text-emerald-500'
+  'royal': 'text-royal-purple',
+  'navy': 'text-royal-navy'
 };
