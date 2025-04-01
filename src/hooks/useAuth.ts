@@ -2,6 +2,8 @@
 import { useContext } from 'react';
 import { AuthContext } from '@/contexts/AuthContext';
 import { AuthContextType } from '@/types/user-consolidated';
+import { TeamColor } from '@/types/user';
+import { toTeamColor } from '@/utils/typeConverters';
 
 /**
  * Custom hook for accessing the authentication context
@@ -12,6 +14,11 @@ export function useAuth(): AuthContextType {
   
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
+  }
+  
+  // Process the user's team property to ensure it's a valid TeamColor
+  if (context.user && context.user.team) {
+    context.user.team = toTeamColor(context.user.team);
   }
   
   return context;

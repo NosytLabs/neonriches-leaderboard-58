@@ -13,8 +13,9 @@ import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
-import { UserProfile } from '@/types/user';
+import { UserProfile, TeamColor } from '@/types/user';
 import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
+import { toTeamColor } from '@/utils/typeConverters';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -86,6 +87,8 @@ const EnhancedDashboard = () => {
   // Now enhance the profile boosts with required properties
   const enhancedUserForProps = {
     ...standardUser,
+    // Convert team to proper TeamColor if it exists
+    team: standardUser.team ? toTeamColor(standardUser.team as string) : null,
     profileBoosts: standardUser.profileBoosts?.map(boost => ({
       ...boost,
       // Make sure required properties are present to satisfy both interfaces

@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { RoyalDividerColor } from '@/types/ui/decorations/types';
 
 export type RoyalDividerVariant = 'line' | 'double' | 'fancy' | 'ornate' | 'crown' | 'simple';
-export type RoyalDividerColor = 'default' | 'royal' | 'gold' | 'crimson' | 'purple';
 
 export interface RoyalDividerProps {
   variant?: RoyalDividerVariant;
@@ -23,7 +23,8 @@ const RoyalDivider: React.FC<RoyalDividerProps> = ({
     royal: 'border-royal-purple/50',
     gold: 'border-royal-gold/50',
     crimson: 'border-royal-crimson/50',
-    purple: 'border-purple-500/50'
+    purple: 'border-purple-500/50',
+    navy: 'border-royal-navy/50'
   };
   
   const variantClasses = {

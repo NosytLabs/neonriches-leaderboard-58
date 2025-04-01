@@ -1,6 +1,6 @@
 
 // Adding TeamColor export to fix import errors
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze';
 
 export interface ProfileImage {
   id: string;
@@ -30,9 +30,9 @@ export interface SocialLink {
   clicks?: number;
 }
 
-export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple';
+export type TeamType = TeamColor;
 
-export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'legendary' | 'founder' | 'whale' | 'shark' | 'dolphin' | 'noble' | 'standard' | 'elite' | 'platinum' | 'diamond' | 'vip';
+export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'legendary' | 'founder' | 'whale' | 'shark' | 'dolphin' | 'noble' | 'standard' | 'elite' | 'platinum' | 'diamond' | 'vip' | 'gold' | 'silver' | 'bronze';
 
 export interface ProfileBoost {
   id: string;

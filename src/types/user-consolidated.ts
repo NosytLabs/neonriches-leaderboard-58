@@ -101,11 +101,11 @@ export interface UserCosmetics {
 export interface ProfileBoost {
   id: string;
   type: string;
-  level: number; // Required to match user.d.ts
+  level: number; 
   startDate: string;
   endDate: string;
-  appliedBy: string; // Required to match user.d.ts
-  strength: number; // Required to match user.d.ts
+  appliedBy: string; // Required to match user.ts
+  strength: number; 
   name?: string;
   description?: string;
   duration?: number;
@@ -126,18 +126,18 @@ export interface UserProfile {
   email?: string;
   profileImage?: string;
   bio?: string;
-  joinedDate: string;  // Required to match User type
+  joinedDate: string;  
   joinDate?: string;
   joinedAt?: string;
   createdAt?: string;
-  totalSpent: number;  // Required to match User type
-  amountSpent: number;  // Required to match User type
-  spentAmount?: number;  // Legacy field - use totalSpent instead
+  totalSpent: number;  
+  amountSpent: number;  
+  spentAmount?: number;  
   walletBalance?: number;
   rank?: number;
   previousRank?: number;
-  tier: UserTier | string;  // Required to match user.ts
-  team?: TeamColor | string | null;
+  tier: UserTier | string;  
+  team?: TeamColor | null;
   isVerified?: boolean;
   isFollowing?: boolean;
   isFounder?: boolean;
@@ -153,8 +153,8 @@ export interface UserProfile {
   subscription?: any;
   settings?: UserSettings;
   gender?: string;
-  followers?: string[];  // Changed to only accept string[] to avoid type issues
-  following?: string[];  // Changed to only accept string[] to avoid type issues
+  followers?: string[];  
+  following?: string[];  
   badges?: string[];
   rankChange?: number;
   spendChange?: number;
@@ -169,12 +169,12 @@ export interface UserProfile {
   profileImages?: any[];
   certificateNFT?: {
     id?: string;
-    mintAddress: string; // Make mintAddress required to match user.ts
+    mintAddress: string; 
     imageUrl?: string;
     dateIssued?: string;
     type?: string;
     isVerified?: boolean;
-    mintDate: string; // Added and required to match user.ts
+    mintDate: string; 
   };
   socialLinks?: any[] | Record<string, string>;
 }
@@ -243,3 +243,6 @@ export interface MockeryStats {
   deployed: Record<MockeryAction, number>;
   [key: string]: any;
 }
+
+// Export TeamType as an alias of TeamColor for compatibility
+export type TeamType = TeamColor;

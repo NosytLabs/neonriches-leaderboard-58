@@ -1,41 +1,34 @@
 
-/**
- * Settings system type definitions
- */
+import { UserSettings } from '@/types/user';
 
-export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'friends';
-  allowProfileLinks: boolean;
-  theme: 'light' | 'dark' | 'royal' | 'system';
-  notifications: boolean;
-  emailNotifications: boolean;
-  soundEffects: boolean;
-  showEmailOnProfile: boolean;
-  rankChangeAlerts: boolean;
-  teamChangeAlerts: boolean;
-  achievementAlerts: boolean;
-  purchaseNotifications: boolean;
-  depositNotifications: boolean;
-  leaderboardUpdates: boolean;
-  newFeatureAlerts: boolean;
-  eventNotifications: boolean;
-  marketingEmails: boolean; 
-  showBadges: boolean;
-  showAchievements: boolean;
-  showSpendingAmount: boolean;
-  showLastActive: boolean;
+export interface AccessibilitySettings {
+  textSize: number;
+  highContrast: boolean;
+  reducedMotion: boolean;
+  reducedTransparency: boolean;
+}
+
+export interface ProfileSettings {
+  publicProfile: boolean;
   showRank: boolean;
   showTeam: boolean;
   showSpending: boolean;
-  publicProfile: boolean;
-  allowMessages: boolean;
-  language: string;
-  darkMode?: boolean; // For backward compatibility
+  rankChangeAlerts?: boolean;
+  teamChangeAlerts?: boolean;
+  achievementAlerts?: boolean;
+  showEmailOnProfile?: boolean;
+}
+
+export interface SoundConfig {
+  enabled: boolean;
+  muted: boolean;
+  volume: number;
+  premium: boolean;
 }
 
 export interface SettingsContextType {
   userSettings: UserSettings;
-  updateSettings: (settings: Partial<UserSettings>) => void;
+  updateSettings: (newSettings: Partial<UserSettings>) => void;
   resetSettings: () => void;
   isDarkTheme: boolean;
   theme: 'light' | 'dark' | 'royal' | 'system';
@@ -45,11 +38,13 @@ export interface SettingsContextType {
   toggleMuted: () => void;
   togglePremium: () => void;
   setVolume: (volume: number) => void;
-}
 
-export interface SoundConfig {
-  enabled: boolean;
-  muted: boolean;
-  volume: number;
-  premium: boolean;
+  // Added missing properties for settings components
+  accessibilitySettings: AccessibilitySettings;
+  updateAccessibilitySettings: (settings: Partial<AccessibilitySettings>) => void;
+  profileSettings: ProfileSettings;
+  updateProfileSettings: (settings: Partial<ProfileSettings>) => void;
+  notifications: boolean;
+  toggleNotifications: () => void;
+  isLoading: boolean;
 }

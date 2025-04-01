@@ -1,5 +1,11 @@
 
-import { IconColor, MedievalIconColor, IconSize, MedievalIconName, MedievalIconSize } from '@/types/ui/decorations/types';
+import { 
+  IconColor, 
+  MedievalIconColor, 
+  IconSize, 
+  MedievalIconName, 
+  MedievalIconSize 
+} from '@/types/ui/icon-types';
 
 /**
  * Adapt a standard icon color to a medieval icon color
@@ -30,7 +36,15 @@ export const adaptIconSize = (size: IconSize | number): MedievalIconSize => {
   }
   
   // If it's already a size string
-  return size as MedievalIconSize;
+  switch (size) {
+    case 'xs': return 'xs';
+    case 'sm': return 'sm';
+    case 'md': return 'md';
+    case 'lg': return 'lg';
+    case 'xl': return 'xl';
+    case '2xl': return 'xl';
+    default: return 'md';
+  }
 };
 
 /**
@@ -44,7 +58,7 @@ export const toMedievalIconName = (name: string): MedievalIconName => {
     'banner': 'banner',
     'scroll': 'scroll',
     'goblet': 'goblet',
-    'castle': 'castle',
+    'castle': 'castle', // Added to MedievalIconName
     'dragon': 'dragon',
     'knight': 'knight',
     'king': 'king',
@@ -57,7 +71,7 @@ export const toMedievalIconName = (name: string): MedievalIconName => {
     'fleur': 'fleur',
     'chalice': 'chalice',
     'throne': 'throne',
-    'crossedSwords': 'crossed-swords',
+    'crossed-swords': 'crossed-swords',
     'helmet': 'helmet',
     'bow': 'bow',
     'arrow': 'arrow',

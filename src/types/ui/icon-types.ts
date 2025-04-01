@@ -1,71 +1,117 @@
 
-import { LucideProps } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 
+// Basic icon properties
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type IconStyle = 'default' | 'medieval' | 'pixel' | 'outlined';
-export type IconColor = 'default' | 'primary' | 'secondary' | 'accent' | 'muted' | 'gold' | 'silver' | 'royal' | 'crimson' | 'navy' | 'bronze' | 'purple' | 'emerald';
 
-export interface IconProps {
-  name: string;
+export type IconColor = 
+  | 'primary' 
+  | 'secondary' 
+  | 'muted' 
+  | 'accent'
+  | 'info'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'royal'
+  | 'gold'
+  | 'silver'
+  | 'crimson'
+  | 'bronze'
+  | 'red'
+  | 'blue'
+  | 'green'
+  | 'purple'
+  | 'navy';
+
+export type IconStyle = 'default' | 'medieval' | 'outline' | 'solid';
+
+// Base icon props without icon name
+export interface BaseIconProps {
   size?: IconSize | number;
-  color?: IconColor;
+  color?: IconColor | string;
   className?: string;
-  style?: IconStyle;
   animated?: boolean;
+  style?: IconStyle;
 }
 
+// Full icon props with icon name
+export interface IconProps extends BaseIconProps {
+  name: string;
+}
+
+// Medieval icon types
 export type MedievalIconName = 
   | 'crown'
   | 'shield'
   | 'sword'
+  | 'banner'
   | 'scroll'
-  | 'heart'
-  | 'medal'
-  | 'trophy'
-  | 'key'
-  | 'coins'
-  | 'gem'
-  | 'seal'
+  | 'goblet'
   | 'castle'
-  | 'chalice'
   | 'dragon'
-  | 'flag'
+  | 'knight'
+  | 'king'
+  | 'queen'
+  | 'jester'
+  | 'wizard'
+  | 'coin'
+  | 'treasure'
+  | 'horse'
+  | 'fleur'
+  | 'chalice'
   | 'throne'
-  | 'tower'
-  | 'treasure-chest';
+  | 'crossed-swords'
+  | 'helmet'
+  | 'bow'
+  | 'arrow'
+  | 'candle'
+  | 'torch'
+  | 'flag'
+  | 'axe'
+  | 'mace';
 
-export type MedievalIconSize = IconSize;
-export type MedievalIconColor = IconColor;
+export type MedievalIconColor = 
+  | 'gold'
+  | 'royal'
+  | 'silver'
+  | 'bronze'
+  | 'red'
+  | 'blue'
+  | 'green'
+  | 'purple';
 
-export interface MedievalIconProps {
-  name: MedievalIconName;
-  size?: MedievalIconSize;
-  color?: MedievalIconColor;
-  className?: string;
-  animate?: boolean;
-}
+export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-export const iconSizeMap = {
-  'xs': 'h-3 w-3',
-  'sm': 'h-4 w-4',
-  'md': 'h-5 w-5',
-  'lg': 'h-6 w-6',
-  'xl': 'h-8 w-8',
-  '2xl': 'h-10 w-10'
+// Size mapping for consistent styling
+export const iconSizeMap: Record<IconSize, string> = {
+  'xs': 'w-3 h-3',
+  'sm': 'w-4 h-4',
+  'md': 'w-6 h-6',
+  'lg': 'w-8 h-8',
+  'xl': 'w-10 h-10',
+  '2xl': 'w-12 h-12'
 };
 
-export const iconColorMap = {
-  'default': 'text-white',
+// Color mapping for consistent styling
+export const iconColorMap: Record<string, string> = {
   'primary': 'text-primary',
   'secondary': 'text-secondary',
-  'accent': 'text-accent',
   'muted': 'text-muted-foreground',
+  'accent': 'text-accent',
+  'info': 'text-blue-500',
+  'success': 'text-green-500',
+  'warning': 'text-amber-500',
+  'danger': 'text-red-500',
+  'royal': 'text-royal-purple',
   'gold': 'text-royal-gold',
   'silver': 'text-gray-300',
-  'royal': 'text-royal-blue',
-  'crimson': 'text-royal-crimson',
-  'navy': 'text-royal-navy',
   'bronze': 'text-amber-700',
+  'crimson': 'text-royal-crimson',
+  'red': 'text-red-500',
+  'blue': 'text-blue-500',
+  'green': 'text-green-500',
   'purple': 'text-purple-500',
-  'emerald': 'text-emerald-500'
+  'navy': 'text-royal-navy',
+  'default': 'text-current'
 };
