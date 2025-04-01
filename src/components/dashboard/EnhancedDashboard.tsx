@@ -13,6 +13,7 @@ import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { convertToLegacyUser } from '@/utils/typeConversion';
+import { UserProfile } from '@/types/user-consolidated';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -74,7 +75,12 @@ const EnhancedDashboard = () => {
   }
 
   // Convert user to legacy format for components that require it
-  const legacyUser = convertToLegacyUser(user);
+  // Fix: Make sure the user has totalSpent property
+  const updatedUser: UserProfile = {
+    ...user,
+    totalSpent: user.totalSpent || user.amountSpent || 0
+  };
+  const legacyUser = convertToLegacyUser(updatedUser);
 
   const handleSpend = () => {
     toast({

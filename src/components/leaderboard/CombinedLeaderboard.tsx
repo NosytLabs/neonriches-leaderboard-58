@@ -1,20 +1,25 @@
-
 import React, { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import LeaderboardList from './components/LeaderboardList';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { UserCircle, Users, TrendingUp, Medal, Crown } from "lucide-react";
+import LeaderboardList from "./components/LeaderboardList";
+import LeaderboardSummary from "./components/LeaderboardSummary";
+import { getLeaderboardUsers } from "@/services/leaderboardService";
 import { UserProfile } from '@/types/user-consolidated';
-import { Button } from '@/components/ui/button';
-import { Trophy, Flame, Calendar, Trending, History, Coins } from 'lucide-react';
-import { useSound } from '@/hooks/use-sound';
-import { sortBy } from 'lodash';
-import { useAuth } from '@/hooks/useAuth';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import ShameModalWrapper from '../dashboard/leaderboard/ShameModalWrapper';
-import { MockeryAction } from '@/types/mockery-types';
-import { ensureNumber } from '@/utils/typeConverters';
+import { ensureStringId } from '@/utils/typeConverters';
 
-const CombinedLeaderboard = () => {
+const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
+  maxVisible = 10,
+  showFilters = true,
+  showTabs = true,
+  compact = false,
+  hideOnMobile = false,
+  currentUserId = '',
+  className = '',
+  initialTab = 'all'
+}) => {
   const { user } = useAuth();
   const sound = useSound();
   const [leaderboardData, setLeaderboardData] = useState<UserProfile[]>([]);
@@ -23,7 +28,9 @@ const CombinedLeaderboard = () => {
   const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [shameAction, setShameAction] = useState<MockeryAction>('tomatoes');
-  
+  const [activeTab, setActiveTab] = useState<string>(initialTab);
+  const [visibleCount, setVisibleCount] = useState<number>(maxVisible);
+
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       setLoading(true);
@@ -88,95 +95,103 @@ const CombinedLeaderboard = () => {
     return sortBy(leaderboardData, user => -user.totalSpent);
   };
   
+  const loadMoreUsers = (count: number = 10) => {
+    setVisibleCount(prevCount => prevCount + count);
+  };
+
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <Trophy className="h-5 w-5 mr-2 text-royal-gold" />
-          Royal Leaderboard
-        </CardTitle>
-      </CardHeader>
-      
-      <CardContent>
-        <Tabs defaultValue={selectedLeaderboard} onValueChange={handleLeaderboardChange}>
-          <TabsList className="grid grid-cols-4 mb-4">
-            <TabsTrigger value="daily" className="flex items-center justify-center">
-              <Flame className="h-4 w-4 mr-2" />
-              <span className="hidden sm:inline">Daily</span>
-            </TabsTrigger>
-            <TabsTrigger value="weekly" className="flex items-center justify-center">
-              <Calendar className="h-4 w-4 mr-2" />
-              <span className="hidden sm:inline">Weekly</span>
-            </TabsTrigger>
-            <TabsTrigger value="monthly" className="flex items-center justify-center">
-              <Trending className="h-4 w-4 mr-2" />
-              <span className="hidden sm:inline">Monthly</span>
-            </TabsTrigger>
-            <TabsTrigger value="alltime" className="flex items-center justify-center">
-              <History className="h-4 w-4 mr-2" />
-              <span className="hidden sm:inline">All-Time</span>
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="daily">
-            <LeaderboardList 
-              users={sortLeaderboardData()}
-              loading={loading}
-              currentUserId={user?.id || ''}
-              onProfileClick={handleProfileClick}
-              onShameUser={handleShameUser}
-            />
-          </TabsContent>
-          
-          <TabsContent value="weekly">
-            <LeaderboardList 
-              users={sortLeaderboardData()}
-              loading={loading}
-              currentUserId={user?.id || ''}
-              onProfileClick={handleProfileClick}
-              onShameUser={handleShameUser}
-            />
-          </TabsContent>
-          
-          <TabsContent value="monthly">
-            <LeaderboardList 
-              users={sortLeaderboardData()}
-              loading={loading}
-              currentUserId={user?.id || ''}
-              onProfileClick={handleProfileClick}
-              onShameUser={handleShameUser}
-            />
-          </TabsContent>
-          
-          <TabsContent value="alltime">
-            <LeaderboardList 
-              users={sortLeaderboardData()}
-              loading={loading}
-              currentUserId={user?.id || ''}
-              onProfileClick={handleProfileClick}
-              onShameUser={handleShameUser}
-            />
-          </TabsContent>
-        </Tabs>
+    <div className={`${className} ${hideOnMobile ? 'hidden md:block' : ''}`}>
+      <Card className="glass-morphism border-white/10">
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Trophy className="h-5 w-5 mr-2 text-royal-gold" />
+            Royal Leaderboard
+          </CardTitle>
+        </CardHeader>
         
-        <div className="mt-4 flex justify-center">
-          <Button variant="outline" className="glass-morphism border-white/10">
-            <Coins className="h-4 w-4 mr-2" />
-            View Full Leaderboard
-          </Button>
-        </div>
-      </CardContent>
-      
-      {selectedUser && (
-        <ShameModalWrapper 
-          showModal={showModal}
-          selectedUser={selectedUser}
-          shameAction={shameAction}
-          onOpenChange={setShowModal}
-          onConfirm={handleConfirmShame}
-        />
-      )}
-    </Card>
+        <CardContent>
+          <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
+            {showTabs && (
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="all" className="flex items-center gap-1.5">
+                  <Users className="h-4 w-4" />
+                  All
+                </TabsTrigger>
+                <TabsTrigger value="trending" className="flex items-center gap-1.5">
+                  <TrendingUp className="h-4 w-4" />
+                  Trending
+                </TabsTrigger>
+                <TabsTrigger value="top" className="flex items-center gap-1.5">
+                  <Medal className="h-4 w-4" />
+                  Top Rank
+                </TabsTrigger>
+                <TabsTrigger value="royal" className="flex items-center gap-1.5">
+                  <Crown className="h-4 w-4" />
+                  Royal
+                </TabsTrigger>
+              </TabsList>
+            )}
+            
+            <TabsContent value="all">
+              <LeaderboardList 
+                users={sortLeaderboardData()}
+                loading={loading}
+                currentUserId={user?.id || ''}
+                onProfileClick={handleProfileClick}
+                onShameUser={handleShameUser}
+              />
+            </TabsContent>
+            
+            <TabsContent value="trending">
+              <LeaderboardList 
+                users={sortLeaderboardData()}
+                loading={loading}
+                currentUserId={user?.id || ''}
+                onProfileClick={handleProfileClick}
+                onShameUser={handleShameUser}
+              />
+            </TabsContent>
+            
+            <TabsContent value="top">
+              <LeaderboardList 
+                users={sortLeaderboardData()}
+                loading={loading}
+                currentUserId={user?.id || ''}
+                onProfileClick={handleProfileClick}
+                onShameUser={handleShameUser}
+              />
+            </TabsContent>
+            
+            <TabsContent value="royal">
+              <LeaderboardList 
+                users={sortLeaderboardData()}
+                loading={loading}
+                currentUserId={user?.id || ''}
+                onProfileClick={handleProfileClick}
+                onShameUser={handleShameUser}
+              />
+            </TabsContent>
+          </Tabs>
+          
+          <div className="mt-4 flex justify-center">
+            <Button variant="outline" className="glass-morphism border-white/10">
+              <Coins className="h-4 w-4 mr-2" />
+              View Full Leaderboard
+            </Button>
+          </div>
+        </CardContent>
+        
+        {selectedUser && (
+          <ShameModalWrapper 
+            showModal={showModal}
+            selectedUser={selectedUser}
+            shameAction={shameAction}
+            onOpenChange={setShowModal}
+            onConfirm={handleConfirmShame}
+          />
+        )}
+      </Card>
+    </div>
   );
 };
 

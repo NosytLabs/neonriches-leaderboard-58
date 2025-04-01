@@ -2,15 +2,15 @@
 import React from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
 import LeaderboardEntry from "./LeaderboardEntry";
-import { UserProfile as User } from '@/types/user-consolidated';
+import { UserProfile } from '@/types/user-consolidated';
 
 export interface LeaderboardListProps {
-  users: User[];
+  users: UserProfile[];
   loading?: boolean;
   compact?: boolean;
   currentUserId: string;
   onProfileClick: (userId: string, username: string) => void;
-  onShameUser: (user: User) => void;
+  onShameUser: (user: UserProfile) => void;
 }
 
 const LeaderboardList: React.FC<LeaderboardListProps> = ({

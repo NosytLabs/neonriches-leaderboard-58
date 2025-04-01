@@ -1,129 +1,129 @@
 
-import { format, formatDistanceToNow, isValid } from 'date-fns';
-
 /**
- * Format a date string into a human-readable format
- * @param dateString Date string to format
- * @param formatString Optional format string (default: 'PP')
- * @returns Formatted date string
+ * Format a number as currency
+ * @param value Number to format as currency
+ * @param currency Currency code (default: USD)
+ * @returns Formatted currency string
  */
-export const formatDate = (dateString: string, formatString = 'PP'): string => {
-  try {
-    const date = new Date(dateString);
-    if (!isValid(date)) return 'Invalid date';
-    return format(date, formatString);
-  } catch (error) {
-    console.error('Error formatting date:', error);
-    return 'Invalid date';
-  }
-};
-
-/**
- * Format a date as relative time (e.g., "5 minutes ago")
- * @param dateString Date string to format
- * @returns Relative time string
- */
-export const formatTimeAgo = (dateString: string): string => {
-  try {
-    const date = new Date(dateString);
-    if (!isValid(date)) return '';
-    return formatDistanceToNow(date, { addSuffix: true });
-  } catch (error) {
-    console.error('Error formatting time ago:', error);
-    return '';
-  }
+export const formatCurrency = (value: number | string | undefined, currency: string = 'USD'): string => {
+  if (value === undefined || value === null) return '$0.00';
+  
+  const num = typeof value === 'string' ? parseFloat(value) : value;
+  if (isNaN(num)) return '$0.00';
+  
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(num);
 };
 
 /**
  * Format a number with thousands separators
  * @param value Number to format
+ * @param decimalPlaces Number of decimal places
  * @returns Formatted number string
  */
-export const formatNumber = (value: number | string): string => {
-  try {
-    const numValue = typeof value === 'string' ? parseFloat(value) : value;
-    if (isNaN(numValue)) return '0';
-    
-    return new Intl.NumberFormat('en-US').format(numValue);
-  } catch (error) {
-    console.error('Error formatting number:', error);
-    return '0';
-  }
+export const formatNumber = (value: number, decimalPlaces: number = 0): string => {
+  if (value === undefined || value === null) return '0';
+  
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: decimalPlaces,
+    maximumFractionDigits: decimalPlaces
+  }).format(value);
 };
 
 /**
- * Format a filesize in bytes to human readable format
- * @param bytes Filesize in bytes
- * @param decimals Number of decimal places to include
- * @returns Formatted filesize string (e.g., "2.5 MB")
+ * Format a number as a dollar amount (without cents)
+ * @param value Number to format as dollar amount
+ * @returns Formatted dollar amount
  */
-export const formatFileSize = (bytes: number, decimals = 2): string => {
+export const formatDollarAmount = (value: number | string | undefined): string => {
+  if (value === undefined || value === null) return '$0';
+  
+  const num = typeof value === 'string' ? parseFloat(value) : value;
+  if (isNaN(num)) return '$0';
+  
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(num);
+};
+
+/**
+ * Format a date to a readable string
+ * @param date Date to format
+ * @param options Formatting options
+ * @returns Formatted date string
+ */
+export const formatDate = (date: Date | string, options: Intl.DateTimeFormatOptions = {}): string => {
+  if (!date) return '';
+  
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  // Default options
+  const defaultOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  };
+  
+  return new Intl.DateTimeFormat('en-US', { ...defaultOptions, ...options }).format(dateObj);
+};
+
+/**
+ * Format a date relative to current time (e.g., "2 days ago")
+ * @param date Date to format
+ * @returns Formatted relative time string
+ */
+export const formatTimeAgo = (date: Date | string): string => {
+  if (!date) return '';
+  
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const now = new Date();
+  
+  const seconds = Math.floor((now.getTime() - dateObj.getTime()) / 1000);
+  
+  // Time intervals in seconds
+  const intervals = {
+    year: 31536000,
+    month: 2592000,
+    week: 604800,
+    day: 86400,
+    hour: 3600,
+    minute: 60
+  };
+  
+  if (seconds < 60) {
+    return 'just now';
+  }
+  
+  for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+    const interval = Math.floor(seconds / secondsInUnit);
+    
+    if (interval >= 1) {
+      return interval === 1 ? `1 ${unit} ago` : `${interval} ${unit}s ago`;
+    }
+  }
+  
+  return 'just now';
+};
+
+/**
+ * Format a file size in bytes to human-readable format
+ * @param bytes File size in bytes
+ * @param decimals Number of decimal places
+ * @returns Formatted file size
+ */
+export const formatFileSize = (bytes: number, decimals: number = 2): string => {
   if (bytes === 0) return '0 Bytes';
   
   const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(decimals))} ${sizes[i]}`;
-};
-
-/**
- * Format a dollar amount with $ sign and commas
- * @param amount Amount to format
- * @returns Formatted dollar amount string
- */
-export const formatDollarAmount = (amount: number | string): string => {
-  try {
-    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-    if (isNaN(numAmount)) return '$0';
-    
-    return `$${numAmount.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    })}`;
-  } catch (error) {
-    console.error('Error formatting dollar amount:', error);
-    return '$0';
-  }
-};
-
-/**
- * Format a percentage value
- * @param value Value to format as percentage
- * @param decimals Number of decimal places
- * @returns Formatted percentage string
- */
-export const formatPercentage = (value: number, decimals = 0): string => {
-  try {
-    if (isNaN(value)) return '0%';
-    
-    return `${value.toFixed(decimals)}%`;
-  } catch (error) {
-    console.error('Error formatting percentage:', error);
-    return '0%';
-  }
-};
-
-/**
- * Format a currency value
- * @param value Value to format as currency
- * @param currency Currency code
- * @returns Formatted currency string
- */
-export const formatCurrency = (
-  value: number | string,
-  currency: string = 'USD'
-): string => {
-  try {
-    const numValue = typeof value === 'string' ? parseFloat(value) : value;
-    if (isNaN(numValue)) return '$0.00';
-    
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency
-    }).format(numValue);
-  } catch (error) {
-    console.error('Error formatting currency:', error);
-    return '$0.00';
-  }
 };

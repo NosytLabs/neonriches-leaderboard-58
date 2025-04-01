@@ -72,3 +72,19 @@ export const kebabToTitleCase = (str: string): string => {
     .map(word => capitalize(word))
     .join(' ');
 };
+
+/**
+ * Get initials from a name (e.g., "John Doe" becomes "JD")
+ * @param name The name to extract initials from
+ * @param count Maximum number of initials to extract
+ * @returns The initials
+ */
+export const getInitials = (name: string, count: number = 2): string => {
+  if (!name) return '';
+  
+  return name
+    .split(/\s+/)
+    .map(word => word.charAt(0).toUpperCase())
+    .slice(0, count)
+    .join('');
+};

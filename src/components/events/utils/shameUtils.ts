@@ -55,7 +55,7 @@ export const getVIPDiscount = (isVIP: boolean): number => {
 };
 
 // Get tier-specific discount rates
-export const getTierDiscountRates = (): Partial<Record<MockeryTier, number>> => {
+export const getTierDiscountRates = (): Partial<Record<MockeryTier | string, number>> => {
   return {
     'common': 0.05,
     'uncommon': 0.1,
@@ -63,8 +63,8 @@ export const getTierDiscountRates = (): Partial<Record<MockeryTier, number>> => 
     'epic': 0.2,
     'legendary': 0.25,
     'royal': 0.3,
-    basic: 0.1,
-    premium: 0.2
+    'basic': 0.1,
+    'premium': 0.2
   };
 };
 
