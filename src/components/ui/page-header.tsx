@@ -9,7 +9,7 @@ export interface PageHeaderProps {
   className?: string;
 }
 
-const PageHeader = ({
+export const PageHeader = ({
   title,
   description,
   actions,

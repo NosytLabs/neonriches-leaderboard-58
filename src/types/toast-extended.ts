@@ -1,5 +1,5 @@
 
-import { Toast, ToastProps } from '@/components/ui/toast';
+import { Toast } from '@/components/ui/toast';
 import { ReactNode } from 'react';
 
 // Extended toast props that allow ReactNode for title instead of just string
@@ -20,7 +20,7 @@ export const createExtendedToast = (props: ExtendedToastProps): Toast => {
     ...props,
     // Ensure title is string compatible
     title: props.title ? (typeof props.title === 'string' ? props.title : String(props.title)) : undefined
-  } as Toast;
+  } as unknown as Toast;
   
   return sanitizedProps;
 };

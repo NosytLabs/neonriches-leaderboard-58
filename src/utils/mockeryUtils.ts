@@ -4,7 +4,7 @@ import { Egg, Crown, Smile, Lock, Skull, VolumeX, Glasses, Cloud, Shield, Target
 import React from 'react';
 
 // Icon component for tomatoes
-const TomatoIcon: React.FC<{ className?: string }> = ({ className }) => (
+export const TomatoIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg
     className={className}
     width="24"
@@ -37,7 +37,7 @@ const TomatoIcon: React.FC<{ className?: string }> = ({ className }) => (
 
 // Map mockery actions to their icon components
 export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
-  const icons: Record<MockeryAction, LucideIcon> = {
+  const icons: Record<string, LucideIcon> = {
     tomatoes: TomatoIcon as unknown as LucideIcon,
     eggs: Egg,
     crown: Crown,
@@ -60,7 +60,7 @@ export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
 
 // Get color for mockery action icon
 export const getMockeryActionIconColor = (action: MockeryAction): string => {
-  const colors: Record<MockeryAction, string> = {
+  const colors: Record<string, string> = {
     tomatoes: 'text-red-500',
     eggs: 'text-amber-300',
     crown: 'text-royal-gold',
@@ -83,7 +83,7 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
 
 // Get mockery name for display
 export const getMockeryName = (action: MockeryAction): string => {
-  const names: Record<MockeryAction, string> = {
+  const names: Record<string, string> = {
     tomatoes: 'Rotten Tomatoes',
     eggs: 'Rancid Eggs',
     stocks: 'Public Stocks',
@@ -102,12 +102,12 @@ export const getMockeryName = (action: MockeryAction): string => {
     duel: 'Royal Duel'
   };
 
-  return names[action] || action;
+  return names[action] || String(action);
 };
 
 // Get mockery description for display
 export const getMockeryDescription = (action: MockeryAction): string => {
-  const descriptions: Record<MockeryAction, string> = {
+  const descriptions: Record<string, string> = {
     tomatoes: 'Splatter their profile with rotten tomatoes for 24 hours',
     eggs: 'Pelt their profile with rancid eggs for 24 hours',
     stocks: 'Lock them in the public stocks for all to see for 3 days',
@@ -131,7 +131,7 @@ export const getMockeryDescription = (action: MockeryAction): string => {
 
 // Get the price for a mockery action
 export const getMockeryActionPrice = (action: MockeryAction): number => {
-  const prices: Record<MockeryAction, number> = {
+  const prices: Record<string, number> = {
     tomatoes: 5,
     eggs: 10,
     stocks: 20,
@@ -158,7 +158,7 @@ export const getShameActionPrice = getMockeryActionPrice;
 
 // Get the tier of a mockery action
 export const getMockeryTier = (action: MockeryAction): MockeryTier => {
-  const tiers: Record<MockeryAction, MockeryTier> = {
+  const tiers: Record<string, MockeryTier> = {
     tomatoes: 'common',
     eggs: 'common',
     jester: 'common',
@@ -178,6 +178,24 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
   };
 
   return tiers[action] || 'common';
+};
+
+// Get color class for a mockery tier
+export const getMockeryTierColorClass = (tier: MockeryTier): string => {
+  const colors: Record<string, string> = {
+    common: 'text-gray-400',
+    uncommon: 'text-green-400',
+    rare: 'text-blue-400',
+    epic: 'text-purple-400',
+    legendary: 'text-yellow-400',
+    royal: 'text-yellow-300',
+    basic: 'text-white',
+    premium: 'text-indigo-400',
+    silver: 'text-gray-300',
+    bronze: 'text-amber-600'
+  };
+  
+  return colors[tier] || 'text-white';
 };
 
 // Alias for backward compatibility
@@ -207,3 +225,7 @@ export const getWeeklyDiscountedAction = (): MockeryAction => {
 export const getMockeryCost = (action: MockeryAction): number => {
   return getMockeryActionPrice(action);
 };
+
+// Aliases for backward compatibility
+export const getMockeryActionTitle = getMockeryName;
+export const getMockeryActionDescription = getMockeryDescription;

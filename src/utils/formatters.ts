@@ -28,6 +28,13 @@ export const formatDollarAmount = (amount: number): string => {
 };
 
 /**
+ * Currency formatter shorthand
+ */
+export const formatCurrency = (amount: number): string => {
+  return `$${formatDollarAmount(amount)}`;
+};
+
+/**
  * Format a file size in bytes to a human-readable size
  */
 export const formatFileSize = (bytes: number): string => {
