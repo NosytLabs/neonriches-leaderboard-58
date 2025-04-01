@@ -1,14 +1,6 @@
 
-import React, { ReactNode } from 'react';
+import React from 'react';
+import ActualShell from '@/components/shell';
 
-interface ShellProps {
-  children: ReactNode;
-}
-
-export const Shell: React.FC<ShellProps> = ({ children }) => {
-  return (
-    <div className="min-h-screen bg-background">
-      {children}
-    </div>
-  );
-};
+export const Shell = ActualShell;
+export default Shell;

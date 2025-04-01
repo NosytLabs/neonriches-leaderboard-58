@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Clock, Calendar, Gift, Award, Trophy, Crown, Badge, Target, Shield } from 'lucide-react';
+import { Clock, Calendar, Gift, Award, Trophy, Crown, Badge, Target, Shield, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Badge as UiBadge } from '@/components/ui/badge';

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Shell } from '@/components/ui/Shell';
 import { PageHeader } from '@/components/ui/page-header';
@@ -64,7 +63,6 @@ export default function EventsPage() {
       <PageHeader
         title="Royal Events"
         description="Participate in various royal events to earn rewards and climb the leaderboard."
-        size="sm"
       />
       
       <div className="container max-w-7xl mx-auto">

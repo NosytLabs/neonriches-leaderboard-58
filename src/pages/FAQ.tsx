@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Shell } from '@/components/ui/shell';
+import { Shell } from '@/components/ui/Shell';
 import { 
   Accordion, 
   AccordionContent, 

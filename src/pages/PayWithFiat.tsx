@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Shell } from '@/components/ui/shell';
+import { Shell } from '@/components/ui/Shell';
 import { Helmet } from 'react-helmet-async';
 import { HeadingText } from '@/components/ui/heading-text';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';

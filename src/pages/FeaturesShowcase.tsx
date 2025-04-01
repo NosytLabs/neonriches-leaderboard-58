@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Shell } from '@/components/ui/shell';
+import { Shell } from '@/components/ui/Shell';
 import { RoyalSection } from '@/components/ui/theme-components';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
