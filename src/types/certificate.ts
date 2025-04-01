@@ -7,12 +7,12 @@ export interface Certificate {
   imageUrl: string;
   mintAddress?: string;
   dateIssued?: string;
-  issuedAt: string;
-  status: string;
+  issuedAt: string; // Added for compatibility
+  status: string; // Added for compatibility
   type: string;
   tier: string;
-  createdAt?: string;
-  isMinted?: boolean;
+  createdAt?: string; // Added for compatibility
+  isMinted?: boolean; // Added for compatibility
   mintedAt?: string;
 }
 

@@ -1,158 +1,228 @@
 
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Sparkles, Link, BarChart, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sparkles, TrendingUp, Users, Eye, BarChart, Share2, Crown, Target, Globe, LineChart, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useProfileBoost, BoostEffectType } from '@/hooks/use-profile-boost';
+import { useFeatureAccess } from '@/hooks/use-feature-access';
+import { Feature } from '@/types/subscription'; 
 import { UserProfile } from '@/types/user';
-import { getMarketingBenefitsByTier } from '@/data/tierData';
-import '../../styles/animations/enhanced-animations.css';
+import { useMarketing } from '@/hooks/use-marketing';
 
 interface ProfileMarketingFeaturesProps {
   user: UserProfile;
-  onBoostProfile: () => void;
+  onShowBoostModal?: () => void;
+  onShowUpgradeModal?: () => void;
 }
 
-const ProfileMarketingFeatures: React.FC<ProfileMarketingFeaturesProps> = ({ 
+const ProfileMarketingFeatures: React.FC<ProfileMarketingFeaturesProps> = ({
   user,
-  onBoostProfile
+  onShowBoostModal,
+  onShowUpgradeModal
 }) => {
   const { toast } = useToast();
+  const { activeBoosts, availableBoosts } = useProfileBoost(user);
+  const { hasAccess } = useFeatureAccess();
+  const { getUserMarketingFeatures } = useMarketing();
   
-  const handleShareProfile = () => {
-    navigator.clipboard.writeText(`${window.location.origin}/profile/${user.username}`);
-    toast({
-      title: "Profile Link Copied",
-      description: "Your profile URL has been copied to your clipboard. Share it to increase your visibility!",
-      variant: "default"
-    });
+  const [loading, setLoading] = useState(false);
+  
+  // Check if the user has marketing features
+  const hasBasicMarketing = hasAccess('marketing-basic');
+  const hasPremiumMarketing = hasAccess('marketing-premium');
+  const hasRoyalMarketing = hasAccess('marketing-royal');
+  
+  // Get user's marketing features
+  const marketingFeatures = getUserMarketingFeatures(user);
+  
+  // Check if user has any active boost effects
+  const hasActiveBoost = activeBoosts && activeBoosts.length > 0;
+  
+  // Handle boost feature
+  const handleBoostProfile = () => {
+    if (onShowBoostModal) {
+      onShowBoostModal();
+    } else {
+      toast({
+        title: "Boost Feature",
+        description: "Profile boost feature is coming soon!"
+      });
+    }
   };
   
-  // Mock analytics data - would come from real analytics in production
-  const profileViews = user.profileViews || 0;
-  const profileClicks = user.profileClicks || 0;
-  const conversionRate = profileViews > 0 ? Math.round((profileClicks / profileViews) * 100) : 0;
-  const marketingBenefits = getMarketingBenefitsByTier(user.tier);
+  // Handle upgrade button
+  const handleUpgrade = () => {
+    if (onShowUpgradeModal) {
+      onShowUpgradeModal();
+    } else {
+      toast({
+        title: "Upgrade Account",
+        description: "Upgrade feature is coming soon!"
+      });
+    }
+  };
   
   return (
-    <div className="space-y-6 animate-royal-entrance">
-      <Card className="glass-morphism border-white/10 overflow-hidden">
-        <div className="absolute -top-20 -right-20 w-40 h-40 bg-royal-gold/10 rounded-full blur-3xl"></div>
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle className="text-xl font-bold flex items-center">
-              <Target className="h-5 w-5 text-royal-gold mr-2 animate-pulse" />
-              Your Billboard Dashboard
-            </CardTitle>
-            <Badge variant="outline" className="bg-royal-gold/20 text-royal-gold border-royal-gold/30">
-              {user.tier === 'premium' ? 'Premium' : 
-               user.tier === 'royal' ? 'Royal' : 
-               user.tier === 'gold' ? 'Royal Gold' :
-               user.tier === 'silver' ? 'Silver' :
-               user.tier === 'bronze' ? 'Bronze' : 'Basic'}
-            </Badge>
-          </div>
-          <CardDescription>
-            Track your profile's performance and convert your status into marketing value
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {/* Profile Analytics */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="glass-morphism-highlight rounded-lg p-3 flex flex-col items-center">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-royal-gold/20 mb-2">
-                  <Eye className="h-4 w-4 text-royal-gold" />
-                </div>
-                <div className="text-2xl font-bold">{profileViews.toLocaleString()}</div>
-                <div className="text-xs text-white/60">Profile Views</div>
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold">Marketing & Visibility</h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Profile Links */}
+        <Card className="glass-morphism border-white/10">
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Link className="h-5 w-5 text-indigo-400" />
+                <span className="font-medium">Profile Links</span>
               </div>
-              
-              <div className="glass-morphism-highlight rounded-lg p-3 flex flex-col items-center">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-royal-gold/20 mb-2">
-                  <ExternalLink className="h-4 w-4 text-royal-gold" />
-                </div>
-                <div className="text-2xl font-bold">{profileClicks.toLocaleString()}</div>
-                <div className="text-xs text-white/60">Link Clicks</div>
-              </div>
-              
-              <div className="glass-morphism-highlight rounded-lg p-3 flex flex-col items-center">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-royal-gold/20 mb-2">
-                  <BarChart className="h-4 w-4 text-royal-gold" />
-                </div>
-                <div className="text-2xl font-bold">{conversionRate}%</div>
-                <div className="text-xs text-white/60">Conversion Rate</div>
-              </div>
+              {hasBasicMarketing && (
+                <span className="text-xs bg-indigo-900/30 text-indigo-300 px-2 py-1 rounded-full">Enabled</span>
+              )}
             </div>
             
-            {/* Rank Impact on Marketing */}
-            <div className="glass-morphism-highlight rounded-lg p-4 my-4">
-              <h3 className="text-lg font-medium mb-2 flex items-center">
-                <Crown className="h-5 w-5 text-royal-gold mr-2" />
-                Rank-Based Marketing Power
-              </h3>
-              
-              <div className="relative h-10 w-full bg-white/5 rounded-lg mb-4 overflow-hidden">
-                <div className="absolute left-0 top-0 h-full bg-gradient-to-r from-royal-gold/30 to-royal-gold" 
-                     style={{ width: `${Math.min(user.rank ? 100 / (user.rank / 10) : 5, 100)}%` }}>
-                </div>
-                
-                <div className="absolute inset-0 flex items-center justify-center text-sm font-medium">
-                  {user.rank ? `Rank #${user.rank} - Spotlight Priority: ${Math.floor(1000 / Math.max(user.rank, 10))}x` : 'Needs rank data'}
-                </div>
+            <p className="text-sm text-white/70">
+              {marketingFeatures.profileLinks > 0 
+                ? `You can add up to ${marketingFeatures.profileLinks} links to your profile.` 
+                : "Unlock the ability to add links to your profile."}
+            </p>
+            
+            {!hasBasicMarketing && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full mt-2"
+                onClick={handleUpgrade}
+              >
+                Unlock Feature
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+        
+        {/* Analytics */}
+        <Card className="glass-morphism border-white/10">
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <BarChart className="h-5 w-5 text-blue-400" />
+                <span className="font-medium">Analytics</span>
               </div>
-              
-              <p className="text-sm text-white/70 mb-3">
-                Higher rank = more visibility. Every dollar spent increases your rank and spotlight priority permanently.
+              {marketingFeatures.analytics && (
+                <span className="text-xs bg-blue-900/30 text-blue-300 px-2 py-1 rounded-full">Enabled</span>
+              )}
+            </div>
+            
+            <p className="text-sm text-white/70">
+              {marketingFeatures.analytics 
+                ? "Track your profile visitors and engagement." 
+                : "Unlock detailed analytics for your profile."}
+            </p>
+            
+            {!marketingFeatures.analytics && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full mt-2"
+                onClick={handleUpgrade}
+              >
+                Unlock Feature
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+        
+        {/* Profile Customization */}
+        <Card className="glass-morphism border-white/10">
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-amber-400" />
+                <span className="font-medium">Customization</span>
+              </div>
+              {marketingFeatures.customization && (
+                <span className="text-xs bg-amber-900/30 text-amber-300 px-2 py-1 rounded-full">Enabled</span>
+              )}
+            </div>
+            
+            <p className="text-sm text-white/70">
+              {marketingFeatures.customization 
+                ? "Customize your profile with themes and effects." 
+                : "Unlock advanced profile customization options."}
+            </p>
+            
+            {!marketingFeatures.customization && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full mt-2"
+                onClick={handleUpgrade}
+              >
+                Unlock Feature
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+        
+        {/* Profile Protection */}
+        <Card className="glass-morphism border-white/10">
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-green-400" />
+                <span className="font-medium">Protection</span>
+              </div>
+              {marketingFeatures.protection > 0 && (
+                <span className="text-xs bg-green-900/30 text-green-300 px-2 py-1 rounded-full">
+                  {marketingFeatures.protection}h
+                </span>
+              )}
+            </div>
+            
+            <p className="text-sm text-white/70">
+              {marketingFeatures.protection > 0 
+                ? `Protection from mockery for ${marketingFeatures.protection} hours.` 
+                : "Protect yourself from mockery and other attacks."}
+            </p>
+            
+            {marketingFeatures.protection === 0 && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full mt-2"
+                onClick={handleUpgrade}
+              >
+                Unlock Feature
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Boost Your Profile */}
+      <Card className="glass-morphism border-white/10 bg-gradient-to-r from-indigo-900/30 to-purple-900/30">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-royal-gold" />
+                Boost Your Profile
+              </h3>
+              <p className="text-sm text-white/70 mt-1">
+                {hasActiveBoost 
+                  ? `You have ${activeBoosts.length} active boost${activeBoosts.length > 1 ? 's' : ''}.` 
+                  : "Make your profile stand out with visual enhancements."}
               </p>
             </div>
             
-            {/* Marketing Benefits by Tier */}
-            <div className="glass-morphism-highlight rounded-lg p-4 my-4">
-              <h3 className="text-lg font-medium mb-3 flex items-center">
-                <Globe className="h-5 w-5 text-royal-gold mr-2" />
-                Your Marketing Benefits
-              </h3>
-              
-              <div className="space-y-3">
-                {marketingBenefits.map((benefit, index) => (
-                  <div key={index} className="flex items-start">
-                    <Sparkles className="h-4 w-4 text-royal-gold mr-2 mt-1 flex-shrink-0" />
-                    <div>
-                      <p className="text-sm text-white/80">{benefit}</p>
-                    </div>
-                  </div>
-                ))}
-                
-                {user.tier === 'basic' && (
-                  <p className="text-sm text-white/60 mt-2">
-                    Spend more to unlock additional marketing benefits. Top spenders receive priority spotlight placement.
-                  </p>
-                )}
-              </div>
-              
-              <div className="mt-3 space-x-2 flex">
-                <Button 
-                  onClick={handleShareProfile}
-                  variant="outline" 
-                  size="sm"
-                  className="flex-1 border-royal-gold/30 text-royal-gold hover:bg-royal-gold/10"
-                >
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Share Profile
-                </Button>
-                
-                <Button 
-                  onClick={onBoostProfile}
-                  size="sm"
-                  className="flex-1 bg-gradient-to-r from-royal-gold-dark via-royal-gold to-royal-gold-bright text-black hover:opacity-90"
-                >
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Boost Visibility
-                </Button>
-              </div>
-            </div>
+            <Button 
+              variant="outline" 
+              className={`${hasActiveBoost ? 'bg-royal-gold/10 text-royal-gold hover:bg-royal-gold/20' : ''}`}
+              onClick={handleBoostProfile}
+              disabled={loading}
+            >
+              {hasActiveBoost ? 'Manage Boosts' : 'Boost Profile'}
+            </Button>
           </div>
         </CardContent>
       </Card>
