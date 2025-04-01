@@ -84,3 +84,63 @@ export function formatRelativeTime(date: string | Date | number): string {
     return 'Invalid date';
   }
 }
+
+/**
+ * Format a date as time ago (e.g., "5 minutes ago")
+ * Alias for formatRelativeTime for backwards compatibility
+ */
+export const formatTimeAgo = formatRelativeTime;
+
+/**
+ * Format date according to specified format
+ */
+export const formatDateWithFormat = (date: Date | string, format: string): string => {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  
+  switch (format) {
+    case 'YYYY-MM-DD':
+      return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
+    case 'MM/DD/YYYY':
+      return `${String(dateObj.getMonth() + 1).padStart(2, '0')}/${String(dateObj.getDate()).padStart(2, '0')}/${dateObj.getFullYear()}`;
+    case 'DD/MM/YYYY':
+      return `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${dateObj.getFullYear()}`;
+    case 'MMM DD, YYYY':
+      return dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    case 'MMMM DD, YYYY':
+      return dateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    default:
+      return dateObj.toLocaleDateString();
+  }
+};
+
+/**
+ * Format a duration in seconds to a human-readable string
+ */
+export const formatDuration = (seconds: number): string => {
+  if (seconds < 60) {
+    return `${seconds} second${seconds !== 1 ? 's' : ''}`;
+  }
+  
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) {
+    return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+  }
+  
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  
+  if (hours < 24) {
+    if (remainingMinutes === 0) {
+      return `${hours} hour${hours !== 1 ? 's' : ''}`;
+    }
+    return `${hours} hour${hours !== 1 ? 's' : ''} ${remainingMinutes} minute${remainingMinutes !== 1 ? 's' : ''}`;
+  }
+  
+  const days = Math.floor(hours / 24);
+  const remainingHours = hours % 24;
+  
+  if (remainingHours === 0) {
+    return `${days} day${days !== 1 ? 's' : ''}`;
+  }
+  return `${days} day${days !== 1 ? 's' : ''} ${remainingHours} hour${remainingHours !== 1 ? 's' : ''}`;
+};

@@ -1,108 +1,83 @@
 
 /**
- * Format a number as currency
+ * Format a number with specified options
  * @param value Number to format
- * @param currency Currency code (default: 'USD')
- * @param options Formatting options
- * @returns Formatted currency string
+ * @param options Intl.NumberFormat options
+ * @returns Formatted number
  */
-export function formatCurrency(
-  value: number | string | undefined,
-  currency: string = 'USD',
-  options?: Intl.NumberFormatOptions
-): string {
-  if (value === undefined || value === null) return '$0.00';
-  
-  // Convert string to number if needed
-  const numValue = typeof value === 'string' ? parseFloat(value) : value;
-  
-  // Check if it's a valid number
-  if (isNaN(numValue)) return '$0.00';
-  
-  const defaultOptions: Intl.NumberFormatOptions = {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  };
-  
-  // Merge default options with provided options
-  const mergedOptions = options ? { ...defaultOptions, ...options } : defaultOptions;
-  
-  try {
-    return new Intl.NumberFormat('en-US', mergedOptions).format(numValue);
-  } catch (error) {
-    console.error('Error formatting currency:', error);
-    return `$${numValue.toFixed(2)}`;
-  }
-}
-
-/**
- * Format a number with thousands separators
- * @param value Number to format
- * @param options Formatting options
- * @returns Formatted number string
- */
-export function formatNumber(
-  value: number | string | undefined,
-  options?: Intl.NumberFormatOptions
-): string {
+export const formatNumber = (value: number | string, options = {}): string => {
   if (value === undefined || value === null) return '0';
   
-  // Convert string to number if needed
   const numValue = typeof value === 'string' ? parseFloat(value) : value;
   
-  // Check if it's a valid number
-  if (isNaN(numValue)) return '0';
-  
-  const defaultOptions: Intl.NumberFormatOptions = {
-    style: 'decimal',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  };
-  
-  // Merge default options with provided options
-  const mergedOptions = options ? { ...defaultOptions, ...options } : defaultOptions;
-  
-  try {
-    return new Intl.NumberFormat('en-US', mergedOptions).format(numValue);
-  } catch (error) {
-    console.error('Error formatting number:', error);
-    return numValue.toString();
-  }
-}
+  return new Intl.NumberFormat('en-US', {
+    ...options
+  }).format(numValue);
+};
 
 /**
- * Format a percentage value
- * @param value Value to format as percentage (0.1 = 10%)
- * @param options Formatting options
- * @returns Formatted percentage string
+ * Format a file size in bytes to a human-readable string
+ * @param bytes Size in bytes
+ * @returns Human-readable file size
  */
-export function formatPercent(
-  value: number | string | undefined,
-  options?: Intl.NumberFormatOptions
-): string {
-  if (value === undefined || value === null) return '0%';
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
   
-  // Convert string to number if needed
-  const numValue = typeof value === 'string' ? parseFloat(value) : value;
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
   
-  // Check if it's a valid number
-  if (isNaN(numValue)) return '0%';
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+/**
+ * Format a rank with the appropriate suffix (1st, 2nd, 3rd, etc)
+ * @param rank Rank number
+ * @returns Formatted rank with suffix
+ */
+export const formatRankWithSuffix = (rank: number): string => {
+  if (!rank) return 'N/A';
   
-  const defaultOptions: Intl.NumberFormatOptions = {
-    style: 'percent',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 1,
-  };
+  const j = rank % 10;
+  const k = rank % 100;
   
-  // Merge default options with provided options
-  const mergedOptions = options ? { ...defaultOptions, ...options } : defaultOptions;
-  
-  try {
-    return new Intl.NumberFormat('en-US', mergedOptions).format(numValue);
-  } catch (error) {
-    console.error('Error formatting percentage:', error);
-    return `${(numValue * 100).toFixed(1)}%`;
+  if (j === 1 && k !== 11) {
+    return rank + "st";
   }
-}
+  if (j === 2 && k !== 12) {
+    return rank + "nd";
+  }
+  if (j === 3 && k !== 13) {
+    return rank + "rd";
+  }
+  return rank + "th";
+};
+
+/**
+ * Round a number to a specific number of decimal places
+ * @param value Number to round
+ * @param decimals Number of decimal places
+ * @returns Rounded number
+ */
+export const roundToDecimalPlaces = (value: number, decimals: number = 2): number => {
+  return Number(Math.round(parseFloat(value + 'e' + decimals)) + 'e-' + decimals);
+};
+
+/**
+ * Format a number with abbreviations (K, M, B, T)
+ * @param num Number to format
+ * @returns Abbreviated number as string
+ */
+export const formatNumberWithAbbreviation = (num: number): string => {
+  if (num < 1000) return num.toString();
+  
+  const abbreviations = ['', 'K', 'M', 'B', 'T'];
+  const tier = Math.floor(Math.log10(Math.abs(num)) / 3);
+  
+  if (tier >= abbreviations.length) return num.toString();
+  
+  const scale = Math.pow(10, tier * 3);
+  const scaled = num / scale;
+  
+  return scaled.toFixed(1).replace(/\.0$/, '') + abbreviations[tier];
+};

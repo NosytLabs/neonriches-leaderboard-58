@@ -61,3 +61,34 @@ export function toCamelCase(str: string): string {
     )
     .replace(/\s+/g, '');
 }
+
+/**
+ * Create a URL-friendly slug from a string
+ * @param str String to convert to a slug
+ * @returns URL-friendly slug
+ */
+export function toSlug(str: string): string {
+  if (!str) return '';
+  
+  return str
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-')     // Replace spaces with hyphens
+    .replace(/-+/g, '-');     // Replace multiple hyphens with single hyphen
+}
+
+/**
+ * Limit a string to a certain number of words
+ * @param str String to limit
+ * @param wordCount Maximum number of words
+ * @param ellipsis String to append when truncated (default: '...')
+ * @returns Limited string
+ */
+export function limitWords(str: string, wordCount: number, ellipsis: string = '...'): string {
+  if (!str) return '';
+  
+  const words = str.split(/\s+/);
+  if (words.length <= wordCount) return str;
+  
+  return words.slice(0, wordCount).join(' ') + ellipsis;
+}

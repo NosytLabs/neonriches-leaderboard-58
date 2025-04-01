@@ -66,6 +66,30 @@ export const formatCompactNumber = (
   return `${unit}${formatter.format(value)}`;
 };
 
+/**
+ * Format a number as a dollar amount (same as formatWithUnit with $ as unit)
+ * @param amount The amount to format
+ * @returns Formatted dollar amount
+ */
 export const formatDollarAmount = (amount: number): string => {
   return formatWithUnit(amount);
+};
+
+/**
+ * Format a number as percentage
+ * @param value Number to format as percentage
+ * @param options Additional formatting options
+ * @returns Formatted percentage string
+ */
+export const formatPercent = (value: number | string, options = {}): string => {
+  if (value === undefined || value === null) return '0%';
+  
+  const numValue = typeof value === 'string' ? parseFloat(value) : value;
+  
+  return new Intl.NumberFormat('en-US', {
+    style: 'percent',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+    ...options
+  }).format(numValue / 100);
 };
