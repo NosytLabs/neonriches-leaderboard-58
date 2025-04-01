@@ -12,7 +12,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'premium',
     price: 25,
     durationDays: 30,
-    previewImage: '/throne-assets/boosts/gold-aura.jpg'
+    previewImage: '/throne-assets/boosts/gold-aura.jpg',
+    duration: 30 * 24, // hours
+    icon: 'crown' // Add missing icon property
   },
   {
     id: 'crown-effect',
@@ -23,7 +25,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'royal',
     price: 50,
     durationDays: 30,
-    previewImage: '/throne-assets/boosts/crown-effect.jpg'
+    previewImage: '/throne-assets/boosts/crown-effect.jpg',
+    duration: 30 * 24, // hours
+    icon: 'crown'
   },
   {
     id: 'neon-pulse',
@@ -34,7 +38,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'premium',
     price: 20,
     durationDays: 30,
-    previewImage: '/throne-assets/boosts/neon-pulse.jpg'
+    previewImage: '/throne-assets/boosts/neon-pulse.jpg',
+    duration: 30 * 24, // hours
+    icon: 'zap'
   },
   {
     id: 'rainbow-flow',
@@ -45,7 +51,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'premium',
     price: 30,
     durationDays: 30,
-    previewImage: '/throne-assets/boosts/rainbow-flow.jpg'
+    previewImage: '/throne-assets/boosts/rainbow-flow.jpg',
+    duration: 30 * 24, // hours
+    icon: 'palette'
   },
   {
     id: 'royal-sparkle',
@@ -56,7 +64,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'basic',
     price: 15,
     durationDays: 30,
-    previewImage: '/throne-assets/boosts/sparkle.jpg'
+    previewImage: '/throne-assets/boosts/sparkle.jpg',
+    duration: 30 * 24, // hours
+    icon: 'sparkle'
   },
   {
     id: 'premium-placement',
@@ -67,7 +77,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'royal',
     price: 75,
     durationDays: 30,
-    previewImage: '/throne-assets/boosts/premium.jpg'
+    previewImage: '/throne-assets/boosts/premium.jpg',
+    duration: 30 * 24, // hours
+    icon: 'arrowUp'
   },
   {
     id: 'enhanced-visibility',
@@ -78,7 +90,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'premium',
     price: 35,
     durationDays: 30,
-    previewImage: '/throne-assets/boosts/enhanced.jpg'
+    previewImage: '/throne-assets/boosts/enhanced.jpg',
+    duration: 30 * 24, // hours
+    icon: 'eye'
   },
   {
     id: 'royal-presence',
@@ -89,7 +103,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'royal',
     price: 60,
     durationDays: 30,
-    previewImage: '/throne-assets/boosts/royal-presence.jpg'
+    previewImage: '/throne-assets/boosts/royal-presence.jpg',
+    duration: 30 * 24, // hours
+    icon: 'crown'
   },
   {
     id: 'animated-border',
@@ -100,7 +116,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'premium',
     price: 40,
     durationDays: 30,
-    previewImage: '/throne-assets/boosts/animated-border.jpg'
+    previewImage: '/throne-assets/boosts/animated-border.jpg',
+    duration: 30 * 24, // hours
+    icon: 'square'
   }
 ];
 

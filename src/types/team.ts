@@ -1,32 +1,22 @@
 
-import { ReactNode } from 'react';
-
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
-export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple';
+import { TeamColor } from './user';
 
 export interface TeamData {
   id: string;
   name: string;
-  description: string;
   color: string;
-  icon: ReactNode;
-  mottoShort?: string;
-  motto?: string;
-  benefits?: string[];
-  memberCount?: number;
-  totalSpent?: number;
-  weeklyGoal?: number;
-  topSpender?: {
-    name: string;
-    amount: number;
-  };
-  members?: number;
+  description: string;
+  members: number;
+  emblemUrl: string;
+  motto: string;
+  benefits: string;
+  securityGuarantee: string;
+  historicalNote: string;
+  absurdStat: string;
+  nftJoke: string;
+  cryptoRoast: string;
   totalContribution?: number;
-  securityGuarantee?: string;
-  absurdStat?: string;
-  historicalNote?: string;
-  nftJoke?: string;
-  cryptoRoast?: string;
+  rank?: number; // Add rank property
 }
 
 export interface TeamTheme {
@@ -40,3 +30,5 @@ export interface TeamTheme {
   hoverBg: string;
   activeBg: string;
 }
+
+export type Team = TeamColor;

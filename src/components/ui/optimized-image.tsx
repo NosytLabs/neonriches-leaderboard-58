@@ -8,6 +8,12 @@ export interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageEl
   className?: string;
   fallbackSrc?: string;
   placeholderColor?: string;
+  // Add missing properties that are used in performance-demo.tsx
+  priority?: boolean;
+  objectFit?: string;
+  format?: string;
+  quality?: number;
+  importance?: string;
 }
 
 const OptimizedImage: React.FC<OptimizedImageProps> = ({
@@ -16,6 +22,11 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   className = '',
   fallbackSrc,
   placeholderColor = '#f3f4f6',
+  priority = false,
+  objectFit,
+  format,
+  quality,
+  importance,
   ...props
 }) => {
   const [imageSrc, setImageSrc] = useState<string>(src);
@@ -38,6 +49,11 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     if (fallbackSrc) {
       setImageSrc(fallbackSrc);
     }
+  };
+
+  // Apply object-fit style if provided
+  const imgStyle: React.CSSProperties = {
+    ...(objectFit ? { objectFit: objectFit as any } : {})
   };
 
   return (
@@ -63,6 +79,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
           error && !fallbackSrc && "hidden",
           className
         )}
+        style={imgStyle}
         {...props}
       />
       {error && !fallbackSrc && (

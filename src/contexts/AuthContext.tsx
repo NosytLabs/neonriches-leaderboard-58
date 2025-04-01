@@ -48,12 +48,13 @@ const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ children
         joinedDate: new Date().toISOString(),
         rank: 42,
         totalSpent: 1250,
+        amountSpent: 1250, // Make sure amountSpent is also set
         tier: "gold",
         team: "blue",
         isVerified: true,
         walletBalance: 500,
-        followers: 25,
-        following: 15,
+        followers: [], // Initialize as empty array instead of number
+        following: [], // Initialize as empty array instead of number 
         spendStreak: 7,
         profileViews: 102,
         profileClicks: 48,
@@ -103,9 +104,12 @@ const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ children
         joinedDate: new Date().toISOString(),
         rank: 9999,
         totalSpent: 0,
+        amountSpent: 0, // Add amountSpent to fix the error
         tier: "free",
         isVerified: false,
         walletBalance: 10, // Starting bonus
+        followers: [], // Initialize as empty array
+        following: [], // Initialize as empty array
         settings: {
           profileVisibility: "public",
           allowProfileLinks: true,

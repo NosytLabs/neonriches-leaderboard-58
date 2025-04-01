@@ -82,6 +82,7 @@ export const getDefaultUser = (email: string, username: string): UserProfile => 
     totalSpent: 0,
     amountSpent: 0,
     joinDate: now,
+    joinedDate: now, // Add joinedDate for compatibility
     isVerified: false,
     cosmetics: {
       border: ['starter-border'],
@@ -107,10 +108,11 @@ export const getDefaultUser = (email: string, username: string): UserProfile => 
       showEmailOnProfile: false,
       rankChangeAlerts: false,
       showTeam: true,
-      showSpending: true
+      showSpending: true,
+      showBadges: true // Add the missing showBadges property
     },
-    followers: 0,
-    following: 0,
+    followers: [], // Initialize as empty array
+    following: [], // Initialize as empty array
     spendStreak: 0
   };
 };
@@ -132,7 +134,8 @@ export const addProfileBoostWithDays = (user: UserProfile, days: number, strengt
     level: strength,
     type,
     strength,
-    appliedBy: 'user'
+    appliedBy: 'user',
+    isActive: true // Add the missing isActive property
   };
   
   const profileBoosts = user.profileBoosts || [];
