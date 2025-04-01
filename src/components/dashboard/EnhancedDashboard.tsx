@@ -14,7 +14,7 @@ import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
 import { UserProfile } from '@/types/user';
-import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
+import { User as ConsolidatedUserProfile } from '@/types/user-consolidated';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -79,8 +79,8 @@ const EnhancedDashboard = () => {
   const userWithRequired = ensureTotalSpent(user as UserProfile);
   
   // Then adapt to ensure all other properties are correctly set
-  // Cast the result to ConsolidatedUserProfile to satisfy the type requirements of components
-  const standardUser = adaptToStandardUserProfile(userWithRequired) as unknown as ConsolidatedUserProfile;
+  // Use type assertion to UserProfile to ensure compatibility with component props
+  const standardUser = adaptToStandardUserProfile(userWithRequired) as UserProfile;
 
   const handleSpend = () => {
     toast({
@@ -99,7 +99,7 @@ const EnhancedDashboard = () => {
     sound.playSound('success');
   };
 
-  // Create type-safe component props by using as any for components that expect ConsolidatedUserProfile
+  // Create props objects with the properly typed user
   const welcomeProps = { user: standardUser };
   const overviewProps = { 
     user: standardUser,

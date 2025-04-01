@@ -99,8 +99,8 @@ export interface UserProfile {
   team: TeamColor;
   rank: number;
   previousRank: number;
-  totalSpent: number; // Make required 
-  amountSpent: number; // Make required
+  totalSpent: number; 
+  amountSpent: number; 
   spentAmount?: number; // For backward compatibility
   walletBalance?: number;
   isFounder: boolean;
