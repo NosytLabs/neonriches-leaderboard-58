@@ -34,7 +34,7 @@ export interface CosmeticItem {
   image?: string; // For backward compatibility
 }
 
-// Define UserCosmetics with optional properties to match the other definitions
+// Define UserCosmetics with optional properties for all fields
 export interface UserCosmetics {
   border?: string[];
   color?: string[];

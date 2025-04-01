@@ -8,9 +8,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Award, Crown, Medal, Shield } from 'lucide-react';
-import { Button } from '@/components/ui/button';  // Added Button import
+import { Button } from '@/components/ui/button';
 import CertificateDisplay from '@/components/certificates/CertificateDisplay';
 import { useCertificate } from '@/hooks/useCertificate';
+import { Certificate } from '@/types/certificates';
 
 const CertificatePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,19 +33,22 @@ const CertificatePage: React.FC = () => {
     certificateId: id 
   });
   
-  const handleMint = async (cert) => {
-    return await mintCertificate(cert);
+  const handleMint = async (cert: Certificate): Promise<string> => {
+    const result = await mintCertificate(cert);
+    return result ? 'success' : 'failed';
   };
   
-  const handleShare = async (cert) => {
+  const handleShare = async (cert: Certificate): Promise<string> => {
     const imageUrl = await generateShareableImage(cert);
     if (imageUrl) {
       // Implementation would depend on how sharing is handled in the app
       console.log('Share certificate:', imageUrl);
+      return imageUrl;
     }
+    return '';
   };
   
-  const handleDownload = async (cert) => {
+  const handleDownload = (cert: Certificate): void => {
     // Implementation would depend on how downloading works in the app
     console.log('Download certificate:', cert);
   };

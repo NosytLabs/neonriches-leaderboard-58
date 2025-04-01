@@ -57,9 +57,11 @@ export const useCosmeticPurchase = () => {
     
     // Update the appropriate category with type assertion
     const updatedCosmetics: UserCosmetics = {
-      ...currentCosmetics,
-      [category]: [...currentItems, item.id]
+      ...currentCosmetics
     };
+    
+    // Use proper type assertion when updating the array
+    (updatedCosmetics[category as keyof UserCosmetics] as string[]) = [...currentItems, item.id];
     
     updateUser({
       ...user,
