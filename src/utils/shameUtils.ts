@@ -63,16 +63,9 @@ export const getShameDisplayMessage = (action: MockeryAction, username: string):
     joust: `${username} has been challenged to a joust!`,
     duel: `${username} has been challenged to a duel!`,
     courtJester: `${username} is now the court jester!`,
-    silent_treatment: `${username} is getting the silent treatment!`,
-    smoke_bomb: `${username} has vanished in a cloud of smoke!`,
+    smokeBomb: `${username} has vanished in a cloud of smoke!`,
     silence: `${username} has been silenced!`,
-    protection: `Protection has been granted!`,
-    // Required for TypeScript, but these shouldn't be used directly
-    rotten_tomato: `${username} has been hit with a rotten tomato!`,
-    jester_hat: `${username} is wearing a jester hat!`,
-    royal_insult: `${username} has been royally insulted!`,
-    crown_jewel: `${username}'s crown jewels have been stolen!`,
-    medieval_protection: `${username} is protected by medieval magic!`
+    protection: `Protection has been granted!`
   };
   
   return messages[action] || `${username} has been mocked!`;

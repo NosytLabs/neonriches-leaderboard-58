@@ -9,9 +9,10 @@ import {
   CloudOff, 
   Award
 } from 'lucide-react';
+import { MockeryAction } from '@/types/mockery';
 
 interface MockeryIconRendererProps {
-  action: string;
+  action: MockeryAction;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }

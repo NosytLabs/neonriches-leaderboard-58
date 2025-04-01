@@ -5,26 +5,20 @@ import { MockeryAction } from '@/types/mockery';
 const mockeryActionIcons: Record<MockeryAction, string> = {
   tomatoes: 'Tomato',
   eggs: 'Egg',
-  rotten_tomato: 'RottenTomato',
-  jester_hat: 'JesterHat',
-  royal_insult: 'RoyalInsult',
+  putridEggs: 'PutridEggs',
+  crown: 'Crown',
+  stocks: 'Stocks',
+  jester: 'JesterHat',
+  courtJester: 'CourtJester',
+  smokeBomb: 'SmokeBomb',
+  silence: 'Silence',
   shame: 'ShameIcon',
+  protection: 'Protection',
   taunt: 'TauntIcon',
   mock: 'MockIcon',
   challenge: 'ChallengeIcon',
   joust: 'JoustIcon',
-  duel: 'DuelIcon',
-  crown_jewel: 'CrownJewel',
-  silent_treatment: 'SilentTreatment',
-  smoke_bomb: 'SmokeBomb',
-  medieval_protection: 'Protection',
-  // Add missing actions from error logs
-  crown: 'Crown',
-  stocks: 'Stocks',
-  putridEggs: 'PutridEggs',
-  courtJester: 'CourtJester',
-  silence: 'Silence',
-  protection: 'Protection'
+  duel: 'DuelIcon'
 };
 
 /**
@@ -45,26 +39,20 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
   const colorMap: Record<MockeryAction, string> = {
     tomatoes: 'red',
     eggs: 'yellow',
-    rotten_tomato: 'green',
-    jester_hat: 'purple',
-    royal_insult: 'crimson',
+    putridEggs: 'green',
+    crown: 'gold',
+    stocks: 'brown',
+    jester: 'purple',
+    courtJester: 'purple',
+    smokeBomb: 'black',
+    silence: 'gray',
     shame: 'crimson',
+    protection: 'blue',
     taunt: 'orange',
     mock: 'blue',
     challenge: 'teal',
     joust: 'indigo',
-    duel: 'red',
-    crown_jewel: 'gold',
-    silent_treatment: 'gray',
-    smoke_bomb: 'black',
-    medieval_protection: 'green',
-    // Add missing actions
-    crown: 'gold',
-    stocks: 'brown',
-    putridEggs: 'green',
-    courtJester: 'purple',
-    silence: 'gray',
-    protection: 'blue'
+    duel: 'red'
   };
   
   return colorMap[action] || 'gray';
@@ -79,26 +67,20 @@ export const getMockeryActionPrice = (action: MockeryAction): number => {
   const priceMap: Record<MockeryAction, number> = {
     tomatoes: 5,
     eggs: 10,
-    rotten_tomato: 15,
-    jester_hat: 25,
-    royal_insult: 50,
+    putridEggs: 20,
+    crown: 80,
+    stocks: 65,
+    jester: 25,
+    courtJester: 40,
+    smokeBomb: 45,
+    silence: 35,
     shame: 100,
+    protection: 60,
     taunt: 20,
     mock: 30,
     challenge: 40,
     joust: 75,
-    duel: 150,
-    crown_jewel: 200,
-    silent_treatment: 30,
-    smoke_bomb: 45,
-    medieval_protection: 60,
-    // Add missing actions
-    crown: 80,
-    stocks: 65,
-    putridEggs: 20,
-    courtJester: 40,
-    silence: 35,
-    protection: 60
+    duel: 150
   };
   
   return priceMap[action] || 5;
@@ -113,26 +95,20 @@ export const getMockeryActionDescription = (action: MockeryAction): string => {
   const descriptionMap: Record<MockeryAction, string> = {
     tomatoes: 'Throw a tomato at this user',
     eggs: 'Throw an egg at this user',
-    rotten_tomato: 'Throw a rotten tomato at this user',
-    jester_hat: 'Make this user wear a jester hat for 1 hour',
-    royal_insult: 'Display a royal insult on this user\'s profile for 4 hours',
+    putridEggs: 'Throw rotten eggs for maximum embarrassment',
+    crown: 'Place a shameful crown on this user\'s profile',
+    stocks: 'Put this user in the stocks for public ridicule',
+    jester: 'Make this user wear a jester hat for 1 hour',
+    courtJester: 'Appoint this user as the court jester',
+    smokeBomb: 'Hide this user\'s profile for 30 minutes',
+    silence: 'Silence this user for a period of time',
     shame: 'Put this user in public shame for 8 hours',
+    protection: 'Shield yourself from mockery attacks',
     taunt: 'Taunt this user with a short message',
     mock: 'Mock this user\'s profile for 2 hours',
     challenge: 'Challenge this user to a duel',
     joust: 'Challenge this user to a joust',
-    duel: 'Challenge this user to a duel to the death',
-    crown_jewel: 'Steal a crown jewel from this user',
-    silent_treatment: 'Prevent this user from commenting for 1 hour',
-    smoke_bomb: 'Hide this user\'s profile for 30 minutes',
-    medieval_protection: 'Protect yourself from mockery for 24 hours',
-    // Add missing actions
-    crown: 'Place a shameful crown on this user\'s profile',
-    stocks: 'Put this user in the stocks for public ridicule',
-    putridEggs: 'Throw rotten eggs for maximum embarrassment',
-    courtJester: 'Appoint this user as the court jester',
-    silence: 'Silence this user for a period of time',
-    protection: 'Shield yourself from mockery attacks'
+    duel: 'Challenge this user to a duel to the death'
   };
   
   return descriptionMap[action] || 'Perform a mockery action';
@@ -147,26 +123,20 @@ export const getMockeryActionDisplayName = (action: MockeryAction): string => {
   const nameMap: Record<MockeryAction, string> = {
     tomatoes: 'Tomato',
     eggs: 'Egg',
-    rotten_tomato: 'Rotten Tomato',
-    jester_hat: 'Jester Hat',
-    royal_insult: 'Royal Insult',
+    putridEggs: 'Putrid Eggs',
+    crown: 'Shameful Crown',
+    stocks: 'Public Stocks',
+    jester: 'Jester Hat',
+    courtJester: 'Court Jester',
+    smokeBomb: 'Smoke Bomb',
+    silence: 'Silence',
     shame: 'Public Shame',
+    protection: 'Royal Protection',
     taunt: 'Taunt',
     mock: 'Mock',
     challenge: 'Challenge',
     joust: 'Joust',
-    duel: 'Duel',
-    crown_jewel: 'Crown Jewel',
-    silent_treatment: 'Silent Treatment',
-    smoke_bomb: 'Smoke Bomb',
-    medieval_protection: 'Protection',
-    // Add missing actions
-    crown: 'Shameful Crown',
-    stocks: 'Public Stocks',
-    putridEggs: 'Putrid Eggs',
-    courtJester: 'Court Jester',
-    silence: 'Silence',
-    protection: 'Royal Protection'
+    duel: 'Duel'
   };
   
   return nameMap[action] || action;
@@ -184,26 +154,20 @@ export const getMockeryTier = (action: MockeryAction): string => {
   const tierMap: Record<MockeryAction, string> = {
     tomatoes: 'common',
     eggs: 'common',
-    rotten_tomato: 'uncommon',
-    jester_hat: 'uncommon',
-    royal_insult: 'rare',
+    putridEggs: 'uncommon',
+    crown: 'rare',
+    stocks: 'epic',
+    jester: 'uncommon',
+    courtJester: 'rare',
+    smokeBomb: 'epic',
+    silence: 'rare',
     shame: 'epic',
+    protection: 'epic',
     taunt: 'common',
     mock: 'uncommon',
     challenge: 'rare',
     joust: 'epic',
-    duel: 'legendary',
-    crown_jewel: 'legendary',
-    silent_treatment: 'rare',
-    smoke_bomb: 'epic',
-    medieval_protection: 'epic',
-    // Add missing actions
-    crown: 'rare',
-    stocks: 'epic',
-    putridEggs: 'uncommon',
-    courtJester: 'rare',
-    silence: 'rare',
-    protection: 'epic'
+    duel: 'legendary'
   };
   
   return tierMap[action] || 'common';

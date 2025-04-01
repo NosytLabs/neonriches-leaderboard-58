@@ -84,7 +84,3 @@ export const getMockeryDescription = (action: MockeryAction): string => {
       return 'A mysterious form of mockery.';
   }
 };
-
-/**
- * Create mockery-descriptions.ts to fix import errors
- */
