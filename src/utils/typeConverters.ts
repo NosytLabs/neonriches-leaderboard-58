@@ -2,73 +2,37 @@
 import { TeamColor } from '@/types/team';
 
 /**
- * Convert any value to TeamColor safely
- * @param team - Team value to convert
- * @returns Valid TeamColor
+ * Convert a string to a valid TeamColor
+ * This helps with type safety when working with team values
  */
-export const toTeamColor = (team: TeamColor | string | null | undefined): TeamColor => {
-  if (!team) return 'none';
+export function toTeamColor(team: string | null | undefined): TeamColor | undefined {
+  if (!team) return undefined;
   
-  const validColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze'];
-  const normalizedTeam = String(team).toLowerCase() as TeamColor;
+  // Check if the string is a valid TeamColor
+  const validTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze'];
   
-  if (validColors.includes(normalizedTeam)) {
-    return normalizedTeam;
+  if (validTeams.includes(team as TeamColor)) {
+    return team as TeamColor;
   }
   
-  return 'none';
-};
+  // Return a default value if not valid
+  return 'neutral';
+}
 
 /**
- * Convert any value to string safely
- * @param value - Value to convert to string
- * @returns String representation of the value
+ * Safely convert any team value to a team color for UI display
  */
-export const safeToString = (value: any): string => {
-  if (value === null || value === undefined) {
-    return '';
-  }
+export function getTeamColorClass(team: string | null | undefined): string {
+  if (!team) return 'text-gray-400';
   
-  if (typeof value === 'object') {
-    try {
-      return JSON.stringify(value);
-    } catch (e) {
-      return String(value);
-    }
+  switch(team.toLowerCase()) {
+    case 'red': return 'text-red-500';
+    case 'blue': return 'text-blue-500';
+    case 'green': return 'text-green-500';
+    case 'gold': return 'text-yellow-500';
+    case 'purple': return 'text-purple-500';
+    case 'silver': return 'text-gray-300';
+    case 'bronze': return 'text-amber-700';
+    default: return 'text-gray-400';
   }
-  
-  return String(value);
-};
-
-/**
- * Ensures a value is a valid string ID
- * @param id - Value to convert to a string ID
- * @returns String ID
- */
-export const ensureStringId = (id: any): string => {
-  if (!id) {
-    return '';
-  }
-  return String(id);
-};
-
-/**
- * Safely convert any value to TeamColor and provide tailwind class
- * Similar to getTeamColor but doesn't require importing teamUtils
- */
-export const safeTeamColor = (team: any): TeamColor => {
-  return toTeamColor(team);
-};
-
-/**
- * Ensures a value is a valid number
- * @param val - Value to convert
- * @param defaultVal - Default value if conversion fails
- * @returns Number value
- */
-export const ensureNumber = (val: any, defaultVal: number = 0): number => {
-  if (val === null || val === undefined) return defaultVal;
-  
-  const num = Number(val);
-  return isNaN(num) ? defaultVal : num;
-};
+}

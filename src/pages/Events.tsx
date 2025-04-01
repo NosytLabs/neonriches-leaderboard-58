@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Shell } from '@/components/ui/Shell';
 import { PageHeader } from '@/components/ui/page-header';
@@ -11,6 +10,7 @@ import RoyalDivider from '@/components/ui/royal-divider';
 import { events, eventDetails } from '@/components/events/data';
 import { useToast } from '@/hooks/use-toast';
 import { EventDetails } from '@/types/events';
+import { toTeamColor } from '@/utils/typeConverters';
 
 export default function EventsPage() {
   const allEvents = events;
@@ -67,6 +67,42 @@ export default function EventsPage() {
     prizes: event.prizes || []
   }));
   
+  // When creating event participants, convert the team strings to TeamColor
+  const eventParticipants: LeaderboardUser[] = [
+    {
+      id: 'user1',
+      userId: 'user1',
+      username: 'KingSpender',
+      profileImage: '/images/avatars/royal1.jpg',
+      totalSpent: 15000,
+      rank: 1,
+      team: toTeamColor('red'),
+      tier: 'royal',
+      spendStreak: 7,
+      displayName: 'King Spender',
+      walletBalance: 5000,
+      previousRank: 1,
+      joinDate: '2023-01-01',
+      isVerified: true
+    },
+    {
+      id: 'user2',
+      userId: 'user2',
+      username: 'QueenGambler',
+      profileImage: '/images/avatars/royal2.jpg',
+      totalSpent: 20000,
+      rank: 2,
+      team: toTeamColor('blue'),
+      tier: 'elite',
+      spendStreak: 6,
+      displayName: 'Queen Gambler',
+      walletBalance: 7000,
+      previousRank: 2,
+      joinDate: '2023-01-10',
+      isVerified: true
+    }
+  ];
+
   return (
     <Shell>
       <PageHeader

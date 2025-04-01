@@ -1,6 +1,8 @@
 
-// This is a simple re-export file to handle casing issues
-import { Shell } from '@/components/ui/shell';
+// Fix imports to use consistent casing
+
+// Import from the correct path with consistent casing
+import { Shell } from '@/components/ui/shell/Shell';
 export { Shell };
 
 // Make sure we're exporting it as the default too

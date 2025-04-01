@@ -40,7 +40,13 @@ export async function accessProtected() {
 }
 
 export async function signOut() {
-  console.log("Mock sign out");
+  try {
+    // Use the imported supabase client
+    return await supabase.auth.signOut();
+  } catch (error) {
+    console.error('Sign out error:', error);
+    throw error;
+  }
 }
 
 export async function register(formData: FormData) {
@@ -122,5 +128,21 @@ export const refreshSession = async () => {
   } catch (error) {
     console.error('Error refreshing session:', error);
     return false;
+  }
+};
+
+export const authenticateUser = async (email: string, password: string) => {
+  try {
+    const response = await supabase.auth.signIn({ email, password });
+    
+    // Handle different response formats
+    if ('data' in response) {
+      return response.data.session;
+    } else {
+      return response.session;
+    }
+  } catch (error) {
+    console.error('Authentication error:', error);
+    throw error;
   }
 };

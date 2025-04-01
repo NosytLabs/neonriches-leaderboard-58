@@ -1,7 +1,6 @@
 
-// This is a consistent casing file to handle imports
-import { Shell } from '../shell';
+// Fix shell casing issue by consistently using lowercase
 
-// Re-export with consistent casing
-export { Shell };
+// Export the Shell component with consistent casing
+export { Shell } from './Shell';
 export default Shell;

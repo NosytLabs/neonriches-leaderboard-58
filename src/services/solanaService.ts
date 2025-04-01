@@ -1,6 +1,6 @@
 
 import { UserProfile } from '@/types/user';
-import { LeaderboardEntry, OnChainLeaderboardEntry, SolanaTransaction } from '@/types/leaderboard';
+import { LeaderboardUser, OnChainLeaderboardEntry, SolanaTransaction } from '@/types/leaderboard';
 import { Certificate } from '@/types/certificate';
 
 export interface SolanaConnectionStatus {
@@ -47,9 +47,27 @@ export const generateCertificateMetadata = (user: UserProfile, templateId?: stri
 export const getOnChainLeaderboard = async (): Promise<OnChainLeaderboardEntry[]> => {
   // Mock implementation for now
   return [
-    { pubkey: 'abc123', amount: 1000, timestamp: new Date().toISOString(), username: 'crypto_whale' },
-    { pubkey: 'def456', amount: 500, timestamp: new Date().toISOString(), username: 'blockchain_king' },
-    { pubkey: 'ghi789', amount: 250, timestamp: new Date().toISOString(), username: 'sol_master' }
+    { 
+      publicKey: 'abc123', 
+      amount: 1000, 
+      rank: 1,
+      username: 'crypto_whale',
+      timestamp: new Date().toISOString()
+    },
+    { 
+      publicKey: 'def456', 
+      amount: 500, 
+      rank: 2,
+      username: 'blockchain_king',
+      timestamp: new Date().toISOString()
+    },
+    { 
+      publicKey: 'ghi789', 
+      amount: 250, 
+      rank: 3,
+      username: 'sol_master',
+      timestamp: new Date().toISOString()
+    }
   ];
 };
 
@@ -58,23 +76,23 @@ export const getTransactionHistory = async (pubkey: string): Promise<SolanaTrans
   return [
     { 
       id: '1',
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().getTime(),
       amount: 100,
       sender: pubkey,
       receiver: 'treasury_key',
       transactionHash: 'tx_hash_1',
-      status: 'completed',
+      status: 'confirmed',
       type: 'deposit'
     },
     {
       id: '2',
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().getTime(),
       amount: 50,
       sender: pubkey,
       receiver: 'treasury_key',
       transactionHash: 'tx_hash_2',
-      status: 'completed',
-      type: 'purchase'
+      status: 'confirmed',
+      type: 'spend'
     }
   ];
 };

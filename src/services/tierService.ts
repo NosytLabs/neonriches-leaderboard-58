@@ -1,101 +1,131 @@
-// Import necessary types
-import { UserTier, TierDetails } from '@/types/tier';
 
-// Convert the tiers object to an array so it can be iterated
-const tiersList: TierDetails[] = [
+import { UserTier } from '@/types/user';
+
+// Update to use an array instead of an object to support iteration methods
+export interface TierDetails {
+  id: UserTier;
+  name: string;
+  description: string;
+  features: string[];
+  color: string;
+  spendRequirement?: number; // Add this property
+}
+
+// Convert to an array of tier details
+export const tiers: TierDetails[] = [
   {
     id: 'free',
     name: 'Free Tier',
-    description: 'Basic features for everyone',
-    features: ['Limited profile visibility', 'Basic analytics'],
+    description: 'Basic features for casual users',
+    features: ['Basic profile', 'Public leaderboard access', 'Limited daily votes'],
     color: 'gray',
     spendRequirement: 0
   },
   {
     id: 'basic',
     name: 'Basic Tier',
-    description: 'Enhanced features for casual spenders',
-    features: ['Increased profile visibility', 'Basic analytics', 'Team chat access'],
+    description: 'Enhanced features for regular users',
+    features: ['Custom profile', 'Team access', 'Daily votes', 'Enhanced visibility'],
     color: 'blue',
     spendRequirement: 100
   },
   {
     id: 'premium',
     name: 'Premium Tier',
-    description: 'Advanced features for serious spenders',
-    features: ['Full profile visibility', 'Advanced analytics', 'Premium badge'],
+    description: 'Advanced features for dedicated users',
+    features: ['Premium profile', 'Team leadership', 'Priority votes', 'Enhanced visibility', 'Special recognition'],
     color: 'purple',
     spendRequirement: 500
   },
   {
     id: 'royal',
     name: 'Royal Tier',
-    description: 'Elite features for the biggest spenders',
-    features: ['Maximum visibility', 'Full analytics', 'Royal badge', 'Custom profile effects'],
+    description: 'Elite features for top spenders',
+    features: ['Royal profile', 'Council membership', 'Unlimited votes', 'Maximum visibility', 'Exclusive recognition', 'Royal certificates'],
     color: 'gold',
     spendRequirement: 1000
+  },
+  // Add more tiers as needed
+  {
+    id: 'founder',
+    name: 'Founder Tier',
+    description: 'Exclusive tier for founding members',
+    features: ['All Royal features', 'Permanent recognition', 'Exclusive access', 'Direct influence'],
+    color: 'royal-gold',
+    spendRequirement: 5000
   }
 ];
 
-// Create a map for easy access by id
-const tiersMap: Record<string, TierDetails> = tiersList.reduce((acc, tier) => {
-  acc[tier.id] = tier;
-  return acc;
-}, {} as Record<string, TierDetails>);
-
-// Convert user spend amount to a tier
-export const getUserTier = (amountSpent: number): UserTier => {
-  if (amountSpent >= 1000) return 'royal';
-  if (amountSpent >= 500) return 'premium';
-  if (amountSpent >= 100) return 'basic';
-  return 'free';
+// Get all available tiers
+export const getAllTiers = () => {
+  return tiers;
 };
 
-// Get details for a specific tier
-export const getTierDetails = (tier: UserTier): TierDetails => {
-  return tiersMap[tier] || tiersMap.free;
+// Get tier by ID
+export const getTierById = (tierId: string): TierDetails | undefined => {
+  return tiers.find(tier => tier.id === tierId);
 };
 
-// Get the next tier based on amount spent
-export const getNextTierDetails = (amountSpent: number): TierDetails | null => {
-  const currentTier = getUserTier(amountSpent);
+// Get tier by spend amount
+export const getTierBySpend = (spendAmount: number): TierDetails => {
+  // Sort tiers by spend requirement (highest first)
+  const sortedTiers = [...tiers].sort((a, b) => 
+    (b.spendRequirement || 0) - (a.spendRequirement || 0)
+  );
   
-  // Find the index of the current tier
-  const currentIndex = tiersList.findIndex(tier => tier.id === currentTier);
+  // Find the highest tier the user qualifies for
+  const qualifiedTier = sortedTiers.find(tier => 
+    spendAmount >= (tier.spendRequirement || 0)
+  );
   
-  // If we're at the max tier, return null
-  if (currentIndex === tiersList.length - 1) {
-    return null;
+  return qualifiedTier || tiers[0]; // Default to first tier if no match
+};
+
+// Get tier progression details for a user
+export const getTierProgression = (currentTier: string, spendAmount: number) => {
+  // Sort tiers by spend requirement
+  const sortedTiers = [...tiers].sort((a, b) => 
+    (a.spendRequirement || 0) - (b.spendRequirement || 0)
+  );
+  
+  const currentIndex = sortedTiers.findIndex(tier => tier.id === currentTier);
+  const nextTier = sortedTiers[currentIndex + 1];
+  
+  if (!nextTier) {
+    return {
+      currentTier: sortedTiers[currentIndex],
+      nextTier: null,
+      progress: 100,
+      remaining: 0
+    };
   }
   
-  // Return the next tier
-  return tiersList[currentIndex + 1];
+  const currentReq = sortedTiers[currentIndex]?.spendRequirement || 0;
+  const nextReq = nextTier.spendRequirement || 0;
+  const range = nextReq - currentReq;
+  const spentInRange = spendAmount - currentReq;
+  const progress = Math.min(100, Math.max(0, (spentInRange / range) * 100));
+  const remaining = nextReq - spendAmount;
+  
+  return {
+    currentTier: sortedTiers[currentIndex],
+    nextTier,
+    progress,
+    remaining
+  };
 };
 
-// Get progress to next tier as a percentage
-export const getProgressToNextTier = (amountSpent: number): number => {
-  const currentTier = getUserTier(amountSpent);
-  const nextTier = getNextTierDetails(amountSpent);
-  
-  if (!nextTier) return 100; // Already at max tier
-  
-  const currentTierDetails = getTierDetails(currentTier);
-  const minAmount = currentTierDetails.spendRequirement;
-  const maxAmount = nextTier.spendRequirement;
-  
-  const progress = ((amountSpent - minAmount) / (maxAmount - minAmount)) * 100;
-  return Math.min(Math.max(progress, 0), 100); // Clamp between 0-100
+// Get tiers above the current tier
+export const getHigherTiers = (currentTier: string) => {
+  const currentIndex = tiers.findIndex(tier => tier.id === currentTier);
+  return tiers.filter((_, index) => index > currentIndex);
 };
 
-// Get amount needed to reach the next tier
-export const getAmountToNextTier = (amountSpent: number): number => {
-  const nextTier = getNextTierDetails(amountSpent);
-  if (!nextTier) return 0; // Already at max tier
-  
-  return Math.max(nextTier.spendRequirement - amountSpent, 0);
-};
-
-// Get all available tiers
-export const getAllTiers = (): TierDetails[] => {
-  return tiersList;
+// Check if a user qualifies for a tier upgrade
+export const checkTierUpgrade = (currentTier: string, spendAmount: number) => {
+  const qualifiedTier = getTierBySpend(spendAmount);
+  return {
+    qualifies: qualifiedTier.id !== currentTier,
+    newTier: qualifiedTier
+  };
 };
