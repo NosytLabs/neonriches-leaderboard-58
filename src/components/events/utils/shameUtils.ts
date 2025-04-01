@@ -1,27 +1,13 @@
 
 import { MockeryAction } from '@/types/mockery-types';
 import { UserTier } from '@/types/user-types';
+import { getMockeryActionPrice } from '@/utils/mockeryUtils';
 
 /**
  * Get shame action price based on mockery action
  */
 export const getShameActionPrice = (action: MockeryAction): number => {
-  const prices: Record<MockeryAction, number> = {
-    tomatoes: 50,
-    eggs: 100,
-    stocks: 250,
-    jester: 500,
-    crown: 1000,
-    shame: 2000,
-    protection: 5000,
-    derank: 10000,
-    gift: 25000,
-    humiliate: 50000,
-    praise: 100000,
-    bribe: 250000
-  };
-  
-  return prices[action] || 100;
+  return getMockeryActionPrice(action);
 };
 
 /**
@@ -37,5 +23,31 @@ export const getShameTierPrices = (tier: UserTier | string): number => {
     'legendary': 1000
   };
   
-  return tierPrices[tier] || 100;
+  return tierPrices[tier as string] || 100;
+};
+
+/**
+ * Get the discounted price for a shame action based on tier
+ */
+export const getDiscountedShamePrice = (action: MockeryAction, tier: string | UserTier = 'basic'): number => {
+  const basePrice = getShameActionPrice(action);
+  
+  // Apply different discount rates based on tier
+  const discountRate = tier === 'premium' || tier === 'royal' ? 0.5 :
+                       tier === 'pro' ? 0.3 :
+                       0.2; // Basic tier or unknown
+  
+  return Math.floor(basePrice * (1 - discountRate));
+};
+
+// Check if there is a weekly discount
+export const hasWeeklyDiscount = (): boolean => {
+  // In a real application, this might be based on the current week/day or fetched from an API
+  return true;
+};
+
+// Get the weekly discounted action
+export const getWeeklyDiscountedAction = (): MockeryAction => {
+  // In a real application, this might rotate weekly or be fetched from an API
+  return 'tomatoes';
 };

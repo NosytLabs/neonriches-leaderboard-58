@@ -37,14 +37,19 @@ export const adaptToStandardUserProfile = (user: ConsolidatedUserProfile): Stand
   if (user.role) standardUser.role = user.role;
   if (user.activeTitle) standardUser.activeTitle = user.activeTitle;
   
-  // Handle profile boosts (making sure level is set as it's required in StandardProfileBoost)
+  // Handle profile boosts (making sure level, strength and isActive are set as they're required in StandardProfileBoost)
   if (user.profileBoosts && Array.isArray(user.profileBoosts)) {
     standardUser.profileBoosts = user.profileBoosts.map(boost => {
       const standardBoost: StandardProfileBoost = {
         ...boost,
+        id: boost.id,
+        type: boost.type,
+        startDate: boost.startDate,
+        endDate: boost.endDate,
         level: boost.level || 1, // Ensure level is set (required in StandardProfileBoost)
         isActive: boost.isActive || false,
-        strength: boost.strength || 1 // Ensure strength is set (required in StandardProfileBoost)
+        strength: boost.strength || 1, // Ensure strength is set (required in StandardProfileBoost)
+        appliedBy: boost.appliedBy || 'system' // Ensure appliedBy is set (required in StandardProfileBoost)
       };
       return standardBoost;
     });
@@ -107,7 +112,7 @@ function adaptUserSettings(settings: any): any {
 /**
  * Ensures a user has the totalSpent property by copying from amountSpent if needed
  */
-export const ensureTotalSpent = <T extends {totalSpent?: number, amountSpent?: number}>(user: T): T & {totalSpent: number} => {
+export const ensureTotalSpent = <T extends {totalSpent?: number, amountSpent?: number}>(user: T): T & {totalSpent: number, amountSpent: number} => {
   return {
     ...user,
     totalSpent: user.totalSpent || user.amountSpent || 0,

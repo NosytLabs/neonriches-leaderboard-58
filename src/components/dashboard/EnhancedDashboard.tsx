@@ -13,7 +13,7 @@ import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { UserProfile } from '@/types/user-consolidated';
-import { adaptToStandardUserProfile } from '@/utils/userTypeAdapter';
+import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -75,11 +75,7 @@ const EnhancedDashboard = () => {
   }
 
   // Convert consolidated user to required format with totalSpent for compatibility
-  const consolidatedUser: UserProfile = {
-    ...user as any,
-    totalSpent: user.totalSpent || user.amountSpent || 0,
-    amountSpent: user.amountSpent || user.totalSpent || 0
-  };
+  const consolidatedUser = ensureTotalSpent(user as UserProfile);
 
   // Adapt the user profile to standard format when passing to components that expect that type
   const standardUser = adaptToStandardUserProfile(consolidatedUser);

@@ -20,6 +20,13 @@ export interface TeamData {
     name: string;
     amount: number;
   };
+  members?: number;
+  totalContribution?: number;
+  securityGuarantee?: string;
+  absurdStat?: string;
+  historicalNote?: string;
+  nftJoke?: string;
+  cryptoRoast?: string;
 }
 
 export interface TeamTheme {

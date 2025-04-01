@@ -8,12 +8,14 @@ import { formatNumber } from '@/utils/formatters';
 interface SpotlightProfileProps {
   user: UserProfile;
   rank: number;
+  isTopSpender?: boolean;
   onClick?: () => void;
 }
 
 const SpotlightProfile: React.FC<SpotlightProfileProps> = ({
   user,
   rank,
+  isTopSpender = false,
   onClick
 }) => {
   // Get initials for avatar fallback
@@ -28,7 +30,7 @@ const SpotlightProfile: React.FC<SpotlightProfileProps> = ({
 
   return (
     <div 
-      className="flex items-center space-x-4 p-3 rounded-lg transition-all hover:bg-white/5 cursor-pointer"
+      className={`flex items-center space-x-4 p-3 rounded-lg transition-all hover:bg-white/5 cursor-pointer ${isTopSpender ? 'border border-yellow-500/30 bg-yellow-500/5' : ''}`}
       onClick={onClick}
     >
       <div className="relative">
@@ -36,6 +38,9 @@ const SpotlightProfile: React.FC<SpotlightProfileProps> = ({
           <AvatarImage src={user.profileImage} />
           <AvatarFallback>{getInitials(user.displayName || user.username)}</AvatarFallback>
         </Avatar>
+        {isTopSpender && (
+          <div className="absolute -top-1 -right-1 h-4 w-4 bg-yellow-500 rounded-full"></div>
+        )}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center">

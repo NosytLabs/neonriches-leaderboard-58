@@ -1,53 +1,52 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from '@/pages/Home';
-import Dashboard from '@/pages/Dashboard';
-import Profile from '@/pages/Profile';
-import Leaderboard from '@/pages/Leaderboard';
-import Settings from '@/pages/Settings';
-import SignUp from '@/pages/SignUp';
-import SignIn from '@/pages/SignIn';
-import Marketing from '@/pages/Marketing';
-import Subscription from '@/pages/Subscription';
-import RoyalPrestige from '@/pages/RoyalPrestige';
-import Certificate from '@/pages/Certificate';
-import NotFound from '@/pages/NotFound';
-import ComingSoonPage from '@/pages/ComingSoonPage';
+import { ThemeProvider } from './components/ThemeProvider';
+import { Toaster } from './components/ui/toaster';
+import { AuthProvider } from './contexts/auth/AuthProvider';
+import HomePage from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import LoginPage from './pages/Login';
+import SignUpPage from './pages/SignUp';
+import ComingSoonPage from './pages/ComingSoonPage';
 
-const App: React.FC = () => {
+function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/profile/:username" element={<Profile />} />
-        <Route path="/leaderboard" element={<Leaderboard />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/marketing" element={<Marketing />} />
-        <Route path="/subscription" element={<Subscription />} />
-        <Route path="/subscription/success" element={<ComingSoonPage title="Subscription Success" description="Thank you for your royal subscription!" />} />
-        <Route path="/prestige" element={<RoyalPrestige />} />
-        <Route path="/certificate" element={<Certificate />} />
-        <Route path="/certificate/:id" element={<Certificate />} />
-        
-        {/* Coming Soon Pages */}
-        <Route path="/teams" element={<ComingSoonPage title="Royal Houses" description="Choose your alliance among the prestigious royal houses." />} />
-        <Route path="/events" element={<ComingSoonPage title="Royal Events" description="Special events and tournaments for the royal court." />} />
-        <Route path="/marketplace" element={<ComingSoonPage title="Royal Marketplace" description="Exchange goods and services with other noble members." />} />
-        <Route path="/gallery" element={<ComingSoonPage title="Royal Gallery" description="View the most prestigious achievements and certificates." />} />
-        <Route path="/challenges" element={<ComingSoonPage title="Royal Challenges" description="Compete in special challenges to earn rewards and recognition." />} />
-        <Route path="/rewards" element={<ComingSoonPage title="Royal Rewards" description="Claim your rewards for loyal service to the throne." />} />
-        <Route path="/referrals" element={<ComingSoonPage title="Royal Referrals" description="Invite new nobles to join the kingdom and earn rewards." />} />
-        
-        {/* 404 Route */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            
+            {/* Coming Soon Pages */}
+            <Route path="/teams" element={<ComingSoonPage title="Teams" description="Join forces with other royals to achieve greatness together. Coming soon!" />} />
+            <Route path="/events" element={<ComingSoonPage title="Royal Events" description="Participate in exclusive events and competitions. Coming soon!" />} />
+            <Route path="/marketplace" element={<ComingSoonPage title="Royal Marketplace" description="Buy and sell exclusive items and boost your status. Coming soon!" />} />
+            <Route path="/leaderboard" element={<ComingSoonPage title="Leaderboards" description="See who rules the kingdom with their spending power. Coming soon!" />} />
+            <Route path="/achievements" element={<ComingSoonPage title="Achievements" description="Earn royal achievements through your spending habits. Coming soon!" />} />
+            <Route path="/subscription" element={<ComingSoonPage title="Royal Subscriptions" description="Subscribe to exclusive premium features. Coming soon!" />} />
+            <Route path="/certificate" element={<ComingSoonPage title="Royal Certificates" description="Earn certified status for your spending accomplishments. Coming soon!" />} />
+            <Route path="/features" element={<ComingSoonPage title="Premium Features" description="Unlock premium features through spending. Coming soon!" />} />
+            <Route path="/community" element={<ComingSoonPage title="Royal Community" description="Connect with fellow royals and expand your influence. Coming soon!" />} />
+            <Route path="/chat" element={<ComingSoonPage title="Royal Messengers" description="Chat with other members of the royal court. Coming soon!" />} />
+            <Route path="/referrals" element={<ComingSoonPage title="Royal Referrals" description="Invite others to join the court and earn rewards. Coming soon!" />} />
+            
+            {/* Fallback for all other routes */}
+            <Route path="*" element={<ComingSoonPage title="Under Construction" description="This part of the kingdom is still being built. Check back soon!" />} />
+          </Routes>
+          
+          <Toaster />
+        </AuthProvider>
+      </Router>
+    </ThemeProvider>
   );
-};
+}
 
 export default App;

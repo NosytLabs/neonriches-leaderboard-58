@@ -1,36 +1,38 @@
 
 import React from 'react';
-import { Crown } from 'lucide-react';
-import AppLayout from '@/layouts/AppLayout';
+import { Card, CardContent } from '@/components/ui/card';
+import { Clock, Sparkles } from 'lucide-react';
 
 interface ComingSoonProps {
   title: string;
   description?: string;
+  icon?: React.ReactNode;
 }
 
-const ComingSoon: React.FC<ComingSoonProps> = ({ 
-  title, 
-  description = "This royal feature is currently under construction by our most skilled artisans." 
+const ComingSoon: React.FC<ComingSoonProps> = ({
+  title,
+  description = "This feature is under development and will be available soon.",
+  icon = <Sparkles className="h-8 w-8 text-royal-gold" />
 }) => {
   return (
-    <AppLayout>
-      <div className="container mx-auto px-4 py-20 text-center">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6 royal-gradient">{title}</h1>
-        
-        <div className="glass-morphism border-royal-gold/20 p-8 max-w-2xl mx-auto rounded-lg">
-          <Crown className="h-16 w-16 text-royal-gold mx-auto mb-6 animate-crown-glow" />
-          
-          <p className="text-lg mb-4">{description}</p>
-          <p className="text-white/70">Check back soon to experience this new addition to the kingdom.</p>
-          
-          <div className="mt-6 flex justify-center">
-            <span className="inline-flex items-center px-3 py-1 rounded-full bg-royal-gold/20 text-royal-gold text-sm">
-              Coming Soon
-            </span>
+    <div className="flex items-center justify-center h-[70vh]">
+      <Card className="max-w-md w-full mx-auto glass-morphism border-white/10 overflow-hidden">
+        <div className="h-1 bg-gradient-to-r from-royal-gold to-royal-purple"></div>
+        <CardContent className="p-8 text-center">
+          <div className="mb-4 inline-flex items-center justify-center rounded-full bg-white/5 p-3">
+            {icon}
           </div>
-        </div>
-      </div>
-    </AppLayout>
+          
+          <h2 className="text-2xl font-bold mb-2">{title}</h2>
+          <p className="text-white/70 mb-6">{description}</p>
+          
+          <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/5 text-sm">
+            <Clock className="h-4 w-4 mr-2 text-royal-gold animate-pulse" />
+            <span>Coming Soon</span>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

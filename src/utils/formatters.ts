@@ -9,8 +9,9 @@ export const formatNumber = (value: number): string => {
 /**
  * Format a number as currency
  */
-export const formatCurrency = (value: number): string => {
-  return `$${formatNumber(value.toFixed(2))}`;
+export const formatCurrency = (value: number | string): string => {
+  const numValue = typeof value === 'string' ? parseFloat(value) : value;
+  return `$${formatNumber(Number(numValue.toFixed(2)))}`;
 };
 
 /**
