@@ -1,7 +1,4 @@
 
-// Import TeamColor for proper typing
-import { TeamColor } from './team';
-
 // Define all possible mockery actions
 export type MockeryAction = 
   | 'taunt'
@@ -66,3 +63,6 @@ export interface MockeryStats {
     count: number;
   };
 }
+
+// Import TeamColor from team types
+import { TeamColor } from './team';

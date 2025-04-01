@@ -3,7 +3,8 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "dark" | "light" | "system";
+// Define allowed theme values
+export type Theme = "dark" | "light" | "system" | "royal";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -23,12 +24,12 @@ const initialState: ThemeProviderState = {
   isDarkTheme: true,
 };
 
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
+export const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = "dark", // Keep dark as default
-  storageKey = "p2w-ui-theme",
+  defaultTheme = "dark", // Keep dark as default for SpendThrone theme
+  storageKey = "spendthrone-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
@@ -39,7 +40,7 @@ export function ThemeProvider({
   useEffect(() => {
     const root = window.document.documentElement;
     
-    root.classList.remove("light", "dark");
+    root.classList.remove("light", "dark", "royal");
     
     let effectiveTheme: "dark" | "light" = "dark";
     
@@ -47,6 +48,12 @@ export function ThemeProvider({
       effectiveTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
         : "light";
+    } else if (theme === "royal") {
+      // Royal theme is based on dark theme with royal styles
+      effectiveTheme = "dark";
+      if (!root.classList.contains("royal")) {
+        root.classList.add("royal");
+      }
     } else {
       effectiveTheme = theme;
     }
@@ -81,12 +88,3 @@ export function ThemeProvider({
     </ThemeProviderContext.Provider>
   );
 }
-
-export const useTheme = () => {
-  const context = useContext(ThemeProviderContext);
-  
-  if (context === undefined)
-    throw new Error("useTheme must be used within a ThemeProvider");
-  
-  return context;
-};

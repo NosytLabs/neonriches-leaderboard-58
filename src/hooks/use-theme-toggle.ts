@@ -10,3 +10,5 @@ export const useThemeToggle = () => {
 
   return { theme, toggleTheme };
 };
+
+export default useThemeToggle;

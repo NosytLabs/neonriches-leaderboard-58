@@ -1,7 +1,7 @@
 
 import React from "react";
-import { Moon, Sun, Crown } from "lucide-react";
-import { useTheme } from "@/providers/ThemeProvider";
+import { Moon, Sun, Crown, Monitor } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -32,11 +32,17 @@ export function ThemeToggle() {
           <Moon className="mr-2 h-4 w-4 text-royal-gold" />
           <span className="font-medieval-text">Night Kingdom</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")} className="cursor-pointer hover:bg-white/10 focus:bg-white/15">
+        <DropdownMenuItem onClick={() => setTheme("royal")} className="cursor-pointer hover:bg-white/10 focus:bg-white/15">
           <Crown className="mr-2 h-4 w-4 text-royal-gold" />
-          <span className="font-medieval-text">Royal Default</span>
+          <span className="font-medieval-text">Royal Theme</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("system")} className="cursor-pointer hover:bg-white/10 focus:bg-white/15">
+          <Monitor className="mr-2 h-4 w-4 text-royal-gold" />
+          <span className="font-medieval-text">System Default</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
+
+export default ThemeToggle;

@@ -10,6 +10,7 @@ export { default as useNotificationSounds } from './sounds/use-notification-soun
 export { useToast } from './use-toast';
 export { useIsMobile as useMobile } from './use-mobile';
 export { useTheme } from './use-theme';
+export { useThemeToggle } from './use-theme-toggle';
 export { useTabState } from './useTabState';
 export { useResponsive } from './use-responsive';
 export { useIntersectionObserver } from './use-intersection-observer';
