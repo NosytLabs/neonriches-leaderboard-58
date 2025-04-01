@@ -12,7 +12,6 @@ import { useSound } from '@/hooks/use-sound';
 import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
-import { UserProfile } from '@/types/user';
 import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
 
 const EnhancedDashboard = () => {
@@ -76,7 +75,7 @@ const EnhancedDashboard = () => {
 
   // Ensure user has all required properties and properly typed
   // First ensure totalSpent and amountSpent properties
-  const processedUser = ensureTotalSpent(user as unknown as UserProfile);
+  const processedUser = ensureTotalSpent(user);
   
   // Then adapt to ensure all other properties are correctly set
   const standardUser = adaptToStandardUserProfile(processedUser);
@@ -100,7 +99,7 @@ const EnhancedDashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <DashboardWelcome user={processedUser} />
+      <DashboardWelcome user={standardUser} />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid grid-cols-5 w-full bg-black/20">

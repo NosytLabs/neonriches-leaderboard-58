@@ -11,7 +11,12 @@ interface ProfileStatsProps {
 
 const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
   // Use totalSpent or amountSpent depending on what's available
-  const amountSpent = user.totalSpent || user.amountSpent || 0;
+  const amountSpent = user.totalSpent ?? user.amountSpent ?? 0;
+  const followersCount = typeof user.followers === 'number' 
+    ? user.followers 
+    : Array.isArray(user.followers) 
+      ? user.followers.length 
+      : 0;
   
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -39,7 +44,7 @@ const ProfileStats: React.FC<ProfileStatsProps> = ({ user }) => {
         <CardContent className="p-4 flex items-center justify-between">
           <div>
             <p className="text-xs text-white/70 mb-1">Followers</p>
-            <p className="text-xl font-bold">{formatNumber(user.followers?.length || 0)}</p>
+            <p className="text-xl font-bold">{formatNumber(followersCount)}</p>
           </div>
           <Users className="h-8 w-8 text-blue-500 opacity-80" />
         </CardContent>

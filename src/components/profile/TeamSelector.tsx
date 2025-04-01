@@ -4,17 +4,18 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield } from "lucide-react";
+import { TeamColor } from '@/types/user';
 
-interface TeamSelectorProps {
-  onTeamChange: (team: "red" | "blue" | "green") => void;
-  team?: "red" | "blue" | "green";
+export interface TeamSelectorProps {
+  onTeamChange: (team: TeamColor) => void;
+  team?: TeamColor;
 }
 
 const TeamSelector: React.FC<TeamSelectorProps> = ({ onTeamChange, team = "red" }) => {
   return (
     <RadioGroup 
       defaultValue={team}
-      onValueChange={(value) => onTeamChange(value as "red" | "blue" | "green")}
+      onValueChange={(value) => onTeamChange(value as TeamColor)}
       className="grid grid-cols-1 md:grid-cols-3 gap-4"
     >
       <Card className="cursor-pointer border-2 border-transparent hover:border-royal-crimson/50 transition-all">

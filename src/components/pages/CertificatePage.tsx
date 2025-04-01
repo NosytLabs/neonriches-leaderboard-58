@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Crown, Download, Check, Award } from 'lucide-react';
-import { Certificate } from '@/types/certificates';
+import { Certificate } from '@/types/certificate';
 import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
 import { UserProfile } from '@/types/user';
 
@@ -44,7 +44,7 @@ const CertificatePage: React.FC = () => {
     );
   }
 
-  const handleMintCertificate = async () => {
+  const handleMintCertificate = async (): Promise<string> => {
     setIsMinting(true);
     
     try {
@@ -62,21 +62,24 @@ const CertificatePage: React.FC = () => {
         description: "Your certificate has been successfully minted on the blockchain.",
         variant: "success",
       });
+      
+      // Return success message
+      return "success";
     } catch (error) {
       toast({
         title: "Minting Failed",
         description: "There was an error minting your certificate. Please try again.",
         variant: "destructive",
       });
+      
+      // Return empty string on failure
+      return "";
     } finally {
       setIsMinting(false);
     }
-    
-    // Return an empty string as required by the function signature
-    return "";
   };
   
-  const handleDownloadCertificate = async () => {
+  const handleDownloadCertificate = async (): Promise<string> => {
     // Simulate certificate download
     await new Promise(resolve => setTimeout(resolve, 1000));
     
@@ -86,8 +89,8 @@ const CertificatePage: React.FC = () => {
       variant: "success",
     });
     
-    // Return an empty string as required by the function signature
-    return "";
+    // Return success message
+    return "success";
   };
   
   return (

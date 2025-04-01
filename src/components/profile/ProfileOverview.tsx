@@ -9,9 +9,10 @@ import { Badge } from '@/components/ui/badge';
 
 interface ProfileOverviewProps {
   user: UserProfile;
+  isOwnProfile?: boolean; // Add this prop
 }
 
-const ProfileOverview: React.FC<ProfileOverviewProps> = ({ user }) => {
+const ProfileOverview: React.FC<ProfileOverviewProps> = ({ user, isOwnProfile }) => {
   return (
     <Card>
       <CardHeader>
