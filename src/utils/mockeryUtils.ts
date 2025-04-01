@@ -1,7 +1,7 @@
 
 import { Egg, Lock, Target, Flame, Crown, User, Volume2, VolumeX, CloudFog, AlertCircle, Shield } from 'lucide-react';
 import { MockeryAction, MockeryTier } from '@/types/mockery';
-import TomatoIcon from '@/components/icons/TomatoIconComponent';
+import { TomatoIcon } from '@/components/icons';
 
 /**
  * Get the name of a mockery action

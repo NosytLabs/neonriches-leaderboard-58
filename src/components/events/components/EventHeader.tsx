@@ -1,35 +1,45 @@
 
 import React from 'react';
-import { Trophy } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Event } from '@/types/events';
+import { formatDate } from '@/utils/formatters';
 import OptimizedImage from '@/components/ui/optimized-image';
 
 interface EventHeaderProps {
-  name: string;
-  image: string;
+  event: Event;
 }
 
-const EventHeader: React.FC<EventHeaderProps> = ({ name, image }) => {
+const EventHeader: React.FC<EventHeaderProps> = ({ event }) => {
   return (
-    <div className="relative h-48 overflow-hidden rounded-t-lg">
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10"></div>
-      
-      <OptimizedImage 
-        src={image} 
-        alt={name}
-        className="w-full h-full object-cover"
-        loadingStrategy="eager"
-        placeholderColor="#1a1a2a"
-      />
-      
-      <div className="absolute bottom-0 left-0 p-6 z-20">
-        <div className="flex items-center space-x-2 mb-1">
-          <span className="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full flex items-center">
-            <Trophy size={12} className="mr-1" /> ACTIVE EVENT
-          </span>
-        </div>
-        <h2 className="text-2xl font-bold text-white">{name}</h2>
+    <Card className="bg-card/50 border-primary/10 overflow-hidden relative">
+      <div className="absolute inset-0 blur-sm opacity-30 z-0">
+        <OptimizedImage
+          src={event.imageUrl || '/assets/events/default-banner.jpg'}
+          alt={event.title}
+          className="w-full h-full object-cover"
+          placeholderColor="#111827"
+        />
       </div>
-    </div>
+      <CardHeader className="relative z-10">
+        <div className="flex items-center justify-between">
+          <Badge variant="outline" className="mb-2">
+            {event.type}
+          </Badge>
+          <Badge 
+            variant={event.status === 'active' ? 'default' : 'outline'} 
+            className={event.status === 'active' ? 'bg-green-500' : ''}
+          >
+            {event.status}
+          </Badge>
+        </div>
+        <CardTitle className="text-2xl">{event.title}</CardTitle>
+        <CardDescription>
+          {formatDate(event.startDate)} - {formatDate(event.endDate)}
+        </CardDescription>
+        <p className="mt-2 text-sm text-card-foreground/80">{event.description}</p>
+      </CardHeader>
+    </Card>
   );
 };
 

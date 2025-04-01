@@ -6,6 +6,7 @@ import { UserProfile } from '@/types/user';
 import { Award, CheckCircle, XCircle, HelpCircle, Medal, Download } from 'lucide-react';
 import { useSound } from '@/hooks/use-sound';
 import RoyalButton from '@/components/ui/royal-button';
+import { safeToString } from '@/utils/safeToString';
 
 export interface CertificateProps {
   user: UserProfile;
@@ -27,7 +28,7 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
   const sound = useSound();
   
   // Generate a unique certificate ID if not provided
-  const userId = typeof user.id === 'number' ? user.id.toString() : user.id || '';
+  const userId = safeToString(user.id, '0');
   const uniqueCertId = certificateId || `STATUS-${Math.floor(10000 + Math.random() * 90000)}-${userId.substring(0, 5)}`;
   
   const handleVerify = () => {

@@ -1,42 +1,63 @@
 
-/**
- * String formatting and text utilities
- */
+import { safeToString } from '../safeToString';
 
 /**
- * Generate a truncated version of text with ellipsis
+ * Capitalize the first letter of each word in a string
+ * @param str String to capitalize
+ * @returns Capitalized string
  */
-export const truncateText = (text: string, maxLength: number): string => {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
-};
-
-/**
- * Convert snake_case or kebab-case to camelCase
- */
-export const toCamelCase = (str: string): string => {
-  return str.replace(/[-_]([a-z])/g, (_, letter) => letter.toUpperCase());
-};
-
-/**
- * Format a file size in bytes to a human readable format
- */
-export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
+export function capitalizeWords(str: string): string {
+  if (!str) return '';
   
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-};
+  return str
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
 
 /**
- * Format a Solana/Crypto address to a shortened version
+ * Truncate a string to a maximum length and append an ellipsis if needed
+ * @param str String to truncate
+ * @param maxLength Maximum length before truncating
+ * @param ellipsis String to append when truncated (default: '...')
+ * @returns Truncated string
  */
-export const formatAddress = (address: string): string => {
-  if (!address) return '';
-  if (address.length <= 8) return address;
+export function truncateString(str: string, maxLength: number, ellipsis: string = '...'): string {
+  if (!str) return '';
   
-  return `${address.substring(0, 4)}...${address.substring(address.length - 4)}`;
-};
+  const safeStr = safeToString(str);
+  
+  if (safeStr.length <= maxLength) return safeStr;
+  
+  return `${safeStr.slice(0, maxLength)}${ellipsis}`;
+}
+
+/**
+ * Convert a string to kebab-case (e.g., "Hello World" -> "hello-world")
+ * @param str String to convert
+ * @returns Kebab-case string
+ */
+export function toKebabCase(str: string): string {
+  if (!str) return '';
+  
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/\s+/g, '-')
+    .replace(/[^a-zA-Z0-9-]/g, '')
+    .toLowerCase();
+}
+
+/**
+ * Convert a string to camelCase (e.g., "Hello World" -> "helloWorld")
+ * @param str String to convert
+ * @returns CamelCase string
+ */
+export function toCamelCase(str: string): string {
+  if (!str) return '';
+  
+  return str
+    .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => 
+      index === 0 ? word.toLowerCase() : word.toUpperCase()
+    )
+    .replace(/\s+/g, '');
+}

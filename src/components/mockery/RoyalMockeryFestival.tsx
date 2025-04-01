@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Target, Crown, Egg, Search, Shield, Info, AlertTriangle } from 'lucide-react';
-import { TomatoIcon } from '@/utils/mockeryUtils';
+import { TomatoIcon } from '@/components/icons';
 import { useToast } from '@/hooks/use-toast';
 import { getMockeryActionIcon, getMockeryName, getMockeryDescription, getMockeryCost, getMockeryTier, getMockeryTierColorClass } from '@/utils/mockeryUtils';
 
@@ -167,9 +166,7 @@ const RoyalMockeryFestival = () => {
                         onClick={() => setSelectedAction(action)}
                       >
                         <div className="flex items-center mb-2">
-                          {IconComponent && (
-                            <IconComponent className="h-5 w-5 mr-2" />
-                          )}
+                          {React.createElement(IconComponent, { className: "h-5 w-5 mr-2" })}
                           <h4 className="font-medium text-sm">{name}</h4>
                         </div>
                         <div className="flex justify-between items-center">

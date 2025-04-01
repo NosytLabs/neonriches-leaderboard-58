@@ -1,102 +1,74 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { TeamColor } from '@/types/team';
-import { Crown, ShieldAlert, Sword, Star, Gem, Users } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { safeToString } from '@/utils/safeToString';
 
 interface TeamBadgeProps {
-  team: TeamColor;
+  team: string;
   size?: 'sm' | 'md' | 'lg';
   showName?: boolean;
   className?: string;
 }
 
-const TeamBadge: React.FC<TeamBadgeProps> = ({ 
-  team, 
-  size = 'md', 
-  showName = false,
-  className
+const TeamBadge: React.FC<TeamBadgeProps> = ({
+  team,
+  size = 'md',
+  showName = true,
+  className = ''
 }) => {
-  const getTeamIcon = () => {
-    switch (team) {
-      case 'red':
-        return <Sword className={iconClasses} />;
-      case 'blue':
-        return <ShieldAlert className={iconClasses} />;
-      case 'green':
-        return <Star className={iconClasses} />;
-      case 'gold':
-        return <Crown className={iconClasses} />;
-      case 'purple':
-        return <Gem className={iconClasses} />;
-      default:
-        return <Users className={iconClasses} />;
-    }
+  const getTeamColor = (teamName: string) => {
+    const teamColors: Record<string, string> = {
+      red: 'bg-red-600 text-white',
+      blue: 'bg-blue-600 text-white',
+      green: 'bg-green-600 text-white',
+      gold: 'bg-yellow-600 text-white',
+      purple: 'bg-purple-600 text-white',
+      none: 'bg-gray-600 text-white',
+      neutral: 'bg-gray-400 text-gray-900',
+      silver: 'bg-gray-300 text-gray-800',
+      bronze: 'bg-amber-700 text-white'
+    };
+    
+    return teamColors[teamName.toLowerCase()] || 'bg-gray-600 text-white';
   };
   
-  const getTeamName = () => {
-    switch (team) {
-      case 'red':
-        return 'Crimson Knights';
-      case 'blue':
-        return 'Azure Guardians';
-      case 'green':
-        return 'Emerald Seekers';
-      case 'gold':
-        return 'Golden Crown';
-      case 'purple':
-        return 'Royal Purple';
-      case 'none':
-      case 'neutral':
-        return 'Unaligned';
-      default:
-        return team.charAt(0).toUpperCase() + team.slice(1);
-    }
+  const getTeamName = (teamName: string) => {
+    const teamNames: Record<string, string> = {
+      red: 'Crimson Court',
+      blue: 'Royal Navy',
+      green: 'Golden Order',
+      gold: 'Sovereign Gold',
+      purple: 'Royal Velvet',
+      none: 'Unaligned',
+      neutral: 'Neutral',
+      silver: 'Silver Alliance',
+      bronze: 'Bronze Legion'
+    };
+    
+    return teamNames[teamName.toLowerCase()] || 'Unknown Team';
   };
   
-  const getTeamColor = () => {
-    switch (team) {
-      case 'red':
-        return 'bg-red-500/20 text-red-400 border-red-500/30';
-      case 'blue':
-        return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'green':
-        return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 'gold':
-        return 'bg-amber-500/20 text-amber-400 border-amber-500/30';
-      case 'purple':
-        return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
-      default:
-        return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
-    }
+  const getSizeClasses = (badgeSize: string) => {
+    const sizeClasses: Record<string, string> = {
+      sm: 'text-xs px-1.5 py-0.5',
+      md: 'text-sm px-2 py-1',
+      lg: 'px-3 py-1.5'
+    };
+    
+    return sizeClasses[badgeSize] || sizeClasses.md;
   };
   
-  const sizeClasses = {
-    sm: 'h-6 px-2 text-xs',
-    md: 'h-8 px-3 text-sm',
-    lg: 'h-10 px-4 text-base'
-  };
-  
-  const iconSizes = {
-    sm: 'h-3 w-3',
-    md: 'h-4 w-4',
-    lg: 'h-5 w-5'
-  };
-  
-  const iconClasses = iconSizes[size];
+  const safeTeam = safeToString(team, 'neutral').toLowerCase();
+  const firstLetter = safeTeam.charAt(0).toUpperCase();
+  const restOfName = safeTeam.slice(1);
+  const formattedTeamName = firstLetter + restOfName;
   
   return (
-    <div 
-      className={cn(
-        'flex items-center rounded-full border',
-        getTeamColor(),
-        sizeClasses[size],
-        className
-      )}
+    <Badge 
+      className={`${getTeamColor(safeTeam)} ${getSizeClasses(size)} ${className}`}
     >
-      {getTeamIcon()}
-      {showName && <span className="ml-1.5">{getTeamName()}</span>}
-    </div>
+      {showName ? getTeamName(safeTeam) : formattedTeamName}
+    </Badge>
   );
 };
 

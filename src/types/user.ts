@@ -20,19 +20,11 @@ export type UserTier =
   | 'platinum'
   | 'none';
 
-export type TeamType = 
-  | 'red' 
-  | 'blue' 
-  | 'green' 
-  | 'gold' 
-  | 'purple'
-  | 'silver'
-  | 'none'
-  | 'neutral';
+// Re-export TeamColor to avoid conflicts
+export { TeamColor };
+export type TeamType = TeamColor;
 
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
-
-export type Team = TeamType;
+export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
 
 export interface ProfileBoost {
   id: string;
