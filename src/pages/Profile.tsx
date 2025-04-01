@@ -13,11 +13,12 @@ import ProfileSettings from '@/components/profile/ProfileSettings';
 import { Separator } from '@/components/ui/separator';
 import Footer from '@/components/Footer';
 import { formatDate } from '@/utils/dateUtils';
+import { ensureStringId } from '@/utils/typeConverters';
 
 const ProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
-  const { userProfile, isLoading, error } = useUser(id || user?.id);
+  const { userProfile, isLoading, error } = useUser(ensureStringId(id || user?.id || ''));
   
   if (isLoading) {
     return (
@@ -102,7 +103,7 @@ const ProfilePage: React.FC = () => {
               <CardContent>
                 <h3 className="text-lg font-semibold mb-4">About</h3>
                 <p className="text-muted-foreground">
-                  Joined on {formatDate(userProfile.joinedDate)}
+                  Joined on {formatDate(userProfile.joinedDate || userProfile.joinDate || '')}
                 </p>
               </CardContent>
             </Card>

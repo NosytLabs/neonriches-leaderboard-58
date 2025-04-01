@@ -4,7 +4,7 @@ import { Trophy, CrownIcon, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated';
 import { formatCurrency } from '@/utils/formatters';
 
 interface TopSpenderShowcaseProps {
@@ -15,7 +15,7 @@ interface TopSpenderShowcaseProps {
 const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className = '' }) => {
   // Calculate custom values that might not exist on user
   const spendStreak = user.spendStreak || 0;
-  const followers = user.followers || 0;
+  const followers = user.followers?.length || 0;
 
   return (
     <div className={`max-w-lg mx-auto ${className}`}>
@@ -98,7 +98,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className
                 <div>
                   <div className="text-sm text-white/60">Member Since</div>
                   <div className="font-medium">
-                    {new Date(user.joinedDate || '').toLocaleDateString()}
+                    {new Date(user.joinedDate || user.joinDate || '').toLocaleDateString()}
                   </div>
                 </div>
                 <div>

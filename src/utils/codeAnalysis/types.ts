@@ -1,158 +1,166 @@
+// Types for code analysis utilities
 
-// Unified type definitions for code analysis features
-
-export interface ImportInfo {
-  name: string;
-  path: string;
-  file: string;
-  used: boolean;
-  impact?: number;
-  line?: number;
-}
-
-export interface VariableInfo {
-  name: string;
-  file: string;
-  scope: string;
-  type: string;
-  used: boolean;
-  impact?: number;
-  line?: number;
-}
-
+// Project structure types
 export interface FileInfo {
   path: string;
-  size: number;
-  used: boolean;
-  impact?: number;
-}
-
-export interface SelectorInfo {
   name: string;
-  file: string;
-  used: boolean;
-  impact?: number;
-  line?: number;
-  selector?: string;
+  extension: string;
+  size: number;
+  lines: number;
+  imports: ImportInfo[];
+  exports: ExportInfo[];
+  functions: FunctionInfo[];
+  classes: ClassInfo[];
+  interfaces: InterfaceInfo[];
+  types: TypeInfo[];
+  dependencies: DependencyInfo[];
 }
 
-export interface CodeIssueInfo {
-  description: string;
-  file: string;
-  lineStart: number;
-  lineEnd: number;
-  severity: 'low' | 'medium' | 'high';
-  impact?: number;
-  line?: number;
+export interface ImportInfo {
+  source: string;
+  specifiers: string[];
+  isDefault: boolean;
+  isNamespace: boolean;
+  isRelative: boolean;
+  isExternal: boolean;
 }
 
-export interface DuplicateCodeInfo {
-  id: string;
-  instances: Array<{ path: string; lineStart: number; lineEnd: number }>;
-  linesCount: number;
-  code: string;
-  recommendation?: string;
-  impact?: number;
-  similarity?: number;
-  lines?: number;
-  files?: Array<{ path: string; lineStart?: number; lineEnd?: number }>;
+export interface ExportInfo {
+  name: string;
+  isDefault: boolean;
+  isType: boolean;
+  source?: string;
 }
 
-export interface ComplexityItem {
-  id: string;
-  file: string;
-  function?: string;
+export interface FunctionInfo {
+  name: string;
+  params: ParameterInfo[];
+  returnType: string;
+  isAsync: boolean;
+  isGenerator: boolean;
+  isExported: boolean;
   complexity: number;
-  lineCount: number;
-  recommendation?: string;
-  impact?: number;
-  line?: number;
-  name?: string;
-  explanation?: string;
-  cyclomaticComplexity?: number;
+  lines: number;
+}
+
+export interface ParameterInfo {
+  name: string;
+  type: string;
+  isOptional: boolean;
+  isRest: boolean;
+  defaultValue?: string;
+}
+
+export interface ClassInfo {
+  name: string;
+  methods: MethodInfo[];
+  properties: PropertyInfo[];
+  extends?: string;
+  implements?: string[];
+  isExported: boolean;
+  isAbstract: boolean;
+  lines: number;
+}
+
+export interface MethodInfo {
+  name: string;
+  params: ParameterInfo[];
+  returnType: string;
+  isAsync: boolean;
+  isStatic: boolean;
+  isPrivate: boolean;
+  isProtected: boolean;
+  isAbstract: boolean;
+  complexity: number;
+  lines: number;
+}
+
+export interface PropertyInfo {
+  name: string;
+  type: string;
+  isStatic: boolean;
+  isPrivate: boolean;
+  isProtected: boolean;
+  isReadonly: boolean;
+  isOptional: boolean;
+}
+
+export interface InterfaceInfo {
+  name: string;
+  properties: PropertyInfo[];
+  methods: MethodSignatureInfo[];
+  extends?: string[];
+  isExported: boolean;
+  lines: number;
+}
+
+export interface MethodSignatureInfo {
+  name: string;
+  params: ParameterInfo[];
+  returnType: string;
+  isOptional: boolean;
+}
+
+export interface TypeInfo {
+  name: string;
+  type: string;
+  isExported: boolean;
+  lines: number;
 }
 
 export interface DependencyInfo {
   name: string;
   version: string;
-  used: boolean;
-  size: number;
-  impact?: number;
+  isDevDependency: boolean;
+  isExternal: boolean;
 }
 
+// Performance analysis types
 export interface PerformanceIssue {
+  id: string;
+  type: 'render' | 'memory' | 'network' | 'computation' | 'other';
+  severity: 'low' | 'medium' | 'high' | 'critical';
   description: string;
-  file: string;
-  lineNumber: number;
-  severity: 'low' | 'medium' | 'high';
-  recommendation: string;
-  impact?: number;
+  location?: string;
+  suggestions: string[];
+  impact: string;
+}
+
+export interface PerformanceMetric {
+  name: string;
+  value: number;
+  unit: string;
+  timestamp: number;
+  category: 'render' | 'memory' | 'network' | 'computation' | 'other';
+}
+
+export interface WebVitalMetric {
+  name: 'FCP' | 'LCP' | 'CLS' | 'FID' | 'TTFB' | 'INP';
+  value: number;
+  rating: 'good' | 'needs-improvement' | 'poor';
+  timestamp: number;
+}
+
+export interface PerformanceMetrics {
+  [key: string]: PerformanceMetric;
 }
 
 export interface ProjectMetrics {
   totalFiles: number;
   totalLines: number;
-  totalComponents: number;
-  averageComponentSize: number;
-  totalDependencies: number;
-  totalSize: number;
-  sizeSavings: number;
-  fileSavings: number;
-  dependencySavings: number;
-  sizePercentage: number;
-  filePercentage: number;
-  dependencyPercentage: number;
-  formattedSize: string;
-  beforeCleanup: {
-    projectSize: number;
-    fileCount: number;
-    dependencyCount: number;
-  };
-  afterCleanup: {
-    projectSize: number;
-    fileCount: number;
-    dependencyCount: number;
-  };
-}
-
-export interface AnalysisResult {
-  unusedImports: ImportInfo[];
-  unusedVariables: VariableInfo[];
-  unusedFiles?: FileInfo[];
-  unusedSelectors?: SelectorInfo[];
-  unusedDependencies?: DependencyInfo[];
-  deadCode?: CodeIssueInfo[];
-  deadCodePaths?: CodeIssueInfo[];
-  duplicateCode: DuplicateCodeInfo[];
-  complexCode: ComplexityItem[];
+  totalFunctions: number;
+  totalClasses: number;
+  totalInterfaces: number;
+  totalTypes: number;
+  averageComplexity: number;
+  dependenciesCount: number;
+  devDependenciesCount: number;
+  bundleSize: number;
   performanceIssues: PerformanceIssue[];
-  metrics?: ProjectMetrics;
+  performanceMetrics: PerformanceMetrics;
 }
 
-// Export the consolidated types to avoid duplication
-export type {
-  AnalysisResult as CodeAnalysisResult,
-  ProjectMetrics,
-  PerformanceIssue,
-  PerformanceMetric
-};
-
-// Additional types needed by the analysis components
-export interface PerformanceMetric {
-  name: string;
-  value: number;
-  unit: string;
-  status: 'good' | 'warning' | 'critical';
-  description?: string;
-}
-
-export interface AnalysisLayoutProps {
-  title: string;
-  description?: string;
-  children: React.ReactNode;
-  metrics?: ProjectMetrics;
-}
-
-export interface PerformanceReportProps {
-  performanceIssues?: PerformanceIssue[];
-}
+// Export from other files to avoid conflicts
+export type { ProjectMetrics } from './projectMetrics';
+export type { PerformanceIssue } from './performanceTypes';
+export type { PerformanceMetric } from './performanceTypes';

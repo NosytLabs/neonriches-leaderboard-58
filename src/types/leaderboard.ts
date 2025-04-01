@@ -2,61 +2,45 @@
 import { TeamColor } from './team';
 import { UserTier } from './tier';
 
-/**
- * LeaderboardUser interface
- */
+export interface LeaderboardFilter {
+  timeframe?: 'day' | 'week' | 'month' | 'all';
+  team?: TeamColor | string;
+  tier?: UserTier | string;
+  limit?: number;
+}
+
 export interface LeaderboardUser {
   id: string;
   userId: string;
   username: string;
-  displayName?: string;
-  profileImage?: string;
+  displayName: string;
+  profileImage: string;
   totalSpent: number;
+  amountSpent?: number;
   rank: number;
+  previousRank: number;
   team: TeamColor;
   tier: UserTier;
-  spendStreak?: number;
-  walletBalance?: number;
-  previousRank?: number;
-  joinDate?: string;
-  isVerified?: boolean;
-  // Add missing properties used in components
-  rankChange?: number;
-  spendChange?: number;
+  spendStreak: number;
+  walletBalance: number;
+  isVerified: boolean;
   isProtected?: boolean;
-  avatarUrl?: string;
+  joinDate?: string;
+  joinedDate?: string;
 }
 
-/**
- * LeaderboardFilter type
- */
-export type LeaderboardFilter = 'all' | 'day' | 'week' | 'month' | 'team';
+export interface LeaderboardEntry extends LeaderboardUser {
+  spendChange?: number;
+  rankChange?: number;
+}
 
-/**
- * OnChainLeaderboardEntry type
- */
-export interface OnChainLeaderboardEntry {
-  address: string;
-  displayName: string;
-  rank: number;
+export interface TeamLeaderboardData {
+  teamId: string;
+  teamColor: TeamColor;
+  teamName: string;
   totalSpent: number;
-  // Add missing properties
-  pubkey?: string;
+  memberCount: number;
+  averageSpent: number;
+  rank: number;
+  previousRank: number;
 }
-
-/**
- * SolanaTransaction type
- */
-export interface SolanaTransaction {
-  id: string;
-  userId: string;
-  amount: number;
-  timestamp: string;
-  status: 'confirmed' | 'pending' | 'failed';
-  type: 'spend' | 'deposit' | 'withdrawal' | 'transfer';
-  signature?: string;
-  recipient?: string;
-}
-
-// Alias for backward compatibility
-export type TypedLeaderboardFilter = LeaderboardFilter;

@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated';
 
 export interface ProfileMarketingSettingsProps {
   user: UserProfile;
-  onSave: (updates: any) => Promise<void>; // Make this prop required
+  onSave: (updates: any) => Promise<void>;
 }
 
 const ProfileMarketingSettings: React.FC<ProfileMarketingSettingsProps> = ({ 

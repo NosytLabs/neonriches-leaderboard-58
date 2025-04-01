@@ -1,6 +1,5 @@
 
-// Fix shell casing issue by consistently using lowercase
+import Shell from './Shell';
 
-// Export the Shell component with consistent casing
-export { Shell } from './Shell';
+export { Shell };
 export default Shell;
