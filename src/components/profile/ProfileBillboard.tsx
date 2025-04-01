@@ -87,23 +87,39 @@ const ProfileBillboard: React.FC<ProfileBillboardProps> = ({
     )
   );
   
-  // Render social links - only if they exist
-  const socialLinksSection = user.socialLinks && user.socialLinks.length > 0 && (
-    <div className="mt-4 flex flex-wrap gap-2">
-      {user.socialLinks.map(link => (
-        <Button 
-          key={link.id} 
-          variant="outline" 
-          size="sm" 
-          className="glass-morphism border-white/10"
-          onClick={() => window.open(link.url, '_blank')}
-        >
-          <ExternalLink className="h-4 w-4 mr-2" />
-          {link.platform}
-        </Button>
-      ))}
-    </div>
-  );
+  // Handle rank comparison safely
+  const handleRankComparison = () => {
+    const userRank = typeof user.rank === 'number' ? user.rank : Number(user.rank);
+    return userRank > 0 && userRank <= 100;
+  };
+  
+  // Handle social links safely
+  const renderSocialLinks = () => {
+    if (!user.socialLinks || typeof user.socialLinks === 'string') {
+      return null;
+    }
+    
+    if (Array.isArray(user.socialLinks) && user.socialLinks.length > 0) {
+      return (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {user.socialLinks.map(link => (
+            <Button 
+              key={link.id} 
+              variant="outline" 
+              size="sm" 
+              className="glass-morphism border-white/10"
+              onClick={() => window.open(link.url, '_blank')}
+            >
+              <ExternalLink className="h-4 w-4 mr-2" />
+              {link.platform}
+            </Button>
+          ))}
+        </div>
+      );
+    }
+    
+    return null;
+  };
   
   return (
     <div className="rounded-lg overflow-hidden glass-morphism border-white/10">
@@ -168,7 +184,7 @@ const ProfileBillboard: React.FC<ProfileBillboardProps> = ({
               )}
             </div>
             
-            {socialLinksSection}
+            {renderSocialLinks()}
           </div>
           
           <div className="mt-6 md:mt-0 flex flex-wrap gap-2">

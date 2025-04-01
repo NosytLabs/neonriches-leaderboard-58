@@ -1,66 +1,37 @@
 
-import { TeamColor } from '@/types/user';
+import { TeamColor } from '@/types/team';
 
 /**
- * Converts a string value to a TeamColor
- * Ensures that the team color is valid according to the TeamColor type
+ * Converts a string to a valid TeamColor enum value
+ * @param value The string value to convert
+ * @returns A valid TeamColor enum value
  */
-export const toTeamColor = (team: any): TeamColor | null => {
-  // If team is null or undefined, return null
-  if (team === null || team === undefined) {
-    return null;
-  }
-  
-  // If team is already a valid TeamColor, return it
-  if (typeof team === 'string') {
-    // Normalize to lowercase for comparison
-    const normalizedTeam = team.toLowerCase();
-    
-    // Check if it's a valid TeamColor
-    const validTeamColors: TeamColor[] = [
-      'red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze'
-    ];
-    
-    if (validTeamColors.includes(normalizedTeam as TeamColor)) {
-      return normalizedTeam as TeamColor;
-    }
-    
-    // Special case handling for legacy team values
-    if (normalizedTeam === 'red' || normalizedTeam === 'Red') return 'red';
-    if (normalizedTeam === 'blue' || normalizedTeam === 'Blue') return 'blue';
-    if (normalizedTeam === 'green' || normalizedTeam === 'Green') return 'green';
-    if (normalizedTeam === 'gold' || normalizedTeam === 'Gold') return 'gold';
-    if (normalizedTeam === 'purple' || normalizedTeam === 'Purple') return 'purple';
-  }
-  
-  // Default to null if no valid conversion
-  return null;
-};
-
-/**
- * Ensures a value is a string ID
- * Converts numbers to strings if needed
- */
-export const ensureStringId = (id: string | number | undefined): string => {
-  if (id === undefined) return '';
-  return String(id);
-};
-
-/**
- * Cast team string to valid TeamColor
- */
-export const safeTeamColor = (team: string | null | undefined): TeamColor => {
-  if (!team) return 'neutral';
-  
+export function toTeamColor(value: string | TeamColor): TeamColor {
+  // Create array of valid team colors
   const validTeamColors: TeamColor[] = [
-    'red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze'
+    'red', 'blue', 'green', 'gold', 'purple', 'none', 
+    'neutral', 'silver', 'bronze'
   ];
   
-  const normalizedTeam = team.toLowerCase() as TeamColor;
-  
-  if (validTeamColors.includes(normalizedTeam)) {
-    return normalizedTeam;
+  // Check if value is already a valid TeamColor
+  if (typeof value === 'string' && validTeamColors.includes(value as TeamColor)) {
+    return value as TeamColor;
   }
   
-  return 'neutral';
-};
+  // Default to 'none' if invalid
+  return 'none';
+}
+
+/**
+ * Type guard to check if a value is a valid TeamColor
+ * @param value The value to check
+ * @returns True if the value is a valid TeamColor
+ */
+export function isTeamColor(value: any): value is TeamColor {
+  const validTeamColors: TeamColor[] = [
+    'red', 'blue', 'green', 'gold', 'purple', 'none', 
+    'neutral', 'silver', 'bronze'
+  ];
+  
+  return typeof value === 'string' && validTeamColors.includes(value as TeamColor);
+}

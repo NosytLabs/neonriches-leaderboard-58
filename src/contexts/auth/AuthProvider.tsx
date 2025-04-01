@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useReducer } from 'react';
-import { AuthContext } from '../index';
+import { AuthContext } from '../AuthContext';
 import { authReducer } from './authReducer';
 import { AuthProviderProps, AuthState } from './types';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +13,7 @@ import {
 } from './authService';
 import { UserProfile } from '@/types/user';
 import { TeamColor } from '@/types/team';
+import { toTeamColor } from '@/utils/typeConverters';
 
 const initialState: AuthState = {
   user: null,
@@ -23,15 +24,14 @@ const initialState: AuthState = {
 
 // Fix for the login success handler with proper TeamColor type
 const handleLoginSuccess = (user: any): UserProfile => {
-  // Convert string team to TeamColor
+  // Convert string team to TeamColor if it exists
   const teamValue = user.team as string;
-  const validTeamColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze'];
+  let team: TeamColor | null = null;
   
-  // Ensure the team is a valid TeamColor
-  const team: TeamColor = validTeamColors.includes(teamValue as TeamColor) 
-    ? teamValue as TeamColor 
-    : 'none';
-    
+  if (teamValue) {
+    team = toTeamColor(teamValue);
+  }
+  
   return {
     ...user,
     team,
@@ -55,9 +55,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const user = await fetchUserProfile();
           
           if (user) {
+            // Process user data to ensure proper types
+            const processedUser = handleLoginSuccess(user);
+            
             dispatch({ 
               type: 'AUTH_SUCCESS', 
-              payload: user 
+              payload: processedUser 
             });
           } else {
             dispatch({ type: 'AUTH_LOGOUT' });
@@ -118,9 +121,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await registerWithEmail(username, email, password);
       
       if (response.success && response.user) {
+        // Process user data before dispatching
+        const processedUser = handleLoginSuccess(response.user);
+        
         dispatch({ 
           type: 'REGISTER_SUCCESS', 
-          payload: response.user 
+          payload: processedUser 
         });
         return true;
       } else {
@@ -147,6 +153,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     
     try {
       dispatch({ type: 'AUTH_START' });
+      
+      // Process team color if it exists in the updates
+      if (updates.team && typeof updates.team === 'string') {
+        updates.team = toTeamColor(updates.team);
+      }
+      
       const updatedUser = await updateUserData({
         ...state.user,
         ...updates
@@ -247,3 +259,5 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export default AuthProvider;

@@ -1,6 +1,8 @@
 
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { AuthContextType, UserProfile } from '@/types/user-consolidated';
+import { TeamColor } from '@/types/team';
+import { toTeamColor } from '@/utils/typeConverters';
 
 // Create a context for auth state
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -61,7 +63,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             joinedDate: new Date().toISOString(),
             profileImage: '/avatars/default.png',
             tier: 'premium',
-            team: 'blue',
+            team: 'blue' as TeamColor, // Cast as TeamColor
             rank: 42,
             previousRank: 45,
             totalSpent: 1250,
@@ -99,7 +101,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           profileImage: '/avatars/default.png',
           joinedDate: new Date().toISOString(),
           tier: 'premium',
-          team: 'blue',
+          team: 'blue' as TeamColor, // Cast as TeamColor
           rank: 42,
           previousRank: 45,
           totalSpent: 1250,
@@ -182,6 +184,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Process team color if it exists in the updates
+      if (updates.team && typeof updates.team === 'string') {
+        updates.team = toTeamColor(updates.team);
+      }
       
       setUser(prevUser => {
         if (!prevUser) return null;

@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { SoundType, SoundOptions, UseSoundHook } from '@/hooks/sounds/types';
 import { useSoundsConfig } from './useSoundsConfig';
@@ -61,25 +62,25 @@ export const useSound = (): UseSoundHook => {
   
   // Make sure these return booleans as required in the interface
   const wrappedToggleSounds = useCallback((): boolean => {
-    const result = toggleSounds();
-    return !!result;
+    const newState = toggleSounds();
+    return !!newState;
   }, [toggleSounds]);
   
   const wrappedToggleMuted = useCallback((): boolean => {
-    const result = toggleMuted();
-    return !!result;
+    const newState = toggleMuted();
+    return !!newState;
   }, [toggleMuted]);
   
-  const pauseSound = useCallback((type?: SoundType) => {
+  const pauseSound = useCallback((type?: SoundType): void => {
     console.log(`Pausing sound: ${type || 'all'}`);
   }, []);
   
-  const resumeSound = useCallback((type?: SoundType) => {
+  const resumeSound = useCallback((type?: SoundType): void => {
     console.log(`Resuming sound: ${type || 'all'}`);
   }, []);
   
   const isPlaying = useCallback((type: SoundType): boolean => {
-    return false; // Placeholder
+    return false; // Placeholder implementation
   }, []);
   
   return {

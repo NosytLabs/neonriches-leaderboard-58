@@ -83,4 +83,10 @@ export interface TeamData {
   logo?: string;
   bannerImage?: string;
   leaderUsername?: string;
+  emblemUrl?: string;  // Added emblemUrl property
+  nftJoke?: string;    // Added nftJoke property
+  cryptoRoast?: string; // Added cryptoRoast property
 }
+
+// Add TeamType as an alias for TeamColor for backwards compatibility
+export type TeamType = TeamColor;
