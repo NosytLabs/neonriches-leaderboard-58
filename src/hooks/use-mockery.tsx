@@ -12,7 +12,7 @@ const useMockery = () => {
   const [mockUsers, setMockUsers] = useState<MockedUser[]>([
     {
       id: '1',
-      userId: '1',
+      // userId is removed as it doesn't exist in the MockedUser type
       username: 'WealthyUser',
       displayName: 'Sir Money Bags',
       profileImage: '/images/avatars/money-bags.jpg',
@@ -25,7 +25,7 @@ const useMockery = () => {
     },
     {
       id: '2',
-      userId: '2',
+      // userId is removed as it doesn't exist in the MockedUser type
       username: 'BigSpender',
       displayName: 'Lady Royal',
       profileImage: '/images/avatars/royal-spender.jpg',
@@ -50,7 +50,7 @@ const useMockery = () => {
       // Add to mocked users
       const mockedUser: MockedUser = {
         id: userId,
-        userId: userId,
+        // Remove userId property
         username: `User${userId}`,
         displayName: `User ${userId}`,
         profileImage: '/images/avatars/default.jpg',
@@ -181,7 +181,7 @@ const useMockery = () => {
     
     return {
       id: mockedUser.id,
-      type: mockedUser.action,
+      // Renamed 'type' to 'action' to match MockeryEvent type
       action: mockedUser.action,
       targetId: mockedUser.id,
       appliedBy: mockedUser.appliedBy,

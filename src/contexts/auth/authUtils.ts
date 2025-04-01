@@ -142,7 +142,7 @@ export const addProfileBoostWithDays = (user: UserProfile, days: number, level: 
  * Adds a cosmetic to a user by category string
  */
 export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: string, category: string): UserCosmetics => {
-  if (!user || !cosmeticId || !category) return user.cosmetics || {};
+  if (!user || !cosmeticId || !category) return user.cosmetics || {} as UserCosmetics;
   
   const cosmetics = { ...(user.cosmetics || {}) } as UserCosmetics;
   
@@ -163,7 +163,8 @@ export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: strin
   
   // Ensure the category exists and is an array
   if (!cosmetics[cosmeticKey]) {
-    cosmetics[cosmeticKey] = [];
+    // Create an empty array for this category
+    cosmetics[cosmeticKey] = [] as string[];
   }
   
   // Add cosmetic if it doesn't already exist

@@ -169,7 +169,7 @@ export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: strin
   
   // Ensure the category exists and is an array
   if (!cosmetics[cosmeticKey]) {
-    cosmetics[cosmeticKey] = [];
+    cosmetics[cosmeticKey] = [] as string[];
   }
   
   // Add cosmetic if it doesn't already exist

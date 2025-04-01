@@ -65,5 +65,5 @@ export interface UserSettings {
   shameAlerts?: boolean;
 }
 
-// Explicitly export TeamColor
-export { TeamColor };
+// Explicitly export TeamColor as a type to avoid isolatedModules error
+export type { TeamColor };
