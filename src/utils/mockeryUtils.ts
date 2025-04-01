@@ -1,178 +1,151 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery-types';
-import { Egg, Crown, UserRound, XCircle, Music, Bomb, Shield, HandMetal, Laugh } from 'lucide-react';
+import { MockeryAction, MockeryTier, TeamColor } from '@/types/mockery-types';
+import { Crown, Egg, Target, TrendingDown, Award, Shield, Trash } from 'lucide-react';
 
 /**
- * Get the display name for a mockery action
+ * Get a display name for a mockery action
  */
 export const getMockeryName = (action: MockeryAction): string => {
-  const mockeryNames: Record<MockeryAction, string> = {
+  const names: Record<MockeryAction, string> = {
     tomatoes: 'Throw Tomatoes',
-    eggs: 'Throw Eggs',
-    putridEggs: 'Throw Putrid Eggs',
-    crown: 'Remove Crown',
-    stocks: 'Put in Stocks',
+    eggs: 'Throw Rotten Eggs',
+    stocks: 'Place in Stocks',
     jester: 'Make a Jester',
-    courtJester: 'Make a Court Jester',
-    shame: 'Public Shame',
-    silence: 'Silence for a Day',
-    smokeBomb: 'Smoke Bomb',
+    crown: 'Award Fake Crown',
+    shame: 'Public Shaming',
     protection: 'Royal Protection',
-    taunt: 'Royal Taunt',
-    mock: 'Royal Mockery',
-    challenge: 'Royal Challenge',
-    joust: 'Royal Joust',
-    duel: 'Royal Duel'
+    derank: 'Force Derank',
+    gift: 'Royal Gift',
+    humiliate: 'Royal Humiliation',
+    praise: 'Royal Praise',
+    bribe: 'Royal Bribery'
   };
   
-  return mockeryNames[action] || 'Unknown Mockery';
+  return names[action] || 'Royal Mockery';
 };
 
 /**
- * Get the description for a mockery action
+ * Get a description for a mockery action
  */
 export const getMockeryDescription = (action: MockeryAction): string => {
-  const mockeryDescriptions: Record<MockeryAction, string> = {
-    tomatoes: 'Throw tomatoes at this user, marking their profile with tomato splats for 24 hours.',
-    eggs: 'Throw eggs at this user, marking their profile with egg splats for 24 hours.',
-    putridEggs: 'Throw putrid eggs at this user, creating a stink cloud around their profile for 24 hours.',
-    crown: 'Remove this user\'s crown for 24 hours if they have one.',
-    stocks: 'Put this user in stocks for 24 hours, preventing them from using certain features.',
-    jester: 'Make this user appear as a jester for 24 hours.',
-    courtJester: 'Make this user appear as a court jester for 24 hours with special animations.',
-    shame: 'Publicly shame this user, appearing in the shame feed for 24 hours.',
-    silence: 'Silence this user for 24 hours, preventing them from commenting or posting.',
-    smokeBomb: 'Deploy a smoke bomb on this user\'s profile for 24 hours, making parts of it difficult to see.',
-    protection: 'Protect yourself from mockery for 24 hours.',
-    taunt: 'Send a royal taunt to this user, challenging them to a spending duel.',
-    mock: 'Mock this user with a custom message that appears on their profile.',
-    challenge: 'Challenge this user to a spending battle.',
-    joust: 'Challenge this user to a royal joust.',
-    duel: 'Challenge this user to a royal duel.'
+  const descriptions: Record<MockeryAction, string> = {
+    tomatoes: 'Throw rotten tomatoes at this user. A medieval classic!',
+    eggs: 'Hurl rotten eggs for maximum embarrassment.',
+    stocks: 'Place this noble in the stocks for public ridicule.',
+    jester: 'Mock them as the court jester for all to see.',
+    crown: 'Award them a crown of sarcasm and fool\'s gold.',
+    shame: 'Call for public shaming! Shame! Shame! Shame!',
+    protection: 'Grant royal protection against mockery for a limited time.',
+    derank: 'Force this user down a rank in the leaderboard.',
+    gift: 'Bestow a gift upon this loyal subject.',
+    humiliate: 'Subject them to royal humiliation rituals.',
+    praise: 'Shower them with royal praise and admiration.',
+    bribe: 'Offer a royal bribe to secure their loyalty.'
   };
   
-  return mockeryDescriptions[action] || 'An unknown form of mockery.';
+  return descriptions[action] || 'Apply royal mockery to this user.';
 };
 
 /**
- * Get the price for a mockery action
- */
-export const getMockeryActionPrice = (action: MockeryAction): number => {
-  const mockeryPrices: Record<MockeryAction, number> = {
-    tomatoes: 5,
-    eggs: 10,
-    putridEggs: 15,
-    crown: 25,
-    stocks: 30,
-    jester: 35,
-    courtJester: 40,
-    shame: 45,
-    silence: 50,
-    smokeBomb: 55,
-    protection: 60,
-    taunt: 65,
-    mock: 70,
-    challenge: 75,
-    joust: 80,
-    duel: 100
-  };
-  
-  return mockeryPrices[action] || 10;
-};
-
-/**
- * Get the icon for a mockery action
+ * Get the icon component for a mockery action
  */
 export const getMockeryActionIcon = (action: MockeryAction) => {
-  const mockeryIcons: Record<string, any> = {
-    tomatoes: Egg,
+  const icons = {
+    tomatoes: Target,
     eggs: Egg,
-    putridEggs: Egg,
+    stocks: Trash,
+    jester: TrendingDown,
     crown: Crown,
-    stocks: UserRound,
-    jester: Laugh,
-    courtJester: Laugh,
-    shame: XCircle,
-    silence: Music,
-    smokeBomb: Bomb,
+    shame: TrendingDown,
     protection: Shield,
-    taunt: HandMetal,
-    mock: Laugh,
-    challenge: HandMetal,
-    joust: HandMetal,
-    duel: HandMetal
+    derank: TrendingDown,
+    gift: Award,
+    humiliate: TrendingDown,
+    praise: Award,
+    bribe: Award
   };
   
-  return mockeryIcons[action] || Laugh;
+  return icons[action] || Crown;
 };
 
 /**
- * Get the tier of a mockery action
+ * Get the tier for a mockery action
  */
 export const getMockeryTier = (action: MockeryAction): MockeryTier => {
-  const mockeryTiers: Record<MockeryAction, MockeryTier> = {
+  const tiers: Record<MockeryAction, MockeryTier> = {
     tomatoes: 'common',
     eggs: 'common',
-    putridEggs: 'uncommon',
-    crown: 'rare',
-    stocks: 'rare',
+    stocks: 'uncommon',
     jester: 'uncommon',
-    courtJester: 'rare',
-    shame: 'epic',
-    silence: 'epic',
-    smokeBomb: 'uncommon',
+    crown: 'rare',
+    shame: 'rare',
     protection: 'epic',
-    taunt: 'uncommon',
-    mock: 'common',
-    challenge: 'rare',
-    joust: 'epic',
-    duel: 'legendary'
+    derank: 'epic',
+    gift: 'legendary',
+    humiliate: 'legendary',
+    praise: 'legendary',
+    bribe: 'epic'
   };
   
-  return mockeryTiers[action] || 'common';
+  return tiers[action] || 'common';
 };
 
 /**
- * Get CSS class for a mockery tier
+ * Get the color class for a mockery tier
  */
 export const getMockeryTierColorClass = (tier: MockeryTier): string => {
-  const tierColors: Record<MockeryTier, string> = {
-    common: 'text-gray-400',
+  const colors = {
+    common: 'text-gray-300',
     uncommon: 'text-green-400',
     rare: 'text-blue-400',
     epic: 'text-purple-400',
-    legendary: 'text-orange-400'
+    legendary: 'text-royal-gold'
   };
   
-  return tierColors[tier] || 'text-gray-400';
+  return colors[tier] || colors.common;
 };
 
 /**
- * Get CSS background class for a mockery tier
+ * Get mockery action price
  */
-export const getMockeryTierBgClass = (tier: MockeryTier): string => {
-  const tierBgColors: Record<MockeryTier, string> = {
-    common: 'bg-gray-800',
-    uncommon: 'bg-green-900',
-    rare: 'bg-blue-900',
-    epic: 'bg-purple-900',
-    legendary: 'bg-orange-900'
+export const getMockeryCost = (action: MockeryAction): number => {
+  const prices: Record<MockeryAction, number> = {
+    tomatoes: 50,
+    eggs: 100,
+    stocks: 250,
+    jester: 500,
+    crown: 1000,
+    shame: 2000,
+    protection: 5000,
+    derank: 10000,
+    gift: 25000,
+    humiliate: 50000,
+    praise: 100000,
+    bribe: 250000
   };
   
-  return tierBgColors[tier] || 'bg-gray-800';
+  return prices[action] || 100;
 };
 
 /**
- * Get border class for a mockery tier
+ * Get shame action price based on mockery action
  */
-export const getMockeryTierBorderClass = (tier: MockeryTier): string => {
-  const tierBorderColors: Record<MockeryTier, string> = {
-    common: 'border-gray-600',
-    uncommon: 'border-green-600',
-    rare: 'border-blue-600',
-    epic: 'border-purple-600',
-    legendary: 'border-orange-500'
+export const getShameActionPrice = (action: MockeryAction): number => {
+  return getMockeryCost(action);
+};
+
+/**
+ * Get shame tier prices
+ */
+export const getShameTierPrices = (tier: string): number => {
+  const tierPrices: Record<string, number> = {
+    'free': 50,
+    'basic': 100,
+    'premium': 200,
+    'pro': 300,
+    'royal': 500,
+    'legendary': 1000
   };
   
-  return tierBorderColors[tier] || 'border-gray-600';
+  return tierPrices[tier] || 100;
 };

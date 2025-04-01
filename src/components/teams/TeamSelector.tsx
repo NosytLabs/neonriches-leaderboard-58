@@ -1,173 +1,174 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Shield, Users, Crown } from 'lucide-react';
+import { TeamType } from '@/types/user-types';
 import { useToast } from '@/hooks/use-toast';
-import { TeamColor, TeamData } from '@/types/team';
-import { useTeam } from '@/hooks/useTeam';
-import { Users, Shield, Crown, Sparkles, Info } from 'lucide-react';
-import TeamBadge from './TeamBadge';
-import { getTeamNFTJoke, getTeamCryptoRoast } from '@/utils/team/teamJokes';
+import { useSound } from '@/hooks/use-sound';
 
-interface TeamSelectorProps {
-  currentTeam: TeamColor | null;
-  onSelectTeam: (team: TeamColor) => void;
+export interface TeamData {
+  id: string;
+  name: string;
+  description: string;
+  color: string;
+  icon: React.ReactNode;
+  mottoShort?: string;
+  benefits?: string[];
 }
 
-const TeamSelector: React.FC<TeamSelectorProps> = ({ currentTeam, onSelectTeam }) => {
+// Added type definition for props
+interface TeamSelectorProps {
+  onTeamSelect: (team: TeamType) => void;
+  currentTeam?: TeamType | null;
+}
+
+const teamData: TeamData[] = [
+  {
+    id: 'red',
+    name: 'Crimson Court',
+    description: 'A fierce band of nobles known for their passion and competitive spirit.',
+    color: 'text-red-500',
+    icon: <Shield className="h-6 w-6 text-red-500" />,
+    mottoShort: 'Fiercer than fire',
+    benefits: [
+      'Exclusive red-themed cosmetics',
+      'Access to Crimson Court events',
+      'Special red team profile badge'
+    ]
+  },
+  {
+    id: 'blue',
+    name: 'Azure Alliance',
+    description: 'Strategic thinkers and loyal subjects dedicated to the royal cause.',
+    color: 'text-blue-500',
+    icon: <Crown className="h-6 w-6 text-blue-500" />,
+    mottoShort: 'Loyal as the ocean is deep',
+    benefits: [
+      'Exclusive blue-themed cosmetics',
+      'Access to Azure Alliance events',
+      'Special blue team profile badge'
+    ]
+  },
+  {
+    id: 'green',
+    name: 'Emerald Order',
+    description: 'Wealth-focused nobles who believe in growth and prosperity for all.',
+    color: 'text-green-500',
+    icon: <Users className="h-6 w-6 text-green-500" />,
+    mottoShort: 'Growing like the forest',
+    benefits: [
+      'Exclusive green-themed cosmetics',
+      'Access to Emerald Order events',
+      'Special green team profile badge'
+    ]
+  }
+];
+
+const TeamSelector: React.FC<TeamSelectorProps> = ({ onTeamSelect, currentTeam = null }) => {
+  const [selectedTeam, setSelectedTeam] = useState<TeamType | null>(currentTeam);
   const { toast } = useToast();
-  const { allTeams } = useTeam();
-  const [selectedTeam, setSelectedTeam] = useState<TeamColor | null>(currentTeam);
+  const { playSound } = useSound();
   
-  const handleSelectTeam = (team: TeamColor) => {
+  const handleTeamSelect = (team: TeamType) => {
     setSelectedTeam(team);
-    
-    // Show toast to confirm selection
-    toast({
-      title: "Team Selected",
-      description: `You've selected the ${team} team. Confirm to make it official.`,
-      variant: "default",
-    });
+    playSound('click');
   };
   
-  const handleConfirmTeam = () => {
-    if (selectedTeam) {
-      onSelectTeam(selectedTeam);
-      
+  const handleConfirm = () => {
+    if (!selectedTeam) {
       toast({
-        title: "Team Joined",
-        description: `You are now officially part of the ${selectedTeam} team!`,
-        variant: "success",
+        title: 'Team Required',
+        description: 'Please select a royal house to join.',
+        variant: 'destructive'
       });
+      return;
     }
+    
+    if (selectedTeam === currentTeam) {
+      toast({
+        description: `You are already a member of ${getTeamName(selectedTeam)}.`,
+      });
+      return;
+    }
+    
+    playSound('success');
+    toast({
+      title: 'Team Joined',
+      description: `Welcome to the ${getTeamName(selectedTeam)}!`,
+      variant: 'success'
+    });
+    
+    onTeamSelect(selectedTeam);
+  };
+  
+  const getTeamName = (teamId: TeamType): string => {
+    const team = teamData.find(t => t.id === teamId);
+    return team ? team.name : 'Unknown Team';
   };
   
   return (
     <div className="space-y-6">
-      <div className="glass-morphism border-white/10 p-6 rounded-lg">
-        <h2 className="text-xl font-bold mb-4 flex items-center">
-          <Users className="h-6 w-6 mr-2 text-royal-gold" />
-          Choose Your Royal Team
-        </h2>
-        
-        <p className="text-white/70 mb-6">
-          Align yourself with one of the royal houses to gain team benefits and participate in the team competition.
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-center">Choose Your Royal House</h2>
+        <p className="text-center text-white/60 max-w-2xl mx-auto">
+          Align yourself with one of the royal houses. Each offers unique benefits and a chance to climb the ranks among like-minded nobles.
         </p>
-        
-        <Tabs defaultValue="teams" className="w-full">
-          <TabsList className="grid grid-cols-2 mb-6">
-            <TabsTrigger value="teams" className="flex items-center">
-              <Crown className="h-4 w-4 mr-2" />
-              Royal Teams
-            </TabsTrigger>
-            <TabsTrigger value="benefits" className="flex items-center">
-              <Shield className="h-4 w-4 mr-2" />
-              Team Benefits
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="teams">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {allTeams.filter(team => team.id !== 'none' && team.id !== 'neutral').map((team) => (
-                <Card 
-                  key={team.id}
-                  className={`glass-morphism cursor-pointer transition-all hover:scale-105 ${
-                    selectedTeam === team.id 
-                      ? `border-2 border-${team.id}-400 shadow-lg shadow-${team.id}-400/20` 
-                      : 'border-white/10'
-                  }`}
-                  onClick={() => handleSelectTeam(team.id as TeamColor)}
-                >
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{team.name}</CardTitle>
-                      <TeamBadge team={team.id as TeamColor} />
-                    </div>
-                    <CardDescription>{team.motto}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-white/70 mb-3">{team.description}</p>
-                    <div className="flex items-center text-xs text-white/60">
-                      <Users className="h-3 w-3 mr-1" />
-                      <span>{team.members} members</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            
-            {selectedTeam && (
-              <div className="mt-6 flex justify-end">
-                <Button
-                  className={`bg-${selectedTeam}-500 hover:bg-${selectedTeam}-600 text-white`}
-                  onClick={handleConfirmTeam}
-                >
-                  <Crown className="h-4 w-4 mr-2" />
-                  Confirm Team Selection
-                </Button>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {teamData.map((team) => (
+          <Card 
+            key={team.id}
+            className={`cursor-pointer transition-all ${
+              selectedTeam === team.id ? 'border-2 border-' + team.id + '-500/70' : 'border border-white/10 hover:border-white/30'
+            }`}
+            onClick={() => handleTeamSelect(team.id as TeamType)}
+          >
+            <CardHeader className="pb-2">
+              <div className="flex items-center space-x-2">
+                {team.icon}
+                <CardTitle className={team.color}>{team.name}</CardTitle>
               </div>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="benefits">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="glass-morphism border-white/10">
-                <CardHeader>
-                  <div className="flex items-center">
-                    <Shield className="h-5 w-5 mr-2 text-royal-gold" />
-                    <CardTitle className="text-lg">Team Advantages</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-start">
-                    <Sparkles className="h-4 w-4 text-royal-gold mr-2 mt-1" />
-                    <p className="text-sm text-white/80">Team-specific profile decorations and badges</p>
-                  </div>
-                  <div className="flex items-start">
-                    <Sparkles className="h-4 w-4 text-royal-gold mr-2 mt-1" />
-                    <p className="text-sm text-white/80">Access to team-only mockery options</p>
-                  </div>
-                  <div className="flex items-start">
-                    <Sparkles className="h-4 w-4 text-royal-gold mr-2 mt-1" />
-                    <p className="text-sm text-white/80">Team-specific leaderboard and competitions</p>
-                  </div>
-                  <div className="flex items-start">
-                    <Sparkles className="h-4 w-4 text-royal-gold mr-2 mt-1" />
-                    <p className="text-sm text-white/80">Special team events with unique rewards</p>
-                  </div>
-                </CardContent>
-              </Card>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm mb-4">{team.description}</p>
+              <div className="text-sm font-medium mb-2">{team.mottoShort}</div>
               
-              <Card className="glass-morphism border-white/10">
-                <CardHeader>
-                  <div className="flex items-center">
-                    <Info className="h-5 w-5 mr-2 text-royal-gold" />
-                    <CardTitle className="text-lg">Team Humor</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {selectedTeam ? (
-                    <div className="space-y-4">
-                      <div className="p-3 bg-white/5 rounded-lg">
-                        <p className="text-sm italic text-white/80">
-                          {getTeamNFTJoke(selectedTeam)}
-                        </p>
-                      </div>
-                      <div className="p-3 bg-white/5 rounded-lg">
-                        <p className="text-sm italic text-white/80">
-                          {getTeamCryptoRoast(selectedTeam)}
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="text-white/60 text-sm">Select a team to see team-specific humor</p>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
+              <ul className="text-xs space-y-1 text-white/70">
+                {team.benefits?.map((benefit, i) => (
+                  <li key={i} className="flex items-start">
+                    <span className="mr-1">•</span>
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+            <CardFooter>
+              <Button 
+                variant={selectedTeam === team.id ? "default" : "outline"} 
+                className="w-full"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleTeamSelect(team.id as TeamType);
+                }}
+              >
+                {selectedTeam === team.id ? 'Selected' : 'Select'}
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+      
+      <div className="flex justify-center">
+        <Button 
+          size="lg" 
+          className="px-8"
+          disabled={!selectedTeam || selectedTeam === currentTeam}
+          onClick={handleConfirm}
+        >
+          Confirm Selection
+        </Button>
       </div>
     </div>
   );

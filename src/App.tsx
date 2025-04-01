@@ -1,42 +1,52 @@
 
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from "@/components/ui/toaster";
-import { AuthProvider } from '@/contexts/auth/AuthProvider';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from '@/pages/Home';
+import Dashboard from '@/pages/Dashboard';
+import Profile from '@/pages/Profile';
+import Leaderboard from '@/pages/Leaderboard';
+import Settings from '@/pages/Settings';
+import SignUp from '@/pages/SignUp';
+import SignIn from '@/pages/SignIn';
+import Marketing from '@/pages/Marketing';
+import Subscription from '@/pages/Subscription';
+import RoyalPrestige from '@/pages/RoyalPrestige';
+import Certificate from '@/pages/Certificate';
+import NotFound from '@/pages/NotFound';
+import ComingSoonPage from '@/pages/ComingSoonPage';
 
-// Pages
-import Index from '@/pages/Index';
-import Features from '@/pages/Features';
-import Mockery from '@/pages/Mockery';
-import ComingSoon from '@/components/ComingSoon';
-
-// We'll use the ComingSoon component for pages that aren't fully implemented yet
-const App = () => {
+const App: React.FC = () => {
   return (
-    <>
-      <AuthProvider>
-        <Routes>
-          {/* Core Pages */}
-          <Route path="/" element={<Index />} />
-          <Route path="/features" element={<Features />} />
-          <Route path="/mockery" element={<Mockery />} />
-          
-          {/* Placeholder pages using ComingSoon */}
-          <Route path="/leaderboard" element={<ComingSoon title="Royal Leaderboard" description="See who's spending the most in our satirical kingdom." />} />
-          <Route path="/deposit" element={<ComingSoon title="Royal Treasury" description="Add to your coffers and climb the ranks." />} />
-          <Route path="/profile" element={<ComingSoon title="Noble Profile" description="View your royal status and mockery history." />} />
-          <Route path="/stats" element={<ComingSoon title="Kingdom Statistics" description="Analyze spending patterns across the realm." />} />
-          <Route path="/teams" element={<ComingSoon title="Royal Alliances" description="Form teams with other nobles to showcase collective wealth." />} />
-          <Route path="/login" element={<ComingSoon title="Royal Authentication" description="Access your noble account." />} />
-          <Route path="/signup" element={<ComingSoon title="Join the Nobility" description="Create your account and begin your ascent." />} />
-          <Route path="/status-through-history" element={<ComingSoon title="Status Through History" description="Learn how wealth has been flaunted throughout the ages." />} />
-          
-          {/* Redirect for any unmatched routes */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-        <Toaster />
-      </AuthProvider>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/:username" element={<Profile />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/marketing" element={<Marketing />} />
+        <Route path="/subscription" element={<Subscription />} />
+        <Route path="/subscription/success" element={<ComingSoonPage title="Subscription Success" description="Thank you for your royal subscription!" />} />
+        <Route path="/prestige" element={<RoyalPrestige />} />
+        <Route path="/certificate" element={<Certificate />} />
+        <Route path="/certificate/:id" element={<Certificate />} />
+        
+        {/* Coming Soon Pages */}
+        <Route path="/teams" element={<ComingSoonPage title="Royal Houses" description="Choose your alliance among the prestigious royal houses." />} />
+        <Route path="/events" element={<ComingSoonPage title="Royal Events" description="Special events and tournaments for the royal court." />} />
+        <Route path="/marketplace" element={<ComingSoonPage title="Royal Marketplace" description="Exchange goods and services with other noble members." />} />
+        <Route path="/gallery" element={<ComingSoonPage title="Royal Gallery" description="View the most prestigious achievements and certificates." />} />
+        <Route path="/challenges" element={<ComingSoonPage title="Royal Challenges" description="Compete in special challenges to earn rewards and recognition." />} />
+        <Route path="/rewards" element={<ComingSoonPage title="Royal Rewards" description="Claim your rewards for loyal service to the throne." />} />
+        <Route path="/referrals" element={<ComingSoonPage title="Royal Referrals" description="Invite new nobles to join the kingdom and earn rewards." />} />
+        
+        {/* 404 Route */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   );
 };
 

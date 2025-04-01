@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Trophy, Users, DollarSign, ChevronsUp } from 'lucide-react';
 import CountUp from 'react-countup';
-import { formatDollarAmount } from '@/utils/formatters';
+import { formatDollarAmount, formatNumber } from '@/utils/formatters';
 
 export interface HeroShowcaseProps {
   topUser: {

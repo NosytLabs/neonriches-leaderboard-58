@@ -36,11 +36,7 @@ const SpotlightProfile: React.FC<SpotlightProfileProps> = ({
           <AvatarImage src={user.profileImage} />
           <AvatarFallback>{getInitials(user.displayName || user.username)}</AvatarFallback>
         </Avatar>
-        <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-xs font-bold">
-          {rank}
-        </div>
       </div>
-      
       <div className="flex-1 min-w-0">
         <div className="flex items-center">
           <h3 className="text-sm font-semibold truncate mr-2">{user.displayName || user.username}</h3>

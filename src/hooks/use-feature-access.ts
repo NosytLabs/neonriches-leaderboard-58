@@ -18,7 +18,9 @@ export interface FeatureAccessHookResult {
   isLoading: boolean;
   getUpgradeUrl: (featureId: string) => string;
   getMarketingFeaturePriceId: (featureId: string) => string;
-  purchaseFeatureIndividually: (featureId: string, success?: () => void) => Promise<{ success: boolean; url?: string; }>;
+  canAccessFeature: (featureId: string) => boolean;
+  isUserPro: boolean;
+  purchaseFeatureIndividually: (featureId: string, successCallback?: () => void) => Promise<{ success: boolean; url?: string; }>;
 }
 
 /**
@@ -56,7 +58,7 @@ export const useFeatureAccess = (): FeatureAccessHookResult => {
     return `/subscription?feature=${featureId}`;
   }, []);
 
-  // Get feature price ID for marketing features
+  // Get marketing feature price ID
   const getMarketingFeaturePriceId = useCallback((featureId: string) => {
     const featurePriceIds: Record<string, string> = {
       'analytics': 'price_analytics',
@@ -99,7 +101,7 @@ export const useFeatureAccess = (): FeatureAccessHookResult => {
       return { 
         success: true,
         // For redirection to checkout, we'd return a URL
-        // url: 'https://example.com/checkout/session_id'
+        url: `/subscription/success?feature=${featureId}`
       };
     } catch (error) {
       console.error('Error purchasing feature:', error);
@@ -108,14 +110,23 @@ export const useFeatureAccess = (): FeatureAccessHookResult => {
     }
   }, [user, toast]);
 
+  // Check if user can access a feature (alias to hasAccess)
+  const canAccessFeature = useCallback((featureId: string) => {
+    return hasAccess(featureId);
+  }, [hasAccess]);
+
+  // Check if the user is on Pro tier or higher
+  const isUserPro = Boolean(user && ['pro', 'premium', 'royal', 'legendary'].includes(user.tier));
+
   return {
     hasAccess,
     isLoading,
     getUpgradeUrl,
     getMarketingFeaturePriceId,
+    canAccessFeature,
+    isUserPro,
     purchaseFeatureIndividually
   };
 };
 
-export default useFeatureAccess;
-export type { Feature as Feature };
+export type { Feature };

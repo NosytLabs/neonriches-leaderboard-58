@@ -14,6 +14,13 @@ export const formatCurrency = (value: number): string => {
 };
 
 /**
+ * Format a dollar amount with dollar sign
+ */
+export const formatDollarAmount = (value: number): string => {
+  return `$${formatNumber(Math.round(value))}`;
+};
+
+/**
  * Format a date as a string
  */
 export const formatDate = (date: string): string => {
@@ -51,4 +58,22 @@ export const formatRelativeTime = (date: string): string => {
   if (interval === 1) return `1 minute ago`;
   
   return `just now`;
+};
+
+/**
+ * Format a date as a time ago string (alias for formatRelativeTime)
+ */
+export const formatTimeAgo = formatRelativeTime;
+
+/**
+ * Format a file size in bytes to a human-readable format
+ */
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
+  
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };

@@ -1,16 +1,14 @@
 
-import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
-import { UserProfile as StandardUserProfile } from '@/types/user';
-import { ProfileBoost as ConsolidatedProfileBoost } from '@/types/user-consolidated';
-import { ProfileBoost as StandardProfileBoost } from '@/types/user';
+import { UserProfile as ConsolidatedUserProfile, ProfileBoost as ConsolidatedProfileBoost } from '@/types/user-consolidated';
+import { UserProfile as StandardUserProfile, ProfileBoost as StandardProfileBoost } from '@/types/user';
 
 /**
- * Adapts a UserProfile from the consolidated type to the standard type
- * This is needed because different parts of the application use different profile types
+ * Adapts a user profile from the consolidated type to the standard type
  */
 export const adaptToStandardUserProfile = (user: ConsolidatedUserProfile): StandardUserProfile => {
   // Create a base user profile with required properties
   const standardUser: StandardUserProfile = {
+    ...user,
     id: user.id,
     username: user.username,
     displayName: user.displayName || user.username,
@@ -18,7 +16,7 @@ export const adaptToStandardUserProfile = (user: ConsolidatedUserProfile): Stand
     profileImage: user.profileImage || '',
     bio: user.bio || '',
     joinedDate: user.joinedDate || user.joinDate || user.createdAt || new Date().toISOString(),
-    amountSpent: user.amountSpent,
+    amountSpent: user.amountSpent || user.totalSpent || 0,
     tier: user.tier as any, // Cast tier to avoid type issues
     team: user.team as any, // Cast team to avoid type issues
     following: Array.isArray(user.following) ? user.following : [],
@@ -45,7 +43,8 @@ export const adaptToStandardUserProfile = (user: ConsolidatedUserProfile): Stand
       const standardBoost: StandardProfileBoost = {
         ...boost,
         level: boost.level || 1, // Ensure level is set (required in StandardProfileBoost)
-        isActive: boost.isActive || false
+        isActive: boost.isActive || false,
+        strength: boost.strength || 1 // Ensure strength is set (required in StandardProfileBoost)
       };
       return standardBoost;
     });
@@ -55,7 +54,7 @@ export const adaptToStandardUserProfile = (user: ConsolidatedUserProfile): Stand
 };
 
 /**
- * Adapts UserCosmetics between different formats
+ * Adapts user cosmetics between different formats
  */
 function adaptUserCosmetics(cosmetics: any): any {
   // Convert to the right format
@@ -82,7 +81,7 @@ function adaptUserCosmetics(cosmetics: any): any {
 }
 
 /**
- * Adapts UserSettings between different formats
+ * Adapts user settings between different formats
  */
 function adaptUserSettings(settings: any): any {
   return {
@@ -106,5 +105,12 @@ function adaptUserSettings(settings: any): any {
 }
 
 /**
- * Create missing SpotlightProfile component
+ * Ensures a user has the totalSpent property by copying from amountSpent if needed
  */
+export const ensureTotalSpent = <T extends {totalSpent?: number, amountSpent?: number}>(user: T): T & {totalSpent: number} => {
+  return {
+    ...user,
+    totalSpent: user.totalSpent || user.amountSpent || 0,
+    amountSpent: user.amountSpent || user.totalSpent || 0
+  };
+};
