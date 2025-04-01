@@ -1,5 +1,5 @@
 
-import { BoostEffect } from '@/types/boostEffects';
+import { BoostEffect } from '@/types/boost';
 
 // Profile boost effects data
 export const profileBoostEffects: BoostEffect[] = [
@@ -14,7 +14,8 @@ export const profileBoostEffects: BoostEffect[] = [
     durationDays: 30,
     previewImage: '/throne-assets/boosts/gold-aura.jpg',
     duration: 30 * 24, // hours
-    icon: 'crown' // Add missing icon property
+    icon: 'crown',
+    strength: 3
   },
   {
     id: 'crown-effect',
@@ -27,7 +28,8 @@ export const profileBoostEffects: BoostEffect[] = [
     durationDays: 30,
     previewImage: '/throne-assets/boosts/crown-effect.jpg',
     duration: 30 * 24, // hours
-    icon: 'crown'
+    icon: 'crown',
+    strength: 5
   },
   {
     id: 'neon-pulse',
@@ -40,7 +42,8 @@ export const profileBoostEffects: BoostEffect[] = [
     durationDays: 30,
     previewImage: '/throne-assets/boosts/neon-pulse.jpg',
     duration: 30 * 24, // hours
-    icon: 'zap'
+    icon: 'zap',
+    strength: 3
   },
   {
     id: 'rainbow-flow',
@@ -53,7 +56,8 @@ export const profileBoostEffects: BoostEffect[] = [
     durationDays: 30,
     previewImage: '/throne-assets/boosts/rainbow-flow.jpg',
     duration: 30 * 24, // hours
-    icon: 'palette'
+    icon: 'palette',
+    strength: 4
   },
   {
     id: 'royal-sparkle',
@@ -66,7 +70,8 @@ export const profileBoostEffects: BoostEffect[] = [
     durationDays: 30,
     previewImage: '/throne-assets/boosts/sparkle.jpg',
     duration: 30 * 24, // hours
-    icon: 'sparkle'
+    icon: 'sparkle',
+    strength: 2
   },
   {
     id: 'premium-placement',
@@ -79,7 +84,8 @@ export const profileBoostEffects: BoostEffect[] = [
     durationDays: 30,
     previewImage: '/throne-assets/boosts/premium.jpg',
     duration: 30 * 24, // hours
-    icon: 'arrowUp'
+    icon: 'arrowUp',
+    strength: 5
   },
   {
     id: 'enhanced-visibility',
@@ -92,7 +98,8 @@ export const profileBoostEffects: BoostEffect[] = [
     durationDays: 30,
     previewImage: '/throne-assets/boosts/enhanced.jpg',
     duration: 30 * 24, // hours
-    icon: 'eye'
+    icon: 'eye',
+    strength: 3
   },
   {
     id: 'royal-presence',
@@ -105,7 +112,8 @@ export const profileBoostEffects: BoostEffect[] = [
     durationDays: 30,
     previewImage: '/throne-assets/boosts/royal-presence.jpg',
     duration: 30 * 24, // hours
-    icon: 'crown'
+    icon: 'crown',
+    strength: 4
   },
   {
     id: 'animated-border',
@@ -118,7 +126,8 @@ export const profileBoostEffects: BoostEffect[] = [
     durationDays: 30,
     previewImage: '/throne-assets/boosts/animated-border.jpg',
     duration: 30 * 24, // hours
-    icon: 'square'
+    icon: 'square',
+    strength: 3
   }
 ];
 

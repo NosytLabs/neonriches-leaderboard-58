@@ -1,4 +1,3 @@
-
 // Authentication utility functions and constants
 import { UserTier, UserProfile, ProfileBoost } from '@/types/user';
 import { UserCosmeticState } from '@/types/cosmetics';
@@ -267,4 +266,47 @@ export const getAmountToNextTier = (totalSpent: number): { amount: number; nextT
   }
   // Already at highest tier
   return { amount: 0, nextTier: 'royal' };
+};
+
+export const createMockUser = (overrides = {}) => {
+  return {
+    id: `user_${Math.random().toString(36).substr(2, 9)}`,
+    username: `user_${Math.random().toString(36).substr(2, 5)}`,
+    displayName: 'Test User',
+    profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${Math.random()}`,
+    bio: 'This is a test user account',
+    joinedDate: new Date().toISOString(), // Change joinDate to joinedDate
+    rank: Math.floor(Math.random() * 1000) + 1,
+    previousRank: Math.floor(Math.random() * 1000) + 1,
+    totalSpent: Math.floor(Math.random() * 10000),
+    amountSpent: Math.floor(Math.random() * 10000),
+    walletBalance: Math.floor(Math.random() * 5000),
+    tier: 'basic',
+    team: 'blue',
+    isVerified: Math.random() > 0.5,
+    isVIP: Math.random() > 0.8,
+    followers: [], // Change to array instead of number
+    following: [], // Change to array instead of number
+    profileViews: Math.floor(Math.random() * 500),
+    profileClicks: Math.floor(Math.random() * 200),
+    spendStreak: Math.floor(Math.random() * 10),
+    lastActive: new Date().toISOString(),
+    settings: {
+      profileVisibility: "public",
+      allowProfileLinks: true,
+      theme: "dark",
+      notifications: true,
+      emailNotifications: false,
+      marketingEmails: false,
+      showRank: true,
+      darkMode: true,
+      soundEffects: true,
+      showEmailOnProfile: false,
+      rankChangeAlerts: false,
+      showTeam: true,
+      showSpending: true,
+      showBadges: true
+    },
+    ...overrides
+  };
 };

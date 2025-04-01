@@ -1,4 +1,3 @@
-
 import { User } from '@/types/user';
 import { UserCosmetics } from '@/types/cosmetics';
 import { ProfileBoost } from '@/types/user';
@@ -216,4 +215,17 @@ export const getAmountToNextTier = (totalSpent: number): { amount: number; nextT
   }
   // Already at highest tier
   return { amount: 0, nextTier: 'royal' };
+};
+
+export const mockProfileBoost = (overrides = {}) => {
+  return {
+    id: `boost_${Math.random().toString(36).substr(2, 9)}`,
+    startDate: new Date().toISOString(),
+    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    level: Math.floor(Math.random() * 3) + 1,
+    type: 'visibility',
+    strength: Math.floor(Math.random() * 5) + 1,
+    appliedBy: `user_${Math.random().toString(36).substr(2, 9)}`,
+    isActive: true
+  };
 };

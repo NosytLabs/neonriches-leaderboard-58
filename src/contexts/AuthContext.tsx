@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect } from 'react';
 import { UserProfile, AuthContextType } from '@/types/user-consolidated';
 
@@ -48,13 +47,13 @@ const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ children
         joinedDate: new Date().toISOString(),
         rank: 42,
         totalSpent: 1250,
-        amountSpent: 1250, // Make sure amountSpent is also set
+        amountSpent: 1250,
         tier: "gold",
         team: "blue",
         isVerified: true,
         walletBalance: 500,
-        followers: [], // Initialize as empty array instead of number
-        following: [], // Initialize as empty array instead of number 
+        followers: [], // Change from number to empty array
+        following: [], // Change from number to empty array
         spendStreak: 7,
         profileViews: 102,
         profileClicks: 48,
@@ -104,7 +103,7 @@ const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ children
         joinedDate: new Date().toISOString(),
         rank: 9999,
         totalSpent: 0,
-        amountSpent: 0, // Add amountSpent to fix the error
+        amountSpent: 0,
         tier: "free",
         isVerified: false,
         walletBalance: 10, // Starting bonus

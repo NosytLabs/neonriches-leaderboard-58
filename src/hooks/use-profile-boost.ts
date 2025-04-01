@@ -16,7 +16,8 @@ const BOOST_EFFECTS: Record<string, BoostEffect> = {
     duration: 3 * 24 * 60 * 60 * 1000, // 3 days in ms
     durationDays: 3,
     icon: 'Sparkles',
-    previewImage: '/assets/boosts/glow.png'
+    previewImage: '/assets/boosts/glow.png',
+    strength: 2
   },
   sparkle: {
     id: 'sparkle',
@@ -29,7 +30,8 @@ const BOOST_EFFECTS: Record<string, BoostEffect> = {
     duration: 7 * 24 * 60 * 60 * 1000, // 7 days in ms
     durationDays: 7,
     icon: 'Star',
-    previewImage: '/assets/boosts/sparkle.png'
+    previewImage: '/assets/boosts/sparkle.png',
+    strength: 3
   },
   crown: {
     id: 'crown',
@@ -42,7 +44,8 @@ const BOOST_EFFECTS: Record<string, BoostEffect> = {
     duration: 14 * 24 * 60 * 60 * 1000, // 14 days in ms
     durationDays: 14,
     icon: 'Crown',
-    previewImage: '/assets/boosts/crown.png'
+    previewImage: '/assets/boosts/crown.png',
+    strength: 5
   }
 };
 

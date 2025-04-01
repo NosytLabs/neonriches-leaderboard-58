@@ -1,5 +1,4 @@
-
-import { MockeryAction } from '@/types/mockery-types';
+import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { UserTier } from '@/types/user-types';
 import { getMockeryActionPrice } from '@/utils/mockeryUtils';
 

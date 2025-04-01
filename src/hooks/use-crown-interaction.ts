@@ -1,51 +1,75 @@
 
 import { useState, useCallback } from 'react';
-import { SoundType } from '@/hooks/sounds/types';
-import useNotificationSounds from '@/hooks/use-notification-sounds';
-import { useToastContext } from "@/contexts/ToastContext";
-import useNotificationSound from '@/hooks/useNotificationSound';
+import { useSound } from './use-sound';
+import useNotificationSounds from './use-notification-sounds';
 
-export function useCrownInteraction() {
-  const { addToast } = useToastContext();
-  const { playSound } = useNotificationSounds();
-  const [hasInteracted, setHasInteracted] = useState(false);
+export const useCrownInteraction = () => {
+  const [isAnimating, setIsAnimating] = useState(false);
+  const { playSound } = useSound();
+  const { playNotificationSound } = useNotificationSounds();
 
-  const handleCrownClick = useCallback((containerRef: React.RefObject<HTMLElement>) => {
-    setHasInteracted(true);
-    playSound('royalAnnouncement', { volume: 0.2 });
-    
-    addToast({
-      title: "Royal Decree",
-      description: "The crown acknowledges your admiration. Now prove your worth with currency!",
-      duration: 3000,
-    });
-    
-    if (containerRef.current) {
-      const sparkleContainer = document.createElement('div');
-      sparkleContainer.className = 'absolute w-full h-full top-0 left-0 pointer-events-none';
-      
-      for (let i = 0; i < 10; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'absolute rounded-full bg-royal-gold animate-float';
-        particle.style.width = `${Math.random() * 10 + 5}px`;
-        particle.style.height = particle.style.width;
-        particle.style.left = `${Math.random() * 100}%`;
-        particle.style.top = `50%`;
-        particle.style.opacity = '0.8';
-        sparkleContainer.appendChild(particle);
-      }
-      
-      containerRef.current.appendChild(sparkleContainer);
+  const triggerCrownAnimation = useCallback((options = {}) => {
+    const {
+      duration = 1500,
+      soundEnabled = true,
+      onComplete
+    } = options;
+
+    setIsAnimating(true);
+
+    if (soundEnabled) {
+      playSound('royal', { volume: 0.6 });
+    }
+
+    // Create the crown element
+    const crown = document.createElement('div');
+    crown.className = 'animated-crown';
+    crown.innerHTML = '👑';
+    crown.style.position = 'fixed';
+    crown.style.top = '50%';
+    crown.style.left = '50%';
+    crown.style.transform = 'translate(-50%, -50%) scale(0)';
+    crown.style.fontSize = '10rem';
+    crown.style.opacity = '0';
+    crown.style.zIndex = '9999';
+    crown.style.pointerEvents = 'none';
+    crown.style.transition = 'transform 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67), opacity 0.8s ease';
+
+    document.body.appendChild(crown);
+
+    // Animate in
+    setTimeout(() => {
+      crown.style.transform = 'translate(-50%, -50%) scale(1)';
+      crown.style.opacity = '1';
+    }, 50);
+
+    // Add particle effects
+    if (soundEnabled) {
+      setTimeout(() => {
+        playNotificationSound('achievement', { volume: 0.4 });
+      }, 400);
+    }
+
+    // Animate out
+    setTimeout(() => {
+      crown.style.transform = 'translate(-50%, -50%) scale(1.2)';
+      crown.style.opacity = '0';
       
       setTimeout(() => {
-        sparkleContainer.remove();
-      }, 5000);
-    }
-  }, []);
+        if (document.body.contains(crown)) {
+          document.body.removeChild(crown);
+        }
+        setIsAnimating(false);
+        if (onComplete) onComplete();
+      }, 800);
+    }, duration);
+    
+  }, [playSound, playNotificationSound]);
 
   return {
-    hasInteracted,
-    setHasInteracted,
-    handleCrownClick
+    triggerCrownAnimation,
+    isAnimating
   };
-}
+};
+
+export default useCrownInteraction;
