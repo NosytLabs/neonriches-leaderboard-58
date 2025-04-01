@@ -12,7 +12,7 @@ import { useSound } from '@/hooks/use-sound';
 import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
-import { UserProfile } from '@/types/user-consolidated';
+import { UserProfile } from '@/types/user';
 import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
 
 const EnhancedDashboard = () => {
@@ -74,11 +74,11 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Convert consolidated user to required format with totalSpent for compatibility
-  const consolidatedUser = ensureTotalSpent(user as UserProfile);
-
-  // Adapt the user profile to standard format when passing to components that expect that type
-  const standardUser = adaptToStandardUserProfile(consolidatedUser);
+  // Ensure user has totalSpent and amountSpent properties
+  const processedUser = ensureTotalSpent(user as UserProfile);
+  
+  // Adapt to standard user profile for components that need that format
+  const standardUser = adaptToStandardUserProfile(processedUser);
 
   const handleSpend = () => {
     toast({
@@ -99,7 +99,7 @@ const EnhancedDashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <DashboardWelcome user={consolidatedUser} />
+      <DashboardWelcome user={processedUser} />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid grid-cols-5 w-full bg-black/20">
@@ -128,7 +128,7 @@ const EnhancedDashboard = () => {
         <div className="mt-6">
           <TabsContent value="overview">
             <OverviewTab 
-              user={consolidatedUser}
+              user={processedUser}
               onSpend={handleSpend} 
               onPaymentSuccess={handlePaymentSuccess} 
             />

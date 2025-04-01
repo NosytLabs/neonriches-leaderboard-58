@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/utils/formatters';
 import { Lock, Check } from 'lucide-react';
+import { CosmeticItem } from '@/types/cosmetics';
 
 export interface CosmeticCardProps {
   id: string;

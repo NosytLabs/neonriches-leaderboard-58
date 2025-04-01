@@ -1,90 +1,66 @@
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type Theme = "dark" | "light" | "system";
+type Theme = 'light' | 'dark' | 'royal' | 'system';
 
-type ThemeProviderProps = {
-  children: React.ReactNode;
-  defaultTheme?: Theme;
-  storageKey?: string;
-};
-
-type ThemeProviderState = {
+interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
-  isDarkTheme: boolean;
-};
+}
 
-const initialState: ThemeProviderState = {
-  theme: "system",
-  setTheme: () => null,
-  isDarkTheme: true,
-};
+const ThemeContext = createContext<ThemeContextType>({
+  theme: 'dark',
+  setTheme: () => null
+});
 
-const ThemeContext = createContext<ThemeProviderState>(initialState);
+export const useTheme = () => useContext(ThemeContext);
 
-export function ThemeProvider({
-  children,
-  defaultTheme = "dark",
-  storageKey = "spendthrone-theme",
-  ...props
-}: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
-  );
-  const [isDarkTheme, setIsDarkTheme] = useState<boolean>(true);
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [theme, setTheme] = useState<Theme>('dark');
 
+  // Initialize theme from localStorage or user preference
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme') as Theme | null;
+    
+    if (storedTheme) {
+      setTheme(storedTheme);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+  }, []);
+
+  // Update document classes when theme changes
   useEffect(() => {
     const root = window.document.documentElement;
     
-    root.classList.remove("light", "dark");
+    // Remove all theme classes
+    root.classList.remove('light-theme', 'dark-theme', 'royal-theme');
     
-    let effectiveTheme: "dark" | "light" = "dark";
-    
-    if (theme === "system") {
-      effectiveTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
+    // Add appropriate class based on theme
+    if (theme === 'system') {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        root.classList.add('dark-theme');
+      } else {
+        root.classList.add('light-theme');
+      }
     } else {
-      effectiveTheme = theme;
+      root.classList.add(`${theme}-theme`);
     }
     
-    root.classList.add(effectiveTheme);
-    setIsDarkTheme(effectiveTheme === "dark");
-    
-    // Add medieval-theme class for consistent styling
-    if (!root.classList.contains("medieval-theme")) {
-      root.classList.add("medieval-theme");
-    }
-    
-    // Set CSS variables for enhanced royal colors
-    document.documentElement.style.setProperty('--royal-gold-opacity', effectiveTheme === 'dark' ? '1' : '0.85');
-    document.documentElement.style.setProperty('--royal-parchment', effectiveTheme === 'dark' ? 'rgba(245, 222, 179, 0.05)' : 'rgba(245, 222, 179, 0.15)');
-    document.documentElement.style.setProperty('--royal-gradient-opacity', effectiveTheme === 'dark' ? '0.9' : '0.7');
-    
+    // Save to localStorage
+    localStorage.setItem('theme', theme);
   }, [theme]);
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
-    },
-    isDarkTheme,
+    setTheme
   };
 
   return (
-    <ThemeContext.Provider {...props} value={value}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );
-}
-
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  
-  if (context === undefined)
-    throw new Error("useTheme must be used within a ThemeProvider");
-  
-  return context;
 };

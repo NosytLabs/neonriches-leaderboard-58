@@ -1,156 +1,161 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Crown, TrendingUp, Users, Zap } from 'lucide-react';
-import { formatCurrency } from '@/utils/formatters';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Crown, TrendingUp, Users, DollarSign } from 'lucide-react';
 import SpotlightProfile from './SpotlightProfile';
 import { UserProfile } from '@/types/user-consolidated';
-import { getMarketingBenefitsByTier } from '@/data/tierData';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { formatCurrency } from '@/utils/formatters';
 
 interface SpotlightSectionProps {
-  topSpenders?: UserProfile[];
-  totalUsers?: number;
-  totalSpending?: number;
-  onViewLeaderboard?: () => void;
+  topSpenders: UserProfile[];
+  risingStars: UserProfile[];
+  topTeams: { name: string; totalSpent: number; members: number }[];
 }
 
 const SpotlightSection: React.FC<SpotlightSectionProps> = ({
-  topSpenders = [],
-  totalUsers = 0,
-  totalSpending = 0,
-  onViewLeaderboard
+  topSpenders,
+  risingStars,
+  topTeams
 }) => {
-  const [activeTab, setActiveTab] = useState<string>('spending');
-  const [featuredUser, setFeaturedUser] = useState<UserProfile | null>(null);
-
-  useEffect(() => {
-    if (topSpenders && topSpenders.length > 0) {
-      setFeaturedUser(topSpenders[0]);
-    }
-  }, [topSpenders]);
-
-  // Fix: Create a user object instead of passing a number
-  const handleProfileSelect = (index: number) => {
-    if (topSpenders && topSpenders[index]) {
-      setFeaturedUser(topSpenders[index]);
-    }
+  const [activeTab, setActiveTab] = useState('spenders');
+  const [selectedProfile, setSelectedProfile] = useState<UserProfile | null>(null);
+  const [showProfileDialog, setShowProfileDialog] = useState(false);
+  
+  const handleProfileClick = (profile: UserProfile) => {
+    setSelectedProfile(profile);
+    setShowProfileDialog(true);
   };
-
-  const statsCards = [
-    {
-      id: 'total-users',
-      icon: <Users className="h-5 w-5 text-blue-400" />,
-      value: totalUsers.toLocaleString(),
-      label: 'Royal Citizens'
-    },
-    {
-      id: 'total-spending',
-      icon: <Crown className="h-5 w-5 text-royal-gold" />,
-      value: formatCurrency(totalSpending),
-      label: 'Total Spent'
-    },
-    {
-      id: 'trend',
-      icon: <TrendingUp className="h-5 w-5 text-green-400" />,
-      value: '24%',
-      label: 'Weekly Growth'
-    }
-  ];
-
+  
+  const closeProfileDialog = () => {
+    setShowProfileDialog(false);
+  };
+  
   return (
-    <section className="py-16 px-4">
-      <div className="container mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">Royal Recognition</h2>
-          <p className="text-white/60 max-w-2xl mx-auto">
-            The elite citizens who contribute to the prosperity of our kingdom through their generous spending.
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-8 space-y-6">
-            {featuredUser && (
-              <SpotlightProfile user={featuredUser} isTopSpender={topSpenders[0]?.id === featuredUser.id} />
-            )}
-            
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-              {statsCards.map((card) => (
+    <Card className="glass-morphism border-royal-gold/20">
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <Crown className="mr-2 h-5 w-5 text-royal-gold" />
+          Royal Spotlight
+        </CardTitle>
+      </CardHeader>
+      
+      <CardContent>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-3 mb-6">
+            <TabsTrigger value="spenders" className="flex items-center gap-2">
+              <DollarSign className="h-4 w-4" />
+              <span className="hidden md:inline">Top Spenders</span>
+              <span className="md:hidden">Spenders</span>
+            </TabsTrigger>
+            <TabsTrigger value="rising" className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4" />
+              <span className="hidden md:inline">Rising Stars</span>
+              <span className="md:hidden">Rising</span>
+            </TabsTrigger>
+            <TabsTrigger value="teams" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              <span>Teams</span>
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="spenders">
+            <div className="space-y-2">
+              {topSpenders.map((user, index) => (
+                <SpotlightProfile 
+                  key={user.id} 
+                  user={user} 
+                  rank={index + 1}
+                  isTopSpender={index === 0} 
+                  onClick={() => handleProfileClick(user)} 
+                />
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="rising">
+            <div className="space-y-2">
+              {risingStars.map((user, index) => (
+                <SpotlightProfile 
+                  key={user.id} 
+                  user={user} 
+                  rank={user.rank || index + 1}
+                  onClick={() => handleProfileClick(user)} 
+                />
+              ))}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="teams">
+            <div className="space-y-3">
+              {topTeams.map((team, index) => (
                 <div 
-                  key={card.id}
-                  className="glass-morphism p-4 rounded-lg border border-white/10 flex items-center space-x-3"
+                  key={index}
+                  className="flex items-center justify-between p-3 rounded-lg border border-white/10 bg-black/20"
                 >
-                  <div className="flex-shrink-0">
-                    {card.icon}
-                  </div>
                   <div>
-                    <div className="text-xl font-bold">{card.value}</div>
-                    <div className="text-sm text-white/60">{card.label}</div>
+                    <h3 className="font-semibold">{team.name}</h3>
+                    <p className="text-xs text-white/60">{team.members} members</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-semibold text-royal-gold">
+                      {formatCurrency(team.totalSpent)}
+                    </div>
+                    <div className="text-xs text-white/60">
+                      Rank #{index + 1}
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-          
-          <div className="lg:col-span-4">
-            <div className="glass-morphism border border-white/10 rounded-lg overflow-hidden">
-              <div className="p-4 border-b border-white/10 flex justify-between items-center">
-                <h3 className="font-bold">Top Spenders</h3>
-                <Badge variant="outline" className="bg-black/20">
-                  <Zap className="h-3 w-3 mr-1 text-yellow-400" />
-                  Royal Status
-                </Badge>
-              </div>
-              
-              <div className="divide-y divide-white/10">
-                {topSpenders.slice(0, 5).map((user, index) => (
-                  <div 
-                    key={user.id}
-                    className={`p-4 flex items-center space-x-3 hover:bg-white/5 cursor-pointer transition-colors ${
-                      featuredUser?.id === user.id ? 'bg-white/10' : ''
-                    }`}
-                    onClick={() => handleProfileSelect(index)}
-                  >
-                    <div className="font-bold text-lg w-6 text-center text-white/60">{index + 1}</div>
-                    <div className="flex-shrink-0 relative">
-                      <img 
-                        src={user.profileImage || '/placeholder-avatar.jpg'} 
-                        alt={user.username}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                      {index === 0 && (
-                        <div className="absolute -top-1 -right-1 bg-yellow-500 text-black rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                          <Crown className="h-3 w-3" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold truncate">{user.displayName || user.username}</div>
-                      <div className="text-sm text-white/60 flex items-center">
-                        <span className="truncate mr-1.5">{formatCurrency(user.totalSpent || user.amountSpent || 0)}</span>
-                        <Badge variant="outline" className="text-[10px] h-4 px-1 bg-black/20">
-                          {user.tier}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="p-4 border-t border-white/10">
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={onViewLeaderboard}
-                >
-                  View Full Leaderboard
-                </Button>
-              </div>
-            </div>
-          </div>
+          </TabsContent>
+        </Tabs>
+        
+        <div className="mt-4">
+          <Button variant="outline" className="w-full">
+            View Full Leaderboard
+          </Button>
         </div>
-      </div>
-    </section>
+      </CardContent>
+      
+      {selectedProfile && (
+        <Dialog open={showProfileDialog} onOpenChange={closeProfileDialog}>
+          <DialogContent className="glass-morphism border-white/10">
+            <DialogHeader>
+              <DialogTitle>{selectedProfile.displayName || selectedProfile.username}</DialogTitle>
+            </DialogHeader>
+            
+            <div className="space-y-4 mt-2">
+              <div className="flex justify-between">
+                <div>
+                  <p className="text-sm text-white/60">Total Spent</p>
+                  <p className="text-lg font-bold text-royal-gold">{formatCurrency(selectedProfile.totalSpent || 0)}</p>
+                </div>
+                
+                <div>
+                  <p className="text-sm text-white/60">Rank</p>
+                  <p className="text-lg font-bold">{selectedProfile.rank || '?'}</p>
+                </div>
+                
+                <div>
+                  <p className="text-sm text-white/60">Team</p>
+                  <p className="text-lg font-bold capitalize">{selectedProfile.team || 'None'}</p>
+                </div>
+              </div>
+              
+              <div>
+                <p className="text-sm text-white/60 mb-1">Bio</p>
+                <p className="text-sm">{selectedProfile.bio || 'No bio available.'}</p>
+              </div>
+              
+              <Button className="w-full" onClick={closeProfileDialog}>Close</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+    </Card>
   );
 };
 

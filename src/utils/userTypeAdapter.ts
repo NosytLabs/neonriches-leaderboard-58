@@ -47,7 +47,6 @@ export const ensureBoostHasRequiredFields = (boost: Partial<ProfileBoost>): Prof
     isActive: boost.isActive !== undefined ? boost.isActive : true,
     strength: boost.strength || 1,
     appliedBy: boost.appliedBy || 'system',
-    ...boost
   };
 };
 

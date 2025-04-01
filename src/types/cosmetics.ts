@@ -1,56 +1,24 @@
 
-export type CosmeticCategory = 
-  | 'border'
-  | 'color'
-  | 'font'
-  | 'emoji'
-  | 'title'
-  | 'background'
-  | 'effect'
-  | 'badge'
-  | 'theme'
-  | 'appearance'
-  | 'profile'
-  | 'interaction';
-
-export type CosmeticRarity = 
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'epic'
-  | 'legendary'
-  | 'mythic'
-  | 'royal'
-  | 'unique';
+export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type CosmeticCategory = 'title' | 'border' | 'background' | 'effect' | 'theme' | 'badge' | 'emoji' | 'color' | 'font';
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
-  category: CosmeticCategory;
   price: number;
   rarity: CosmeticRarity;
-  previewUrl?: string;
+  type: string;
+  category: CosmeticCategory;
   enabled: boolean;
+  previewUrl?: string;
   unlockRequirement?: string;
-  cost?: number; // For backward compatibility
-  previewImage?: string; // Alternative to previewUrl
-  image?: string; // For backward compatibility
-  imageSrc?: string; // Alternative to image
-  cssClass?: string; // For styling purposes
-  type?: string; // For compatibility
+  cssClass?: string;
+  restrictedTo?: string[];
+  icon?: string;
 }
 
 export interface UserCosmetics {
-  borders?: string[];
-  colors?: string[];
-  fonts?: string[];
-  emojis?: string[];
-  titles?: string[];
-  backgrounds?: string[];
-  effects?: string[];
-  badges?: string[];
-  themes?: string[];
   border?: string[];
   color?: string[];
   font?: string[];
@@ -69,29 +37,19 @@ export interface UserCosmetics {
   activeEffect?: string;
   activeBadge?: string;
   activeTheme?: string;
-  socialLinks?: Record<string, string>;
 }
 
-// Interface for consistent property name access
-export interface UserCosmeticState {
-  border: string[];
-  color: string[];
-  font: string[];
-  emoji: string[];
-  title: string[];
-  background: string[];
-  effect: string[];
-  badge: string[];
-  theme: string[];
-  [key: string]: string[] | string | Record<string, string> | undefined;
-}
-
-// SocialLink type for user profile
 export interface SocialLink {
-  id: string;
-  platform: string;
+  id: string | number;
+  platform?: string;
   url: string;
+  username?: string;
+  display?: string;
   icon?: string;
-  isVerified?: boolean;
-  clicks?: number; // Added for compatibility
+  verified?: boolean;
+  primary?: boolean;
+  clicks?: number;
+  title?: string;
+  label?: string;
+  type?: string;
 }
