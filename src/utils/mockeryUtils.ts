@@ -1,7 +1,7 @@
 
 import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { LucideIcon } from 'lucide-react';
-import { getMockeryActionIcon } from '@/utils/mockery/mockery-icons';
+import { getMockeryActionIcon as getIconFromIconsModule } from '@/utils/mockery/mockery-icons';
 
 /**
  * Get a display name for a mockery action
@@ -123,9 +123,11 @@ export const getMockeryActionEffect = (action: MockeryAction): string => {
 
 /**
  * Get the icon for a mockery action
+ * @param action The mockery action to get the icon for
+ * @returns A Lucide icon component
  */
 export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
-  return getMockeryActionIcon(action);
+  return getIconFromIconsModule(action);
 };
 
 /**
