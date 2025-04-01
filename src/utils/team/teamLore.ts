@@ -19,7 +19,7 @@ export const teamHistory: Record<TeamColor, string> = {
   red: 'Founded by the infamous Duke of Spendington, the Red Team has a history of flamboyant displays of wealth dating back centuries.',
   blue: 'Established by a consortium of royal advisors, the Blue Team began as a think tank for economic strategy before evolving into a full-fledged spending faction.',
   green: 'The Green Team emerged from the Garden Court, where nobles with agricultural holdings would discuss sustainable wealth management between croquet matches.',
-  gold: 'The Gold Team traces its lineage directly to the royal family's inner circle, maintaining exclusive membership criteria that few can meet.',
+  gold: 'The Gold Team traces its lineage directly to the royal family\'s inner circle, maintaining exclusive membership criteria that few can meet.',
   purple: 'Born from a midnight gathering of eccentric nobles during a lunar eclipse, the Purple Team has always embraced the mystical and unexpected.',
   none: 'Unaffiliated nobles have a proud tradition of independence, dating back to the Great Spending Schism of the previous dynasty.',
   neutral: 'The Neutral position was established during the Team Wars as a diplomatic corps dedicated to preventing spending-related conflicts.',
