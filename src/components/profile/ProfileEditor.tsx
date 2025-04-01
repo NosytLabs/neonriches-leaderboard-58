@@ -1,189 +1,208 @@
 
-import React, { useState, useEffect } from 'react';
-import { UserProfile, SocialLink, ProfileImage as UserProfileImage, TeamType, Gender } from '@/types/user';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Crown, User, Image, Link as LinkIcon, Palette, Settings, Shield } from 'lucide-react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import BasicInfoEditor from './editor/BasicInfoEditor';
-import ImagesEditor from './editor/ImagesEditor';
-import SocialMediaLinksEditor from './editor/SocialMediaLinksEditor';
-import AppearanceEditor from './editor/AppearanceEditor';
-import TeamSelector from '@/components/teams/TeamSelector';
+import type { UserProfile } from '@/types/user';
+import TeamSelector from './TeamSelector';
 
-export interface ProfileEditorProps {
+interface ProfileEditorProps {
   user: UserProfile;
-  onProfileUpdate?: (updatedProfile: Partial<UserProfile>) => void;
+  onUpdateProfile: (updates: Partial<UserProfile>) => Promise<void>;
+  onUpdateProfileImage: (file: File) => Promise<void>;
 }
 
-type GenderType = 'king' | 'queen' | 'neutral' | 'jester' | 'noble';
-
-const ProfileEditor: React.FC<ProfileEditorProps> = ({ user, onProfileUpdate }) => {
+const ProfileEditor: React.FC<ProfileEditorProps> = ({
+  user,
+  onUpdateProfile,
+  onUpdateProfileImage
+}) => {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("basic-info");
-  const [displayName, setDisplayName] = useState(user.displayName || '');
-  const [bio, setBio] = useState(user.bio || '');
-  const [gender, setGender] = useState<GenderType>((user.gender as GenderType) || 'neutral');
-  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(
-    Array.isArray(user.socialLinks) ? user.socialLinks : []
-  );
-  const [profileImages, setProfileImages] = useState<UserProfileImage[]>(
-    user.profileImages || []
-  );
-  const [selectedTeam, setSelectedTeam] = useState<'red' | 'green' | 'blue' | null>(
-    user.team === null ? null : (user.team as 'red' | 'green' | 'blue' | null)
-  );
-  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    displayName: user.displayName || '',
+    bio: user.bio || '',
+    profileImage: user.profileImage || '',
+    team: user.team || 'none',
+  });
   
-  // Update local state when user prop changes
-  useEffect(() => {
-    setDisplayName(user.displayName || '');
-    setBio(user.bio || '');
-    setGender((user.gender as GenderType) || 'neutral');
-    setSocialLinks(Array.isArray(user.socialLinks) ? user.socialLinks : []);
-    setProfileImages(user.profileImages || []);
-    setSelectedTeam(user.team === null ? null : (user.team as 'red' | 'green' | 'blue' | null));
-  }, [user]);
-  
-  const handleGenderChange = (value: GenderType) => {
-    setGender(value);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
   
-  const handleTeamChange = (team: 'red' | 'green' | 'blue') => {
-    setSelectedTeam(team);
-  };
-  
-  const handleSaveProfile = async () => {
-    setIsSaving(true);
-    try {
-      // Prepare updated profile data
-      const updatedProfile: Partial<UserProfile> = {
-        displayName,
-        bio,
-        gender: gender as Gender,
-        socialLinks,
-        profileImages,
-        team: selectedTeam, // Can be null or a team color
-      };
-      
-      // If there's an update callback, use it
-      if (onProfileUpdate) {
-        onProfileUpdate(updatedProfile);
-      }
-      
-      // Simulate API call
-      setTimeout(() => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setIsLoading(true);
+      try {
+        await onUpdateProfileImage(file);
         toast({
-          title: "Profile Updated",
-          description: "Your royal profile has been successfully updated.",
+          title: "Profile image updated",
+          description: "Your profile image has been updated successfully.",
+          variant: "success"
         });
-        setIsSaving(false);
-      }, 1000);
-    } catch (error) {
-      toast({
-        title: "Update Failed",
-        description: "There was an error updating your profile.",
-        variant: "destructive"
-      });
-      setIsSaving(false);
+      } catch (error) {
+        toast({
+          title: "Error updating profile image",
+          description: "There was an error updating your profile image. Please try again.",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
-
-  // Check if there are any changes to save
-  const hasChanges = 
-    displayName !== user.displayName ||
-    bio !== user.bio ||
-    gender !== user.gender ||
-    JSON.stringify(socialLinks) !== JSON.stringify(user.socialLinks) ||
-    JSON.stringify(profileImages) !== JSON.stringify(user.profileImages) ||
-    selectedTeam !== user.team;
-
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    const updates: Partial<UserProfile> = {
+      displayName: formData.displayName,
+      bio: formData.bio,
+      team: formData.team,
+    };
+    
+    try {
+      await onUpdateProfile(updates);
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been updated successfully.",
+        variant: "success"
+      });
+    } catch (error) {
+      toast({
+        title: "Error updating profile",
+        description: "There was an error updating your profile. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleTeamChange = (team: any) => {
+    setFormData(prev => ({ ...prev, team }));
+  };
+  
   return (
-    <Card className="glass-morphism border-white/10">
+    <Card className="glass-morphism">
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <Crown className="mr-2 h-5 w-5 text-royal-gold" />
-          Edit Your Royal Profile
-        </CardTitle>
-        <CardDescription>
-          Customize your profile to showcase your digital nobility
-        </CardDescription>
+        <CardTitle>Edit Profile</CardTitle>
       </CardHeader>
       <CardContent>
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="glass-morphism w-full border-white/10 bg-transparent">
-            <TabsTrigger value="basic-info" className="data-[state=active]:bg-white/10">
-              <User className="h-4 w-4 mr-2" />
-              Basic Info
-            </TabsTrigger>
-            <TabsTrigger value="images" className="data-[state=active]:bg-white/10">
-              <Image className="h-4 w-4 mr-2" />
-              Images
-            </TabsTrigger>
-            <TabsTrigger value="social" className="data-[state=active]:bg-white/10">
-              <LinkIcon className="h-4 w-4 mr-2" />
-              Social Links
-            </TabsTrigger>
-            <TabsTrigger value="appearance" className="data-[state=active]:bg-white/10">
-              <Palette className="h-4 w-4 mr-2" />
-              Appearance
-            </TabsTrigger>
-            <TabsTrigger value="team" className="data-[state=active]:bg-white/10">
-              <Shield className="h-4 w-4 mr-2" />
-              Royal House
-            </TabsTrigger>
+        <Tabs defaultValue="general">
+          <TabsList className="mb-6">
+            <TabsTrigger value="general">General Info</TabsTrigger>
+            <TabsTrigger value="profile-image">Profile Image</TabsTrigger>
+            <TabsTrigger value="team">Team Affiliation</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="basic-info" className="space-y-4">
-            <BasicInfoEditor 
-              user={user}
-              displayName={displayName}
-              bio={bio}
-              gender={gender}
-              onDisplayNameChange={setDisplayName}
-              onBioChange={setBio}
-              onGenderChange={handleGenderChange}
-            />
+          <TabsContent value="general">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="displayName" className="text-sm font-medium">Display Name</label>
+                <Input
+                  id="displayName"
+                  name="displayName"
+                  placeholder="Your display name"
+                  value={formData.displayName}
+                  onChange={handleInputChange}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label htmlFor="bio" className="text-sm font-medium">Bio</label>
+                <Textarea
+                  id="bio"
+                  name="bio"
+                  placeholder="Tell us about yourself"
+                  value={formData.bio}
+                  onChange={handleInputChange}
+                  rows={4}
+                />
+              </div>
+              
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? "Saving..." : "Save Changes"}
+              </Button>
+            </form>
           </TabsContent>
           
-          <TabsContent value="images" className="space-y-4">
-            <ImagesEditor 
-              user={user}
-              images={profileImages}
-              onImagesChange={setProfileImages}
-            />
+          <TabsContent value="profile-image">
+            <div className="space-y-6">
+              <div className="flex items-center space-x-6">
+                <div className="h-24 w-24 rounded-full overflow-hidden bg-gray-100">
+                  <img 
+                    src={formData.profileImage || '/placeholder-avatar.png'} 
+                    alt="Profile" 
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    Upload a new profile picture. Square images work best.
+                  </p>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    disabled={isLoading}
+                    onChange={handleImageChange}
+                  />
+                </div>
+              </div>
+              
+              <Separator />
+              
+              <div className="space-y-2">
+                <h3 className="text-sm font-medium">Image URL</h3>
+                <Input
+                  name="profileImage"
+                  placeholder="Or enter an image URL"
+                  value={formData.profileImage}
+                  onChange={handleInputChange}
+                />
+                <Button 
+                  variant="outline" 
+                  onClick={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)} 
+                  disabled={isLoading}
+                >
+                  Update Image URL
+                </Button>
+              </div>
+            </div>
           </TabsContent>
           
-          <TabsContent value="social" className="space-y-4">
-            <SocialMediaLinksEditor 
-              user={user}
-              socialLinks={socialLinks}
-              onLinksChange={setSocialLinks}
-            />
-          </TabsContent>
-          
-          <TabsContent value="appearance" className="space-y-4">
-            <AppearanceEditor user={user} />
-          </TabsContent>
-          
-          <TabsContent value="team" className="space-y-4">
-            <TeamSelector 
-              team={selectedTeam} 
-              onTeamChange={handleTeamChange} 
-            />
+          <TabsContent value="team">
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-base font-medium">Team Affiliation</h3>
+                <p className="text-sm text-muted-foreground">
+                  Choose which royal team you want to join. Your team choice impacts your available rewards and leaderboard.
+                </p>
+              </div>
+              
+              <div className="mt-4">
+                <TeamSelector 
+                  onTeamChange={handleTeamChange} 
+                />
+              </div>
+              
+              <Button 
+                onClick={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)} 
+                disabled={isLoading}
+              >
+                Save Team Selection
+              </Button>
+            </div>
           </TabsContent>
         </Tabs>
-        
-        <div className="mt-6 flex justify-end">
-          <Button 
-            onClick={handleSaveProfile}
-            className="bg-royal-gold hover:bg-royal-gold/90 text-black"
-            disabled={isSaving || !hasChanges}
-          >
-            {isSaving ? "Saving..." : hasChanges ? "Save Royal Profile" : "No Changes to Save"}
-          </Button>
-        </div>
       </CardContent>
     </Card>
   );

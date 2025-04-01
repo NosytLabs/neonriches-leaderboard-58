@@ -8,8 +8,8 @@ import { ProfileBoost } from '@/types/user';
 export const ensureTotalSpent = (user: UserProfile): UserProfile & { totalSpent: number; amountSpent: number } => {
   return {
     ...user,
-    totalSpent: user.totalSpent || 0,
-    amountSpent: user.amountSpent || user.totalSpent || 0,
+    totalSpent: typeof user.totalSpent === 'number' ? user.totalSpent : 0,
+    amountSpent: typeof user.amountSpent === 'number' ? user.amountSpent : (user.totalSpent || 0),
   };
 };
 
@@ -34,8 +34,8 @@ export const adaptToStandardUserProfile = (user: UserProfile & { totalSpent: num
     tier: user.tier || 'basic',
     team: user.team || 'none',
     profileBoosts: adaptedProfileBoosts,
-    // If the user.joinedDate doesn't exist, set a fallback
-    joinedDate: user.joinedDate || user.joinDate || user.createdAt || user.joinedAt || new Date().toISOString()
+    // Use joinedDate as the standard field for when user joined
+    joinedDate: user.joinedDate || new Date().toISOString()
   };
 };
 

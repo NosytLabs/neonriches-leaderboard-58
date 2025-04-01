@@ -11,7 +11,7 @@ import { Award, Crown, Medal, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CertificateDisplay from '@/components/certificates/CertificateDisplay';
 import { useCertificate } from '@/hooks/useCertificate';
-import { adaptToStandardUserProfile } from '@/utils/userTypeAdapter';
+import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
 
 const CertificatePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,13 +29,13 @@ const CertificatePage: React.FC = () => {
     mintCertificate, 
     generateShareableImage 
   } = useCertificate({ 
-    user: user ? adaptToStandardUserProfile(user) : null, 
+    user: user ? ensureTotalSpent(adaptToStandardUserProfile(ensureTotalSpent(user))) : null, 
     certificateId: id 
   });
   
   const handleMint = async (cert: any) => {
     const result = await mintCertificate(cert);
-    return result;
+    return result || ''; // Return empty string if result is falsy
   };
   
   const handleShare = async (cert: any) => {
@@ -69,6 +69,8 @@ const CertificatePage: React.FC = () => {
       </div>
     );
   }
+
+  const processedUser = ensureTotalSpent(adaptToStandardUserProfile(ensureTotalSpent(user)));
   
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -92,7 +94,7 @@ const CertificatePage: React.FC = () => {
               {certificate ? (
                 <CertificateDisplay 
                   certificate={certificate}
-                  user={adaptToStandardUserProfile(user)}
+                  user={processedUser}
                   onMint={handleMint}
                   onShare={handleShare}
                   onDownload={handleDownload}
@@ -125,7 +127,7 @@ const CertificatePage: React.FC = () => {
                               <CertificateDisplay 
                                 key={cert.id}
                                 certificate={cert}
-                                user={adaptToStandardUserProfile(user)}
+                                user={processedUser}
                                 onMint={handleMint}
                                 onShare={handleShare}
                                 onDownload={handleDownload}

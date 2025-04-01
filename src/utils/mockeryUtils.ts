@@ -48,7 +48,7 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
 };
 
 // Get the cost of each mockery action
-export const getMockeryCost = (action: MockeryAction): number => {
+export const getMockeryActionPrice = (action: MockeryAction): number => {
   const costs: Record<MockeryAction, number> = {
     'eggs': 5,
     'tomatoes': 10,
@@ -92,9 +92,15 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
   return colors[action] || 'text-gray-400';
 };
 
-/**
- * Get shame action price based on mockery action
- */
-export const getShameActionPrice = (action: MockeryAction): number => {
-  return getMockeryCost(action);
+// Add the missing function to get tier color class
+export const getMockeryTierColorClass = (tier: MockeryTier): string => {
+  const colorClasses: Record<MockeryTier, string> = {
+    'common': 'text-gray-300',
+    'uncommon': 'text-green-400',
+    'rare': 'text-blue-400',
+    'epic': 'text-purple-400',
+    'legendary': 'text-royal-gold'
+  };
+  
+  return colorClasses[tier] || 'text-gray-300';
 };
