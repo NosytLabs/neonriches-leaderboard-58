@@ -1,126 +1,165 @@
 
 import { TeamColor, TeamData } from '@/types/team';
+import { 
+  getTeamName, 
+  getTeamMotto 
+} from '@/utils/team/teamInfo';
+import { 
+  getTeamBenefit, 
+  getTeamSecurityGuarantee 
+} from '@/utils/team/teamBenefits';
+import { 
+  getTeamHistoricalNote, 
+  getTeamAbsurdStat 
+} from '@/utils/team/teamLore';
+import { 
+  getTeamNFTJoke, 
+  getTeamCryptoRoast 
+} from '@/utils/team/teamJokes';
+import { getTeamColor } from '@/utils/team/teamColors';
 
-/**
- * Team data repository
- * Contains all static data related to teams
- */
+// Create mock team data
 export const teams: Record<TeamColor, TeamData> = {
-  red: {
+  'red': {
     id: 'red',
-    name: 'Crimson Order',
-    motto: 'Fortune favors the bold',
-    color: '#dc2626',
-    benefits: [
-      '+15% attack power in mockery battles',
-      'Exclusive crimson profile frames',
-      'Bonus daily rank points during conquests'
-    ],
-    securityGuarantee: 'Protected by unbreakable battle oaths',
-    absurdStat: '87% of members claim to have fought a digital dragon',
-    historicalNote: 'Founded by a former video game speed-runner who believed real life needed a leaderboard',
-    nftJoke: 'Our NFTs are so exclusive they don\'t actually exist',
-    cryptoRoast: 'People who think pressing buy faster makes the price go up'
+    name: getTeamName('red'),
+    color: 'red',
+    description: 'The Crimson Knights are known for their aggressive spending strategies and bold declarations of wealth.',
+    members: 1254,
+    totalContribution: 842650,
+    rank: 2,
+    emblemUrl: '/assets/emblems/red-emblem.png',
+    motto: getTeamMotto('red'),
+    benefits: getTeamBenefit('red'),
+    securityGuarantee: getTeamSecurityGuarantee('red'),
+    absurdStat: getTeamAbsurdStat('red'),
+    historicalNote: getTeamHistoricalNote('red'),
+    nftJoke: getTeamNFTJoke('red'),
+    cryptoRoast: getTeamCryptoRoast('red')
   },
-  blue: {
+  'blue': {
     id: 'blue',
-    name: 'Azure Legion',
-    motto: 'Knowledge is true power',
-    color: '#2563eb',
-    benefits: [
-      '+10% increased wallet interest rate',
-      'Reduced cooldown on profile boosts',
-      'Special team cosmetic unlocks'
-    ],
-    securityGuarantee: 'Safeguarded by ancient wisdom',
-    absurdStat: '42% believe they can predict market movements by reading tea leaves',
-    historicalNote: 'Started as a book club that evolved into a competitive wealth philosophy',
-    nftJoke: 'We invented a blockchain that runs on pure intellectual superiority',
-    cryptoRoast: 'Overthinking every trade until the opportunity has passed'
+    name: getTeamName('blue'),
+    color: 'blue',
+    description: 'The Azure Guardians approach spending with intellectual precision, analyzing every dollar for maximum rank efficiency.',
+    members: 1876,
+    totalContribution: 925430,
+    rank: 1,
+    emblemUrl: '/assets/emblems/blue-emblem.png',
+    motto: getTeamMotto('blue'),
+    benefits: getTeamBenefit('blue'),
+    securityGuarantee: getTeamSecurityGuarantee('blue'),
+    absurdStat: getTeamAbsurdStat('blue'),
+    historicalNote: getTeamHistoricalNote('blue'),
+    nftJoke: getTeamNFTJoke('blue'),
+    cryptoRoast: getTeamCryptoRoast('blue')
   },
-  green: {
+  'green': {
     id: 'green',
-    name: 'Emerald Dynasty',
-    motto: 'Growth through harmony',
-    color: '#16a34a',
-    benefits: [
-      '-20% cost on profile boosts',
-      'Enhanced growth-themed animations',
-      'Special monthly rewards'
-    ],
-    securityGuarantee: 'Secured by natural balance',
-    absurdStat: '63% claim their plants grow faster when they wear team colors',
-    historicalNote: 'Originally a gardening discord that pivoted to wealth generation',
-    nftJoke: 'Our NFTs are sustainably farmed and 100% organic',
-    cryptoRoast: 'Believes staring at plants helps portfolio growth'
+    name: getTeamName('green'),
+    color: 'green',
+    description: 'The Emerald Seekers believe in sustainable spending, focusing on steady rank growth through consistent contributions.',
+    members: 1432,
+    totalContribution: 683200,
+    rank: 3,
+    emblemUrl: '/assets/emblems/green-emblem.png',
+    motto: getTeamMotto('green'),
+    benefits: getTeamBenefit('green'),
+    securityGuarantee: getTeamSecurityGuarantee('green'),
+    absurdStat: getTeamAbsurdStat('green'),
+    historicalNote: getTeamHistoricalNote('green'),
+    nftJoke: getTeamNFTJoke('green'),
+    cryptoRoast: getTeamCryptoRoast('green')
   },
-  gold: {
+  'gold': {
     id: 'gold',
-    name: 'Golden Empire',
-    motto: 'Prosperity above all',
-    color: '#eab308',
-    benefits: [
-      '+25% bonus on first monthly deposit',
-      'Exclusive golden profile effects',
-      'Special status indicators'
-    ],
-    securityGuarantee: 'Ensured by prosperity pacts',
-    absurdStat: '91% sleep with their crypto wallets under their pillows',
-    historicalNote: 'Created by former poker players who missed the thrill of high stakes',
-    nftJoke: 'Each NFT comes with a virtual butler who ignores you',
-    cryptoRoast: 'The only thing more inflated than their wallets is their ego'
+    name: getTeamName('gold'),
+    color: 'gold',
+    description: 'The Golden Crown represents the aristocracy of spending, where status and visible opulence are paramount.',
+    members: 876,
+    totalContribution: 576890,
+    rank: 4,
+    emblemUrl: '/assets/emblems/gold-emblem.png',
+    motto: getTeamMotto('gold'),
+    benefits: getTeamBenefit('gold'),
+    securityGuarantee: getTeamSecurityGuarantee('gold'),
+    absurdStat: getTeamAbsurdStat('gold'),
+    historicalNote: getTeamHistoricalNote('gold'),
+    nftJoke: getTeamNFTJoke('gold'),
+    cryptoRoast: getTeamCryptoRoast('gold')
   },
-  purple: {
+  'purple': {
     id: 'purple',
-    name: 'Royal Court',
-    motto: 'Divine right to rule',
-    color: '#9333ea',
-    benefits: [
-      'Royal cosmetics unlock at rank 10 instead of 50',
-      'Special royal titles available',
-      'Extended protection duration'
-    ],
-    securityGuarantee: 'Protected by royal decree',
-    absurdStat: '79% address themselves with royal titles in private',
-    historicalNote: 'Established by cosplay enthusiasts with a particular love for royal characters',
-    nftJoke: 'Our NFTs are royalty-free, but still expect to be treated like royalty',
-    cryptoRoast: 'Expects their crypto to curtsy before being traded'
+    name: getTeamName('purple'),
+    color: 'purple',
+    description: 'The Royal Purple is an exclusive team of elite spenders who value creativity and flair in their contributions.',
+    members: 643,
+    totalContribution: 512340,
+    rank: 5,
+    emblemUrl: '/assets/emblems/purple-emblem.png',
+    motto: getTeamMotto('purple'),
+    benefits: getTeamBenefit('purple'),
+    securityGuarantee: getTeamSecurityGuarantee('purple'),
+    absurdStat: getTeamAbsurdStat('purple'),
+    historicalNote: getTeamHistoricalNote('purple'),
+    nftJoke: getTeamNFTJoke('purple'),
+    cryptoRoast: getTeamCryptoRoast('purple')
   },
-  none: {
+  'none': {
     id: 'none',
-    name: 'Unaligned',
-    motto: 'Chart your own path',
-    color: '#6b7280',
-    benefits: [
-      'Freedom to change teams at any time',
-      'No team-specific restrictions',
-      'Independent rewards system'
-    ],
-    securityGuarantee: 'Self-reliance is your shield',
-    absurdStat: '96% believe they\'re actually NPCs in someone else\'s game',
-    historicalNote: 'Not a team at all, but a philosophical stance against arbitrary grouping',
-    nftJoke: 'We believe in NFTs: Nice Friendly Thoughts',
-    cryptoRoast: 'Can\'t even commit to a blockchain, let alone a team'
+    name: getTeamName('none'),
+    color: 'none',
+    description: 'Independent spenders who choose to forge their own path without team allegiance.',
+    members: 2345,
+    totalContribution: 432180,
+    rank: 6,
+    emblemUrl: '/assets/emblems/neutral-emblem.png',
+    motto: getTeamMotto('none'),
+    benefits: getTeamBenefit('none'),
+    securityGuarantee: getTeamSecurityGuarantee('none'),
+    absurdStat: getTeamAbsurdStat('none'),
+    historicalNote: getTeamHistoricalNote('none'),
+    nftJoke: getTeamNFTJoke('none'),
+    cryptoRoast: getTeamCryptoRoast('none')
   },
-  neutral: {
+  'neutral': {
     id: 'neutral',
-    name: 'Neutral',
-    motto: 'Balance in all things',
-    color: '#6b7280',
-    benefits: [
-      'Balanced benefits across all features',
-      'Universal compatibility bonuses',
-      'Special mediator status'
-    ],
-    securityGuarantee: 'Universal protection through balance',
-    absurdStat: '50% of statistics are made up on the spot',
-    historicalNote: 'Founded by professional mediators seeking balance in all things',
-    nftJoke: 'Our NFTs are perfectly balanced - they\'re worth exactly what you paid',
-    cryptoRoast: 'Too afraid to have an opinion on whether crypto will go up or down'
+    name: getTeamName('neutral'),
+    color: 'neutral',
+    description: 'Neutral spenders who have yet to choose a team allegiance.',
+    members: 2345,
+    totalContribution: 432180,
+    rank: 6,
+    emblemUrl: '/assets/emblems/neutral-emblem.png',
+    motto: getTeamMotto('neutral'),
+    benefits: getTeamBenefit('neutral'),
+    securityGuarantee: getTeamSecurityGuarantee('neutral'),
+    absurdStat: getTeamAbsurdStat('neutral'),
+    historicalNote: getTeamHistoricalNote('neutral'),
+    nftJoke: getTeamNFTJoke('neutral'),
+    cryptoRoast: getTeamCryptoRoast('neutral')
   }
 };
 
-// A utility function to get a team by ID
-export const getTeamById = (teamId: TeamColor): TeamData => {
-  return teams[teamId] || teams.none;
+/**
+ * Get team data by id
+ * @param teamId The team id to look up
+ * @returns The team data
+ */
+export function getTeamById(teamId: TeamColor): TeamData {
+  return teams[teamId] || teams.neutral;
+}
+
+/**
+ * Get all available teams
+ * @returns Array of team data
+ */
+export function getAllTeams(): TeamData[] {
+  return Object.values(teams);
+}
+
+export default {
+  teams,
+  getTeamById,
+  getAllTeams
 };

@@ -3,273 +3,399 @@ import React, { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import PageHeader from '@/components/layout/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CreditCard, DollarSign, TrendingUp, History, Crown } from 'lucide-react';
-import { Slider } from '@/components/ui/slider';
-import { useToast } from '@/hooks/use-toast';
+import { DollarSign, TrendingUp, CreditCard, Crown, Gem, Gift } from 'lucide-react';
 import { useAuth } from '@/contexts/auth';
+import { useToast } from '@/hooks/use-toast';
 import usePageTracking from '@/hooks/usePageTracking';
 
 const Deposit = () => {
-  const { toast } = useToast();
   const { user } = useAuth();
-  const [amount, setAmount] = useState(50);
-  const [paymentMethod, setPaymentMethod] = useState('credit-card');
+  const { toast } = useToast();
+  const [depositAmount, setDepositAmount] = useState('10');
+  const [processing, setProcessing] = useState(false);
   
   // Track page view
   usePageTracking();
   
-  const handleDeposit = () => {
-    // Implementation would connect to payment processor
-    toast({
-      title: "Deposit Successful",
-      description: `Your royal treasury has been increased by $${amount}.`,
-    });
+  const predefinedAmounts = [10, 25, 50, 100, 250, 500];
+  
+  const handleDepositSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Check for valid amount
+    const amount = parseFloat(depositAmount);
+    if (isNaN(amount) || amount <= 0) {
+      toast({
+        title: "Invalid Amount",
+        description: "Please enter a valid deposit amount.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Mock deposit processing
+    setProcessing(true);
+    setTimeout(() => {
+      setProcessing(false);
+      toast({
+        title: "Deposit Successful",
+        description: `You've deposited $${amount.toFixed(2)} and your rank has been increased!`,
+        variant: "success",
+      });
+    }, 1500);
   };
   
-  const predefinedAmounts = [10, 25, 50, 100, 250];
+  const handleQuickAmount = (amount: number) => {
+    setDepositAmount(amount.toString());
+  };
   
   return (
     <Layout>
       <div className="container mx-auto px-4 py-6">
         <PageHeader 
           title="Royal Treasury" 
-          description="Increase your status and influence by expanding your royal coffers"
-          icon={<Crown className="h-8 w-8 text-royal-gold" />}
+          description="Increase your rank by contributing to the royal coffers"
+          icon={<DollarSign className="h-8 w-8 text-royal-gold" />}
         />
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-          <div className="md:col-span-2">
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold">Expand Your Influence</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="p-4 rounded-lg bg-gradient-to-br from-royal-gold/20 to-royal-crimson/20 border border-white/10 text-center">
-                    <p className="mb-2 text-white/70">Current Rank</p>
-                    <div className="text-4xl font-bold royal-gradient mb-2">#{user?.rank || 'N/A'}</div>
-                    <p className="text-sm text-white/70">
-                      {user?.tier === 'royal' 
-                        ? 'You have achieved royal status!' 
-                        : 'Every dollar spent increases your rank permanently'}
-                    </p>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h3 className="font-bold">Select Amount</h3>
-                    
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {predefinedAmounts.map((value) => (
+        <Tabs defaultValue="deposit" className="mt-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="deposit" className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4" />
+              Deposit Funds
+            </TabsTrigger>
+            <TabsTrigger value="packages" className="flex items-center gap-2">
+              <Crown className="h-4 w-4" />
+              Royal Packages
+            </TabsTrigger>
+            <TabsTrigger value="subscription" className="flex items-center gap-2">
+              <Gem className="h-4 w-4" />
+              Royal Subscription
+            </TabsTrigger>
+          </TabsList>
+          
+          <div className="mt-6">
+            <TabsContent value="deposit">
+              <Card className="glass-morphism border-white/10">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <TrendingUp className="h-5 w-5 mr-2 text-royal-gold" />
+                    Increase Your Royal Standing
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleDepositSubmit} className="space-y-6">
+                    <div className="grid grid-cols-3 gap-3">
+                      {predefinedAmounts.map((amount) => (
                         <Button
-                          key={value}
-                          variant={amount === value ? "default" : "outline"}
-                          onClick={() => setAmount(value)}
-                          className={amount === value ? "bg-royal-gold text-black" : ""}
+                          key={amount}
+                          type="button"
+                          variant={depositAmount === amount.toString() ? "default" : "outline"}
+                          onClick={() => handleQuickAmount(amount)}
+                          className="relative overflow-hidden"
                         >
-                          ${value}
+                          {amount >= 100 && (
+                            <div className="absolute -right-6 -top-1 bg-royal-gold text-black transform rotate-45 px-6 py-0.5 text-xs">
+                              Popular
+                            </div>
+                          )}
+                          ${amount}
                         </Button>
                       ))}
-                      <Button
-                        variant={!predefinedAmounts.includes(amount) ? "default" : "outline"}
-                        onClick={() => setAmount(500)}
-                        className={!predefinedAmounts.includes(amount) ? "bg-royal-gold text-black" : ""}
-                      >
-                        Custom
-                      </Button>
                     </div>
                     
                     <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-sm text-white/70">$10</span>
-                        <span className="text-sm text-white/70">$500+</span>
-                      </div>
-                      <Slider
-                        value={[amount]}
-                        min={10}
-                        max={500}
-                        step={5}
-                        onValueChange={(value) => setAmount(value[0])}
-                        className="py-4"
-                      />
-                    </div>
-                    
-                    <div className="flex items-center">
-                      <div className="flex-1">
-                        <label htmlFor="custom-amount" className="sr-only">Custom amount</label>
-                        <div className="relative">
-                          <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
-                          <Input
-                            id="custom-amount"
-                            type="number"
-                            value={amount}
-                            onChange={(e) => setAmount(Number(e.target.value))}
-                            className="pl-9"
-                            min={1}
-                          />
+                      <label htmlFor="custom-amount" className="text-sm text-white/70">
+                        Or enter a custom amount:
+                      </label>
+                      <div className="flex">
+                        <div className="bg-white/10 flex items-center justify-center px-3 border border-white/10 rounded-l-md">
+                          <DollarSign className="h-5 w-5 text-white/70" />
                         </div>
+                        <Input
+                          id="custom-amount"
+                          type="number"
+                          min="1"
+                          step="0.01"
+                          value={depositAmount}
+                          onChange={(e) => setDepositAmount(e.target.value)}
+                          className="rounded-l-none"
+                          placeholder="Enter amount"
+                        />
                       </div>
                     </div>
                     
-                    <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                      <div className="flex justify-between mb-2">
-                        <span>Amount</span>
-                        <span>${amount}</span>
-                      </div>
-                      <div className="flex justify-between mb-2">
-                        <span>Rank Increase</span>
-                        <span>~{amount} positions</span>
-                      </div>
-                      <div className="flex justify-between font-bold text-lg">
-                        <span>Total</span>
-                        <span>${amount}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <Tabs value={paymentMethod} onValueChange={setPaymentMethod}>
-                    <TabsList className="grid grid-cols-2 mb-4">
-                      <TabsTrigger value="credit-card" className="flex items-center gap-2">
-                        <CreditCard className="h-4 w-4" />
-                        Credit Card
-                      </TabsTrigger>
-                      <TabsTrigger value="crypto" className="flex items-center gap-2">
-                        <DollarSign className="h-4 w-4" />
-                        Crypto
-                      </TabsTrigger>
-                    </TabsList>
-                    
-                    <TabsContent value="credit-card">
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">Card Number</label>
-                            <Input placeholder="1234 5678 9012 3456" />
-                          </div>
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">Name on Card</label>
-                            <Input placeholder="John Doe" />
-                          </div>
+                    <div className="p-4 bg-white/5 rounded-lg">
+                      <h3 className="font-medium mb-2 flex items-center">
+                        <TrendingUp className="h-4 w-4 mr-2 text-royal-gold" />
+                        Rank Increase Preview
+                      </h3>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <p className="text-white/60">Current Rank:</p>
+                          <p className="font-bold">#{user?.rank || '???'}</p>
                         </div>
-                        
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">Expiry Date</label>
-                            <Input placeholder="MM/YY" />
-                          </div>
-                          <div className="space-y-2">
-                            <label className="text-sm font-medium">CVV</label>
-                            <Input placeholder="123" />
-                          </div>
-                        </div>
-                        
-                        <Button 
-                          onClick={handleDeposit} 
-                          className="w-full bg-gradient-to-r from-royal-gold to-royal-crimson text-black font-bold"
-                        >
-                          Deposit ${amount}
-                        </Button>
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="crypto">
-                      <div className="space-y-4">
-                        <div className="p-4 rounded-lg bg-black/20 border border-white/10 text-center">
-                          <p className="mb-2">Send ${amount} equivalent to:</p>
-                          <div className="font-mono bg-black/40 p-2 rounded text-sm mb-2 break-all">
-                            1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa
-                          </div>
-                          <p className="text-sm text-white/60">
-                            Funds will be credited after 1 confirmation
+                        <div>
+                          <p className="text-white/60">Estimated New Rank:</p>
+                          <p className="font-bold text-royal-gold">
+                            #{user?.rank
+                              ? Math.max(1, user.rank - Math.ceil(parseFloat(depositAmount) / 10))
+                              : '???'}
                           </p>
                         </div>
-                        
-                        <Button 
-                          variant="outline" 
-                          className="w-full"
-                          onClick={() => {
-                            navigator.clipboard.writeText("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa");
-                            toast({
-                              title: "Address Copied",
-                              description: "Cryptocurrency address copied to clipboard",
-                            });
-                          }}
-                        >
-                          Copy Address
-                        </Button>
                       </div>
-                    </TabsContent>
-                  </Tabs>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          
-          <div className="space-y-6">
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center">
-                  <TrendingUp className="h-5 w-5 mr-2 text-royal-gold" />
-                  Rank Projection
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-3 rounded-lg bg-black/30">
-                    <p className="text-sm text-white/70">Current Rank</p>
-                    <p className="text-2xl font-bold">#{user?.rank || 'N/A'}</p>
-                  </div>
-                  
-                  <div className="p-3 rounded-lg bg-black/30">
-                    <p className="text-sm text-white/70">Projected Rank</p>
-                    <p className="text-2xl font-bold">#{user?.rank ? Math.max(1, user.rank - amount) : 'N/A'}</p>
-                  </div>
-                  
-                  <div className="h-20 w-full bg-black/20 rounded-lg relative overflow-hidden">
-                    <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-royal-gold/50 rounded-tr-lg"></div>
-                    <div className="absolute bottom-0 left-1/3 w-1/3 h-2/3 bg-royal-gold/70 rounded-tr-lg"></div>
-                    <div className="absolute bottom-0 left-2/3 w-1/3 h-full bg-royal-gold rounded-tr-lg"></div>
+                    </div>
                     
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <p className="text-sm font-medium">Rank Progress</p>
+                    <div className="flex justify-center">
+                      <Button 
+                        type="submit"
+                        className="bg-gradient-to-r from-royal-gold to-royal-gold-bright text-black hover:opacity-90 w-full md:w-2/3"
+                        size="lg"
+                        disabled={processing}
+                      >
+                        {processing ? (
+                          <>Processing...</>
+                        ) : (
+                          <>
+                            <Crown className="h-5 w-5 mr-2" />
+                            Complete Deposit
+                          </>
+                        )}
+                      </Button>
                     </div>
-                  </div>
-                  
-                  <p className="text-sm text-white/70">
-                    With a deposit of ${amount}, you could move up approximately {amount} positions on the leaderboard.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+                    
+                    <p className="text-center text-white/50 text-xs">
+                      Your rank is directly tied to your total contribution. 
+                      Each dollar equals one unit of rank.
+                    </p>
+                  </form>
+                </CardContent>
+              </Card>
+            </TabsContent>
             
-            <Card className="glass-morphism border-white/10">
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center">
-                  <History className="h-5 w-5 mr-2 text-royal-gold" />
-                  Recent Transactions
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className="flex justify-between p-2 border-b border-white/10 last:border-0">
-                      <div>
-                        <p className="font-medium">Deposit</p>
-                        <p className="text-xs text-white/60">{new Date(Date.now() - i * 86400000).toLocaleDateString()}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium text-royal-gold">+${25 * (i + 1)}</p>
-                        <p className="text-xs text-white/60">Processed</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            <TabsContent value="packages">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="glass-morphism border-white/10 relative overflow-hidden">
+                  <div className="absolute -right-16 -top-16 w-32 h-32 bg-royal-gold/10 rounded-full"></div>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Gift className="h-5 w-5 mr-2 text-royal-gold" />
+                      Squire Package
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold mb-4">$49.99</div>
+                    <ul className="space-y-2 mb-6">
+                      <li className="flex items-center text-sm">
+                        <DollarSign className="h-4 w-4 mr-2 text-royal-gold" />
+                        $50 rank improvement
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Crown className="h-4 w-4 mr-2 text-royal-gold" />
+                        Squire title next to your name
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Gift className="h-4 w-4 mr-2 text-royal-gold" />
+                        5 mockery tokens included
+                      </li>
+                    </ul>
+                    <Button 
+                      className="w-full bg-gradient-to-r from-royal-gold to-royal-gold-bright text-black hover:opacity-90"
+                    >
+                      Purchase Package
+                    </Button>
+                  </CardContent>
+                </Card>
+                
+                <Card className="glass-morphism border-white/10 relative overflow-hidden ring-2 ring-royal-gold/30">
+                  <div className="absolute -right-16 -top-16 w-32 h-32 bg-royal-gold/20 rounded-full"></div>
+                  <div className="absolute top-0 left-0 bg-royal-gold text-black px-4 py-1 text-xs font-bold uppercase">
+                    Most Popular
+                  </div>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Crown className="h-5 w-5 mr-2 text-royal-gold" />
+                      Knight Package
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold mb-4">$99.99</div>
+                    <ul className="space-y-2 mb-6">
+                      <li className="flex items-center text-sm">
+                        <DollarSign className="h-4 w-4 mr-2 text-royal-gold" />
+                        $110 rank improvement (10% bonus)
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Crown className="h-4 w-4 mr-2 text-royal-gold" />
+                        Knight title next to your name
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Gift className="h-4 w-4 mr-2 text-royal-gold" />
+                        15 mockery tokens included
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Gem className="h-4 w-4 mr-2 text-royal-gold" />
+                        Exclusive profile frame
+                      </li>
+                    </ul>
+                    <Button 
+                      className="w-full bg-gradient-to-r from-royal-gold to-royal-gold-bright text-black hover:opacity-90"
+                    >
+                      Purchase Package
+                    </Button>
+                  </CardContent>
+                </Card>
+                
+                <Card className="glass-morphism border-white/10 relative overflow-hidden">
+                  <div className="absolute -right-16 -top-16 w-32 h-32 bg-royal-gold/10 rounded-full"></div>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Crown className="h-5 w-5 mr-2 text-royal-gold" />
+                      Royal Package
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold mb-4">$249.99</div>
+                    <ul className="space-y-2 mb-6">
+                      <li className="flex items-center text-sm">
+                        <DollarSign className="h-4 w-4 mr-2 text-royal-gold" />
+                        $300 rank improvement (20% bonus)
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Crown className="h-4 w-4 mr-2 text-royal-gold" />
+                        Lord/Lady title next to your name
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Gift className="h-4 w-4 mr-2 text-royal-gold" />
+                        50 mockery tokens included
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Gem className="h-4 w-4 mr-2 text-royal-gold" />
+                        Animated royal profile frame
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <TrendingUp className="h-4 w-4 mr-2 text-royal-gold" />
+                        Featured on front page for 1 week
+                      </li>
+                    </ul>
+                    <Button 
+                      className="w-full bg-gradient-to-r from-royal-gold to-royal-gold-bright text-black hover:opacity-90"
+                    >
+                      Purchase Package
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="subscription">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="glass-morphism border-white/10">
+                  <CardHeader>
+                    <CardTitle>Royal Monthly</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold mb-4">$19.99<span className="text-sm text-white/60">/month</span></div>
+                    <ul className="space-y-2 mb-6">
+                      <li className="flex items-center text-sm">
+                        <DollarSign className="h-4 w-4 mr-2 text-royal-gold" />
+                        $25 rank improvement every month
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Crown className="h-4 w-4 mr-2 text-royal-gold" />
+                        Subscriber badge on profile
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Gift className="h-4 w-4 mr-2 text-royal-gold" />
+                        5 mockery tokens per month
+                      </li>
+                    </ul>
+                    <Button 
+                      className="w-full"
+                    >
+                      Subscribe Monthly
+                    </Button>
+                  </CardContent>
+                </Card>
+                
+                <Card className="glass-morphism border-white/10 ring-2 ring-royal-gold/30">
+                  <div className="absolute top-0 left-0 bg-royal-gold text-black px-4 py-1 text-xs font-bold uppercase">
+                    Best Value
+                  </div>
+                  <CardHeader>
+                    <CardTitle>Royal Yearly</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold mb-4">$199.99<span className="text-sm text-white/60">/year</span></div>
+                    <ul className="space-y-2 mb-6">
+                      <li className="flex items-center text-sm">
+                        <DollarSign className="h-4 w-4 mr-2 text-royal-gold" />
+                        $300 rank improvement per year
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Crown className="h-4 w-4 mr-2 text-royal-gold" />
+                        Gold subscriber badge on profile
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Gift className="h-4 w-4 mr-2 text-royal-gold" />
+                        10 mockery tokens per month
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Gem className="h-4 w-4 mr-2 text-royal-gold" />
+                        Exclusive seasonal profile frames
+                      </li>
+                    </ul>
+                    <Button 
+                      className="w-full bg-gradient-to-r from-royal-gold to-royal-gold-bright text-black hover:opacity-90"
+                    >
+                      Subscribe Yearly
+                    </Button>
+                    <p className="text-xs text-white/50 text-center mt-2">Save over 15%</p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="glass-morphism border-white/10">
+                  <CardHeader>
+                    <CardTitle>Royal Lifetime</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold mb-4">$599.99<span className="text-sm text-white/60">/lifetime</span></div>
+                    <ul className="space-y-2 mb-6">
+                      <li className="flex items-center text-sm">
+                        <DollarSign className="h-4 w-4 mr-2 text-royal-gold" />
+                        $700 instant rank improvement
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Crown className="h-4 w-4 mr-2 text-royal-gold" />
+                        Diamond subscriber badge on profile
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Gift className="h-4 w-4 mr-2 text-royal-gold" />
+                        20 mockery tokens per month
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <Gem className="h-4 w-4 mr-2 text-royal-gold" />
+                        All exclusive profile customizations
+                      </li>
+                      <li className="flex items-center text-sm">
+                        <TrendingUp className="h-4 w-4 mr-2 text-royal-gold" />
+                        $50 rank boost annually
+                      </li>
+                    </ul>
+                    <Button 
+                      className="w-full"
+                    >
+                      Get Lifetime Access
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
           </div>
-        </div>
+        </Tabs>
       </div>
     </Layout>
   );

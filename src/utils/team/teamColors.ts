@@ -3,53 +3,62 @@ import { TeamColor } from '@/types/team';
 
 /**
  * Convert a string to a TeamColor type if valid, otherwise return a default
- * @param team The team string to convert
+ * @param input The team string to convert
  * @returns A valid TeamColor value
  */
-export const asTeamColor = (team: TeamColor | string | null): TeamColor => {
-  const validTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
+export function asTeamColor(input: string | TeamColor | undefined | null): TeamColor {
+  const validColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
   
-  if (team && validTeams.includes(team as TeamColor)) {
-    return team as TeamColor;
-  }
+  if (!input) return 'neutral';
   
-  return 'neutral';
-};
+  const normalized = input.toLowerCase() as TeamColor;
+  return validColors.includes(normalized) ? normalized : 'neutral';
+}
 
 /**
- * Get the text and background color for a team
+ * Get the CSS color class for a team
  * @param team The team to get color for
- * @returns CSS classes for the team color
+ * @returns The CSS color class
  */
-export const getTeamColor = (team: TeamColor | string | null): string => {
-  const teamMap: Record<string, string> = {
-    'red': 'text-red-400 bg-red-500/20',
-    'blue': 'text-blue-400 bg-blue-500/20',
-    'green': 'text-green-400 bg-green-500/20',
-    'gold': 'text-yellow-400 bg-yellow-500/20',
-    'purple': 'text-purple-400 bg-purple-500/20',
-    'none': 'text-gray-400 bg-gray-500/20',
-    'neutral': 'text-gray-400 bg-gray-500/20'
+export function getTeamColor(team: TeamColor | string | null | undefined): string {
+  const teamColor = asTeamColor(team as TeamColor);
+  
+  const colorMap: Record<TeamColor, string> = {
+    'red': '#ef4444',
+    'blue': '#3b82f6',
+    'green': '#22c55e',
+    'gold': '#f59e0b',
+    'purple': '#a855f7',
+    'none': '#6b7280',
+    'neutral': '#6b7280'
   };
   
-  return teamMap[team as string] || 'text-gray-400 bg-gray-500/20';
-};
+  return colorMap[teamColor];
+}
 
 /**
- * Get the border color for a team
+ * Get the CSS border color class for a team
  * @param team The team to get border color for
- * @returns CSS border color class for the team
+ * @returns The CSS border color class
  */
-export const getTeamBorderColor = (team: TeamColor | string | null): string => {
-  const teamMap: Record<string, string> = {
-    'red': 'border-red-500/30',
-    'blue': 'border-blue-500/30',
-    'green': 'border-green-500/30',
-    'gold': 'border-yellow-500/30',
-    'purple': 'border-purple-500/30',
-    'none': 'border-gray-500/30',
-    'neutral': 'border-gray-500/30'
+export function getTeamBorderColor(team: TeamColor | string | null | undefined): string {
+  const teamColor = asTeamColor(team as TeamColor);
+  
+  const borderMap: Record<TeamColor, string> = {
+    'red': 'border-red-500',
+    'blue': 'border-blue-500',
+    'green': 'border-green-500',
+    'gold': 'border-amber-500',
+    'purple': 'border-purple-500',
+    'none': 'border-gray-500',
+    'neutral': 'border-gray-500'
   };
   
-  return teamMap[team as string] || 'border-gray-500/30';
+  return borderMap[teamColor];
+}
+
+export default {
+  asTeamColor,
+  getTeamColor,
+  getTeamBorderColor
 };

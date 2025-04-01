@@ -1,47 +1,72 @@
 
 import { TeamColor } from '@/types/team';
+import { asTeamColor } from './teamColors';
 
 /**
- * Get the display name for a team
+ * Get the name for a team
  * @param team The team to get name for
- * @returns The display name for the team
+ * @returns The team name
  */
-export const getTeamName = (team: TeamColor | string | null): string => {
-  const teamMap: Record<string, string> = {
-    'red': 'Crimson',
-    'blue': 'Azure',
-    'green': 'Emerald',
-    'gold': 'Gold',
-    'purple': 'Royal',
-    'none': 'Neutral',
-    'neutral': 'Neutral'
+export function getTeamName(team: TeamColor | string | null | undefined): string {
+  const teamColor = asTeamColor(team as TeamColor);
+  
+  const nameMap: Record<TeamColor, string> = {
+    'red': 'Crimson Knights',
+    'blue': 'Azure Guardians',
+    'green': 'Emerald Seekers',
+    'gold': 'Golden Crown',
+    'purple': 'Royal Purple',
+    'none': 'Unaligned',
+    'neutral': 'Unaligned'
   };
   
-  return teamMap[team as string] || 'Neutral';
-};
+  return nameMap[teamColor];
+}
 
 /**
- * Get the display name for a team (alias for getTeamName)
- * @param team The team to get name for
- * @returns The display name for the team
+ * Get the display name for a team (includes emoji)
+ * @param team The team to get display name for
+ * @returns The team display name with emoji
  */
-export const getTeamDisplayName = getTeamName;
+export function getTeamDisplayName(team: TeamColor | string | null | undefined): string {
+  const teamColor = asTeamColor(team as TeamColor);
+  
+  const displayMap: Record<TeamColor, string> = {
+    'red': '🔴 Crimson Knights',
+    'blue': '🔵 Azure Guardians',
+    'green': '🟢 Emerald Seekers',
+    'gold': '🟡 Golden Crown',
+    'purple': '🟣 Royal Purple',
+    'none': '⚪ Unaligned',
+    'neutral': '⚪ Unaligned'
+  };
+  
+  return displayMap[teamColor];
+}
 
 /**
- * Get a team motto
+ * Get the motto for a team
  * @param team The team to get motto for
- * @returns The motto for the team
+ * @returns The team motto
  */
-export const getTeamMotto = (team: TeamColor | string | null): string => {
-  const teamMap: Record<string, string> = {
-    'red': 'Blood and Gold Above All',
-    'blue': 'Honor Through Knowledge and Service',
-    'green': 'Fortune Favors the Bold',
-    'gold': 'Glory Through Golden Prosperity',
-    'purple': 'Power Through Royal Bloodlines',
-    'none': 'Status Through Spending',
-    'neutral': 'Status Through Spending'
+export function getTeamMotto(team: TeamColor | string | null | undefined): string {
+  const teamColor = asTeamColor(team as TeamColor);
+  
+  const mottoMap: Record<TeamColor, string> = {
+    'red': 'Fortune favors the bold spender',
+    'blue': 'Knowledge is power, wealth is influence',
+    'green': 'Growth through strategic investment',
+    'gold': 'The crown that outshines them all',
+    'purple': 'Royal by blood, royal by spending',
+    'none': 'Carve your own path to glory',
+    'neutral': 'Carve your own path to glory'
   };
   
-  return teamMap[team as string] || 'Status Through Spending';
+  return mottoMap[teamColor];
+}
+
+export default {
+  getTeamName,
+  getTeamDisplayName,
+  getTeamMotto
 };

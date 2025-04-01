@@ -1,101 +1,129 @@
 
-import { TierDetails } from "@/types/tier";
-
-export const tiers: TierDetails[] = [
-  {
-    name: 'basic',
-    label: 'Free',
-    minSpend: 0,
-    maxSpend: 99,
-    color: 'text-white/70',
-    benefits: [
-      'Basic profile customization',
-      'Standard leaderboard visibility',
-      'Participation in public events'
-    ],
-    marketingBenefits: [
-      'Basic profile visibility',
-      'Standard click tracking',
-      'Public profile page'
-    ],
-    icon: 'user'
-  },
-  {
-    name: 'bronze',
-    label: 'Bronze',
-    minSpend: 100,
-    maxSpend: 999,
-    color: 'text-amber-600',
-    benefits: [
-      'All Free benefits',
-      'Team chat access',
-      'Bronze profile banner',
-      'One mockery action per week'
-    ],
-    marketingBenefits: [
-      'Enhanced profile visibility',
-      'Basic click analytics',
-      'Social media links',
-      'Custom profile banner'
-    ],
-    icon: 'shield'
-  },
-  {
-    name: 'silver',
-    label: 'Silver',
-    minSpend: 1000,
-    maxSpend: 9999,
-    color: 'text-gray-300',
-    benefits: [
-      'All Bronze benefits',
-      'Profile animation effects',
-      'Advanced profile customization',
-      'Three mockery actions per week'
-    ],
-    marketingBenefits: [
-      'Increased profile visibility',
-      'Detailed click analytics',
-      'Weekly visibility in Spotlight',
-      'Custom profile effects'
-    ],
-    icon: 'sword'
-  },
-  {
-    name: 'gold',
-    label: 'Royal Gold',
-    minSpend: 10000,
-    maxSpend: null,
-    color: 'text-royal-gold',
-    benefits: [
-      'All Silver benefits',
-      'Featured on homepage rotation',
-      'Royal council voting power',
-      'Unlimited mockery actions'
-    ],
-    marketingBenefits: [
-      'Premium homepage Spotlight placement',
-      'Full analytics dashboard',
-      'Custom animated effects',
-      'Exclusive profile customization',
-      'Priority placement in all leaderboards'
-    ],
-    icon: 'crown'
+/**
+ * Get marketing benefits based on user tier
+ * @param tier User subscription tier
+ * @returns Array of marketing benefits
+ */
+export function getMarketingBenefitsByTier(tier: string | undefined): string[] {
+  const defaultBenefits = [
+    'Basic profile visibility in the kingdom',
+    'Standard mockery targeting options',
+    'Ability to share your profile link'
+  ];
+  
+  if (!tier || tier === 'basic') {
+    return defaultBenefits;
   }
-];
+  
+  const tierBenefits: Record<string, string[]> = {
+    'bronze': [
+      ...defaultBenefits,
+      'Bronze profile enhancement',
+      'Increased visibility on the leaderboard',
+      '10% discount on mockery actions'
+    ],
+    'silver': [
+      ...defaultBenefits,
+      'Silver profile enhancement',
+      'Featured on curated royal profiles section',
+      '20% discount on mockery actions',
+      'Profile visitor analytics'
+    ],
+    'gold': [
+      ...defaultBenefits,
+      'Gold profile enhancement and animation',
+      'Regular feature on kingdom homepage',
+      '30% discount on all mockery actions',
+      'Detailed profile analytics',
+      'Special profile badges and titles'
+    ],
+    'premium': [
+      ...defaultBenefits,
+      'Premium profile enhancement and animations',
+      'Regular feature on kingdom homepage',
+      '40% discount on all mockery actions',
+      'Comprehensive profile analytics',
+      'Custom profile badges and titles',
+      'Priority exposure in team activities'
+    ],
+    'royal': [
+      ...defaultBenefits,
+      'Royal profile enhancement with dynamic animations',
+      'Permanent feature on kingdom homepage',
+      '50% discount on all royal actions',
+      'Real-time profile analytics and dashboards',
+      'Exclusive royal badges and customizable titles',
+      'Top exposure in all kingdom activities',
+      'Personal royal herald announcements'
+    ]
+  };
+  
+  return tierBenefits[tier.toLowerCase()] || defaultBenefits;
+}
 
-// Export user benefits based on spending amount
-export const getUserTier = (amountSpent: number): TierDetails => {
-  for (let i = tiers.length - 1; i >= 0; i--) {
-    const tier = tiers[i];
-    if (amountSpent >= tier.minSpend && (tier.maxSpend === null || amountSpent <= tier.maxSpend)) {
-      return tier;
-    }
+/**
+ * Get mockery benefits based on user tier
+ * @param tier User subscription tier
+ * @returns Array of mockery benefits
+ */
+export function getMockeryBenefitsByTier(tier: string | undefined): string[] {
+  const defaultBenefits = [
+    'Basic mockery actions',
+    'Standard mockery effect duration',
+    'Regular mockery cooldown periods'
+  ];
+  
+  if (!tier || tier === 'basic') {
+    return defaultBenefits;
   }
-  return tiers[0]; // Default to basic tier
-};
+  
+  const tierBenefits: Record<string, string[]> = {
+    'bronze': [
+      ...defaultBenefits,
+      'Bronze mockery visuals',
+      '10% reduced cooldown periods',
+      'Access to bronze-tier mockery actions'
+    ],
+    'silver': [
+      ...defaultBenefits,
+      'Silver mockery visuals',
+      '20% reduced cooldown periods',
+      'Access to silver-tier mockery actions',
+      'Increased mockery effect duration'
+    ],
+    'gold': [
+      ...defaultBenefits,
+      'Gold mockery visuals with animations',
+      '30% reduced cooldown periods',
+      'Access to gold-tier mockery actions',
+      'Significantly increased effect duration',
+      'Ability to chain mockery effects'
+    ],
+    'premium': [
+      ...defaultBenefits,
+      'Premium mockery visuals with custom animations',
+      '40% reduced cooldown periods',
+      'Access to premium mockery actions',
+      'Extended mockery effect duration',
+      'Ability to chain multiple mockery effects',
+      'Mockery immunity for limited periods'
+    ],
+    'royal': [
+      ...defaultBenefits,
+      'Royal mockery visuals with exclusive animations',
+      '50% reduced cooldown periods',
+      'Access to all mockery actions including royal exclusives',
+      'Maximum mockery effect duration',
+      'Unlimited mockery chaining capability',
+      'Extended mockery immunity periods',
+      'Ability to create custom mockery events'
+    ]
+  };
+  
+  return tierBenefits[tier.toLowerCase()] || defaultBenefits;
+}
 
-// Get marketing benefit description by tier name
-export const getMarketingBenefitsByTier = (tierName: string): string[] => {
-  const tier = tiers.find(t => t.name === tierName) || tiers[0];
-  return tier.marketingBenefits || [];
+export default {
+  getMarketingBenefitsByTier,
+  getMockeryBenefitsByTier
 };

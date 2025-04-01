@@ -1,40 +1,50 @@
 
 import { TeamColor } from '@/types/team';
+import { asTeamColor } from './teamColors';
 
 /**
- * Get a historical note for the team
+ * Get a historical note for a team
  * @param team The team to get historical note for
  * @returns The historical note
  */
-export const getTeamHistoricalNote = (team: TeamColor | string | null): string => {
-  const teamMap: Record<string, string> = {
-    'red': 'Founded by the first spenders who believed might makes right',
-    'blue': 'Established by scholars who saw wealth as a means to enlightenment',
-    'green': 'Created by risk-takers who gambled their fortunes for glory',
-    'gold': 'The oldest team, founded by the original aristocrats of the platform',
-    'purple': 'A secretive cabal formed by the platform\'s earliest investors',
-    'none': 'Those who walk their own path, free from team politics',
-    'neutral': 'Those who walk their own path, free from team politics'
+export function getTeamHistoricalNote(team: TeamColor | string | null | undefined): string {
+  const teamColor = asTeamColor(team as TeamColor);
+  
+  const noteMap: Record<TeamColor, string> = {
+    'red': 'Founded by a wealthy merchant who believed aggression in spending led to wealth dominance.',
+    'blue': 'Established by a consortium of academics who realized money speaks louder than knowledge.',
+    'green': 'Created by visionary investors who saw potential in sustainable spending practices.',
+    'gold': 'Formed by royalty who wanted to ensure the aristocracy always topped the leaderboards.',
+    'purple': 'A secret society of elites who emerged from the shadows to claim their rightful place.',
+    'none': 'The path of the independent has existed since the dawn of commerce itself.',
+    'neutral': 'The path of the independent has existed since the dawn of commerce itself.'
   };
   
-  return teamMap[team as string] || 'Those who walk their own path, free from team politics';
-};
+  return noteMap[teamColor];
+}
 
 /**
- * Get an absurd statistic for the team
- * @param team The team to get statistic for
+ * Get an absurd statistic for a team
+ * @param team The team to get absurd stat for
  * @returns The absurd statistic
  */
-export const getTeamAbsurdStat = (team: TeamColor | string | null): string => {
-  const teamMap: Record<string, string> = {
-    'red': 'Members spend an average of 3.7x their monthly rent on digital status',
-    'blue': 'Collectively written 42 academic papers justifying their spending',
-    'green': 'Has won 73% of all team spending competitions through sheer luck',
-    'gold': 'Members have spent enough to buy a small island nation',
-    'purple': 'Royal members own 87% of all premium cosmetic items',
-    'none': 'Independent spenders save 0% by not being in a team',
-    'neutral': 'Independent spenders save 0% by not being in a team'
+export function getTeamAbsurdStat(team: TeamColor | string | null | undefined): string {
+  const teamColor = asTeamColor(team as TeamColor);
+  
+  const statMap: Record<TeamColor, string> = {
+    'red': '93% of Crimson Knights members have accidentally set fire to money while trying to spend it faster.',
+    'blue': 'Azure Guardians members spend an average of 42 minutes analyzing the optimal time to click the "deposit" button.',
+    'green': 'Emerald Seekers have collectively grown enough virtual trees to offset the carbon footprint of all cryptocurrency mining.',
+    'gold': 'Golden Crown members have spent more on golden toilet paper than most countries' annual GDP.',
+    'purple': 'Royal Purple members practice spending in their sleep and report 37% more spending-related dreams.',
+    'none': 'Independent spenders are 76% more likely to claim they "meant to do that" after accidental purchases.',
+    'neutral': 'Independent spenders are 76% more likely to claim they "meant to do that" after accidental purchases.'
   };
   
-  return teamMap[team as string] || 'Independent spenders save 0% by not being in a team';
+  return statMap[teamColor];
+}
+
+export default {
+  getTeamHistoricalNote,
+  getTeamAbsurdStat
 };

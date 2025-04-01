@@ -1,68 +1,85 @@
 
 import { TeamColor } from '@/types/team';
+import { asTeamColor } from './teamColors';
 
 /**
- * Get a benefit for the team
- * @param team The team to get benefit for
- * @returns The benefit description
+ * Get the benefits for a team
+ * @param team The team to get benefits for
+ * @returns Array of team benefits
  */
-export const getTeamBenefit = (team: TeamColor | string | null): string[] => {
-  const teamMap: Record<string, string[]> = {
+export function getTeamBenefit(team: TeamColor | string | null | undefined): string[] {
+  const teamColor = asTeamColor(team as TeamColor);
+  
+  const benefitMap: Record<TeamColor, string[]> = {
     'red': [
-      '+5% Bonus on direct spend-to-rank conversion',
-      'Exclusive crimson profile frames',
-      'Access to special fire-themed effects'
+      'Bonus rank points for aggressive spending',
+      'Exclusive access to combat-themed mockery options',
+      'Crimson profile badge and decorations',
+      'Special discount on "Royal Duel" actions'
     ],
     'blue': [
-      '+10% Visibility boosts on leaderboard',
-      'Sapphire profile decorations',
-      'Water-themed animation effects'
+      'Reduced cooling periods between mockery actions',
+      'Access to special analytical spending tools',
+      'Azure profile badge and decorations',
+      'Special discount on "Royal Silence" actions'
     ],
     'green': [
-      '+3% Chance of bonus rewards from spending',
-      'Nature-themed custom emojis',
-      'Emerald crown cosmetic item'
+      'Compound interest on rank points (5% annually)',
+      'Special team-only investment packages',
+      'Emerald profile badge and decorations',
+      'Special discount on "Growth Promotion" actions'
     ],
     'gold': [
-      'Access to exclusive gold team cosmetics',
-      'Golden profile frames',
-      'Special golden name effects'
+      'Royal exposure boost on the leaderboard',
+      'Unique golden frame around profile picture',
+      'Gold profile badge and decorations',
+      'Special discount on "Crown" mockery actions'
     ],
     'purple': [
-      'Royal titles and special badges',
-      'Purple-themed profile highlights',
-      'Special throne room access'
+      'Ability to create special team challenges',
+      'Exclusive purple royal aesthetic options',
+      'Amethyst profile badge and decorations',
+      'Special discount on "Court Jester" actions'
     ],
     'none': [
-      'No team-specific benefits',
-      'Independent progression bonuses',
-      'Freedom from team politics'
+      'Complete independence from team politics',
+      'Unique lone wolf profile indicators',
+      'Special discount on "Rogue" actions',
+      'Ability to join any team event as a mercenary'
     ],
     'neutral': [
-      'No team-specific benefits',
-      'Independent progression bonuses',
-      'Freedom from team politics'
+      'Complete independence from team politics',
+      'Unique lone wolf profile indicators',
+      'Special discount on "Rogue" actions',
+      'Ability to join any team event as a mercenary'
     ]
   };
   
-  return teamMap[team as string] || teamMap['none'];
-};
+  return benefitMap[teamColor];
+}
 
 /**
- * Get a security guarantee for the team
+ * Get the security guarantee for a team
  * @param team The team to get security guarantee for
- * @returns The security guarantee
+ * @returns The team security guarantee
  */
-export const getTeamSecurityGuarantee = (team: TeamColor | string | null): string => {
-  const teamMap: Record<string, string> = {
-    'red': 'Protected by the Crimson Guard, our elite spending enforcers',
-    'blue': 'Safeguarded by Azure Protocols, the most secure spending algorithm',
-    'green': 'Fortune favors the bold, but we still use 256-bit encryption',
-    'gold': 'Your gold is secured in our digital treasury vaults',
-    'purple': 'Royal protection extends to all your transactions',
-    'none': 'Standard platform security applies',
-    'neutral': 'Standard platform security applies'
+export function getTeamSecurityGuarantee(team: TeamColor | string | null | undefined): string {
+  const teamColor = asTeamColor(team as TeamColor);
+  
+  const securityMap: Record<TeamColor, string> = {
+    'red': 'Our security is as strong as our spending: relentless and unwavering.',
+    'blue': 'Protected by the most intellectual encryption algorithms money can buy.',
+    'green': 'Our security grows stronger with every contribution, like a well-tended garden.',
+    'gold': 'Royal-grade protection that shines as bright as our golden coffers.',
+    'purple': 'Security fit for royalty, with enough layers to make an onion jealous.',
+    'none': 'Independent security systems tailored to the lone spender.',
+    'neutral': 'Independent security systems tailored to the lone spender.'
   };
   
-  return teamMap[team as string] || 'Standard platform security applies';
+  return securityMap[teamColor];
+}
+
+export default {
+  getTeamBenefit,
+  getTeamSecurityGuarantee
 };
