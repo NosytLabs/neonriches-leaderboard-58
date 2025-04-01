@@ -7,7 +7,7 @@ export interface PageHeaderProps {
   description?: string;
   actions?: React.ReactNode;
   className?: string;
-  size?: string;
+  size?: 'default' | 'small' | 'large';
 }
 
 export const PageHeader = ({

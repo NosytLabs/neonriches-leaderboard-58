@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/auth';
-import { createSuccessToast, createErrorToast } from '@/utils/toastUtils';
+import { showSuccessToast, showErrorToast } from '@/utils/toastUtils';
 
 interface ProfileSettingsProps {
   user: UserProfile;
@@ -36,10 +36,10 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
         ...formData
       });
       setIsEditing(false);
-      createSuccessToast('Profile updated successfully');
+      showSuccessToast('Profile updated successfully');
     } catch (error) {
       console.error('Error updating profile:', error);
-      createErrorToast('Failed to update profile');
+      showErrorToast('Failed to update profile');
     }
   };
 

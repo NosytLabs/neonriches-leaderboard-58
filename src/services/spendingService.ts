@@ -1,7 +1,7 @@
 
 // Modify imports to include proper Team types
 import { User, UserProfile } from '@/types/user';
-import { TeamColor } from '@/types/user-consolidated';
+import { TeamColor } from '@/types/team';
 
 // Mock spending service
 const mockSpendingService = {
@@ -14,6 +14,7 @@ const mockSpendingService = {
         displayName: 'Golden King',
         profileImage: '/avatars/user1.png',
         totalSpent: 5000,
+        amountSpent: 5000, // Adding amountSpent field
         rank: 1,
         team: 'gold' as TeamColor,
         tier: 'royal',
@@ -28,6 +29,7 @@ const mockSpendingService = {
         displayName: 'Diamond Duchess',
         profileImage: '/avatars/user2.png',
         totalSpent: 3800,
+        amountSpent: 3800, // Adding amountSpent field
         rank: 2,
         team: 'purple' as TeamColor,
         tier: 'elite',
@@ -42,6 +44,7 @@ const mockSpendingService = {
         displayName: 'Silver Surfer',
         profileImage: '/avatars/user3.png',
         totalSpent: 2900,
+        amountSpent: 2900, // Adding amountSpent field
         rank: 3,
         team: 'silver' as TeamColor,
         tier: 'premium',
@@ -56,6 +59,7 @@ const mockSpendingService = {
         displayName: 'Bronze Emperor',
         profileImage: '/avatars/user4.png',
         totalSpent: 2100,
+        amountSpent: 2100, // Adding amountSpent field
         rank: 4,
         team: 'bronze' as TeamColor,
         tier: 'basic',
@@ -78,6 +82,7 @@ const mockSpendingService = {
         displayName: 'Red Baron',
         profileImage: '/avatars/red-baron.png',
         totalSpent: 1500,
+        amountSpent: 1500, // Adding amountSpent field
         rank: 5,
         team: 'red' as TeamColor,
         tier: 'premium',
@@ -92,6 +97,7 @@ const mockSpendingService = {
         displayName: 'Blue Bomber',
         profileImage: '/avatars/blue-bomber.png',
         totalSpent: 1200,
+        amountSpent: 1200, // Adding amountSpent field
         rank: 6,
         team: 'blue' as TeamColor,
         tier: 'basic',
@@ -106,6 +112,7 @@ const mockSpendingService = {
         displayName: 'Green Giant',
         profileImage: '/avatars/green-giant.png',
         totalSpent: 1000,
+        amountSpent: 1000, // Adding amountSpent field
         rank: 7,
         team: 'green' as TeamColor,
         tier: 'premium',
@@ -120,6 +127,7 @@ const mockSpendingService = {
         displayName: 'Gold Miner',
         profileImage: '/avatars/gold-miner.png',
         totalSpent: 900,
+        amountSpent: 900, // Adding amountSpent field
         rank: 8,
         team: 'gold' as TeamColor,
         tier: 'basic',
@@ -163,6 +171,7 @@ export const mockSpendingUsers = {
     displayName: 'Red User',
     profileImage: '/avatars/red-user.png',
     totalSpent: 750,
+    amountSpent: 750, // Adding amountSpent field
     rank: 9,
     team: "red" as TeamColor,
     tier: 'basic',
@@ -178,6 +187,7 @@ export const mockSpendingUsers = {
     displayName: 'Blue User',
     profileImage: '/avatars/blue-user.png',
     totalSpent: 600,
+    amountSpent: 600, // Adding amountSpent field
     rank: 10,
     team: "blue" as TeamColor,
     tier: 'free',
@@ -193,6 +203,7 @@ export const mockSpendingUsers = {
     displayName: 'Green User',
     profileImage: '/avatars/green-user.png',
     totalSpent: 800,
+    amountSpent: 800, // Adding amountSpent field
     rank: 8,
     team: "green" as TeamColor,
     tier: 'premium',
@@ -208,6 +219,7 @@ export const mockSpendingUsers = {
     displayName: 'Gold User',
     profileImage: '/avatars/gold-user.png',
     totalSpent: 900,
+    amountSpent: 900, // Adding amountSpent field
     rank: 7,
     team: "gold" as TeamColor,
     tier: 'basic',
@@ -219,8 +231,8 @@ export const mockSpendingUsers = {
 };
 
 // Fix team comparisons in any functions that compare teams
-const modifyTeamComparisons = (team: TeamColor, comparison: string): boolean => {
-  return team === comparison as TeamColor;
+const modifyTeamComparisons = (team: TeamColor, comparison: TeamColor): boolean => {
+  return team === comparison;
 };
 
 export default mockSpendingService;

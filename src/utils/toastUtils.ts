@@ -48,3 +48,9 @@ export const showRoyalToast = (title: string, description?: string) => {
     variant: 'royal'
   });
 };
+
+// Aliases for backward compatibility
+export const createSuccessToast = showSuccessToast;
+export const createErrorToast = showErrorToast;
+export const createRoyalToast = showRoyalToast;
+

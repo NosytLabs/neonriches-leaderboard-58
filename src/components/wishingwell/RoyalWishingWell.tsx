@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,9 +10,16 @@ import { useAuth } from '@/hooks/useAuth';
 
 interface RoyalWishingWellProps {
   className?: string;
+  currentPool?: number;
+  recentWishes?: Array<{
+    username: string;
+    amount: number;
+    result: string;
+    timestamp: string;
+  }>;
 }
 
-const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({ className }) => {
+const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({ className, currentPool = 0, recentWishes = [] }) => {
   const [donationAmount, setDonationAmount] = useState<number | string>('');
   const { toast } = useToast();
   const { user, updateUserProfile } = useAuth();
@@ -69,6 +77,27 @@ const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({ className }) => {
     setDonationAmount('');
   };
 
+  // Display recent wishes if available
+  const renderRecentWishes = () => {
+    if (recentWishes.length === 0) {
+      return null;
+    }
+
+    return (
+      <div className="mt-4 border-t border-white/10 pt-4">
+        <h4 className="text-sm font-medium mb-2">Recent Wishes</h4>
+        <div className="space-y-2">
+          {recentWishes.slice(0, 3).map((wish, index) => (
+            <div key={index} className="text-xs flex justify-between">
+              <span>{wish.username}</span>
+              <span>{formatCurrency(wish.amount)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Card className={className}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -79,6 +108,13 @@ const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({ className }) => {
         <Coins className="h-4 w-4 text-yellow-500" />
       </CardHeader>
       <CardContent>
+        {currentPool > 0 && (
+          <div className="mb-4 text-center">
+            <p className="text-sm text-muted-foreground">Current Pool</p>
+            <p className="text-2xl font-bold">{formatCurrency(currentPool)}</p>
+          </div>
+        )}
+        
         <div className="mb-4 text-sm text-muted-foreground">
           Donate to the Royal Wishing Well and increase your total spending. Every coin counts towards your
           ascension!
@@ -96,6 +132,8 @@ const RoyalWishingWell: React.FC<RoyalWishingWellProps> = ({ className }) => {
             Donate
           </Button>
         </div>
+        
+        {renderRecentWishes()}
       </CardContent>
     </Card>
   );

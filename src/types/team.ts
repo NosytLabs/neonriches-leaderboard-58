@@ -31,5 +31,27 @@ export interface Team {
   description?: string;
 }
 
+/**
+ * TeamData interface with additional properties for team details
+ */
+export interface TeamData {
+  id: string;
+  name: string;
+  description: string;
+  color: string | TeamColor;
+  members: number;
+  emblemUrl?: string;
+  motto?: string;
+  benefits?: string[];
+  securityGuarantee?: string;
+  historicalNote?: string;
+  absurdStat?: string;
+  nftJoke?: string;
+  cryptoRoast?: string;
+  rank?: number;
+  memberCount?: number;
+  totalContribution?: number;
+}
+
 // Backwards compatibility exports
 export type TeamType = TeamColor;

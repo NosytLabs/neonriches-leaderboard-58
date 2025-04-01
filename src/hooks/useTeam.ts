@@ -1,7 +1,6 @@
-
-import { useState } from 'react';
-import { TeamColor, TeamData } from '@/types/team';
-import { useAuth } from '@/hooks/useAuth';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/auth';
+import { TeamData, TeamColor } from '@/types/team';
 import { getTeamColor, getTeamName, getTeamMotto, getTeamBenefits } from '@/utils/teamUtils';
 
 const useTeam = () => {

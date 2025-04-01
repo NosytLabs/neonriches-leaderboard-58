@@ -1,4 +1,3 @@
-
 export type EventType = 
   | 'standard'
   | 'featured'
@@ -38,12 +37,12 @@ export interface Event {
   participationCost?: number;
   maxParticipants?: number;
   createdAt?: string;
+  rules?: string[]; // Add rules property to Event interface
   
   // Additional properties for compatibility
   name?: string;
   image?: string;
   rarity?: string;
-  rules?: string[]; // Add rules property to Event interface
 }
 
 export interface EventParticipant {
@@ -119,11 +118,28 @@ export interface EventLeaderboard {
 }
 
 // Fix EventDetails to make it compatible with Event
-export interface EventDetails extends Omit<Event, 'rewards' | 'prizes'> {
+export interface EventDetails {
+  id: string;
+  title: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  type: EventType;
+  status: EventStatus;
   rules: string[];
   prizes: Array<{
     rank: string;
     reward: string;
   }> | string[];
   rewards?: EventReward[] | string[];
+  imageUrl?: string;
+  totalParticipants?: number;
+  userParticipating?: boolean;
+  leaderboardUrl?: string;
+  participationCost?: number;
+  maxParticipants?: number;
+  createdAt?: string;
+  name?: string;
+  image?: string;
+  rarity?: string;
 }

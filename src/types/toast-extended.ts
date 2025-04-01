@@ -14,7 +14,7 @@ export interface ExtendedToastProps {
 }
 
 // Create a type-safe toast utility function
-export const createExtendedToast = (props: ExtendedToastProps): Toast => {
+export const createExtendedToast = (props: ExtendedToastProps): typeof Toast => {
   // Convert ReactNode title to string if needed
   const sanitizedProps = {
     ...props,
@@ -22,5 +22,5 @@ export const createExtendedToast = (props: ExtendedToastProps): Toast => {
     title: props.title ? (typeof props.title === 'string' ? props.title : String(props.title)) : undefined
   };
   
-  return sanitizedProps as unknown as Toast;
+  return sanitizedProps as unknown as typeof Toast;
 };
