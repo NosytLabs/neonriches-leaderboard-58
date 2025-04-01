@@ -1,238 +1,252 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { UserProfile, AuthContextType } from '@/types/user-consolidated';
 
-// Create the Auth context with default values
+import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import { AuthContextType, UserProfile } from '@/types/user-consolidated';
+
+// Create a context for auth state
 export const AuthContext = createContext<AuthContextType | null>(null);
 
-const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+// Default user data
+const defaultUser: UserProfile = {
+  id: '',
+  username: '',
+  displayName: '',
+  email: '',
+  profileImage: '',
+  bio: '',
+  joinedDate: new Date().toISOString(),
+  tier: 'free',
+  team: null,
+  rank: 0,
+  previousRank: 0,
+  totalSpent: 0,
+  amountSpent: 0,
+  walletBalance: 0,
+  settings: {
+    profileVisibility: 'public',
+    allowProfileLinks: true,
+    theme: 'dark',
+    notifications: true,
+    emailNotifications: false,
+    marketingEmails: false,
+    soundEffects: true,
+    showRank: true,
+    darkMode: true,
+    showBadges: true,
+    showTeam: true,
+    showSpending: true
+  }
+};
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Set up initial auth state on component mount
   useEffect(() => {
+    // Check for existing auth token in localStorage
     const checkAuth = async () => {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        try {
-          const parsedUser = JSON.parse(storedUser) as UserProfile;
-          setUser(parsedUser);
-          setIsAuthenticated(true);
-        } catch (error) {
-          console.error("Error parsing user data:", error);
-          localStorage.removeItem('user');
+      try {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          // For demo purposes, just create a mock user
+          setUser({
+            ...defaultUser,
+            id: '1',
+            username: 'demo_user',
+            displayName: 'Demo User',
+            email: 'demo@example.com',
+            joinedDate: new Date().toISOString(),
+            profileImage: '/avatars/default.png',
+            tier: 'premium',
+            team: 'blue',
+            rank: 42,
+            previousRank: 45,
+            totalSpent: 1250,
+            amountSpent: 1250,
+            walletBalance: 500,
+          });
         }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     checkAuth();
   }, []);
 
-  // Handle user login
-  const login = async (email: string, password: string) => {
+  // Login function
+  const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // Simulating API call for login
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 800));
       
-      // Mock successful login
-      const mockUser: UserProfile = {
-        id: "user123",
-        username: "royal_user",
-        displayName: "Royal User",
-        email: email,
-        profileImage: "https://api.dicebear.com/7.x/personas/svg?seed=royal",
-        bio: "I'm a royal user of SpendThrone!",
-        joinedDate: new Date().toISOString(),
-        rank: 42,
-        totalSpent: 1250,
-        amountSpent: 1250,
-        tier: "gold",
-        team: "blue",
-        isVerified: true,
-        walletBalance: 500,
-        followers: [], // Change from number to empty array
-        following: [], // Change from number to empty array
-        spendStreak: 7,
-        profileViews: 102,
-        profileClicks: 48,
-        settings: {
-          profileVisibility: "public",
-          allowProfileLinks: true,
-          theme: "dark",
-          notifications: true,
-          emailNotifications: true,
-          marketingEmails: false,
-          darkMode: true,
-          soundEffects: true,
-          newFollowerAlerts: true,
-          teamNotifications: true,
-          showTeam: true,
-          showSpending: true,
-          showRank: true,
-          showBadges: true
-        }
-      };
+      // For demo, any non-empty values will succeed
+      if (email && password) {
+        localStorage.setItem('authToken', 'mock-jwt-token');
+        
+        setUser({
+          ...defaultUser,
+          id: '1',
+          username: email.split('@')[0],
+          displayName: email.split('@')[0],
+          email: email,
+          profileImage: '/avatars/default.png',
+          joinedDate: new Date().toISOString(),
+          tier: 'premium',
+          team: 'blue',
+          rank: 42,
+          previousRank: 45,
+          totalSpent: 1250,
+          amountSpent: 1250,
+          walletBalance: 500,
+        });
+        
+        setIsLoading(false);
+        return true;
+      }
       
-      setUser(mockUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      return true;
-    } catch (error) {
-      console.error("Login error:", error);
-      return false;
-    } finally {
       setIsLoading(false);
+      return false;
+    } catch (error) {
+      console.error('Login failed:', error);
+      setIsLoading(false);
+      return false;
     }
   };
 
-  // Handle user registration
-  const register = async (username: string, email: string, password: string) => {
+  // Register function
+  const register = async (username: string, email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // Simulating API call for registration
+      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Mock successful registration and auto-login
-      const newUser: UserProfile = {
-        id: `user${Date.now()}`,
-        username,
-        email,
-        profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${username}`,
-        joinedDate: new Date().toISOString(),
-        rank: 9999,
-        totalSpent: 0,
-        amountSpent: 0,
-        tier: "free",
-        isVerified: false,
-        walletBalance: 10, // Starting bonus
-        followers: [], // Initialize as empty array
-        following: [], // Initialize as empty array
-        settings: {
-          profileVisibility: "public",
-          allowProfileLinks: true,
-          theme: "dark",
-          notifications: true,
-          emailNotifications: true,
-          marketingEmails: false,
-          darkMode: true,
-          soundEffects: true,
-          newFollowerAlerts: true,
-          teamNotifications: true,
-          showTeam: true,
-          showSpending: true,
-          showRank: true,
-          showBadges: true
-        }
-      };
+      // For demo, any non-empty values will succeed
+      if (username && email && password) {
+        localStorage.setItem('authToken', 'mock-jwt-token');
+        
+        setUser({
+          ...defaultUser,
+          id: '1',
+          username: username,
+          displayName: username,
+          email: email,
+          profileImage: '/avatars/default.png',
+          joinedDate: new Date().toISOString(),
+          tier: 'basic',
+          team: null,
+          rank: 999,
+          previousRank: 999,
+          totalSpent: 0,
+          amountSpent: 0,
+          walletBalance: 100, // Starter balance
+        });
+        
+        setIsLoading(false);
+        return true;
+      }
       
-      setUser(newUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      return true;
-    } catch (error) {
-      console.error("Registration error:", error);
-      return false;
-    } finally {
       setIsLoading(false);
+      return false;
+    } catch (error) {
+      console.error('Registration failed:', error);
+      setIsLoading(false);
+      return false;
     }
   };
 
-  // Handle user logout
-  const logout = async () => {
+  // Logout function
+  const logout = async (): Promise<void> => {
     setIsLoading(true);
     try {
-      // Simulating API call for logout
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      // Clear auth token
+      localStorage.removeItem('authToken');
       setUser(null);
-      setIsAuthenticated(false);
-      localStorage.removeItem('user');
     } catch (error) {
-      console.error("Logout error:", error);
+      console.error('Logout failed:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Update user profile
-  const updateUserProfile = async (updates: Partial<UserProfile>) => {
-    if (!user) return false;
-    
+  // Update user
+  const updateUser = async (updates: Partial<UserProfile>): Promise<boolean> => {
     try {
-      // Simulating API call for profile update
+      if (!user) return false;
+      
+      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      const updatedUser = { ...user, ...updates };
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(prevUser => {
+        if (!prevUser) return null;
+        return { ...prevUser, ...updates };
+      });
+      
       return true;
     } catch (error) {
-      console.error("Profile update error:", error);
+      console.error('Update user failed:', error);
       return false;
     }
   };
 
-  // Award a cosmetic to the user
-  const awardCosmetic = async (category: string, itemId: string, notify: boolean = true) => {
-    if (!user) return false;
-    
+  // Award a cosmetic item to the user
+  const awardCosmetic = async (category: string, itemId: string, notify: boolean = true): Promise<boolean> => {
     try {
-      // Simulate API call to award cosmetic
+      if (!user) return false;
+      
+      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Update user's cosmetics
-      const currentCosmetics = user.cosmetics || {};
-      const updatedCosmetics = { ...currentCosmetics };
-      
-      // Handle different category structures
-      if (!updatedCosmetics[category]) {
-        updatedCosmetics[category] = [];
-      }
-      
-      if (Array.isArray(updatedCosmetics[category])) {
-        // Only add if it doesn't already exist
-        if (!(updatedCosmetics[category] as string[]).includes(itemId)) {
-          (updatedCosmetics[category] as string[]).push(itemId);
+      // Update user cosmetics
+      setUser(prevUser => {
+        if (!prevUser) return null;
+        
+        const updatedCosmetics = { ...(prevUser.cosmetics || {}) };
+        
+        // Initialize the category array if it doesn't exist
+        if (!updatedCosmetics[category]) {
+          updatedCosmetics[category] = [];
         }
-      } else if (typeof updatedCosmetics[category] === 'object') {
-        // Handle object structure
-        updatedCosmetics[category] = {
-          ...(updatedCosmetics[category] as Record<string, string>),
-          [itemId]: itemId
+        
+        // Add the item to the category if it doesn't already exist
+        if (Array.isArray(updatedCosmetics[category]) && !updatedCosmetics[category].includes(itemId)) {
+          updatedCosmetics[category] = [...updatedCosmetics[category], itemId];
+        }
+        
+        return {
+          ...prevUser,
+          cosmetics: updatedCosmetics,
+          // Reduce wallet balance to simulate purchase
+          walletBalance: prevUser.walletBalance ? prevUser.walletBalance - 50 : 0
         };
-      }
-      
-      // Update the user with new cosmetics
-      const updatedUser = { 
-        ...user, 
-        cosmetics: updatedCosmetics 
-      };
-      
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+      });
       
       return true;
     } catch (error) {
-      console.error("Error awarding cosmetic:", error);
+      console.error('Award cosmetic failed:', error);
       return false;
     }
   };
 
-  // Create the context value object to provide to consumers
+  // Provide auth context value
   const contextValue: AuthContextType = {
     user,
-    isAuthenticated,
+    isAuthenticated: !!user,
     isLoading,
     login,
     signIn: login, // Alias for login
     register,
     logout,
     signOut: logout, // Alias for logout
-    updateUser: updateUserProfile, // Alias for updateUserProfile
-    updateUserProfile,
-    awardCosmetic
+    updateUser,
+    updateUserProfile: updateUser, // Alias for updateUser
+    awardCosmetic,
   };
 
   return (
@@ -242,4 +256,4 @@ const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
-export default AuthContextProvider;
+export default AuthProvider;

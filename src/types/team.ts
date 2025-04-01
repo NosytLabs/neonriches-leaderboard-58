@@ -65,3 +65,22 @@ export interface Team {
   stats: TeamStats;
   theme: TeamTheme;
 }
+
+// Add the TeamData interface that's required by components
+export interface TeamData {
+  id: TeamColor;
+  name: string;
+  description: string;
+  motto: string;
+  color: string;
+  members: number;
+  historicalNote?: string;
+  absurdStat?: string;
+  benefits?: string[];
+  securityGuarantee?: string;
+  totalContribution?: number;
+  rank?: number;
+  logo?: string;
+  bannerImage?: string;
+  leaderUsername?: string;
+}
