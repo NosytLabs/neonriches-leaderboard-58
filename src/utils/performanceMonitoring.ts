@@ -147,7 +147,7 @@ const observeCLS = (): void => {
 const observeINP = (): void => {
   try {
     // Support for newer INP metric
-    const inpObserver = new PerformanceObserver((entryList) => {
+    const observer = new PerformanceObserver((entryList) => {
       const interactions = entryList.getEntries();
       
       if (interactions.length > 0) {
@@ -165,10 +165,14 @@ const observeINP = (): void => {
       }
     });
     
-    // This has custom options that may not be supported in all browsers
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    inpObserver.observe({ type: 'event', buffered: true, durationThreshold: 16 });
+    // This has options that may not be supported in all browsers
+    if ('observe' in observer) {
+      observer.observe({ 
+        type: 'event', 
+        buffered: true, 
+        durationThreshold: 16 
+      } as any);
+    }
   } catch (error) {
     console.warn('[Performance] INP metric not supported in this browser');
   }
@@ -216,35 +220,6 @@ export const markComponentRenderEnd = (componentName: string): void => {
       console.error(`[Performance] Error measuring ${componentName}:`, error);
     }
   }
-};
-
-/**
- * Track a user interaction for performance analysis
- */
-export const trackUserInteraction = (actionName: string, callback: () => void): void => {
-  if (typeof window === 'undefined') return;
-  
-  const startTime = performance.now();
-  
-  // Execute the callback
-  callback();
-  
-  // Measure the time taken
-  const endTime = performance.now();
-  const duration = endTime - startTime;
-  
-  // Warn if interaction took too long
-  if (duration > 100) {
-    console.warn(`[Performance] User interaction '${actionName}' took ${duration.toFixed(2)}ms - consider optimizing`);
-  }
-  
-  // Record the interaction
-  window.__PERFORMANCE_INTERACTIONS = window.__PERFORMANCE_INTERACTIONS || [];
-  window.__PERFORMANCE_INTERACTIONS.push({
-    name: actionName,
-    timestamp: Date.now(),
-    duration
-  });
 };
 
 /**

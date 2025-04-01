@@ -17,6 +17,7 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   quality?: number;
   format?: 'auto' | 'webp' | 'avif';
   sizes?: string;
+  onLoad?: () => void;
 }
 
 /**
@@ -42,6 +43,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   quality = 80,
   format = 'auto',
   sizes,
+  onLoad,
   ...props
 }) => {
   const [imgSrc, setImgSrc] = useState<string>(priority ? src : blurDataURL || placeholder);
@@ -102,6 +104,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   
   const handleLoad = () => {
     setIsLoading(false);
+    if (onLoad) onLoad();
   };
   
   // Create srcSet for responsive images when width is provided

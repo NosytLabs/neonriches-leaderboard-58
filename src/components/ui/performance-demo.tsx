@@ -1,12 +1,18 @@
 
 import React, { useState } from 'react';
 import OptimizedImage from './optimized-image';
-import { useComponentPerformance } from '@/utils/performance';
+import { usePerformanceMonitoring } from '@/hooks/use-performance-monitoring';
 import Lazy3D from './lazy-3d';
 
 const PerformanceDemo: React.FC = () => {
   const [imagesLoaded, setImagesLoaded] = useState(0);
-  const { renderCount } = useComponentPerformance('PerformanceDemo');
+  const { markStart, markEnd } = usePerformanceMonitoring();
+  
+  // Start performance measurement when component mounts
+  React.useEffect(() => {
+    markStart('PerformanceDemo');
+    return () => markEnd('PerformanceDemo');
+  }, [markStart, markEnd]);
   
   const handleImageLoad = () => {
     setImagesLoaded(prev => prev + 1);
@@ -21,7 +27,6 @@ const PerformanceDemo: React.FC = () => {
           image loading, code splitting, and performance monitoring.
         </p>
         <div className="mt-4 text-sm text-muted-foreground">
-          <p>Component render count: {renderCount}</p>
           <p>Images loaded: {imagesLoaded} / 4</p>
         </div>
       </div>
