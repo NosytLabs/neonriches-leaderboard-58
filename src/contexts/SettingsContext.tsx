@@ -1,47 +1,55 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { UserSettings, SettingsContextType, SoundConfig } from '@/types/settings';
+import { UserSettings, SettingsContextType, AccessibilitySettings, ProfileSettings, SoundConfig } from '@/types/settings';
 
 // Default settings
-const defaultSettings: UserSettings = {
+const defaultUserSettings: UserSettings = {
   profileVisibility: 'public',
   allowProfileLinks: true,
-  theme: 'royal',
+  theme: 'dark',
   notifications: true,
   emailNotifications: false,
-  soundEffects: true,
-  showEmailOnProfile: false,
-  rankChangeAlerts: true,
-  teamChangeAlerts: true,
-  achievementAlerts: true,
-  purchaseNotifications: true,
-  depositNotifications: true,
-  leaderboardUpdates: true,
-  newFeatureAlerts: true,
-  eventNotifications: true,
   marketingEmails: false,
+  showRank: true,
+  darkMode: true,
+  soundEffects: true,
   showBadges: true,
-  showAchievements: true,
-  showSpendingAmount: true,
-  showLastActive: true,
+  showTeam: true,
+  showSpending: true,
+  showEmailOnProfile: false,
+  rankChangeAlerts: false,
+  newFollowerAlerts: false,
+  teamNotifications: false
+};
+
+const defaultAccessibilitySettings: AccessibilitySettings = {
+  textSize: 16,
+  highContrast: false,
+  reducedMotion: false,
+  reducedTransparency: false
+};
+
+const defaultProfileSettings: ProfileSettings = {
+  publicProfile: true,
   showRank: true,
   showTeam: true,
   showSpending: true,
-  publicProfile: true,
-  allowMessages: true,
-  language: 'en'
+  rankChangeAlerts: true,
+  teamChangeAlerts: true,
+  achievementAlerts: true,
+  showEmailOnProfile: false
 };
 
-// Default sound config
 const defaultSoundConfig: SoundConfig = {
   enabled: true,
   muted: false,
-  volume: 0.7,
+  volume: 0.5,
   premium: false
 };
 
+// Create the SettingsContext
 const SettingsContext = createContext<SettingsContextType>({
-  userSettings: defaultSettings,
+  userSettings: defaultUserSettings,
   updateSettings: () => {},
   resetSettings: () => {},
   isDarkTheme: true,
@@ -51,119 +59,155 @@ const SettingsContext = createContext<SettingsContextType>({
   toggleSounds: () => {},
   toggleMuted: () => {},
   togglePremium: () => {},
-  setVolume: () => {}
+  setVolume: () => {},
+  // Add the missing properties
+  accessibilitySettings: defaultAccessibilitySettings,
+  updateAccessibilitySettings: () => {},
+  profileSettings: defaultProfileSettings,
+  updateProfileSettings: () => {},
+  notifications: true,
+  toggleNotifications: () => {},
+  isLoading: false
 });
 
-export const useSettings = () => useContext(SettingsContext);
-
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Load saved settings from localStorage
-  const [userSettings, setUserSettings] = useState<UserSettings>(() => {
-    const savedSettings = localStorage.getItem('user-settings');
-    return savedSettings ? { ...defaultSettings, ...JSON.parse(savedSettings) } : defaultSettings;
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [userSettings, setUserSettings] = useState<UserSettings>(defaultUserSettings);
+  const [accessibilitySettings, setAccessibilitySettings] = useState<AccessibilitySettings>(defaultAccessibilitySettings);
+  const [profileSettings, setProfileSettings] = useState<ProfileSettings>(defaultProfileSettings);
+  const [soundConfig, setSoundConfig] = useState<SoundConfig>(defaultSoundConfig);
   
-  // Theme state
-  const [theme, setTheme] = useState<'light' | 'dark' | 'royal' | 'system'>(() => {
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'royal' | 'system';
-    return savedTheme || defaultSettings.theme;
-  });
-  
-  // Sound configuration
-  const [soundConfig, setSoundConfig] = useState<SoundConfig>(() => {
-    const savedConfig = localStorage.getItem('sound-settings');
-    return savedConfig ? { ...defaultSoundConfig, ...JSON.parse(savedConfig) } : defaultSoundConfig;
-  });
-  
-  // Calculate if theme is dark
-  const isDarkTheme = React.useMemo(() => {
-    if (theme === 'dark') return true;
-    if (theme === 'light') return false;
-    if (theme === 'system') {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    return theme === 'royal'; // Royal theme is dark by default
-  }, [theme]);
+  // Load settings from localStorage on component mount
+  useEffect(() => {
+    const loadSettings = () => {
+      try {
+        const storedSettings = localStorage.getItem('userSettings');
+        const storedAccessibility = localStorage.getItem('accessibilitySettings');
+        const storedProfile = localStorage.getItem('profileSettings');
+        const storedSound = localStorage.getItem('soundConfig');
+        
+        if (storedSettings) {
+          setUserSettings(JSON.parse(storedSettings));
+        }
+        
+        if (storedAccessibility) {
+          setAccessibilitySettings(JSON.parse(storedAccessibility));
+        }
+        
+        if (storedProfile) {
+          setProfileSettings(JSON.parse(storedProfile));
+        }
+        
+        if (storedSound) {
+          setSoundConfig(JSON.parse(storedSound));
+        }
+      } catch (error) {
+        console.error('Error loading settings:', error);
+        // Fallback to defaults
+        setUserSettings(defaultUserSettings);
+        setAccessibilitySettings(defaultAccessibilitySettings);
+        setProfileSettings(defaultProfileSettings);
+        setSoundConfig(defaultSoundConfig);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadSettings();
+  }, []);
   
   // Save settings to localStorage when they change
   useEffect(() => {
-    localStorage.setItem('user-settings', JSON.stringify(userSettings));
-  }, [userSettings]);
-  
-  // Save theme to localStorage when it changes
-  useEffect(() => {
-    localStorage.setItem('theme', theme);
-    
-    // Apply theme class to document
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark', 'royal');
-    
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      root.classList.add(systemTheme);
-    } else {
-      root.classList.add(theme);
+    try {
+      localStorage.setItem('userSettings', JSON.stringify(userSettings));
+      localStorage.setItem('accessibilitySettings', JSON.stringify(accessibilitySettings));
+      localStorage.setItem('profileSettings', JSON.stringify(profileSettings));
+      localStorage.setItem('soundConfig', JSON.stringify(soundConfig));
+    } catch (error) {
+      console.error('Error saving settings:', error);
     }
-  }, [theme]);
+  }, [userSettings, accessibilitySettings, profileSettings, soundConfig]);
   
-  // Save sound config to localStorage when it changes
-  useEffect(() => {
-    localStorage.setItem('sound-settings', JSON.stringify(soundConfig));
-  }, [soundConfig]);
-  
-  // Update settings
+  // Update user settings
   const updateSettings = (newSettings: Partial<UserSettings>) => {
     setUserSettings(prev => ({ ...prev, ...newSettings }));
   };
   
-  // Reset settings to defaults
-  const resetSettings = () => {
-    setUserSettings(defaultSettings);
-    setTheme(defaultSettings.theme);
+  // Update accessibility settings
+  const updateAccessibilitySettings = (newSettings: Partial<AccessibilitySettings>) => {
+    setAccessibilitySettings(prev => ({ ...prev, ...newSettings }));
   };
   
-  // Toggle sound effects
+  // Update profile settings
+  const updateProfileSettings = (newSettings: Partial<ProfileSettings>) => {
+    setProfileSettings(prev => ({ ...prev, ...newSettings }));
+  };
+  
+  // Reset settings to defaults
+  const resetSettings = () => {
+    setUserSettings(defaultUserSettings);
+    setAccessibilitySettings(defaultAccessibilitySettings);
+    setProfileSettings(defaultProfileSettings);
+    setSoundConfig(defaultSoundConfig);
+  };
+  
+  // Theme utilities
+  const isDarkTheme = userSettings.theme === 'dark' || 
+    (userSettings.theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  
+  const setTheme = (newTheme: 'light' | 'dark' | 'royal' | 'system') => {
+    updateSettings({ theme: newTheme });
+  };
+  
+  // Sound utilities
   const toggleSounds = () => {
     setSoundConfig(prev => ({ ...prev, enabled: !prev.enabled }));
   };
   
-  // Toggle mute
   const toggleMuted = () => {
     setSoundConfig(prev => ({ ...prev, muted: !prev.muted }));
   };
   
-  // Toggle premium sounds
   const togglePremium = () => {
     setSoundConfig(prev => ({ ...prev, premium: !prev.premium }));
   };
   
-  // Set volume level
   const setVolume = (volume: number) => {
-    setSoundConfig(prev => ({ ...prev, volume: Math.min(Math.max(volume, 0), 1) }));
+    setSoundConfig(prev => ({ ...prev, volume }));
   };
   
-  // Update theme
-  const handleThemeChange = (newTheme: 'light' | 'dark' | 'royal' | 'system') => {
-    setTheme(newTheme);
-  };
-  
-  const value = {
-    userSettings,
-    updateSettings,
-    resetSettings,
-    isDarkTheme,
-    theme,
-    setTheme: handleThemeChange,
-    soundConfig,
-    toggleSounds,
-    toggleMuted,
-    togglePremium,
-    setVolume
+  // Notification utilities
+  const toggleNotifications = () => {
+    updateSettings({ notifications: !userSettings.notifications });
   };
   
   return (
-    <SettingsContext.Provider value={value}>
+    <SettingsContext.Provider value={{
+      userSettings,
+      updateSettings,
+      resetSettings,
+      isDarkTheme,
+      theme: userSettings.theme,
+      setTheme,
+      soundConfig,
+      toggleSounds,
+      toggleMuted,
+      togglePremium,
+      setVolume,
+      // Add the missing properties
+      accessibilitySettings,
+      updateAccessibilitySettings,
+      profileSettings,
+      updateProfileSettings,
+      notifications: userSettings.notifications,
+      toggleNotifications,
+      isLoading
+    }}>
       {children}
     </SettingsContext.Provider>
   );
 };
+
+export const useSettings = () => useContext(SettingsContext);
+
+export default SettingsContext;

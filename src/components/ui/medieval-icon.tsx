@@ -1,22 +1,54 @@
+
 import React from 'react';
-import { MedievalIconProps, MedievalIconSize, MedievalIconColor, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
+import { MedievalIconProps } from '@/types/ui/icon-types';
 import { cn } from '@/lib/utils';
 
-const MedievalIcon: React.FC<MedievalIconProps> = ({ 
-  name, 
-  size = 'md', 
-  color = 'default',
-  className = '',
-  animate = false
+const MedievalIcon: React.FC<MedievalIconProps> = ({
+  name,
+  size = 'md',
+  color = 'gold',
+  className,
+  animated = false,
+  style = 'default'
 }) => {
-  const sizeClass = typeof size === 'string' ? iconSizeMap[size] : `w-${size} h-${size}`;
-  const colorClass = iconColorMap[color];
-  const animationClass = animate ? 'animate-pulse' : '';
-
+  const sizeClasses = {
+    xs: 'w-4 h-4',
+    sm: 'w-6 h-6',
+    md: 'w-8 h-8',
+    lg: 'w-10 h-10',
+    xl: 'w-12 h-12'
+  };
+  
+  const colorClasses = {
+    gold: 'text-royal-gold',
+    royal: 'text-royal-purple',
+    silver: 'text-gray-300',
+    bronze: 'text-amber-700',
+    red: 'text-red-500',
+    blue: 'text-blue-500',
+    green: 'text-green-500',
+    purple: 'text-purple-500'
+  };
+  
+  const styleClasses = {
+    default: '',
+    outline: 'stroke-[1.5] fill-none',
+    solid: 'fill-current'
+  };
+  
+  const animationClasses = animated ? 'transform transition-transform hover:scale-110' : '';
+  
   return (
-    <div className={cn(`medieval-icon medieval-icon-${name}`, colorClass, sizeClass, animationClass, className)}>
-      {/* Icon SVG would go here */}
-      <span className="sr-only">{name} icon</span>
+    <div className={cn(
+      sizeClasses[size],
+      colorClasses[color as keyof typeof colorClasses] || colorClasses.gold,
+      styleClasses[style],
+      animationClasses,
+      className
+    )}>
+      <svg viewBox="0 0 24 24" className="w-full h-full">
+        <use href={`/assets/medieval-icons.svg#${name}`} />
+      </svg>
     </div>
   );
 };

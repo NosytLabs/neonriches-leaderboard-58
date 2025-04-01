@@ -1,5 +1,22 @@
 
-import { UserSettings } from '@/types/user';
+export interface UserSettings {
+  profileVisibility: 'public' | 'private' | 'friends';
+  allowProfileLinks: boolean;
+  theme: 'light' | 'dark' | 'royal' | 'system';
+  notifications: boolean;
+  emailNotifications: boolean;
+  marketingEmails: boolean;
+  showRank: boolean;
+  darkMode: boolean;
+  soundEffects: boolean;
+  showBadges: boolean;
+  showTeam: boolean;
+  showSpending: boolean;
+  showEmailOnProfile?: boolean;
+  rankChangeAlerts?: boolean;
+  newFollowerAlerts?: boolean;
+  teamNotifications?: boolean;
+}
 
 export interface AccessibilitySettings {
   textSize: number;
@@ -39,7 +56,7 @@ export interface SettingsContextType {
   togglePremium: () => void;
   setVolume: (volume: number) => void;
 
-  // Added missing properties for settings components
+  // Added properties for settings components
   accessibilitySettings: AccessibilitySettings;
   updateAccessibilitySettings: (settings: Partial<AccessibilitySettings>) => void;
   profileSettings: ProfileSettings;

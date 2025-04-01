@@ -1,34 +1,41 @@
 
 import React from 'react';
-import { Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useSoundsConfig } from '@/hooks/sounds/use-sounds-config';
-import useSound from '@/hooks/useSound';
+import { Volume2, VolumeX } from 'lucide-react';
+import { useSound } from '@/hooks/use-sound';
+import { cn } from '@/lib/utils';
 
-export default function HeroSoundToggle() {
-  const { soundConfig, toggleMuted } = useSoundsConfig();
+export const HeroSoundToggle: React.FC<{ className?: string }> = ({ className }) => {
   const sound = useSound();
   
   const handleToggle = () => {
-    if (!soundConfig.muted) {
-      sound.playSound('click');
+    sound.toggleMuted();
+    
+    // Play a click sound when unmuting to provide feedback
+    if (sound.isMuted) {
+      setTimeout(() => {
+        sound.playSound('click');
+      }, 50);
     }
-    toggleMuted();
   };
   
   return (
     <Button
       variant="ghost"
-      size="icon"
-      className="absolute top-4 right-4 bg-black/30 hover:bg-black/50 backdrop-blur-sm text-white h-10 w-10 rounded-full"
+      className={cn(
+        "rounded-full bg-background/80 backdrop-blur-sm border border-white/10 p-2 hover:bg-background/90", 
+        className
+      )}
       onClick={handleToggle}
+      aria-label={sound.isMuted ? "Unmute sound effects" : "Mute sound effects"}
     >
-      <span className="sr-only">{soundConfig.muted ? 'Unmute' : 'Mute'}</span>
-      {soundConfig.muted ? (
+      {sound.isMuted ? (
         <VolumeX className="h-5 w-5" />
       ) : (
         <Volume2 className="h-5 w-5" />
       )}
     </Button>
   );
-}
+};
+
+export default HeroSoundToggle;

@@ -1,46 +1,43 @@
 
 import React from 'react';
-import { Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useSoundsConfig } from '@/hooks/sounds/use-sounds-config';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import useSound from '@/hooks/useSound';
+import { Volume2, VolumeX } from 'lucide-react';
+import { useSound } from '@/hooks/sounds/use-sound';
+import { cn } from '@/lib/utils';
 
-export function SoundToggle() {
-  const { soundConfig, toggleMuted } = useSoundsConfig();
+interface SoundToggleProps {
+  className?: string;
+}
+
+export const SoundToggle: React.FC<SoundToggleProps> = ({ className }) => {
   const sound = useSound();
   
   const handleToggle = () => {
-    if (!soundConfig.muted) {
-      sound.playSound('click');
+    sound.toggleMuted();
+    
+    // Play a sound when unmuting to provide immediate feedback
+    if (sound.isMuted) {
+      setTimeout(() => {
+        sound.playSound('click');
+      }, 50);
     }
-    toggleMuted();
   };
   
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0"
-            onClick={handleToggle}
-          >
-            <span className="sr-only">
-              {soundConfig.muted ? 'Unmute' : 'Mute'} sounds
-            </span>
-            {soundConfig.muted ? (
-              <VolumeX className="h-4 w-4" />
-            ) : (
-              <Volume2 className="h-4 w-4" />
-            )}
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>{soundConfig.muted ? 'Unmute' : 'Mute'} sounds</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Button
+      variant="ghost"
+      size="sm"
+      className={cn("px-2", className)}
+      onClick={handleToggle}
+      aria-label={sound.isMuted ? "Unmute Sounds" : "Mute Sounds"}
+    >
+      {sound.isMuted ? (
+        <VolumeX className="h-5 w-5" />
+      ) : (
+        <Volume2 className="h-5 w-5" />
+      )}
+    </Button>
   );
-}
+};
+
+export default SoundToggle;

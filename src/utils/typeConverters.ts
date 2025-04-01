@@ -36,3 +36,31 @@ export const toTeamColor = (team: any): TeamColor | null => {
   // Default to null if no valid conversion
   return null;
 };
+
+/**
+ * Ensures a value is a string ID
+ * Converts numbers to strings if needed
+ */
+export const ensureStringId = (id: string | number | undefined): string => {
+  if (id === undefined) return '';
+  return String(id);
+};
+
+/**
+ * Cast team string to valid TeamColor
+ */
+export const safeTeamColor = (team: string | null | undefined): TeamColor => {
+  if (!team) return 'neutral';
+  
+  const validTeamColors: TeamColor[] = [
+    'red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze'
+  ];
+  
+  const normalizedTeam = team.toLowerCase() as TeamColor;
+  
+  if (validTeamColors.includes(normalizedTeam)) {
+    return normalizedTeam;
+  }
+  
+  return 'neutral';
+};

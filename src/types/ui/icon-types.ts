@@ -69,7 +69,12 @@ export type MedievalIconName =
   | 'torch'
   | 'flag'
   | 'axe'
-  | 'mace';
+  | 'mace'
+  | 'tower';  // Add missing tower icon
+
+export interface MedievalIconProps extends BaseIconProps {
+  name: MedievalIconName;
+}
 
 export type MedievalIconColor = 
   | 'gold'

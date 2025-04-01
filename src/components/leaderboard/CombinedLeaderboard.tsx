@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,11 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UserCircle, Users, TrendingUp, Medal, Crown, Trophy, Coins } from "lucide-react";
 import LeaderboardList from "./components/LeaderboardList";
-import { UserProfile } from '@/types/user-consolidated';
+import { UserProfile, TeamColor } from '@/types/user';
 import { useAuth } from '@/hooks/useAuth';
 import { useSound } from '@/hooks/use-sound';
 import { MockeryAction } from '@/types/mockery-types';
 import { ensureNumber } from '@/utils/stringUtils';
+import { safeTeamColor } from '@/utils/typeConverters';
 
 interface CombinedLeaderboardProps {
   maxVisible?: number;
@@ -53,22 +53,27 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
       try {
         // In a real app, this would fetch from an API
         setTimeout(() => {
-          const mockData: UserProfile[] = Array.from({ length: 10 }).map((_, index) => ({
+          const mockData = Array.from({ length: 10 }).map((_, index) => ({
             id: `user-${index + 1}`,
             username: `noble${index + 1}`,
             displayName: `Noble User ${index + 1}`,
             profileImage: `https://source.unsplash.com/random/?portrait&${index}`,
             tier: index < 3 ? 'royal' : index < 6 ? 'premium' : 'basic',
-            team: ['red', 'blue', 'green', 'gold', 'purple'][index % 5],
+            team: safeTeamColor(['red', 'blue', 'green', 'gold', 'purple'][index % 5]),
             rank: index + 1,
             totalSpent: Math.floor(10000 / (index + 1)), 
-            amountSpent: Math.floor(10000 / (index + 1)), // Adding amountSpent to match UserProfile type
+            amountSpent: Math.floor(10000 / (index + 1)),
             previousRank: ensureNumber(Math.floor(Math.random() * 20)),
             joinedDate: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
             isVerified: index < 3,
             walletBalance: Math.floor(Math.random() * 1000),
-            spendStreak: index < 5 ? index + 1 : 0
-          }));
+            spendStreak: index < 5 ? index + 1 : 0,
+            badges: [],
+            achievements: [],
+            socialLinks: [],
+            followers: [],
+            following: []
+          } as UserProfile));
           
           setLeaderboardData(mockData);
           setLoading(false);
@@ -88,8 +93,7 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
   };
   
   const handleProfileClick = (userId: string, username: string) => {
-    console.log(`Clicked on user profile: ${username} (${userId})`);
-    // Could navigate to profile page or show profile modal
+    console.log(`Clicked on ${username}`);
   };
   
   const handleShameUser = (user: UserProfile) => {
@@ -102,7 +106,6 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
     setShowModal(false);
     sound.playSound('mockery');
     console.log(`Applied ${shameAction} to user ${userId}`);
-    // In a real app, this would call an API to apply the shame effect
   };
   
   const sortLeaderboardData = () => {
@@ -149,41 +152,41 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
             
             <TabsContent value="all">
               <LeaderboardList 
-                users={sortLeaderboardData()}
+                users={leaderboardData}
                 loading={loading}
                 currentUserId={user?.id || ''}
-                onProfileClick={handleProfileClick}
-                onShameUser={handleShameUser}
+                onProfileClick={(userId, username) => console.log(`Clicked on ${username}`)}
+                onShameUser={(user) => console.log(`Shame on ${user.username}`)}
               />
             </TabsContent>
             
             <TabsContent value="trending">
               <LeaderboardList 
-                users={sortLeaderboardData()}
+                users={leaderboardData}
                 loading={loading}
                 currentUserId={user?.id || ''}
-                onProfileClick={handleProfileClick}
-                onShameUser={handleShameUser}
+                onProfileClick={(userId, username) => console.log(`Clicked on ${username}`)}
+                onShameUser={(user) => console.log(`Shame on ${user.username}`)}
               />
             </TabsContent>
             
             <TabsContent value="top">
               <LeaderboardList 
-                users={sortLeaderboardData()}
+                users={leaderboardData}
                 loading={loading}
                 currentUserId={user?.id || ''}
-                onProfileClick={handleProfileClick}
-                onShameUser={handleShameUser}
+                onProfileClick={(userId, username) => console.log(`Clicked on ${username}`)}
+                onShameUser={(user) => console.log(`Shame on ${user.username}`)}
               />
             </TabsContent>
             
             <TabsContent value="royal">
               <LeaderboardList 
-                users={sortLeaderboardData()}
+                users={leaderboardData}
                 loading={loading}
                 currentUserId={user?.id || ''}
-                onProfileClick={handleProfileClick}
-                onShameUser={handleShameUser}
+                onProfileClick={(userId, username) => console.log(`Clicked on ${username}`)}
+                onShameUser={(user) => console.log(`Shame on ${user.username}`)}
               />
             </TabsContent>
           </Tabs>
@@ -202,7 +205,7 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
             selectedUser={selectedUser}
             shameAction={shameAction}
             onOpenChange={setShowModal}
-            onConfirm={handleConfirmShame}
+            onConfirm={(userId) => console.log(`Confirmed shame on ${userId}`)}
           />
         )}
       </Card>
