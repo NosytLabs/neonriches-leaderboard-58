@@ -1,206 +1,155 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Trash2, ExternalLink } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { SocialLink, UserProfile } from '@/types/user';
+import { SocialLink } from '@/types/user';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Trash, Plus } from 'lucide-react';
 
-// Define social platform types
-type SocialPlatform = 'twitter' | 'instagram' | 'facebook' | 'linkedin' | 'github' | 'youtube' | 'twitch' | 'discord' | 'reddit' | 'tiktok' | 'other';
-
-export interface SocialMediaLinksEditorProps {
-  user: UserProfile;
-  socialLinks: SocialLink[];
-  onLinksChange: (links: SocialLink[]) => void;
+interface SocialMediaLinksEditorProps {
+  links: SocialLink[];
+  onChange: (links: SocialLink[]) => void;
+  maxLinks?: number;
 }
 
-const SocialMediaLinksEditor: React.FC<SocialMediaLinksEditorProps> = ({ user, socialLinks, onLinksChange }) => {
-  const { toast } = useToast();
-  const [platform, setPlatform] = useState<SocialPlatform>('twitter');
-  const [url, setUrl] = useState('');
-
-  // Maximum number of social links based on tier
-  const getMaxLinks = () => {
-    if (user.tier === 'free') return 2;
-    if (user.tier === 'pro') return 5;
-    return 10; // royal or other higher tiers
-  };
-
-  // Get icon for a social platform
-  const getPlatformIcon = (platform: SocialPlatform): string => {
-    switch (platform) {
-      case 'twitter': return 'twitter';
-      case 'instagram': return 'instagram';
-      case 'facebook': return 'facebook';
-      case 'linkedin': return 'linkedin';
-      case 'github': return 'github';
-      case 'youtube': return 'youtube';
-      case 'twitch': return 'twitch';
-      case 'discord': return 'discord';
-      case 'reddit': return 'reddit';
-      case 'tiktok': return 'tiktok';
-      default: return 'link';
-    }
-  };
-
+const SocialMediaLinksEditor: React.FC<SocialMediaLinksEditorProps> = ({
+  links,
+  onChange,
+  maxLinks = 5,
+}) => {
+  const [editing, setEditing] = useState(false);
+  
   const handleAddLink = () => {
-    if (!url) {
-      toast({
-        title: "Error",
-        description: "Please provide a URL for your social profile",
-        variant: "destructive"
-      });
-      return;
+    if (links.length >= maxLinks) {
+      return; // Don't add more than maxLinks
     }
-
-    // Validate URL format
-    try {
-      new URL(url);
-    } catch (error) {
-      toast({
-        title: "Invalid URL",
-        description: "Please enter a valid URL (e.g. https://example.com)",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Check if maximum links reached
-    if (socialLinks.length >= getMaxLinks()) {
-      toast({
-        title: "Limit Reached",
-        description: `${user.tier === 'free' ? 'Free' : 'Pro'} tier users can only add ${getMaxLinks()} social links. Upgrade for more!`,
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Create a new social link with the platform, URL, and icon
+    
     const newLink: SocialLink = {
-      id: Date.now(), // Use a number for the ID
-      platform,
-      url,
-      icon: getPlatformIcon(platform),
-      clicks: 0 // Initialize clicks to 0
+      id: `link-${Date.now()}`, // Generate a string ID
+      platform: '',
+      url: '',
+      title: '',
     };
-
-    onLinksChange([...socialLinks, newLink]);
     
-    // Reset form
-    setUrl('');
-    
-    toast({
-      title: "Social Link Added",
-      description: "Your social media link has been added to your profile",
-    });
+    onChange([...links, newLink]);
   };
-
-  const handleRemoveLink = (id: string | number) => {
-    const updatedLinks = socialLinks.filter(link => link.id !== id);
-    onLinksChange(updatedLinks);
-    
-    toast({
-      title: "Social Link Removed",
-      description: "The social media link has been removed from your profile",
-    });
+  
+  const handleRemoveLink = (index: number) => {
+    const newLinks = [...links];
+    newLinks.splice(index, 1);
+    onChange(newLinks);
   };
-
-  // Platform display names
-  const platformNames: Record<SocialPlatform, string> = {
-    twitter: 'Twitter / X',
-    instagram: 'Instagram',
-    facebook: 'Facebook',
-    linkedin: 'LinkedIn',
-    github: 'GitHub',
-    youtube: 'YouTube',
-    twitch: 'Twitch',
-    discord: 'Discord',
-    reddit: 'Reddit',
-    tiktok: 'TikTok',
-    other: 'Other'
+  
+  const handleLinkChange = (index: number, field: keyof SocialLink, value: string) => {
+    const newLinks = [...links];
+    newLinks[index] = {
+      ...newLinks[index],
+      [field]: value,
+    };
+    onChange(newLinks);
   };
-
+  
   return (
-    <div className="space-y-6">
-      <div className="space-y-4">
-        <Label className="text-base font-medium">Social Media Links</Label>
-        
-        <div className="space-y-2">
-          {socialLinks.map((link) => (
-            <div key={String(link.id)} className="glass-morphism rounded-lg p-3 border border-white/10 flex justify-between items-center">
-              <div className="flex items-center">
-                <ExternalLink size={16} className="text-royal-gold" />
-                <div className="ml-2">
-                  <p className="text-sm font-medium">{platformNames[link.platform as SocialPlatform] || link.platform}</p>
-                  <p className="text-xs text-white/50 truncate max-w-[200px]">{link.url}</p>
-                  {link.clicks !== undefined && (
-                    <p className="text-xs text-white/30">{link.clicks} clicks</p>
-                  )}
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex justify-between items-center">
+          <span>Social Media Links</span>
+          {links.length < maxLinks && (
+            <Button 
+              onClick={handleAddLink}
+              size="sm"
+              variant="outline"
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Add Link
+            </Button>
+          )}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {links.length === 0 ? (
+            <div className="text-center py-4 text-muted-foreground">
+              <p>No social links added yet.</p>
+              <Button 
+                onClick={handleAddLink} 
+                className="mt-2"
+                variant="outline"
+                size="sm"
+              >
+                Add Your First Link
+              </Button>
+            </div>
+          ) : (
+            links.map((link, index) => (
+              <div key={String(link.id)} className="space-y-2 border p-3 rounded-md">
+                <div className="flex justify-between items-center">
+                  <Label>Link {index + 1}</Label>
+                  <Button 
+                    onClick={() => handleRemoveLink(index)}
+                    size="sm"
+                    variant="ghost"
+                    className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                </div>
+                
+                <div className="grid gap-2">
+                  <Label htmlFor={`platform-${index}`}>Platform</Label>
+                  <Input
+                    id={`platform-${index}`}
+                    value={link.platform || ''}
+                    onChange={(e) => handleLinkChange(index, 'platform', e.target.value)}
+                    placeholder="e.g. Twitter, Instagram, etc."
+                  />
+                </div>
+                
+                <div className="grid gap-2">
+                  <Label htmlFor={`title-${index}`}>Title</Label>
+                  <Input
+                    id={`title-${index}`}
+                    value={link.title || ''}
+                    onChange={(e) => handleLinkChange(index, 'title', e.target.value)}
+                    placeholder="e.g. Follow me on Twitter"
+                  />
+                </div>
+                
+                <div className="grid gap-2">
+                  <Label htmlFor={`url-${index}`}>URL</Label>
+                  <Input
+                    id={`url-${index}`}
+                    value={link.url}
+                    onChange={(e) => handleLinkChange(index, 'url', e.target.value)}
+                    placeholder="https://..."
+                  />
                 </div>
               </div>
-              <Button 
-                size="sm"
-                variant="ghost"
-                className="text-white/50 hover:text-white hover:bg-white/10"
-                onClick={() => handleRemoveLink(link.id)}
-              >
-                <Trash2 size={14} />
-              </Button>
-            </div>
-          ))}
+            ))
+          )}
+          
+          {links.length > 0 && links.length < maxLinks && (
+            <Button 
+              onClick={handleAddLink}
+              variant="outline"
+              className="w-full"
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Add Another Link
+            </Button>
+          )}
+          
+          {links.length >= maxLinks && (
+            <p className="text-sm text-muted-foreground text-center">
+              You've reached the maximum number of links ({maxLinks}).
+              <br />
+              Upgrade your account to add more links.
+            </p>
+          )}
         </div>
-        
-        {socialLinks.length < getMaxLinks() && (
-          <div className="glass-morphism rounded-lg p-4 border border-white/10 mt-4">
-            <h3 className="text-base font-medium mb-2">Add Social Media</h3>
-            <div className="space-y-3">
-              <div>
-                <Label htmlFor="platform">Platform</Label>
-                <Select value={platform} onValueChange={(val) => setPlatform(val as SocialPlatform)}>
-                  <SelectTrigger className="glass-morphism border-white/10">
-                    <SelectValue placeholder="Select platform" />
-                  </SelectTrigger>
-                  <SelectContent className="glass-morphism border-white/10">
-                    {Object.entries(platformNames).map(([key, name]) => (
-                      <SelectItem key={key} value={key}>{name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="socialUrl">Profile URL</Label>
-                <Input 
-                  id="socialUrl" 
-                  type="text" 
-                  placeholder="https://twitter.com/username" 
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  className="glass-morphism border-white/10"
-                />
-              </div>
-              <Button 
-                className="w-full mt-2 glass-morphism border-white/10 hover:bg-white/10"
-                onClick={handleAddLink}
-              >
-                <Plus size={14} className="mr-2" />
-                Add Social Link
-              </Button>
-            </div>
-          </div>
-        )}
-        
-        <div className="text-sm text-white/50">
-          {user.tier === 'free' 
-            ? `Free tier: ${socialLinks.length}/2 social links used. Upgrade for more!` 
-            : user.tier === 'pro' 
-              ? `Pro tier: ${socialLinks.length}/5 social links used.`
-              : `Royal tier: ${socialLinks.length}/10 social links used.`}
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

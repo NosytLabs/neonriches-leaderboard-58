@@ -14,6 +14,7 @@ export interface Certificate {
   createdAt?: string; // Added for compatibility
   isMinted?: boolean; // Added for compatibility
   mintedAt?: string;
+  team?: string;
 }
 
 export type CertificateType = 
@@ -32,7 +33,7 @@ export type CertificateStyle =
   | 'royal'
   | 'minimalist'
   | 'ornate'
-  | 'classic'; // Add this as valid style
+  | 'classic'; // Added classic as valid style
 
 export type CertificateTeam = 
   | 'red'
@@ -40,7 +41,7 @@ export type CertificateTeam =
   | 'green'
   | 'gold'
   | 'purple'
-  | 'neutral'; // Add this as valid team
+  | 'neutral'; // Added neutral as valid team
 
 export interface CertificateTemplate {
   id: string;

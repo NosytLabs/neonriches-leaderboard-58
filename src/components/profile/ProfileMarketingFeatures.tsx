@@ -4,11 +4,33 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Sparkles, Link, BarChart, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { useProfileBoost, BoostEffectType } from '@/hooks/use-profile-boost';
 import { useFeatureAccess } from '@/hooks/use-feature-access';
 import { Feature } from '@/types/subscription'; 
 import { UserProfile } from '@/types/user';
 import { useMarketing } from '@/hooks/use-marketing';
+
+// Create an interface to define the structure of profile boost data
+interface ProfileBoost {
+  id: string;
+  type: string;
+  level: number;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+}
+
+// Hook to handle profile boosts (simplified version)
+const useProfileBoost = (user: UserProfile) => {
+  // Extract active boosts from user data
+  const activeBoosts = user?.profileBoosts?.filter(boost => 
+    boost.isActive && new Date(boost.endDate) > new Date()
+  ) || [];
+  
+  // Placeholder for available boosts
+  const availableBoosts = [];
+  
+  return { activeBoosts, availableBoosts };
+};
 
 interface ProfileMarketingFeaturesProps {
   user: UserProfile;

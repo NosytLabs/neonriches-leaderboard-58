@@ -13,7 +13,7 @@ import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -76,7 +76,7 @@ const EnhancedDashboard = () => {
 
   // Ensure user has all required properties and properly typed
   // First ensure totalSpent and amountSpent properties
-  const processedUser = ensureTotalSpent(user as unknown as UserProfile);
+  const processedUser = ensureTotalSpent(user as UserProfile);
   
   // Then adapt to ensure all other properties are correctly set
   const standardUser = adaptToStandardUserProfile(processedUser);
