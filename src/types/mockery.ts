@@ -29,7 +29,7 @@ export type MockeryTier =
   | 'silver'
   | 'bronze';
 
-// Export TeamColor so it's available when importing from this file
+// Export TeamColor properly
 export type TeamColor = 
   | 'red' 
   | 'blue' 

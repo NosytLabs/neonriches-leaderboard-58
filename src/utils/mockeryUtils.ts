@@ -1,11 +1,7 @@
 
-import React from 'react';
-import { Egg, Lock, Target, Flame, Crown, User, Volume2, VolumeX, CloudFog, AlertCircle, Shield } from 'lucide-react';
-import { MockeryAction, MockeryTier } from '@/types/mockery';
+import { MockeryAction, MockeryTier, TeamColor } from '@/types/mockery';
 import TomatoIcon from '@/components/icons/TomatoIcon';
-
-// Export TomatoIcon so it's available when importing
-export { default as TomatoIcon } from '@/components/icons/TomatoIcon';
+import { Egg, Lock, Target, Flame, Crown, User, Volume2, VolumeX, CloudFog, AlertCircle, Shield } from 'lucide-react';
 
 /**
  * Get the name of a mockery action
@@ -50,216 +46,153 @@ export const getMockeryName = (action: MockeryAction): string => {
 };
 
 /**
- * Get the description of a mockery action
+ * Get the price for a mockery action
  */
-export const getMockeryDescription = (action: MockeryAction): string => {
+export const getMockeryActionPrice = (action: MockeryAction): number => {
   switch (action) {
     case 'tomatoes':
-      return 'Throw rotten tomatoes at a noble.';
+      return 5;
     case 'eggs':
-      return 'Pelt a noble with eggs.';
-    case 'putridEggs':
-      return 'Throw putrid eggs that leave a lasting stench.';
-    case 'crown':
-      return 'Temporarily steal a noble\'s crown.';
+      return 10;
     case 'stocks':
-      return 'Put a noble in the public stocks.';
+      return 20;
+    case 'crown':
+      return 100;
     case 'jester':
-      return 'Force a noble to dress as a jester.';
-    case 'courtJester':
-      return 'Make the noble your personal court jester.';
-    case 'smokeBomb':
-      return 'Temporarily obscure a noble\'s profile with smoke.';
+      return 15;
+    case 'putridEggs':
+      return 25;
     case 'silence':
-      return 'Prevent a noble from speaking in public forums.';
+      return 30;
+    case 'courtJester':
+      return 50;
+    case 'smokeBomb':
+      return 15;
     case 'shame':
-      return 'Force a noble on a public walk of shame.';
+      return 10;
     case 'protection':
-      return 'Shield yourself from mockery.';
+      return 75;
     case 'taunt':
-      return 'Publicly taunt another noble.';
+      return 5;
     case 'mock':
-      return 'Mock another noble publicly.';
+      return 10;
     case 'challenge':
-      return 'Challenge a noble to a contest.';
+      return 20;
     case 'joust':
-      return 'Challenge a noble to a joust.';
+      return 30;
     case 'duel':
-      return 'Challenge a noble to a duel.';
+      return 50;
     default:
-      return 'A mysterious form of mockery.';
+      return 5;
   }
+};
+
+/**
+ * Get the discounted price for a mockery action
+ */
+export const getDiscountedShamePrice = (action: MockeryAction): number => {
+  const regularPrice = getMockeryActionPrice(action);
+  return Math.floor(regularPrice * 0.5);
+};
+
+/**
+ * Check if the action has a weekly discount
+ */
+export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
+  return action === getWeeklyDiscountedAction();
+};
+
+/**
+ * Get the action that is discounted this week
+ */
+export const getWeeklyDiscountedAction = (): MockeryAction => {
+  return 'stocks';
 };
 
 /**
  * Get the tier of a mockery action
  */
-export const getMockeryTier = (action: MockeryAction): string => {
+export const getMockeryTier = (action: MockeryAction): MockeryTier => {
   switch (action) {
     case 'tomatoes':
     case 'eggs':
+    case 'jester':
     case 'taunt':
     case 'mock':
-      return 'Common';
+      return 'common';
     case 'stocks':
-    case 'jester':
-    case 'challenge':
     case 'shame':
-      return 'Uncommon';
-    case 'putridEggs':
     case 'smokeBomb':
-    case 'joust':
-      return 'Rare';
-    case 'courtJester':
+    case 'challenge':
+      return 'uncommon';
+    case 'putridEggs':
     case 'silence':
-      return 'Epic';
+    case 'courtJester':
+    case 'joust':
+      return 'rare';
     case 'crown':
     case 'protection':
     case 'duel':
-      return 'Legendary';
+      return 'legendary';
     default:
-      return 'Common';
+      return 'common';
   }
 };
 
 /**
- * Get the action icon component
+ * Get the cost of a mockery action (alias for getMockeryActionPrice)
  */
-export const getMockeryActionIcon = (action: MockeryAction): React.FC<{ className?: string }> => {
+export const getMockeryCost = getMockeryActionPrice;
+
+/**
+ * Get icon for a mockery action
+ */
+export const getMockeryActionIcon = (action: MockeryAction) => {
   switch (action) {
     case 'tomatoes':
-      return TomatoIcon;
+      return { icon: TomatoIcon, color: 'text-red-500' };
     case 'eggs':
-    case 'putridEggs':
-      return Egg;
+      return { icon: Egg, color: 'text-amber-300' };
     case 'stocks':
-      return Lock;
+      return { icon: Lock, color: 'text-slate-400' };
     case 'crown':
-      return Crown;
+      return { icon: Crown, color: 'text-royal-gold' };
     case 'jester':
-    case 'courtJester':
-    case 'mock':
-      return User;
-    case 'smokeBomb':
-      return CloudFog;
+      return { icon: User, color: 'text-purple-400' };
+    case 'putridEggs':
+      return { icon: Egg, color: 'text-green-400' };
     case 'silence':
-      return VolumeX;
-    case 'taunt':
-      return Volume2;
+      return { icon: VolumeX, color: 'text-blue-400' };
+    case 'courtJester':
+      return { icon: User, color: 'text-pink-400' };
+    case 'smokeBomb':
+      return { icon: CloudFog, color: 'text-gray-400' };
     case 'shame':
-      return AlertCircle;
+      return { icon: AlertCircle, color: 'text-red-400' };
     case 'protection':
-      return Shield;
+      return { icon: Shield, color: 'text-emerald-400' };
+    case 'taunt':
+      return { icon: Volume2, color: 'text-yellow-400' };
+    case 'mock':
+      return { icon: User, color: 'text-teal-400' };
     case 'challenge':
-      return Flame;
+      return { icon: Flame, color: 'text-orange-400' };
     case 'joust':
+      return { icon: Target, color: 'text-indigo-400' };
     case 'duel':
-      return Target;
+      return { icon: Target, color: 'text-red-600' };
     default:
-      return Target;
+      return { icon: Target, color: 'text-gray-400' };
   }
 };
 
-/**
- * Get the cost of a mockery action
- */
-export const getMockeryCost = (action: MockeryAction): number => {
-  switch (action) {
-    case 'tomatoes':
-      return 5;
-    case 'eggs':
-      return 10;
-    case 'stocks':
-      return 25;
-    case 'jester':
-      return 15;
-    case 'crown':
-      return 100;
-    case 'putridEggs':
-      return 30;
-    case 'silence':
-      return 75;
-    case 'courtJester':
-      return 50;
-    case 'smokeBomb':
-      return 20;
-    case 'shame':
-      return 15;
-    case 'protection':
-      return 150;
-    case 'taunt':
-      return 5;
-    case 'mock':
-      return 10;
-    case 'challenge':
-      return 25;
-    case 'joust':
-      return 75;
-    case 'duel':
-      return 150;
-    default:
-      return 10;
-  }
-};
-
-/**
- * Get the CSS color class for a mockery tier
- */
-export const getMockeryTierColorClass = (tier: string): string => {
-  switch (tier) {
-    case 'Common':
-      return 'text-gray-400 border-gray-400';
-    case 'Uncommon':
-      return 'text-green-400 border-green-400';
-    case 'Rare':
-      return 'text-blue-400 border-blue-400';
-    case 'Epic':
-      return 'text-purple-400 border-purple-400';
-    case 'Legendary':
-      return 'text-royal-gold border-royal-gold';
-    default:
-      return 'text-gray-400 border-gray-400';
-  }
-};
-
-/**
- * Get the color for a mockery action icon
- */
-export const getMockeryActionIconColor = (action: MockeryAction): string => {
-  switch (action) {
-    case 'tomatoes':
-      return '#EF4444';
-    case 'eggs':
-      return '#F59E0B';
-    case 'putridEggs':
-      return '#10B981';
-    case 'stocks':
-      return '#6B7280';
-    case 'crown':
-      return '#D4AF37';
-    case 'jester':
-      return '#8B5CF6';
-    case 'courtJester':
-      return '#EC4899';
-    case 'smokeBomb':
-      return '#9CA3AF';
-    case 'silence':
-      return '#3B82F6';
-    case 'shame':
-      return '#EF4444';
-    case 'protection':
-      return '#10B981';
-    case 'taunt':
-      return '#F59E0B';
-    case 'mock':
-      return '#14B8A6';
-    case 'challenge':
-      return '#F97316';
-    case 'joust':
-      return '#6366F1';
-    case 'duel':
-      return '#DC2626';
-    default:
-      return '#6B7280';
-  }
+export default {
+  getMockeryName,
+  getMockeryActionIcon,
+  getMockeryActionPrice,
+  getMockeryTier,
+  getMockeryCost,
+  getDiscountedShamePrice,
+  hasWeeklyDiscount,
+  getWeeklyDiscountedAction
 };

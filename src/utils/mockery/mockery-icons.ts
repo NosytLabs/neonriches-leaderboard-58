@@ -1,11 +1,12 @@
 
 import { Egg, Lock, Target, Flame, Crown, User, Volume2, VolumeX, CloudFog, AlertCircle, Shield } from 'lucide-react';
-import { MockeryAction } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery';
+import TomatoIcon from '@/components/icons/TomatoIcon';
 
 export const getMockeryIcon = (action: MockeryAction) => {
   switch (action) {
     case 'tomatoes':
-      return { icon: 'Tomato', color: 'text-red-500' };
+      return { icon: TomatoIcon, color: 'text-red-500' };
     case 'eggs':
       return { icon: Egg, color: 'text-amber-300' };
     case 'stocks':
@@ -39,4 +40,14 @@ export const getMockeryIcon = (action: MockeryAction) => {
     default:
       return { icon: Target, color: 'text-gray-400' };
   }
+};
+
+export const getMockeryIconColor = (action: MockeryAction): string => {
+  const iconData = getMockeryIcon(action);
+  return iconData.color;
+};
+
+export const getMockeryIconComponent = (action: MockeryAction) => {
+  const iconData = getMockeryIcon(action);
+  return iconData.icon;
 };

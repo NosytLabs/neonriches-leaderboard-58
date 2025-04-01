@@ -1,127 +1,50 @@
 
-// Re-export utility functions for easier imports
+// Re-export utility functions
+export * from './constants';
+export * from './validation';
+export * from './userUtils';
+export * from './safeToString';
 
-// Basic utilities
-import { cn } from '@/lib/utils';
-
-// Formatters
-import { 
-  formatNumber, 
-  formatPercent, 
+// Re-export formatters
+export {
+  formatCurrency,
+  formatNumber,
+  formatPercent,
   formatDollarAmount, 
-  formatFileSize, 
-  formatRankWithSuffix, 
+  formatFileSize,
+  formatRankWithSuffix,
   formatDuration,
   formatTimeAgo
 } from './formatters';
 
-// Auth utilities
-import { 
-  parseUserRole, 
-  getUserSettings, 
-  getUserRank, 
-  getVerifiedStatus,
-  generateUsername
+// Re-export auth utils
+export {
+  isAuthenticated,
+  parseToken,
+  setToken,
+  clearToken
 } from './authUtils';
 
-// Data transformation
-import { 
-  sortByKey, 
-  filterByValue, 
-  groupByKey 
-} from './dataUtils';
+// Re-export profile utils
+export {
+  getUserProfile,
+  updateUserProfile
+} from './profileUtils';
 
-// Animation and effects
-import { 
-  applyAnimation, 
-  removeAnimation, 
-  getTransitionClass 
+// Animation utilities
+export {
+  getAnimationClass,
+  applyAnimation,
+  removeAnimation
 } from './animationUtils';
 
-// Mockery utilities
-import {
-  getMockeryName,
-  getMockeryDescription,
-  getMockeryActionPrice,
-  getMockeryTier,
-  getMockeryActionIcon,
-  getMockeryActionIconColor,
-  getDiscountedShamePrice,
-  hasWeeklyDiscount,
-  getWeeklyDiscountedAction,
-  getShameActionPrice,
-  getMockeryCost
-} from './mockeryUtils';
-
-// Performance monitoring
-import {
-  markComponentRenderStart,
-  markComponentRenderEnd,
-  initPerformanceMonitoring
-} from './performanceMonitoring';
-
-// Resource loading
-import {
-  preloadCriticalAssets,
-  preloadImage,
-  addPreloadLink,
-  addPreconnect,
-  preloadAboveTheFoldImages
-} from './resourcePreload';
-
-// Export everything
+// Re-export mockery utils
 export {
-  // Basic utilities
-  cn,
-
-  // Formatters
-  formatNumber,
-  formatPercent,
-  formatDollarAmount,
-  formatFileSize,
-  formatRankWithSuffix,
-  formatDuration,
-  formatTimeAgo,
-
-  // Auth utilities
-  parseUserRole,
-  getUserSettings,
-  getUserRank,
-  getVerifiedStatus,
-  generateUsername,
-
-  // Data transformation
-  sortByKey,
-  filterByValue,
-  groupByKey,
-
-  // Animation and effects
-  applyAnimation,
-  removeAnimation,
-  getTransitionClass,
-
-  // Mockery utilities
   getMockeryName,
-  getMockeryDescription,
   getMockeryActionPrice,
   getMockeryTier,
-  getMockeryActionIcon,
-  getMockeryActionIconColor,
+  getMockeryCost,
   getDiscountedShamePrice,
   hasWeeklyDiscount,
-  getWeeklyDiscountedAction,
-  getShameActionPrice,
-  getMockeryCost,
-
-  // Performance monitoring
-  markComponentRenderStart,
-  markComponentRenderEnd,
-  initPerformanceMonitoring,
-
-  // Resource loading
-  preloadCriticalAssets,
-  preloadImage,
-  addPreloadLink,
-  addPreconnect,
-  preloadAboveTheFoldImages
-};
+  getWeeklyDiscountedAction
+} from './mockeryUtils';

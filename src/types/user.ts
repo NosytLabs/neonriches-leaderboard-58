@@ -26,7 +26,9 @@ export type TeamType =
   | 'green' 
   | 'gold' 
   | 'purple'
-  | 'silver';
+  | 'silver'
+  | 'none'
+  | 'neutral';
 
 export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
 
@@ -43,6 +45,50 @@ export interface ProfileBoost {
   isActive: boolean;
 }
 
+export interface UserCosmetics {
+  border?: string[];
+  color?: string[];
+  font?: string[];
+  emoji?: string[];
+  title?: string[];
+  background?: string[];
+  effect?: string[];
+  badge?: string[];
+  theme?: string[];
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string;
+  activeTitle?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  activeBadge?: string;
+  activeTheme?: string;
+}
+
+export interface SocialLink {
+  id?: string | number;
+  platform?: string;
+  url: string;
+  username?: string;
+  display?: string;
+  icon?: string;
+  verified?: boolean;
+  primary?: boolean;
+  clicks?: number;
+  title?: string;
+  label?: string;
+  type?: string;
+}
+
+export interface ProfileImage {
+  id?: string | number;
+  url: string;
+  isPrimary: boolean;
+  caption?: string;
+  type?: string;
+}
+
 export interface User {
   id: string;
   username: string;
@@ -50,8 +96,11 @@ export interface User {
   email?: string;
   profileImage?: string;
   rank?: number;
+  previousRank?: number;
   amountSpent: number;
   totalSpent: number;
+  spentAmount?: number;
+  walletBalance?: number;
   joinedDate: Date;
   team?: TeamColor;
   tier?: UserTier;
@@ -60,26 +109,31 @@ export interface User {
   profileClicks?: number;
   following?: string[];
   followers?: string[];
+  spendStreak?: number;
+  gender?: Gender;
+  role?: string;
+  isVerified?: boolean;
+  isVIP?: boolean;
+  isFounder?: boolean;
+  activeTitle?: string;
+  lastActive?: string;
+  cosmetics?: UserCosmetics;
+  purchasedFeatures?: string[];
+  profileImages?: ProfileImage[];
+  profileBoosts?: ProfileBoost[];
+  socialLinks?: SocialLink[] | Record<string, string>;
+  settings?: UserSettings;
 }
 
 export interface UserProfile extends User {
   bio?: string;
   location?: string;
-  socialLinks?: {
-    twitter?: string;
-    instagram?: string;
-    website?: string;
-  };
   achievements?: string[];
   badges?: string[];
   mockeryStats?: {
     received: number;
     deployed: number;
   };
-  profileBoosts?: ProfileBoost[];
-  spendStreak?: number;
-  walletBalance?: number;
-  isFollowing?: boolean;
 }
 
 export interface UserSettings {
@@ -95,8 +149,10 @@ export interface UserSettings {
   soundEffects: boolean;
   showEmailOnProfile: boolean;
   rankChangeAlerts: boolean;
-  newFollowerAlerts: boolean;
-  teamNotifications: boolean;
+  newFollowerAlerts?: boolean;
+  teamNotifications?: boolean;
   showTeam: boolean;
   showSpending: boolean;
 }
+
+export type ProfileLink = SocialLink;

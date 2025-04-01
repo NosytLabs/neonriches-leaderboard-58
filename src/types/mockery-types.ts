@@ -1,7 +1,7 @@
 
 import { TeamColor, MockeryAction } from './mockery';
 
-export type { MockeryAction };
+export { TeamColor, MockeryAction };
 
 export interface MockedUser {
   id: string;

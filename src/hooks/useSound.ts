@@ -24,11 +24,21 @@ export type SoundType =
   | 'withdrawal'
   | 'coinDrop'
   | 'protection'
-  | 'sparkle';
+  | 'sparkle'
+  | 'reward'
+  | 'rank_up'
+  | 'team'
+  | 'trumpet'
+  | 'warning'
+  | 'medallion'
+  | 'royalAnnouncement'
+  | 'seal';
 
 export interface SoundOptions {
   volume?: number;
   loop?: boolean;
+  playbackRate?: number;
+  onEnd?: () => void;
 }
 
 export const useSound = () => {
