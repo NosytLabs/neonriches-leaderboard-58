@@ -1,3 +1,4 @@
+
 import { UserProfile } from '@/types/user-consolidated';
 import { ProfileBoost } from '@/types/boost';
 import { TeamColor } from '@/types/team';
@@ -161,7 +162,7 @@ export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: strin
   const cosmeticKey = fieldName as keyof UserCosmetics;
   
   // Get the current items or initialize an empty array
-  const currentItems = (cosmetics[cosmeticKey] as string[]) || [];
+  const currentItems = cosmetics[cosmeticKey] as string[] || [];
   
   // Add cosmetic if it doesn't already exist
   if (!currentItems.includes(cosmeticId)) {
