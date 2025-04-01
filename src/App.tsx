@@ -8,21 +8,24 @@ import Login from '@/pages/Login';
 import Signup from '@/pages/SignUp';
 import Settings from '@/pages/Settings';
 import SoundProvider from '@/hooks/sounds/SoundProvider';
+import { AuthProvider } from '@/contexts/auth'; // Import AuthProvider
 
 const App: React.FC = () => {
   return (
-    <SoundProvider>
-      <MainLayout>
-        <Routes>
-          <Route path="/" element={<Chat />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/settings" element={<Settings />} />
-        </Routes>
-        <Toaster />
-      </MainLayout>
-    </SoundProvider>
+    <AuthProvider>
+      <SoundProvider>
+        <MainLayout>
+          <Routes>
+            <Route path="/" element={<Chat />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/settings" element={<Settings />} />
+          </Routes>
+          <Toaster />
+        </MainLayout>
+      </SoundProvider>
+    </AuthProvider>
   );
 };
 
