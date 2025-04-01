@@ -1,14 +1,58 @@
 
 import { useState, useCallback } from 'react';
 import { useSound } from './use-sound';
-import useNotificationSounds from './use-notification-sounds';
+import { SoundOptions } from '@/types/user-types';
+
+// Define the missing notification sounds hook
+export const useNotificationSounds = () => {
+  const { playSound } = useSound();
+
+  const playNotificationSound = (type: string = 'notification', options?: SoundOptions) => {
+    const soundOptions: SoundOptions = {
+      volume: 0.5,
+      ...options
+    };
+
+    switch (type) {
+      case 'achievement':
+        playSound('achievement', soundOptions);
+        break;
+      case 'message':
+        playSound('message', soundOptions);
+        break;
+      case 'alert':
+        playSound('notification', soundOptions);
+        break;
+      case 'success':
+        playSound('success', soundOptions);
+        break;
+      case 'error':
+        playSound('error', soundOptions);
+        break;
+      case 'reward':
+        playSound('reward', soundOptions);
+        break;
+      default:
+        playSound('notification', soundOptions);
+        break;
+    }
+  };
+
+  return { playNotificationSound };
+};
+
+interface CrownAnimationOptions {
+  duration?: number;
+  soundEnabled?: boolean;
+  onComplete?: () => void;
+}
 
 export const useCrownInteraction = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const { playSound } = useSound();
   const { playNotificationSound } = useNotificationSounds();
 
-  const triggerCrownAnimation = useCallback((options = {}) => {
+  const triggerCrownAnimation = useCallback((options: CrownAnimationOptions = {}) => {
     const {
       duration = 1500,
       soundEnabled = true,

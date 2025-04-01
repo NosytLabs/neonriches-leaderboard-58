@@ -1,146 +1,142 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useSound } from '@/hooks/use-sound';
 import { SoundOptions } from '@/types/user-types';
 
-interface FloatingCoinsOptions {
-  duration?: number;
+export interface FloatingCoinsOptions {
   count?: number;
-  minVelocity?: number;
-  maxVelocity?: number;
-  soundEnabled?: boolean;
+  duration?: number;
+  size?: number;
+  gold?: boolean;
+  velocity?: number;
+  offsetX?: number;
+  offsetY?: number;
+  fromBottom?: boolean;
+  fromTop?: boolean;
+  fromLeft?: boolean;
+  fromRight?: boolean;
+  containerId?: string;
+  onComplete?: () => void;
+  playSounds?: boolean;
 }
 
-export const useFloatingCoins = () => {
-  const [isAnimating, setIsAnimating] = useState(false);
+const useFloatingCoins = () => {
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const { playSound } = useSound();
 
-  const createCoinElement = useCallback(() => {
+  const createCoin = useCallback((container: HTMLElement, options: FloatingCoinsOptions) => {
     const coin = document.createElement('div');
-    coin.classList.add('floating-coin');
-    coin.innerHTML = '💰';
-    coin.style.position = 'fixed';
-    coin.style.zIndex = '9999';
-    coin.style.fontSize = `${Math.random() * 20 + 20}px`;
+    const size = options.size || Math.random() * 30 + 20;
+    const isGold = options.gold || Math.random() > 0.5;
+    
+    coin.innerHTML = isGold ? '🪙' : '💰';
+    coin.style.position = 'absolute';
+    coin.style.fontSize = `${size}px`;
     coin.style.userSelect = 'none';
     coin.style.pointerEvents = 'none';
-    coin.style.opacity = '0';
-    coin.style.transition = 'opacity 0.3s ease-in-out';
-    return coin;
-  }, []);
-
-  const animateCoin = useCallback((
-    coin: HTMLDivElement, 
-    startX: number, 
-    startY: number, 
-    duration: number, 
-    minVelocity: number, 
-    maxVelocity: number
-  ) => {
-    // Position coin at the starting position
+    coin.style.zIndex = '9999';
+    coin.style.filter = 'drop-shadow(0 0 2px rgba(0, 0, 0, 0.5))';
+    
+    // Position calculations
+    const startX = options.fromLeft ? 0 : options.fromRight ? container.clientWidth : Math.random() * container.clientWidth;
+    const startY = options.fromTop ? 0 : options.fromBottom ? container.clientHeight : Math.random() * container.clientHeight;
+    
     coin.style.left = `${startX}px`;
     coin.style.top = `${startY}px`;
     
-    // Make the coin visible
-    setTimeout(() => {
-      coin.style.opacity = '1';
-    }, 10);
+    // Random rotation and movement
+    const rotation = Math.random() * 360;
+    const rotationSpeed = (Math.random() - 0.5) * 10;
+    const xVelocity = (Math.random() - 0.5) * (options.velocity || 5);
+    const yVelocity = -Math.random() * (options.velocity || 5) - 2;
     
-    // Calculate random velocity
-    const velocityX = (Math.random() * (maxVelocity - minVelocity) + minVelocity) * (Math.random() > 0.5 ? 1 : -1);
-    const velocityY = -1 * (Math.random() * (maxVelocity - minVelocity) + minVelocity);
+    container.appendChild(coin);
     
-    // Apply gravity and move the coin
-    let posX = startX;
-    let posY = startY;
-    let currentVelocityY = velocityY;
-    const gravity = 0.2;
+    let x = startX;
+    let y = startY;
+    let rotationAngle = rotation;
     
-    const moveInterval = setInterval(() => {
-      posX += velocityX;
-      posY += currentVelocityY;
-      currentVelocityY += gravity;
+    const duration = options.duration || 2000;
+    const startTime = performance.now();
+    
+    const animateCoin = (timestamp: number) => {
+      const elapsed = timestamp - startTime;
+      const progress = elapsed / duration;
       
-      coin.style.left = `${posX}px`;
-      coin.style.top = `${posY}px`;
-      
-      // Remove coin if it's out of the viewport
-      if (
-        posY > window.innerHeight + 100 ||
-        posX < -100 ||
-        posX > window.innerWidth + 100
-      ) {
-        clearInterval(moveInterval);
-        document.body.removeChild(coin);
+      if (progress < 1) {
+        x += xVelocity;
+        y += yVelocity + progress * 9.8; // Apply gravity effect
+        rotationAngle += rotationSpeed;
+        
+        coin.style.transform = `translate(${x - startX}px, ${y - startY}px) rotate(${rotationAngle}deg)`;
+        coin.style.opacity = (1 - progress).toString();
+        
+        requestAnimationFrame(animateCoin);
+      } else {
+        if (container.contains(coin)) {
+          container.removeChild(coin);
+        }
       }
-    }, 16); // ~60fps
+    };
     
-    // Set timeout to remove coin after duration
-    setTimeout(() => {
-      clearInterval(moveInterval);
-      if (document.body.contains(coin)) {
-        coin.style.opacity = '0';
-        setTimeout(() => {
-          if (document.body.contains(coin)) {
-            document.body.removeChild(coin);
-          }
-        }, 300); // Wait for fade out
-      }
-    }, duration);
+    requestAnimationFrame(animateCoin);
   }, []);
 
   const triggerCoins = useCallback((options: FloatingCoinsOptions = {}) => {
-    const {
-      duration = 2000,
-      count = 15,
-      minVelocity = 2,
-      maxVelocity = 8,
-      soundEnabled = true
-    } = options;
-    
     setIsAnimating(true);
     
-    if (soundEnabled) {
-      const soundOptions: SoundOptions = {
-        volume: 0.35,
-        playbackRate: 1
-      };
+    // Get target container
+    const containerId = options.containerId || 'root';
+    const container = document.getElementById(containerId) || document.body;
+    
+    // Set container position if not already set
+    if (getComputedStyle(container).position === 'static') {
+      container.style.position = 'relative';
+    }
+    
+    const count = options.count || 10;
+    
+    // Play coin sound
+    if (options.playSounds !== false) {
+      const soundOptions: SoundOptions = { volume: 0.35 };
       playSound('coin', soundOptions);
     }
     
-    // Create and animate coins
+    // Create coins
     for (let i = 0; i < count; i++) {
-      const coin = createCoinElement();
-      document.body.appendChild(coin);
-      
-      // Determine starting position (bottom center of viewport)
-      const startX = window.innerWidth / 2 + (Math.random() * 100 - 50);
-      const startY = window.innerHeight - 100 + (Math.random() * 50);
-      
-      // Stagger the animation of each coin slightly
       setTimeout(() => {
-        animateCoin(coin, startX, startY, duration, minVelocity, maxVelocity);
+        createCoin(container, options);
+        
+        // Additional sound for bigger bursts
+        if (i === Math.floor(count / 2) && count > 15 && options.playSounds !== false) {
+          const soundOptions: SoundOptions = { volume: 0.35 };
+          playSound('coinDrop', soundOptions);
+        }
       }, i * 50);
-      
-      // Play a secondary coin sound for a richer effect on some coins
-      if (i % 4 === 0 && soundEnabled) {
-        setTimeout(() => {
-          const secondarySoundOptions: SoundOptions = {
-            volume: 0.35,
-            playbackRate: 1.1
-          };
-          playSound('coinDrop', secondarySoundOptions);
-        }, i * 80);
-      }
     }
     
-    // Reset animation state after all coins have finished
+    // Reset animation state
     setTimeout(() => {
       setIsAnimating(false);
-    }, duration + count * 50);
-  }, [createCoinElement, animateCoin, playSound]);
+      if (options.onComplete) options.onComplete();
+    }, count * 50 + 2000);
+  }, [createCoin, playSound]);
 
-  return { triggerCoins, isAnimating };
+  // Add the createBurst method to fix the errors
+  const createBurst = useCallback((count: number = 5) => {
+    triggerCoins({
+      count,
+      velocity: 8,
+      gold: true,
+      playSounds: true
+    });
+  }, [triggerCoins]);
+
+  return {
+    triggerCoins,
+    createBurst,
+    isAnimating
+  };
 };
 
 export default useFloatingCoins;

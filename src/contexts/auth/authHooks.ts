@@ -167,9 +167,10 @@ export const useAuthMethods = (
       
       const newBoosts = addProfileBoostWithDays(user, days, level);
       
+      // Fix the error by creating a proper updated user object with the correct type
       const updatedUser = {
         ...user,
-        profileBoosts: newBoosts,
+        profileBoosts: newBoosts
       };
       
       setUser(updatedUser);

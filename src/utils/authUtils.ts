@@ -1,6 +1,9 @@
+
 // Authentication utility functions and constants
-import { UserTier, UserProfile, ProfileBoost } from '@/types/user';
-import { UserCosmeticState } from '@/types/cosmetics';
+import { UserTier, UserProfile } from '@/types/user';
+import { ProfileBoost } from '@/types/boost';
+import { UserCosmetics } from '@/types/cosmetics';
+import { UserSettings } from '@/types/user-consolidated';
 
 // Default notifications configuration for new users
 export const defaultNotifications = {
@@ -80,8 +83,8 @@ export const getDefaultUser = (email: string, username: string): UserProfile => 
     walletBalance: 5.00, // Starting balance
     totalSpent: 0,
     amountSpent: 0,
-    joinDate: now,
-    joinedDate: now, // Add joinedDate for compatibility
+    joinedDate: now,
+    joinDate: now, // For backward compatibility
     isVerified: false,
     cosmetics: {
       border: ['starter-border'],
@@ -93,7 +96,7 @@ export const getDefaultUser = (email: string, username: string): UserProfile => 
       effect: [],
       badge: [],
       theme: []
-    } as UserCosmeticState,
+    } as UserCosmetics,
     settings: {
       profileVisibility: 'public',
       allowProfileLinks: true,
@@ -110,8 +113,8 @@ export const getDefaultUser = (email: string, username: string): UserProfile => 
       showSpending: true,
       showBadges: true // Add the missing showBadges property
     },
-    followers: [], // Initialize as empty array
-    following: [], // Initialize as empty array
+    followers: [] as string[], // Fix type for followers
+    following: [] as string[], // Fix type for following
     spendStreak: 0
   };
 };
@@ -144,10 +147,10 @@ export const addProfileBoostWithDays = (user: UserProfile, days: number, strengt
 /**
  * Adds a cosmetic to a user by category string
  */
-export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: string, category: string): UserCosmeticState => {
-  if (!user || !cosmeticId || !category) return user.cosmetics;
+export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: string, category: string): UserCosmetics => {
+  if (!user || !cosmeticId || !category) return user.cosmetics as UserCosmetics;
   
-  const cosmetics = { ...user.cosmetics };
+  const cosmetics = { ...user.cosmetics } as UserCosmetics;
   
   // Handle legacy field names
   let fieldName = category;
@@ -162,7 +165,7 @@ export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: strin
   if (category === 'themes') fieldName = 'theme';
   
   // Convert category to a valid key
-  const cosmeticKey = fieldName as keyof UserCosmeticState;
+  const cosmeticKey = fieldName as keyof UserCosmetics;
   
   // Ensure the category exists and is an array
   if (!cosmetics[cosmeticKey]) {
@@ -170,7 +173,7 @@ export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: strin
   }
   
   // Add cosmetic if it doesn't already exist
-  if (!cosmetics[cosmeticKey].includes(cosmeticId)) {
+  if (cosmetics[cosmeticKey] && !cosmetics[cosmeticKey].includes(cosmeticId)) {
     cosmetics[cosmeticKey] = [...cosmetics[cosmeticKey], cosmeticId];
   }
   
@@ -275,7 +278,7 @@ export const createMockUser = (overrides = {}) => {
     displayName: 'Test User',
     profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${Math.random()}`,
     bio: 'This is a test user account',
-    joinedDate: new Date().toISOString(), // Change joinDate to joinedDate
+    joinedDate: new Date().toISOString(), // Use joinedDate to match type
     rank: Math.floor(Math.random() * 1000) + 1,
     previousRank: Math.floor(Math.random() * 1000) + 1,
     totalSpent: Math.floor(Math.random() * 10000),
@@ -285,8 +288,8 @@ export const createMockUser = (overrides = {}) => {
     team: 'blue',
     isVerified: Math.random() > 0.5,
     isVIP: Math.random() > 0.8,
-    followers: [], // Change to array instead of number
-    following: [], // Change to array instead of number
+    followers: [] as string[], // Fix the type for followers
+    following: [] as string[], // Fix the type for following
     profileViews: Math.floor(Math.random() * 500),
     profileClicks: Math.floor(Math.random() * 200),
     spendStreak: Math.floor(Math.random() * 10),
