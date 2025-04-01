@@ -92,9 +92,9 @@ export interface UserProfile {
   profileImage: string;
   bio: string;
   joinedDate: string;
-  joinDate?: string;
-  joinedAt?: string;
-  createdAt?: string;
+  joinDate?: string; // For backward compatibility
+  joinedAt?: string; // For backward compatibility
+  createdAt?: string; // For backward compatibility
   tier: UserTier;
   team: TeamColor;
   rank: number;
@@ -141,4 +141,3 @@ export interface UserProfile {
 export interface User extends UserProfile {}
 
 export type ProfileLink = SocialLink;
-

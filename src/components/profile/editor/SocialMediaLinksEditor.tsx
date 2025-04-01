@@ -29,7 +29,7 @@ const SocialMediaLinksEditor: React.FC<SocialMediaLinksEditorProps> = ({
       id: `link-${Date.now()}`, // Generate a string ID
       platform: '',
       url: '',
-      title: '', // Include title field
+      title: '', // Now title is a valid property
     };
     
     onChange([...links, newLink]);

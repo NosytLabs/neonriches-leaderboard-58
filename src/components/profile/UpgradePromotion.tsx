@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,7 +20,6 @@ export interface SubscriptionTier {
   yearlyPriceId: string;
 }
 
-// Provide access to the subscription tiers for other components
 export const subscriptionTiers = SUBSCRIPTION_TIERS;
 
 const UpgradePromotion: React.FC = () => {
@@ -30,28 +28,15 @@ const UpgradePromotion: React.FC = () => {
   const { toast } = useToast();
 
   const handleSubscribe = async (tier: SubscriptionTier) => {
-    try {
-      setIsLoading({ ...isLoading, [tier.id]: true });
-      
-      const priceId = billingInterval === 'yearly' ? tier.yearlyPriceId : tier.priceId;
-      // Add empty string as the third parameter
-      const result = await createSubscription(priceId, billingInterval, '');
-      
-      if (result?.subscriptionId) {
-        // Use subscriptionId from result instead of URL
-        window.location.href = `/subscription/success?id=${result.subscriptionId}`;
-      } else {
-        throw new Error("Failed to create subscription session");
-      }
-    } catch (error) {
-      console.error("Subscription error:", error);
-      toast({
-        title: "Subscription Error",
-        description: "Could not process your subscription request. Please try again later.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading({ ...isLoading, [tier.id]: false });
+    setIsLoading({ ...isLoading, [tier.id]: true });
+    
+    const priceId = billingInterval === 'yearly' ? tier.yearlyPriceId : tier.priceId;
+    const result = await createSubscription(priceId, billingInterval, 'basic');
+    
+    if (result?.subscriptionId) {
+      window.location.href = `/subscription/success?id=${result.subscriptionId}`;
+    } else {
+      throw new Error("Failed to create subscription session");
     }
   };
 
@@ -87,12 +72,11 @@ const UpgradePromotion: React.FC = () => {
     return Math.round(((monthlyCost - yearlyCost) / monthlyCost) * 100);
   };
 
-  // Convert SUBSCRIPTION_TIERS to an array and add recommended property
   const subscriptionTiersArray = Object.values(SUBSCRIPTION_TIERS).map(tier => ({
     ...tier,
-    recommended: tier.id === 'premium', // Set the premium tier as recommended
-    priceId: `price_${tier.id}_monthly`, // Add priceId property
-    yearlyPriceId: `price_${tier.id}_yearly` // Add yearlyPriceId property
+    recommended: tier.id === 'premium',
+    priceId: `price_${tier.id}_monthly`,
+    yearlyPriceId: `price_${tier.id}_yearly`
   }));
 
   return (
