@@ -104,8 +104,8 @@ export interface ProfileBoost {
   level: number; // Required to match user.d.ts
   startDate: string;
   endDate: string;
-  appliedBy?: string;
-  strength: number; // Changed from optional to required to match user.d.ts
+  appliedBy: string; // Changed from optional to required to match user.d.ts
+  strength: number; // Required to match user.d.ts
   name?: string;
   description?: string;
   duration?: number;
@@ -209,7 +209,7 @@ export interface SocialLink {
   verified?: boolean;
   primary?: boolean;
   clicks?: number;
-  title: string; // Changed from optional to required to match usage in components
+  title: string; // Required to match usage in components
   label?: string;
   type?: string;
 }

@@ -26,7 +26,7 @@ export const adaptToStandardUserProfile = (user: UserProfile & { totalSpent: num
         level: boost.level || 1, // Ensure level is always provided
         isActive: boost.isActive ?? true,
         strength: boost.strength || 1, // Ensure strength is always provided
-        appliedBy: boost.appliedBy ?? 'system'
+        appliedBy: boost.appliedBy || 'system' // Ensure appliedBy is always provided
       }))
     : [];
 

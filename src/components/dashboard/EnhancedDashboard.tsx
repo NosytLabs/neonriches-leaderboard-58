@@ -82,7 +82,7 @@ const EnhancedDashboard = () => {
   // Convert to the ConsolidatedUserProfile type to match the components' expectations
   const standardUser = adaptToStandardUserProfile(userWithRequired) as unknown as ConsolidatedUserProfile;
 
-  // Now the profile boosts should have the correct types
+  // Now the profile boosts should have the correct types and required properties
   const enhancedUserForProps = {
     ...standardUser,
     profileBoosts: standardUser.profileBoosts?.map(boost => ({
@@ -90,7 +90,8 @@ const EnhancedDashboard = () => {
       // Make sure required properties are present to satisfy both interfaces
       strength: boost.strength || 1,
       isActive: boost.isActive ?? true,
-      level: boost.level || 1
+      level: boost.level || 1,
+      appliedBy: boost.appliedBy || 'system' // Ensure appliedBy is always present
     })) || []
   };
 
@@ -111,19 +112,13 @@ const EnhancedDashboard = () => {
     sound.playSound('success');
   };
 
-  // Create component props with appropriate type casting
-  const welcomeProps = { user: enhancedUserForProps };
-  const overviewProps = { 
-    user: enhancedUserForProps,
-    onSpend: handleSpend, 
-    onPaymentSuccess: handlePaymentSuccess 
-  };
-  const teamProps = { user: enhancedUserForProps };
-  const upgradeProps = { user: enhancedUserForProps };
+  // Get the proper user type for each component by casting to UserProfile from @/types/user
+  // This ensures compatibility with all component prop types
+  const userForComponents = enhancedUserForProps as unknown as UserProfile;
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <DashboardWelcome {...welcomeProps} />
+      <DashboardWelcome user={userForComponents} />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid grid-cols-5 w-full bg-black/20">
@@ -151,7 +146,11 @@ const EnhancedDashboard = () => {
         
         <div className="mt-6">
           <TabsContent value="overview">
-            <OverviewTab {...overviewProps} />
+            <OverviewTab 
+              user={userForComponents}
+              onSpend={handleSpend} 
+              onPaymentSuccess={handlePaymentSuccess} 
+            />
           </TabsContent>
           
           <TabsContent value="rank">
@@ -159,7 +158,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="team">
-            <TeamStatusCard {...teamProps} />
+            <TeamStatusCard user={userForComponents} />
           </TabsContent>
           
           <TabsContent value="achievements">
@@ -167,7 +166,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="upgrade">
-            <CashThroneUpgrade {...upgradeProps} />
+            <CashThroneUpgrade user={userForComponents} />
           </TabsContent>
         </div>
       </Tabs>
