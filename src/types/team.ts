@@ -1,66 +1,61 @@
 
-export type TeamColor = 
-  | 'red' | 'green' | 'blue' | 'gold' | 'purple' | 'none' | 'neutral';
+/**
+ * Team color options available in the application
+ */
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 
+/**
+ * Team theme properties
+ */
+export interface TeamTheme {
+  primary: string;
+  text: string;
+  border: string;
+  background: string;
+  accent: string;
+  hover: string;
+  gradient: string;
+}
+
+/**
+ * Team data structure
+ */
 export interface Team {
   id: string;
   name: string;
   color: TeamColor;
+  displayName: string;
+  slogan: string;
   description: string;
-  members: number;
-  totalContribution: number;
-  rank: number;
-  emblemUrl: string;
+  icon: string;
+  memberCount: number;
+  totalSpent: number;
+  theme: TeamTheme;
+  foundedDate: string;
+  leaderUsername?: string;
+  insignia?: string;
 }
-
-export interface TeamData {
-  id: string;
-  name: string;
-  color: TeamColor;
-  description: string;
-  members: number;
-  totalContribution: number;
-  rank: number;
-  emblemUrl: string;
-  motto?: string;
-  leader?: string;
-  benefits?: string[];
-  securityGuarantee?: string;
-  absurdStat?: string;
-  historicalNote?: string;
-  nftJoke?: string;
-  cryptoRoast?: string;
-}
-
-export interface TeamTheme {
-  primaryColor: string;
-  secondaryColor: string;
-  accentColor: string;
-  textColor: string;
-  backgroundColor: string;
-  primary?: string; // Added for backward compatibility
-  text?: string; // Added for backward compatibility
-  background?: string; // Added for backward compatibility
-}
-
-// Alias for backward compatibility
-export type TeamType = TeamColor;
 
 /**
- * Convert a string to a TeamColor type if valid, otherwise return a default
- * @param input The team string to convert
- * @returns A valid TeamColor value
+ * Team leaderboard entry
  */
-export function asTeamColor(input: string | TeamColor | undefined | null): TeamColor {
-  const validColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
-  
-  if (!input) return 'neutral';
-  
-  const normalized = input.toLowerCase() as TeamColor;
-  return validColors.includes(normalized) ? normalized : 'neutral';
+export interface TeamLeaderboardEntry {
+  teamId: string;
+  teamName: string;
+  teamColor: TeamColor;
+  totalSpent: number;
+  rank: number;
+  memberCount: number;
+  weeklyChange: number;
 }
 
-// Export as a default object to fix 'Team' value reference
-export default {
-  asTeamColor
-};
+/**
+ * Team stats
+ */
+export interface TeamStats {
+  totalSpent: number;
+  memberCount: number;
+  avgSpendPerMember: number;
+  weeklyGrowth: number;
+  rank: number;
+}

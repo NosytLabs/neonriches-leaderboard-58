@@ -1,5 +1,8 @@
 
-// Properly export the MockeryAction and MockeryTier types
+// Import TeamColor for proper typing
+import { TeamColor } from './team';
+
+// Define all possible mockery actions
 export type MockeryAction = 
   | 'taunt'
   | 'shame'
@@ -63,6 +66,3 @@ export interface MockeryStats {
     count: number;
   };
 }
-
-// Re-export TeamColor from team.ts to ensure consistency
-export type { TeamColor } from './team';

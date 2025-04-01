@@ -1,7 +1,6 @@
 
 import { MockeryAction, MockeryTier } from '@/types/mockery';
-import { LucideIcon } from 'lucide-react';
-import { getMockeryActionIcon as getIconFromIconsModule } from '@/utils/mockery/mockery-icons';
+import { LucideIcon, Target, Egg, Crown, Shield, User, Clock } from 'lucide-react';
 
 /**
  * Get a display name for a mockery action
@@ -82,87 +81,107 @@ export const getMockeryActionPrice = (action: MockeryAction): number => {
 };
 
 /**
- * Get the title for a mockery action
- */
-export const getMockeryActionTitle = (action: MockeryAction): string => {
-  return getMockeryName(action);
-};
-
-/**
- * Get the description for a mockery action effect
- */
-export const getMockeryActionDescription = (action: MockeryAction): string => {
-  return getMockeryDescription(action);
-};
-
-/**
- * Get the effect description for a mockery action
- */
-export const getMockeryActionEffect = (action: MockeryAction): string => {
-  const effects: Record<MockeryAction, string> = {
-    'taunt': 'The target will receive a notification of your taunt',
-    'shame': 'The target will be publicly shamed',
-    'jester': 'The target will be marked as a jester for 24 hours',
-    'mock': 'The target will receive a notification of your mockery',
-    'challenge': 'The target will be challenged to spend more',
-    'joust': 'A public joust will be initiated',
-    'duel': 'A public duel will be initiated',
-    'tomatoes': 'Their profile will be covered in tomatoes for 24 hours',
-    'eggs': 'Their profile will be pelted with eggs for 24 hours',
-    'stocks': 'They will be placed in the public stocks for 3 days',
-    'crown': 'They will wear the crown of shame for 7 days',
-    'putridEggs': 'Their profile will reek of putrid eggs for 3 days',
-    'silence': 'They will be unable to post in public forums for 12 hours',
-    'courtJester': 'They will serve as your court jester for 3 days',
-    'smokeBomb': 'Their profile will be obscured by smoke for 24 hours',
-    'protection': 'You will be protected from mockery for 3 days'
-  };
-
-  return effects[action] || 'Apply a mysterious effect';
-};
-
-/**
- * Get the icon for a mockery action
- * @param action The mockery action to get the icon for
- * @returns A Lucide icon component
- */
-export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
-  return getIconFromIconsModule(action);
-};
-
-/**
  * Get the color for a mockery action icon
  */
 export const getMockeryActionIconColor = (action: MockeryAction): string => {
   const colors: Record<MockeryAction, string> = {
     'taunt': '#ef4444',
-    'shame': '#dc2626',
-    'jester': '#8b5cf6',
-    'mock': '#f97316',
-    'challenge': '#eab308',
-    'joust': '#facc15',
-    'duel': '#4338ca',
-    'tomatoes': '#dc2626',
+    'shame': '#ef4444',
+    'jester': '#a855f7',
+    'mock': '#ef4444',
+    'challenge': '#3b82f6',
+    'joust': '#f59e0b',
+    'duel': '#f59e0b',
+    'tomatoes': '#ef4444',
     'eggs': '#f59e0b',
-    'stocks': '#8b5cf6',
+    'stocks': '#6b7280',
     'crown': '#f59e0b',
-    'putridEggs': '#84cc16',
+    'putridEggs': '#22c55e',
     'silence': '#3b82f6',
-    'courtJester': '#ec4899',
+    'courtJester': '#a855f7',
     'smokeBomb': '#6b7280',
-    'protection': '#10b981'
+    'protection': '#22c55e'
   };
 
   return colors[action] || '#6b7280';
+};
+
+/**
+ * Get the tier for a mockery action
+ */
+export const getMockeryTier = (action: MockeryAction): MockeryTier => {
+  const tiers: Record<MockeryAction, MockeryTier> = {
+    'taunt': 'common',
+    'shame': 'common',
+    'jester': 'uncommon',
+    'mock': 'common',
+    'challenge': 'uncommon',
+    'joust': 'rare',
+    'duel': 'legendary',
+    'tomatoes': 'common',
+    'eggs': 'uncommon',
+    'stocks': 'rare',
+    'crown': 'legendary',
+    'putridEggs': 'rare',
+    'silence': 'epic',
+    'courtJester': 'rare',
+    'smokeBomb': 'uncommon',
+    'protection': 'legendary'
+  };
+
+  return tiers[action] || 'common';
+};
+
+/**
+ * Get color class based on mockery tier
+ */
+export const getMockeryTierColorClass = (tier: MockeryTier): string => {
+  switch (tier) {
+    case 'legendary':
+      return 'text-royal-gold';
+    case 'epic':
+      return 'text-purple-500';
+    case 'rare': 
+      return 'text-blue-500';
+    case 'uncommon':
+      return 'text-green-500';
+    case 'common':
+    default:
+      return 'text-gray-400';
+  }
+};
+
+/**
+ * Get the discounted price for a mockery action
+ */
+export const getDiscountedShamePrice = (action: MockeryAction): number => {
+  const regularPrice = getMockeryActionPrice(action);
+  return regularPrice * 0.5; // 50% discount
+};
+
+/**
+ * Get the cost of a mockery action
+ */
+export const getMockeryCost = (action: MockeryAction): number => {
+  return getMockeryActionPrice(action);
+};
+
+/**
+ * Get weekly discount status
+ */
+export const hasWeeklyDiscount = (): boolean => {
+  // Mock implementation
+  return true;
 };
 
 export default {
   getMockeryName,
   getMockeryDescription,
   getMockeryActionPrice,
-  getMockeryActionTitle,
-  getMockeryActionDescription,
-  getMockeryActionEffect,
-  getMockeryActionIcon,
-  getMockeryActionIconColor
+  getMockeryActionIconColor,
+  getMockeryTier,
+  getMockeryTierColorClass,
+  getDiscountedShamePrice,
+  getMockeryCost,
+  hasWeeklyDiscount
 };
