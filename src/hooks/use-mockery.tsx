@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { MockeryAction, MockedUser, MockeryEvent } from '@/types/mockery-types';
 import { useSound } from '@/hooks/use-sound';
@@ -12,9 +11,7 @@ const useMockery = () => {
   const [mockUsers, setMockUsers] = useState<MockedUser[]>([
     {
       id: '1',
-      // userId is removed as it doesn't exist in the MockedUser type
       username: 'WealthyUser',
-      displayName: 'Sir Money Bags',
       profileImage: '/images/avatars/money-bags.jpg',
       tier: 'royal',
       team: 'gold',
@@ -25,9 +22,7 @@ const useMockery = () => {
     },
     {
       id: '2',
-      // userId is removed as it doesn't exist in the MockedUser type
       username: 'BigSpender',
-      displayName: 'Lady Royal',
       profileImage: '/images/avatars/royal-spender.jpg',
       tier: 'premium',
       team: 'purple',
@@ -50,9 +45,7 @@ const useMockery = () => {
       // Add to mocked users
       const mockedUser: MockedUser = {
         id: userId,
-        // Remove userId property
         username: `User${userId}`,
-        displayName: `User ${userId}`,
         profileImage: '/images/avatars/default.jpg',
         tier: 'basic',
         team: 'red',
@@ -181,15 +174,15 @@ const useMockery = () => {
     
     return {
       id: mockedUser.id,
-      // Renamed 'type' to 'action' to match MockeryEvent type
       action: mockedUser.action,
-      targetId: mockedUser.id,
+      fromId: mockedUser.id,
+      timestamp: mockedUser.appliedAt,
+      isAnonymous: false,
       appliedBy: mockedUser.appliedBy,
       appliedAt: mockedUser.appliedAt,
       expiresAt: mockedUser.expiresAt,
       isActive: true,
-      active: true,
-      timestamp: mockedUser.appliedAt
+      active: true
     };
   }, [mockUsers]);
   

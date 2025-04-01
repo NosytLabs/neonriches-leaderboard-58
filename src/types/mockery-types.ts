@@ -30,7 +30,12 @@ export type MockeryTier =
   | 'uncommon'
   | 'rare'
   | 'epic'
-  | 'legendary';
+  | 'legendary'
+  | 'royal'
+  | 'basic'
+  | 'premium'
+  | 'silver'
+  | 'bronze';
 
 /**
  * Team colors available in the application
@@ -63,10 +68,14 @@ export interface MockeryEvent {
   id: string;
   action: MockeryAction;
   appliedAt: string;
-  userId: string;
-  targetUserId: string;
+  fromId: string; // Changed from userId to fromId
+  isAnonymous: boolean; // Required property
+  timestamp: string;
   expiresAt: string;
-  visible: boolean;
+  visible?: boolean;
+  appliedBy?: string;
+  isActive?: boolean;
+  active?: boolean;
 }
 
 /**
@@ -81,6 +90,8 @@ export interface MockedUser {
   expiresAt: string;
   appliedBy: string;
   reason?: string;
+  tier?: string;
+  team?: string;
 }
 
 /**
