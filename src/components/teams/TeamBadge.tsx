@@ -1,73 +1,88 @@
 
 import React from 'react';
+import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { safeToString } from '@/utils/safeToString';
+import { TeamColor } from '@/types/user-consolidated';
 
 interface TeamBadgeProps {
-  team: string;
+  team: TeamColor | string | null;
   size?: 'sm' | 'md' | 'lg';
-  showName?: boolean;
+  showLabel?: boolean;
   className?: string;
 }
 
-const TeamBadge: React.FC<TeamBadgeProps> = ({
-  team,
-  size = 'md',
-  showName = true,
+/**
+ * A badge component for displaying team affiliation
+ */
+const TeamBadge: React.FC<TeamBadgeProps> = ({ 
+  team, 
+  size = 'md', 
+  showLabel = true,
   className = ''
 }) => {
-  const getTeamColor = (teamName: string) => {
-    const teamColors: Record<string, string> = {
-      red: 'bg-red-600 text-white',
-      blue: 'bg-blue-600 text-white',
-      green: 'bg-green-600 text-white',
-      gold: 'bg-yellow-600 text-white',
-      purple: 'bg-purple-600 text-white',
-      none: 'bg-gray-600 text-white',
-      neutral: 'bg-gray-400 text-gray-900',
-      silver: 'bg-gray-300 text-gray-800',
-      bronze: 'bg-amber-700 text-white'
-    };
-    
-    return teamColors[teamName.toLowerCase()] || 'bg-gray-600 text-white';
+  if (!team || team === 'none' || team === 'neutral') {
+    return null;
+  }
+  
+  // Normalize the team value
+  const normalizedTeam = String(team).toLowerCase() as TeamColor;
+  
+  // Get badge styles based on team
+  const getBadgeColor = () => {
+    switch (normalizedTeam) {
+      case 'red':
+        return 'bg-red-600 hover:bg-red-700 text-white';
+      case 'blue':
+        return 'bg-blue-600 hover:bg-blue-700 text-white';
+      case 'green':
+        return 'bg-green-600 hover:bg-green-700 text-white';
+      case 'gold':
+        return 'bg-yellow-500 hover:bg-yellow-600 text-black';
+      case 'purple':
+        return 'bg-purple-600 hover:bg-purple-700 text-white';
+      case 'silver':
+        return 'bg-gray-300 hover:bg-gray-400 text-gray-800';
+      case 'bronze':
+        return 'bg-amber-600 hover:bg-amber-700 text-white';
+      default:
+        return 'bg-gray-600 hover:bg-gray-700 text-white';
+    }
   };
   
-  const getTeamName = (teamName: string) => {
-    const teamNames: Record<string, string> = {
-      red: 'Crimson Court',
-      blue: 'Royal Navy',
-      green: 'Golden Order',
-      gold: 'Sovereign Gold',
-      purple: 'Royal Velvet',
-      none: 'Unaligned',
-      neutral: 'Neutral',
+  // Get team display name
+  const getTeamName = (teamColor: TeamColor) => {
+    const teamNames: Record<TeamColor, string> = {
+      red: 'Red Crown',
+      blue: 'Blue Legion',
+      green: 'Green Order',
+      gold: 'Gold Dynasty',
+      purple: 'Purple Realm',
+      none: '',
+      neutral: '',
       silver: 'Silver Alliance',
-      bronze: 'Bronze Legion'
+      bronze: 'Bronze Brigade'
     };
     
-    return teamNames[teamName.toLowerCase()] || 'Unknown Team';
+    return teamNames[teamColor] || teamColor;
   };
   
-  const getSizeClasses = (badgeSize: string) => {
-    const sizeClasses: Record<string, string> = {
-      sm: 'text-xs px-1.5 py-0.5',
-      md: 'text-sm px-2 py-1',
-      lg: 'px-3 py-1.5'
-    };
-    
-    return sizeClasses[badgeSize] || sizeClasses.md;
+  // Size classes
+  const sizeClasses = {
+    sm: 'text-xs px-2 py-0.5',
+    md: 'text-sm px-2.5 py-0.5',
+    lg: 'text-base px-3 py-1'
   };
-  
-  const safeTeam = safeToString(team, 'neutral').toLowerCase();
-  const firstLetter = safeTeam.charAt(0).toUpperCase();
-  const restOfName = safeTeam.slice(1);
-  const formattedTeamName = firstLetter + restOfName;
   
   return (
     <Badge 
-      className={`${getTeamColor(safeTeam)} ${getSizeClasses(size)} ${className}`}
+      className={cn(
+        getBadgeColor(),
+        sizeClasses[size],
+        className
+      )}
+      variant="default"
     >
-      {showName ? getTeamName(safeTeam) : formattedTeamName}
+      {showLabel ? getTeamName(normalizedTeam) : ''}
     </Badge>
   );
 };

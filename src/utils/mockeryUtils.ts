@@ -142,10 +142,32 @@ export const getMockeryActionDisplayName = (action: MockeryAction): string => {
   return nameMap[action] || action;
 };
 
-// Add missing function names from errors
-export const getMockeryName = getMockeryActionDisplayName;
-export const getMockeryDescription = getMockeryActionDescription;
-export const getMockeryCost = getMockeryActionPrice;
+/**
+ * Gets the name of a mockery action
+ * @param action The mockery action to get the name for
+ * @returns The display name for the mockery action
+ */
+export const getMockeryName = (action: MockeryAction): string => {
+  return getMockeryActionDisplayName(action);
+};
+
+/**
+ * Gets the description of a mockery action
+ * @param action The mockery action to get the description for
+ * @returns The description text for the mockery action
+ */
+export const getMockeryDescription = (action: MockeryAction): string => {
+  return getMockeryActionDescription(action);
+};
+
+/**
+ * Gets the cost of a mockery action
+ * @param action The mockery action to get the cost for
+ * @returns The cost of the mockery action
+ */
+export const getMockeryCost = (action: MockeryAction): number => {
+  return getMockeryActionPrice(action);
+};
 
 /**
  * Gets the tier for a mockery action

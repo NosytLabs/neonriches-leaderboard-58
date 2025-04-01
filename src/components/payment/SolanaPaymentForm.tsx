@@ -1,11 +1,13 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { wallet } from '@/services/walletService';
 import { formatCurrency } from '@/utils/formatters';
+import { convertToLegacyUser } from '@/utils/typeConversion';
 
 interface SolanaPaymentFormProps {
   onSuccess?: (amount: number) => void;
@@ -22,39 +24,49 @@ const SolanaPaymentForm: React.FC<SolanaPaymentFormProps> = ({
   const { toast } = useToast();
   const [amount, setAmount] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Only allow numbers and a single decimal point
     const value = e.target.value;
     if (/^(\d+)?(\.\d{0,2})?$/.test(value) || value === '') {
       setAmount(value);
-      setError(null);
+      setFormError(null);
     }
   };
 
   const handlePayment = async () => {
     if (!user) {
-      setError('You must be logged in to make a deposit');
-      toast.error('You must be logged in to make a deposit');
+      setFormError('You must be logged in to make a deposit');
+      toast({
+        title: "Error",
+        description: 'You must be logged in to make a deposit',
+        variant: "destructive"
+      });
       return;
     }
 
     if (!amount || parseFloat(amount) <= 0) {
-      setError('Please enter a valid amount');
-      toast.error('Please enter a valid amount');
+      setFormError('Please enter a valid amount');
+      toast({
+        title: "Error",
+        description: 'Please enter a valid amount',
+        variant: "destructive"
+      });
       return;
     }
 
     setIsProcessing(true);
-    setError(null);
+    setFormError(null);
 
     try {
       // Convert string to number for the payment
       const paymentAmount = parseFloat(amount);
       
+      // Convert to legacy user format and process payment
+      const legacyUser = convertToLegacyUser(user);
       // Process payment through wallet service
-      const result = await wallet.addFunds(user, paymentAmount, 'solana');
+      const result = await wallet.addFunds(legacyUser, paymentAmount, 'solana');
 
       if (result.success) {
         // Clear the form
@@ -64,14 +76,29 @@ const SolanaPaymentForm: React.FC<SolanaPaymentFormProps> = ({
         if (onSuccess) {
           onSuccess(paymentAmount);
         }
+        
+        toast({
+          title: "Payment Successful",
+          description: `Added ${formatCurrency(paymentAmount)} to your wallet`,
+          variant: "success"
+        });
       } else {
-        setError(result.error || 'Payment failed');
-        toast.error('Payment failed');
+        const errorMessage = result.error || 'Payment failed';
+        setFormError(errorMessage);
+        toast({
+          title: "Payment Failed",
+          description: errorMessage,
+          variant: "destructive"
+        });
       }
     } catch (err) {
       console.error('Payment error:', err);
-      setError('An unexpected error occurred. Please try again.');
-      toast.error('An unexpected error occurred. Please try again.');
+      setFormError('An unexpected error occurred. Please try again.');
+      toast({
+        title: "Error",
+        description: 'An unexpected error occurred. Please try again.',
+        variant: "destructive"
+      });
     } finally {
       setIsProcessing(false);
     }
@@ -79,7 +106,7 @@ const SolanaPaymentForm: React.FC<SolanaPaymentFormProps> = ({
 
   const handleQuickAmount = (quickAmount: number) => {
     setAmount(quickAmount.toString());
-    setError(null);
+    setFormError(null);
   };
 
   return (
@@ -110,7 +137,7 @@ const SolanaPaymentForm: React.FC<SolanaPaymentFormProps> = ({
               className="pl-7"
             />
           </div>
-          {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+          {formError && <p className="mt-1 text-sm text-red-500">{formError}</p>}
         </div>
 
         <div className="grid grid-cols-3 gap-2">

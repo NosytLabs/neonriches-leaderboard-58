@@ -4,15 +4,19 @@ import {
   getMockeryActionPrice, 
   getDiscountedShamePrice, 
   hasWeeklyDiscount, 
-  getWeeklyDiscountedAction 
+  getWeeklyDiscountedAction,
+  getMockeryName,
+  getMockeryDescription
 } from './mockeryUtils';
 
-// Re-export functions from mockeryUtils for backward compatibility
+// Export these functions for backwards compatibility
 export { 
   getMockeryActionPrice as getShameActionPrice,
   getDiscountedShamePrice,
   hasWeeklyDiscount,
-  getWeeklyDiscountedAction
+  getWeeklyDiscountedAction,
+  getMockeryName,
+  getMockeryDescription
 };
 
 /**

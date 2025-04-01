@@ -28,7 +28,7 @@ const CertificateOfNobility: React.FC<CertificateProps> = ({
   const sound = useSound();
   
   // Generate a unique certificate ID if not provided
-  const userId = safeToString(user.id, '0');
+  const userId = safeToString(user.id);
   const uniqueCertId = certificateId || `STATUS-${Math.floor(10000 + Math.random() * 90000)}-${userId.substring(0, 5)}`;
   
   const handleVerify = () => {

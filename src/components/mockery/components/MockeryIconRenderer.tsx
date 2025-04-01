@@ -7,7 +7,12 @@ import {
   ShieldCheck, 
   UserX, 
   CloudOff, 
-  Award
+  Award,
+  MessageCircle,
+  Laugh,
+  Swords,
+  Flag,
+  Shield
 } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery';
 
@@ -59,6 +64,16 @@ const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({
       return <CloudOff className={`${iconClass} text-gray-600`} />;
     case 'protection':
       return <ShieldCheck className={`${iconClass} text-green-400`} />;
+    case 'taunt':
+      return <MessageCircle className={`${iconClass} text-orange-500`} />;
+    case 'mock':
+      return <Laugh className={`${iconClass} text-blue-500`} />;
+    case 'challenge':
+      return <Flag className={`${iconClass} text-teal-500`} />;
+    case 'joust':
+      return <Swords className={`${iconClass} text-indigo-600`} />;
+    case 'duel':
+      return <Shield className={`${iconClass} text-red-600`} />;
     default:
       return <AlertCircle className={`${iconClass} text-gray-400`} />;
   }
