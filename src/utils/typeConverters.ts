@@ -59,3 +59,16 @@ export const ensureStringId = (id: any): string => {
 export const safeTeamColor = (team: any): TeamColor => {
   return toTeamColor(team);
 };
+
+/**
+ * Ensures a value is a valid number
+ * @param val - Value to convert
+ * @param defaultVal - Default value if conversion fails
+ * @returns Number value
+ */
+export const ensureNumber = (val: any, defaultVal: number = 0): number => {
+  if (val === null || val === undefined) return defaultVal;
+  
+  const num = Number(val);
+  return isNaN(num) ? defaultVal : num;
+};

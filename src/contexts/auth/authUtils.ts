@@ -105,7 +105,7 @@ export const hasPermission = (
   }
   
   // Check if user has the permissions
-  const userPermissions: string[] = (user as any).permissions || [];
+  const userPermissions = (user as any).permissions || [];
   
   // Check if any of the required permissions match the user's permissions
   return requiredPermissions.some(permission => 

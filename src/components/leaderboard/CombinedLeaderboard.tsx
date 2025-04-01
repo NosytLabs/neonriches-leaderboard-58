@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +12,6 @@ import { UserProfile, TeamColor } from '@/types/user';
 import { useAuth } from '@/hooks/useAuth';
 import { useSound } from '@/hooks/use-sound';
 import { MockeryAction } from '@/types/mockery-types';
-import { ensureNumber } from '@/utils/typeConverters';
 import { toTeamColor } from '@/utils/typeConverters';
 
 interface CombinedLeaderboardProps {
@@ -63,7 +63,7 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
             rank: index + 1,
             totalSpent: Math.floor(10000 / (index + 1)), 
             amountSpent: Math.floor(10000 / (index + 1)),
-            previousRank: ensureNumber(Math.floor(Math.random() * 20)),
+            previousRank: index + 3 > 10 ? index - 2 : index + 3,
             joinedDate: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
             isVerified: index < 3,
             walletBalance: Math.floor(Math.random() * 1000),
