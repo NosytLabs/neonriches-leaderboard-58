@@ -61,7 +61,7 @@ const MockeryComponent = () => {
                   onClick={() => handleMockery(action)}
                 >
                   <div className="flex items-center mb-2">
-                    <ActionIcon className="h-5 w-5 mr-2" />
+                    {React.createElement(ActionIcon, { className: "h-5 w-5 mr-2" })}
                     <span className="font-medium text-sm">{name}</span>
                   </div>
                   <div className="flex justify-between items-center">

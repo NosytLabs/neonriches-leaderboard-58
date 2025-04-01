@@ -1,147 +1,90 @@
 
 import React from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Trophy, ChevronUp, ChevronDown, Minus, Sparkles } from 'lucide-react';
-import { LeaderboardUser } from '@/types/leaderboard';
-import { formatCurrency } from '@/utils/formatters';
-import { getInitials } from '@/utils/stringUtils';
-import { cn } from '@/lib/utils';
-import { UserSettings } from '@/types/user-consolidated';
+import { UserProfile } from '@/types/user-consolidated';
+import { getTeamBgColorClass, getTeamTextColorClass } from '@/lib/colors';
+import { Button } from '@/components/ui/button';
+import { Egg } from 'lucide-react';
 
-interface LeaderboardEntryProps {
-  user: LeaderboardUser;
-  position: number;
-  isCurrentUser?: boolean;
-  settings?: UserSettings;
+export interface LeaderboardEntryProps {
+  user: UserProfile;
+  rank: number;
+  currentUserId: string;
+  compact?: boolean;
+  onProfileClick: (userId: string, username: string) => void;
+  onShameUser: () => void;
 }
 
-const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({ user, position, isCurrentUser = false, settings }) => {
-  const rankChange = user.previousRank ? user.previousRank - user.rank : 0;
+const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
+  user,
+  rank,
+  currentUserId,
+  compact = false,
+  onProfileClick,
+  onShameUser
+}) => {
+  const isCurrentUser = user.id === currentUserId;
+  const teamBgClass = user.team ? getTeamBgColorClass(user.team.toString()) : 'bg-gray-700';
+  const teamTextClass = user.team ? getTeamTextColorClass(user.team.toString()) : 'text-gray-300';
   
-  // Badge color based on team
-  const getBadgeColor = (team: string | null) => {
-    switch (team) {
-      case 'red': return 'bg-red-500/20 text-red-300 border-red-500/30';
-      case 'blue': return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
-      case 'green': return 'bg-green-500/20 text-green-300 border-green-500/30';
-      case 'gold': return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
-      case 'purple': return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
-      default: return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
-    }
+  // Determine rank style based on position
+  const getRankStyle = () => {
+    if (rank === 1) return 'text-royal-gold font-bold';
+    if (rank === 2) return 'text-gray-300 font-bold';
+    if (rank === 3) return 'text-amber-600 font-bold';
+    return 'text-white/70';
   };
   
-  // Convert positions to string for safety
-  const userId = user.id?.toString() || '';
-  const positionStr = position?.toString() || '';
-  const rankStr = user.rank?.toString() || '';
-  
   return (
-    <div 
-      className={cn(
-        "flex items-center py-2 px-4 border-b border-white/10 transition-colors",
-        isCurrentUser ? "bg-white/10" : "hover:bg-white/5",
-        position <= 3 ? "relative overflow-hidden" : ""
-      )}
-    >
-      {/* Top 3 special background */}
-      {position <= 3 && (
-        <div 
-          className={cn(
-            "absolute inset-0 opacity-10",
-            position === 1 ? "bg-gradient-to-r from-yellow-400 to-yellow-600" :
-            position === 2 ? "bg-gradient-to-r from-gray-400 to-gray-500" :
-            "bg-gradient-to-r from-amber-700 to-amber-800"
-          )}
-        />
-      )}
-      
-      {/* Position badge */}
-      <div className="flex items-center justify-center min-w-10 w-10">
-        {position <= 3 ? (
-          <div 
-            className={cn(
-              "flex items-center justify-center w-8 h-8 rounded-full",
-              position === 1 ? "bg-yellow-500 text-black" :
-              position === 2 ? "bg-gray-400 text-black" :
-              "bg-amber-700 text-white"
-            )}
-          >
-            {position === 1 && <Trophy className="h-4 w-4" />}
-            {position !== 1 && position}
+    <div className={`p-3 rounded-md glass-morphism transition-colors ${
+      isCurrentUser ? 'border-royal-gold/50' : 'border-white/10'
+    }`}>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-3 flex-1" 
+             onClick={() => onProfileClick(user.id, user.username)}
+             style={{ cursor: 'pointer' }}>
+          <div className={`flex-shrink-0 ${getRankStyle()} w-6 text-center`}>
+            #{rank}
           </div>
-        ) : (
-          <span className="text-muted-foreground">{position}</span>
+          
+          <div className="flex-shrink-0 w-9 h-9 rounded-full overflow-hidden border border-white/20">
+            <img 
+              src={user.profileImage || '/placeholder-avatar.png'} 
+              alt={user.username} 
+              className="w-full h-full object-cover" 
+            />
+          </div>
+          
+          <div className="flex-1">
+            <div className="flex items-center flex-wrap">
+              <div className="font-medium">{user.displayName || user.username}</div>
+              
+              {/* Show additional info if not compact */}
+              {!compact && (
+                <div className={`ml-2 px-2 py-0.5 text-xs rounded-full ${teamBgClass}/20 ${teamTextClass}`}>
+                  {user.team || 'Unaligned'}
+                </div>
+              )}
+            </div>
+            
+            {!compact && (
+              <div className="text-xs text-white/60">
+                @{user.username} • ${user.totalSpent?.toLocaleString() || user.amountSpent?.toLocaleString() || '0'}
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {!isCurrentUser && !compact && (
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-royal-crimson hover:text-royal-crimson hover:bg-royal-crimson/10"
+            onClick={onShameUser}
+          >
+            <Egg className="h-4 w-4" />
+          </Button>
         )}
       </div>
-      
-      {/* User info */}
-      <div className="flex items-center flex-1 min-w-0">
-        <Avatar className="h-10 w-10 mr-3">
-          <AvatarImage src={user.profileImage} alt={user.displayName || user.username} />
-          <AvatarFallback>{getInitials(user.displayName || user.username)}</AvatarFallback>
-        </Avatar>
-        
-        <div className="truncate">
-          <div className="flex items-center">
-            <span className="font-medium truncate">{user.displayName || user.username}</span>
-            {user.isVerified && (
-              <span className="ml-1 text-blue-400">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
-                  <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"></path>
-                  <path d="m9 12 2 2 4-4"></path>
-                </svg>
-              </span>
-            )}
-          </div>
-          <div className="flex items-center text-xs text-muted-foreground">
-            <span className="truncate">@{user.username}</span>
-            {settings?.showTeam && user.team && (
-              <Badge variant="outline" className={cn("ml-2 text-xs py-0 h-4", getBadgeColor(user.team))}>
-                {user.team}
-              </Badge>
-            )}
-          </div>
-        </div>
-      </div>
-      
-      {/* Rank change */}
-      {rankChange !== 0 && (
-        <div className="flex items-center justify-center min-w-16 w-16">
-          <span 
-            className={cn(
-              "flex items-center text-xs",
-              rankChange > 0 ? "text-green-400" : 
-              rankChange < 0 ? "text-red-400" : 
-              "text-gray-400"
-            )}
-          >
-            {rankChange > 0 ? (
-              <>
-                <ChevronUp className="h-3 w-3 mr-0.5" />
-                {rankChange}
-              </>
-            ) : rankChange < 0 ? (
-              <>
-                <ChevronDown className="h-3 w-3 mr-0.5" />
-                {Math.abs(rankChange)}
-              </>
-            ) : (
-              <>
-                <Minus className="h-3 w-3 mr-0.5" />
-                0
-              </>
-            )}
-          </span>
-        </div>
-      )}
-      
-      {/* Spend amount */}
-      {settings?.showSpending && (
-        <div className="flex items-center justify-end min-w-24 w-24">
-          <span className="font-medium">{formatCurrency(user.totalSpent || user.amountSpent || 0)}</span>
-        </div>
-      )}
     </div>
   );
 };

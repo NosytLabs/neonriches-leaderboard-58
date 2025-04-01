@@ -1,58 +1,61 @@
 
 import React from 'react';
-import { CardContent } from '@/components/ui/card';
-import LeaderboardEntry from './LeaderboardEntry';
-import { User } from '@/types/user';
-import { Crown } from 'lucide-react';
+import { Skeleton } from "@/components/ui/skeleton";
+import LeaderboardEntry from "./LeaderboardEntry";
+import { UserProfile as User } from '@/types/user-consolidated';
 
-interface LeaderboardListProps {
+export interface LeaderboardListProps {
   users: User[];
-  loading: boolean;
-  limit: number;
-  currentUserId?: string;
+  loading?: boolean;
   compact?: boolean;
+  currentUserId: string;
   onProfileClick: (userId: string, username: string) => void;
-  onShameUser?: (user: User, action: string) => void;
+  onShameUser: (user: User) => void;
 }
 
 const LeaderboardList: React.FC<LeaderboardListProps> = ({
   users,
-  loading,
-  limit,
-  currentUserId,
+  loading = false,
   compact = false,
+  currentUserId,
   onProfileClick,
   onShameUser
 }) => {
   if (loading) {
     return (
-      <div className="py-20 text-center">
-        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite] opacity-50"></div>
-        <p className="mt-4 text-white/50">Loading leaderboard...</p>
+      <div className="space-y-3">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <div key={index} className="flex items-center space-x-3">
+            <Skeleton className="h-8 w-8 rounded-full" />
+            <div className="space-y-2 flex-1">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-3 w-3/4" />
+            </div>
+          </div>
+        ))}
       </div>
     );
   }
 
   if (users.length === 0) {
     return (
-      <div className="p-8 text-center text-white/50">
-        <Crown size={32} className="mx-auto mb-2 text-royal-gold/50" />
-        <p>No nobles match your search criteria</p>
+      <div className="text-center py-8 text-white/50">
+        No users found in the leaderboard.
       </div>
     );
   }
 
   return (
-    <div className="divide-y divide-white/10">
-      {users.slice(0, limit).map((user, index) => (
-        <LeaderboardEntry
+    <div className="space-y-2">
+      {users.map((user, index) => (
+        <LeaderboardEntry 
           key={user.id}
           user={user}
-          index={index}
+          rank={index + 1}
           currentUserId={currentUserId}
           compact={compact}
           onProfileClick={onProfileClick}
-          onShameUser={onShameUser ? () => onShameUser(user, 'shame') : undefined}
+          onShameUser={() => onShameUser(user)}
         />
       ))}
     </div>

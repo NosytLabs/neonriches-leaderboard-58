@@ -113,11 +113,11 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
         profileImage: user.profileImage || '',
         bio: user.bio || '',
         joinedDate: user.joinedDate,
+        // Changed from using achievements (which is not in UserProfile)
+        // to an empty array as a safe default
         isVerified: user.isVerified || false,
         following: Array.isArray(user.following) ? user.following : [],
         followers: Array.isArray(user.followers) ? user.followers : [],
-        achievements: user.achievements || [],
-        badges: user.badges || [],
         team: user.team as any,
         tier: user.tier,
         rank: user.rank || 0,

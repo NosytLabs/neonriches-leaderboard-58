@@ -1,137 +1,77 @@
 
-import { TeamColor } from '@/types/user-consolidated';
-import { safeToString } from '@/utils/safeToString';
+import { TeamColor } from '@/types/user';
 
 /**
- * Convert any value to a TeamColor
- * @param team The team value to convert
- * @returns A valid TeamColor or null
+ * Ensures a value is a string, converting if necessary
+ * @param id The ID that might be a string or number
+ * @returns A string representation of the ID
  */
-export const toTeamColor = (team: any): TeamColor | null => {
-  if (!team) return null;
-  
-  const teamString = String(team).toLowerCase();
-  const validTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze'];
-  
-  if (validTeams.includes(teamString as TeamColor)) {
-    return teamString as TeamColor;
-  }
-  
-  // Map some common variations
-  const teamMap: Record<string, TeamColor> = {
-    'crimson': 'red',
-    'azure': 'blue', 
-    'emerald': 'green',
-    'golden': 'gold',
-    'violet': 'purple',
-    'neutral': 'none',
-    'none': 'none',
-    'unaffiliated': 'none',
-    'independent': 'neutral'
-  };
-  
-  return teamMap[teamString] || null;
-};
-
-/**
- * Makes sure that user IDs are handled consistently as strings
- * @param id The ID to convert to string
- * @returns The string representation of the ID
- */
-export const ensureStringId = (id: string | number | undefined | null): string => {
-  if (id === undefined || id === null) return '';
+export const ensureStringId = (id: string | number): string => {
+  if (id === null || id === undefined) return '';
   return String(id);
 };
 
 /**
- * Convert an array of values to strings
- * @param values Array of values to convert
- * @returns Array of strings
+ * Ensures a value is a number, converting if necessary
+ * @param value The value that might be a string or number
+ * @returns A numeric representation of the value
  */
-export const arrayToStringArray = (values: any[] | undefined | null): string[] => {
-  if (!values) return [];
-  if (!Array.isArray(values)) return [];
-  
-  return values.map(value => safeToString(value));
+export const ensureNumber = (value: string | number): number => {
+  if (value === null || value === undefined) return 0;
+  if (typeof value === 'number') return value;
+  return parseFloat(value) || 0;
 };
 
 /**
- * Convert a user tier to a standardized string format
- * @param tier The tier to convert
- * @returns A standardized tier string
+ * Converts a team string to a valid TeamColor
+ * @param team The team name or identifier
+ * @returns A valid TeamColor or null
  */
-export const normalizeTier = (tier: string | undefined | null): string => {
-  if (!tier) return 'free';
+export const toTeamColor = (team: string | null | undefined): TeamColor | null => {
+  if (!team) return null;
   
-  const tierString = String(tier).toLowerCase();
-  const validTiers = [
-    'free', 'basic', 'premium', 'royal', 'founder', 
-    'noble', 'legendary', 'whale', 'pro', 'standard', 
-    'elite', 'platinum', 'diamond', 'gold', 'silver', 
-    'bronze', 'vip', 'knight', 'baron', 'viscount', 
-    'earl', 'duke', 'prince', 'king', 'emperor'
-  ];
+  const teamString = String(team).toLowerCase();
   
-  if (validTiers.includes(tierString)) {
-    return tierString;
+  switch (teamString) {
+    case 'red':
+    case 'blue':
+    case 'green':
+    case 'gold':
+    case 'purple':
+    case 'none':
+    case 'neutral':
+      return teamString as TeamColor;
+    default:
+      // Return null for any invalid team value
+      return null;
   }
-  
-  // Map some common variations
-  const tierMap: Record<string, string> = {
-    'f': 'free',
-    'b': 'basic',
-    'p': 'premium',
-    'r': 'royal',
-    'vip': 'royal',
-    'king': 'royal',
-    'queen': 'royal',
-    'standard': 'basic',
-    'advanced': 'premium',
-    'ultra': 'royal'
-  };
-  
-  return tierMap[tierString] || 'basic';
 };
 
 /**
- * Convert a numeric or string value to a boolean
+ * Safely access array elements with a fallback
+ * @param arr The array to access
+ * @param index The index to access
+ * @param fallback Fallback value if index is out of bounds
+ * @returns The array element or fallback
+ */
+export const safeArrayAccess = <T>(arr: T[] | undefined | null, index: number, fallback: T): T => {
+  if (!arr || !Array.isArray(arr) || index < 0 || index >= arr.length) {
+    return fallback;
+  }
+  return arr[index];
+};
+
+/**
+ * Convert boolean-like values to actual booleans
  * @param value The value to convert
- * @param defaultValue The default value if conversion fails
- * @returns A boolean value
+ * @returns A boolean representation
  */
-export const toBoolean = (value: any, defaultValue: boolean = false): boolean => {
+export const toBoolean = (value: unknown): boolean => {
   if (typeof value === 'boolean') return value;
-  if (value === 'true' || value === '1' || value === 1) return true;
-  if (value === 'false' || value === '0' || value === 0) return false;
-  return defaultValue;
-};
-
-/**
- * Ensure ProfileBoost object has an isActive property
- * @param boost The boost object to check
- * @returns A boost object with isActive property
- */
-export const ensureBoostIsActive = (boost: any): any => {
-  if (boost && typeof boost === 'object' && !('isActive' in boost)) {
-    const now = new Date();
-    const endDate = boost.endDate ? new Date(boost.endDate) : null;
-    
-    return {
-      ...boost,
-      isActive: endDate ? now < endDate : false
-    };
+  if (typeof value === 'string') {
+    const lowercased = value.toLowerCase();
+    return lowercased === 'true' || lowercased === 'yes' || lowercased === '1';
   }
-  
-  return boost;
-};
-
-/**
- * Ensure ProfileBoost array has isActive property on each item
- * @param boosts The boost array to check
- * @returns A boost array with isActive property on each item
- */
-export const ensureBoostsAreActive = (boosts: any[] | undefined): any[] => {
-  if (!boosts || !Array.isArray(boosts)) return [];
-  
-  return boosts.map(ensureBoostIsActive);
+  if (typeof value === 'number') return value !== 0;
+  return Boolean(value);
 };

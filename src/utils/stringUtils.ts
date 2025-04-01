@@ -1,76 +1,74 @@
 
 /**
- * Safe conversion to string, handling null/undefined values
- * @param value The value to convert to a string
- * @param defaultValue Default value to return if value is null/undefined
- * @returns A string
+ * Safely converts a value to a string
+ * @param value The value to convert to string
+ * @returns A string representation of the value
  */
-export const safeToString = (value: any, defaultValue: string = ''): string => {
-  if (value === null || value === undefined) {
-    return defaultValue;
-  }
+export const safeToString = (value: any): string => {
+  if (value === null || value === undefined) return '';
   return String(value);
 };
 
 /**
- * Safely converts a value to a localized string representation
- * @param value The value to convert
- * @param defaultValue The default value if conversion fails
- * @returns A localized string representation of the value
+ * Safely limits a string to a maximum length with ellipsis
+ * @param str The string to truncate
+ * @param maxLength Maximum length before truncating
+ * @returns The truncated string with ellipsis if needed
  */
-export const safeToLocaleString = (value: any, defaultValue: string = ''): string => {
-  if (value === null || value === undefined) {
-    return defaultValue;
-  }
-  
-  try {
-    if (typeof value === 'number') {
-      return value.toLocaleString();
-    }
-    
-    const num = Number(value);
-    if (!isNaN(num)) {
-      return num.toLocaleString();
-    }
-  } catch (e) {
-    // Ignore conversion errors and return the value as-is or default
-  }
-  
-  return safeToString(value, defaultValue);
+export const truncateString = (str: string, maxLength: number): string => {
+  if (!str) return '';
+  if (str.length <= maxLength) return str;
+  return str.substring(0, maxLength) + '...';
 };
 
 /**
- * Gets initials from a string (usually a name)
- * @param text The text to extract initials from
- * @param length Maximum number of initials to return
- * @returns The initials
+ * Creates a string with the first letter capitalized
+ * @param str The string to capitalize
+ * @returns The capitalized string
  */
-export const getInitials = (text: string, length: number = 2): string => {
-  if (!text) return '';
-  
-  const words = text.trim().split(/\s+/);
-  
-  if (words.length === 1) {
-    return text.substring(0, length).toUpperCase();
-  }
-  
-  return words
-    .slice(0, length)
-    .map(word => word.charAt(0).toUpperCase())
-    .join('');
+export const capitalize = (str: string): string => {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
 /**
- * Truncate a string and add ellipsis if needed
- * @param text The text to truncate
- * @param maxLength Maximum length before truncation
- * @param suffix The suffix to add after truncation (default: "...")
- * @returns The truncated string
+ * Safely escapes HTML characters to prevent XSS
+ * @param str The string to escape
+ * @returns The escaped string
  */
-export const truncateText = (text: string, maxLength: number, suffix: string = '...'): string => {
-  if (!text || text.length <= maxLength) {
-    return text || '';
-  }
-  
-  return text.substring(0, maxLength) + suffix;
+export const escapeHtml = (str: string): string => {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+};
+
+/**
+ * Converts camelCase to title case (e.g., "camelCase" to "Camel Case")
+ * @param str The camelCase string
+ * @returns The title case string
+ */
+export const camelToTitleCase = (str: string): string => {
+  if (!str) return '';
+  return capitalize(
+    str
+      .replace(/([A-Z])/g, ' $1')
+      .trim()
+  );
+};
+
+/**
+ * Converts kebab-case to title case (e.g., "kebab-case" to "Kebab Case")
+ * @param str The kebab-case string
+ * @returns The title case string
+ */
+export const kebabToTitleCase = (str: string): string => {
+  if (!str) return '';
+  return str
+    .split('-')
+    .map(word => capitalize(word))
+    .join(' ');
 };

@@ -1,141 +1,142 @@
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CircleDollarSign, ThumbsUp } from 'lucide-react';
+import { Egg, Crown, AlertCircle, Shield } from 'lucide-react';
+import { MockeryAction } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
-import { MockeryAction } from '@/types/mockery';
-
-// Define a minimal user interface for simplicity
-interface MinimalUser {
-  id: string;
-  username: string;
-  profileImage?: string;
-  tier?: string;
-  team?: string;
-  totalSpent: number;
-  rank: number;
-}
+import { useSound } from '@/hooks/use-sound';
+import { getMockeryName, getMockeryDescription, getMockeryTier, getMockeryTierColorClass } from '@/utils/mockeryUtils';
 
 const PublicShamingFeature: React.FC = () => {
   const { toast } = useToast();
-  const { user } = useAuth();
-  const [activeUsers, setActiveUsers] = useState<MinimalUser[]>([]);
-  const [showingUsers, setShowingUsers] = useState<boolean>(false);
-
-  // Simulate loading active users
-  useEffect(() => {
-    const mockUsers: MinimalUser[] = [
-      {
-        id: '1',
-        username: 'RoyalSpender',
-        profileImage: 'https://randomuser.me/api/portraits/men/1.jpg',
-        tier: 'royal',
-        team: 'red',
-        totalSpent: 5000,
-        rank: 1
-      },
-      {
-        id: '2',
-        username: 'MoneyCrown',
-        profileImage: 'https://randomuser.me/api/portraits/women/2.jpg',
-        tier: 'premium',
-        team: 'blue',
-        totalSpent: 3500,
-        rank: 2
-      },
-      {
-        id: '3',
-        username: 'WealthyNoble',
-        profileImage: 'https://randomuser.me/api/portraits/men/3.jpg',
-        tier: 'pro',
-        team: 'green',
-        totalSpent: 2800,
-        rank: 3
-      }
-    ];
-
-    // Simulate API delay
-    const timer = setTimeout(() => {
-      setActiveUsers(mockUsers);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleFetchUsers = () => {
-    setShowingUsers(true);
+  const sound = useSound();
+  const [selectedAction, setSelectedAction] = useState<MockeryAction>('tomatoes');
+  
+  const mockeryActions: MockeryAction[] = [
+    'tomatoes',
+    'eggs',
+    'stocks',
+    'jester',
+    'crown'
+  ];
+  
+  const handleSelectAction = (action: MockeryAction) => {
+    setSelectedAction(action);
+    sound.playSound('click');
   };
-
-  const handleShameUser = (userId: string, username: string, action: MockeryAction) => {
-    // Calculate cost based on action
-    const costs: Record<MockeryAction, number> = {
-      'tomatoes': 5,
-      'eggs': 10,
-      'stocks': 20,
-      'crown': 50,
-      'jester': 15,
-      'putridEggs': 30,
-      'silence': 40,
-      'courtJester': 45,
-      'smokeBomb': 25,
-      'shame': 15,
-      'protection': 100
-    };
-
-    const cost = costs[action] || 10;
-
-    // In a real app, this would be an API call
+  
+  const handleApplyShame = () => {
     toast({
-      title: 'Public Shaming',
-      description: `You spent $${cost} to shame ${username} with ${action}!`,
-      duration: 3000
+      title: "Mockery Applied",
+      description: `You've applied ${getMockeryName(selectedAction)} to the selected user.`,
     });
+    sound.playSound('mockery');
   };
-
+  
+  const handleShield = () => {
+    toast({
+      title: "Protection Purchased",
+      description: "You've purchased Royal Protection for 48 hours.",
+    });
+    sound.playSound('purchase');
+  };
+  
+  // Generate popularity data for each mockery action
+  const mockeryStats: Record<MockeryAction, number> = {
+    tomatoes: 256,
+    eggs: 189,
+    stocks: 124,
+    crown: 78,
+    jester: 143,
+    putridEggs: 52,
+    silence: 31,
+    courtJester: 20,
+    smokeBomb: 45,
+    shame: 15,
+    protection: 67,
+    challenge: 18,
+    taunt: 42,
+    mock: 96,
+    joust: 30,
+    duel: 12
+  };
+  
   return (
-    <Card>
+    <Card className="glass-morphism border-royal-crimson/20">
       <CardHeader>
         <CardTitle className="flex items-center">
-          <CircleDollarSign className="mr-2 h-5 w-5 text-royal-gold" />
-          Public Shaming Feature
+          <Egg className="h-5 w-5 text-royal-crimson mr-2" />
+          Public Mockery
         </CardTitle>
       </CardHeader>
+      
       <CardContent>
-        <p className="text-sm text-muted-foreground mb-4">
-          Spend money to shame other users in the most medieval way possible! Your mockery will be displayed publicly on their profile.
+        <p className="text-sm text-white/70 mb-4">
+          Humiliate those who outrank you with these mockery options. Choose wisely!
         </p>
-
-        {!showingUsers ? (
-          <Button onClick={handleFetchUsers} className="w-full">
-            <ThumbsUp className="mr-2 h-4 w-4" />
-            Show Active Users to Shame
-          </Button>
-        ) : activeUsers.length > 0 ? (
-          <div className="space-y-4 mt-4">
-            {activeUsers.map(user => (
-              <div key={user.id} className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg">
-                <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full overflow-hidden bg-secondary">
-                    {user.profileImage && <img src={user.profileImage} alt={user.username} className="w-full h-full object-cover" />}
-                  </div>
-                  <div className="ml-3">
-                    <p className="font-medium">{user.username}</p>
-                    <p className="text-xs text-muted-foreground">Rank #{user.rank}</p>
-                  </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+          {mockeryActions.map((action) => {
+            const actionTier = getMockeryTier(action);
+            const tierColorClass = getMockeryTierColorClass(actionTier);
+            
+            return (
+              <div 
+                key={action}
+                className={`p-3 rounded-md border cursor-pointer transition-colors ${
+                  selectedAction === action 
+                    ? 'bg-royal-crimson/20 border-royal-crimson/40' 
+                    : 'bg-background/50 border-white/10 hover:bg-royal-crimson/10 hover:border-royal-crimson/20'
+                }`}
+                onClick={() => handleSelectAction(action)}
+              >
+                <div className="flex justify-between mb-1">
+                  <span className="font-medium text-sm">{getMockeryName(action)}</span>
+                  <Badge variant="outline" className={`text-xs ${tierColorClass}`}>
+                    {actionTier}
+                  </Badge>
                 </div>
-                <div>
-                  <Button size="sm" variant="outline" onClick={() => handleShameUser(user.id, user.username, 'tomatoes')}>
-                    Throw Tomatoes ($5)
-                  </Button>
+                <p className="text-xs text-white/60">{getMockeryDescription(action)}</p>
+                <div className="flex justify-between items-center mt-2">
+                  <span className="text-xs text-white/50">
+                    Used {mockeryStats[action]} times
+                  </span>
+                  <span className="text-sm font-bold">${Math.floor(15 + Math.random() * 50)}</span>
                 </div>
               </div>
-            ))}
+            );
+          })}
+        </div>
+        
+        <div className="p-3 rounded-lg bg-royal-crimson/10 border border-royal-crimson/20 mb-4">
+          <div className="flex items-start">
+            <AlertCircle className="h-5 w-5 text-royal-crimson mr-2 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-white/80">
+              Warning: Mockery is public and visible to all. The target will be notified, and they may retaliate.
+            </p>
           </div>
-        ) : (
-          <p className="text-center py-4">Loading users...</p>
-        )}
+        </div>
+        
+        <div className="flex justify-between items-center">
+          <Button 
+            variant="default" 
+            className="bg-royal-crimson hover:bg-royal-crimson/80"
+            onClick={handleApplyShame}
+          >
+            Apply {getMockeryName(selectedAction)}
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            className="border-royal-gold/50 text-royal-gold hover:bg-royal-gold/10"
+            onClick={handleShield}
+          >
+            <Shield className="h-4 w-4 mr-2" />
+            Buy Protection ($75)
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

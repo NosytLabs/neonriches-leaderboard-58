@@ -1,175 +1,213 @@
+
 import React from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { UserProfile } from '@/types/user';
-import { SocialLink } from '@/types/user-consolidated';
-import { formatCurrency } from '@/utils/formatters';
-import { formatDate } from '@/utils/dateUtils';
-import { getInitials } from '@/utils/stringUtils';
-import { Clock, CreditCard, Share, Star, ThumbsUp, Users } from 'lucide-react';
-import { safeToLocaleString } from '@/utils/stringUtils';
+import { formatDate } from '@/utils/formatters';
+import { getTeamBgColorClass, getTeamTextColorClass } from '@/lib/colors';
+import { ExternalLink, Mail, User, Shield, Crown, Calendar, Users, DollarSign } from 'lucide-react';
+import { safeToLocaleString } from '@/utils/safeToString';
+import { SpendAmount } from '@/components/ui/theme-components';
 
 interface ProfileBillboardProps {
   user: UserProfile;
   onFollow?: () => void;
-  isCurrentUser?: boolean;
+  onUnfollow?: () => void;
+  onDM?: () => void;
+  onBoost?: () => void;
+  onMockery?: () => void;
+  onGift?: () => void;
+  isOwnProfile?: boolean;
 }
 
-const ProfileBillboard: React.FC<ProfileBillboardProps> = ({ user, onFollow, isCurrentUser = false }) => {
-  const joinDate = user.joinedDate ? formatDate(user.joinedDate) : 'Unknown';
-  const memberSince = user.joinedDate 
-    ? new Date(user.joinedDate).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long'
-      })
-    : 'Unknown';
-
+const ProfileBillboard: React.FC<ProfileBillboardProps> = ({
+  user,
+  onFollow,
+  onUnfollow,
+  onDM,
+  onBoost,
+  onMockery,
+  onGift,
+  isOwnProfile = false
+}) => {
+  // Fallback values for important user properties if missing
+  const displayName = user.displayName || user.username;
+  const joinedDate = user.joinedDate || new Date().toISOString();
+  const formattedDate = formatDate(joinedDate);
+  
+  // Team-related styling
+  const teamBgClass = user.team ? getTeamBgColorClass(user.team.toString()) : 'bg-gray-700';
+  const teamTextClass = user.team ? getTeamTextColorClass(user.team.toString()) : 'text-gray-300';
+  
+  // User verification badge
+  const verifiedBadge = user.isVerified && (
+    <Badge variant="outline" className="ml-2 bg-blue-500/20 text-blue-300 border-blue-400/30">
+      <Shield className="h-3 w-3 mr-1" />
+      Verified
+    </Badge>
+  );
+  
+  // VIP status badge
+  const vipBadge = user.isVIP && (
+    <Badge variant="outline" className="ml-2 bg-purple-500/20 text-purple-300 border-purple-400/30">
+      <Crown className="h-3 w-3 mr-1" />
+      VIP
+    </Badge>
+  );
+  
+  // Active title display
+  const activeTitle = user.activeTitle && (
+    <div className="text-sm mt-1 text-white/60">
+      {user.activeTitle}
+    </div>
+  );
+  
+  // Conditional follow/unfollow button
+  const followButton = !isOwnProfile && (
+    user.following ? (
+      <Button 
+        variant="outline" 
+        size="sm" 
+        onClick={onUnfollow} 
+        className="glass-morphism border-white/10"
+      >
+        <Users className="h-4 w-4 mr-2" />
+        Unfollow
+      </Button>
+    ) : (
+      <Button 
+        variant="outline" 
+        size="sm" 
+        onClick={onFollow} 
+        className="glass-morphism border-white/10"
+      >
+        <Users className="h-4 w-4 mr-2" />
+        Follow
+      </Button>
+    )
+  );
+  
+  // Render social links - only if they exist
+  const socialLinksSection = user.socialLinks && user.socialLinks.length > 0 && (
+    <div className="mt-4 flex flex-wrap gap-2">
+      {user.socialLinks.map(link => (
+        <Button 
+          key={link.id} 
+          variant="outline" 
+          size="sm" 
+          className="glass-morphism border-white/10"
+          onClick={() => window.open(link.url, '_blank')}
+        >
+          <ExternalLink className="h-4 w-4 mr-2" />
+          {link.platform}
+        </Button>
+      ))}
+    </div>
+  );
+  
   return (
-    <Card className="glass-morphism border-white/10 overflow-hidden">
-      <div className="relative h-32 md:h-40 bg-gradient-to-r from-purple-900/50 to-blue-900/50">
-        <div className="absolute inset-0 bg-pattern-grid opacity-20"></div>
+    <div className="rounded-lg overflow-hidden glass-morphism border-white/10">
+      <div className="h-32 bg-gradient-to-r from-purple-900/30 to-blue-900/30 relative">
+        {/* Profile banner image could go here */}
       </div>
       
-      <CardContent className="p-0">
-        <div className="relative px-4 pb-4 -mt-12 md:-mt-16">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between">
-            {/* Avatar and name section */}
-            <div className="flex flex-col items-center md:items-start md:flex-row">
-              <Avatar className="h-24 w-24 md:h-32 md:w-32 border-4 border-background">
-                <AvatarImage 
-                  src={user.profileImage || `/placeholder-avatar.png`}
-                  alt={user.displayName || user.username}
-                />
-                <AvatarFallback className="text-2xl">
-                  {getInitials(user.displayName || user.username)}
-                </AvatarFallback>
-              </Avatar>
-              
-              <div className="mt-3 md:mt-0 md:ml-4 text-center md:text-left mb-4 md:mb-0">
-                <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2">
-                  <h2 className="text-2xl font-bold">
-                    {user.displayName || user.username}
-                  </h2>
-                  
-                  {user.isVerified && (
-                    <Badge variant="outline" className="bg-blue-500/20 text-blue-300 border-blue-500/30 h-5">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3 mr-1">
-                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"></path>
-                        <path d="m9 12 2 2 4-4"></path>
-                      </svg>
-                      Verified
-                    </Badge>
-                  )}
-                </div>
-                
-                <div className="text-lg text-muted-foreground">@{user.username}</div>
-                
-                {user.activeTitle && (
-                  <div className="mt-1">
-                    <Badge className="bg-royal-gold/20 text-royal-gold border-royal-gold/30">
-                      {user.activeTitle}
-                    </Badge>
-                  </div>
-                )}
-              </div>
+      <div className="px-6 pb-6 relative">
+        <div className="absolute -top-12 left-6 rounded-full border-4 border-black overflow-hidden">
+          <img 
+            src={user.profileImage || '/placeholder-avatar.png'} 
+            alt={user.username} 
+            className="w-24 h-24 object-cover"
+          />
+        </div>
+        
+        <div className="pt-14 flex flex-col md:flex-row md:justify-between md:items-start">
+          <div>
+            <div className="flex items-center flex-wrap">
+              <h2 className="text-2xl font-bold">{displayName}</h2>
+              {verifiedBadge}
+              {vipBadge}
             </div>
             
-            {/* Action buttons */}
-            <div className="flex flex-col md:flex-row gap-2 mt-4 md:mt-0">
-              {!isCurrentUser && (
-                <Button 
-                  variant="outline" 
-                  className="glass-morphism border-white/10"
-                  onClick={onFollow}
-                >
-                  {user.isFollowing ? (
-                    <>
-                      <ThumbsUp className="h-4 w-4 mr-2" />
-                      Following
-                    </>
-                  ) : (
-                    <>
-                      <Users className="h-4 w-4 mr-2" />
-                      Follow
-                    </>
-                  )}
-                </Button>
-              )}
-              
-              <Button variant="outline" className="glass-morphism border-white/10">
-                <Share className="h-4 w-4 mr-2" />
-                Share
-              </Button>
-            </div>
-          </div>
-          
-          {/* Stats section */}
-          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="glass-morphism border-white/10 rounded-lg p-3 text-center">
-              <div className="text-lg font-bold">
-                #{user.rank || 'N/A'}
-              </div>
-              <div className="text-xs text-muted-foreground">Current Rank</div>
-            </div>
+            <div className="text-sm text-white/60">@{user.username}</div>
+            {activeTitle}
             
-            <div className="glass-morphism border-white/10 rounded-lg p-3 text-center">
-              <div className="text-lg font-bold">
-                ${safeToLocaleString(user.totalSpent || user.amountSpent || 0)} spent
-              </div>
-              <div className="text-xs text-muted-foreground">Total Spent</div>
-            </div>
-            
-            <div className="glass-morphism border-white/10 rounded-lg p-3 text-center">
-              <div className="text-lg font-bold">
-                {user.followers && typeof user.followers === 'number' ? user.followers.toLocaleString() : '0'}
-              </div>
-              <div className="text-xs text-muted-foreground">Followers</div>
-            </div>
-            
-            <div className="glass-morphism border-white/10 rounded-lg p-3 text-center">
-              <div className="text-lg font-bold capitalize">
-                {user.tier}
-              </div>
-              <div className="text-xs text-muted-foreground">Status Tier</div>
-            </div>
-          </div>
-          
-          {/* Bio and social links */}
-          <div className="mt-6">
             {user.bio && (
-              <div className="mb-4">
-                <p className="text-sm">{user.bio}</p>
-              </div>
+              <p className="mt-3 text-white/80">{user.bio}</p>
             )}
             
-            <div className="flex items-center text-sm text-muted-foreground">
-              <Clock className="h-4 w-4 mr-1" />
-              <span>Member since {memberSince}</span>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Badge variant="outline" className={`${teamBgClass}/20 ${teamTextClass}`}>
+                {user.team || 'Unaligned'}
+              </Badge>
               
-              {user.team && (
-                <Badge className="ml-3 bg-gray-500/20" variant="outline">
-                  Team {user.team}
-                </Badge>
+              <Badge variant="outline" className="bg-purple-500/20 text-purple-300">
+                {user.tier || 'Basic'}
+              </Badge>
+              
+              <Badge variant="outline" className="bg-green-500/20 text-green-300">
+                Rank #{user.rank || 'N/A'}
+              </Badge>
+              
+              <Badge variant="outline" className="bg-yellow-500/20 text-yellow-300">
+                <DollarSign className="h-3 w-3 mr-1" />
+                <SpendAmount amount={user.totalSpent || user.amountSpent || 0} />
+              </Badge>
+            </div>
+            
+            <div className="mt-4 flex flex-wrap gap-2 text-xs text-white/60">
+              <div className="flex items-center">
+                <Calendar className="h-3 w-3 mr-1" />
+                Joined {formattedDate}
+              </div>
+              
+              {user.lastActive && (
+                <div className="flex items-center">
+                  <User className="h-3 w-3 mr-1" />
+                  Last seen: {formatDate(user.lastActive)}
+                </div>
               )}
             </div>
             
-            {user.socialLinks && Array.isArray(user.socialLinks) && user.socialLinks.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-3">
-                {user.socialLinks.map((link) => (
-                  <Button key={link.id} size="sm" variant="outline" asChild className="h-8">
-                    <a href={link.url} target="_blank" rel="noopener noreferrer">
-                      <span>{link.platform}</span>
-                    </a>
-                  </Button>
-                ))}
-              </div>
+            {socialLinksSection}
+          </div>
+          
+          <div className="mt-6 md:mt-0 flex flex-wrap gap-2">
+            {followButton}
+            
+            {!isOwnProfile && (
+              <>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={onDM} 
+                  className="glass-morphism border-white/10"
+                >
+                  <Mail className="h-4 w-4 mr-2" />
+                  Message
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={onBoost} 
+                  className="glass-morphism border-white/10"
+                >
+                  <Crown className="h-4 w-4 mr-2" />
+                  Boost
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={onMockery} 
+                  className="glass-morphism border-royal-crimson/20 text-royal-crimson"
+                >
+                  Mockery
+                </Button>
+              </>
             )}
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

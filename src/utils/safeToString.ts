@@ -1,86 +1,60 @@
 
 /**
- * Safely convert any value to a string
- * @param value The value to convert to string
- * @returns A string representation of the value
+ * Safely converts a value to a string
+ * @param value Any value that needs to be safely converted to a string
+ * @returns String representation of the value or empty string if null/undefined
  */
 export const safeToString = (value: any): string => {
-  if (value === null || value === undefined) {
-    return '';
-  }
+  if (value === null || value === undefined) return '';
   return String(value);
 };
 
 /**
- * Safely convert a number to a locale string
- * @param value The number to format
- * @param options Formatting options
- * @returns A formatted string
+ * Safely applies toLocaleString to a number, handling non-number types
+ * @param value A number, string, or other value to format
+ * @param locale Optional locale for formatting (defaults to user's locale)
+ * @param options Optional formatting options
+ * @returns Formatted string or empty string for invalid inputs
  */
-export const safeToLocaleString = (value: any, options?: Intl.NumberFormatOptions): string => {
-  if (value === null || value === undefined) {
-    return '0';
-  }
+export const safeToLocaleString = (
+  value: any, 
+  locale?: string | string[], 
+  options?: Intl.NumberFormatOptions
+): string => {
+  if (value === null || value === undefined) return '';
   
+  // Handle Number and numeric strings
   const num = Number(value);
-  if (isNaN(num)) {
-    return '0';
+  if (!isNaN(num)) {
+    return num.toLocaleString(locale, options);
   }
   
-  return num.toLocaleString(undefined, options);
-};
-
-/**
- * Convert any value to a number safely
- * @param value The value to convert
- * @param defaultValue Default value if conversion fails
- * @returns A number
- */
-export const safeToNumber = (value: any, defaultValue: number = 0): number => {
-  if (value === null || value === undefined) {
-    return defaultValue;
-  }
-  
-  const num = Number(value);
-  return isNaN(num) ? defaultValue : num;
-};
-
-/**
- * Convert any value to a boolean safely
- * @param value The value to convert
- * @param defaultValue Default value if conversion fails
- * @returns A boolean
- */
-export const safeToBoolean = (value: any, defaultValue: boolean = false): boolean => {
-  if (value === null || value === undefined) {
-    return defaultValue;
-  }
-  
-  if (typeof value === 'boolean') {
+  // For non-numeric strings, return as is
+  if (typeof value === 'string') {
     return value;
   }
   
-  if (typeof value === 'string') {
-    return value.toLowerCase() === 'true' || value === '1';
-  }
-  
-  if (typeof value === 'number') {
-    return value === 1;
-  }
-  
-  return defaultValue;
+  // For any other type, convert to string
+  return String(value);
 };
 
 /**
- * Format a number as currency
- * @param value The value to format
- * @param currency The currency code
- * @returns A formatted currency string
+ * Formats a number as currency
+ * @param value Number to format as currency
+ * @param currency Currency code (default: USD)
+ * @returns Formatted currency string
  */
-export const formatCurrency = (value: any, currency: string = 'USD'): string => {
-  const num = safeToNumber(value);
-  return new Intl.NumberFormat('en-US', {
+export const formatCurrency = (
+  value: number | string, 
+  currency: string = 'USD'
+): string => {
+  const num = typeof value === 'string' ? parseFloat(value) : value;
+  if (isNaN(num)) return '';
+  
+  return num.toLocaleString('en-US', {
     style: 'currency',
-    currency
-  }).format(num);
+    currency: currency
+  });
 };
+
+export default safeToString;

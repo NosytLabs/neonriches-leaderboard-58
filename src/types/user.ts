@@ -1,4 +1,7 @@
 
+// Adding TeamColor export to fix import errors
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
+
 export interface ProfileImage {
   id: string;
   url: string;
@@ -73,13 +76,13 @@ export interface UserSettings {
   showRank: boolean;
   darkMode: boolean;
   soundEffects: boolean;
-  newFollowerAlerts?: boolean;
-  teamNotifications?: boolean;
-  showTeam?: boolean;
-  showSpending?: boolean;
-  showBadges?: boolean;
+  showBadges: boolean;
+  showTeam: boolean;
+  showSpending: boolean;
   showEmailOnProfile?: boolean;
   rankChangeAlerts?: boolean;
+  newFollowerAlerts?: boolean;
+  teamNotifications?: boolean;
 }
 
 export interface UserProfile {
@@ -119,7 +122,14 @@ export interface UserProfile {
   role?: string;
   email?: string;
   boostCount?: number;
+  socialLinks?: SocialLink[];
 }
+
+// Adding User type alias to fix import errors
+export type User = UserProfile;
+
+// Add Gender type for better type safety
+export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
 
 // Extend with additional types as needed
 export interface Team {

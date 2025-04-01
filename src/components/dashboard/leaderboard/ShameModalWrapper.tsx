@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { Dialog } from '@/components/ui/dialog';
-import { User } from '@/types/user';
-import { MockeryAction, TeamColor } from '@/types/mockery';
+import { UserProfile as User } from '@/types/user';
+import { MockeryAction, TeamColor } from '@/types/mockery-types';
 import { safeToString } from '@/utils/stringUtils';
 import ShameModal from '@/components/events/components/ShameModal';
 

@@ -1,206 +1,118 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery';
+import { MockeryAction, MockeryTier } from '@/types/mockery-types';
+import { getMockeryActionPrice } from '@/utils/mockeryUtils';
 
-/**
- * Get the price for a shame action
- * @param action The mockery action to get the price for
- * @returns The price in dollars/coins
- */
-export const getShameActionPrice = (action: MockeryAction): number => {
-  const prices: Partial<Record<MockeryAction, number>> = {
-    'tomatoes': 5,
-    'eggs': 10,
-    'stocks': 20,
-    'crown': 100,
-    'jester': 15,
-    'putridEggs': 25,
-    'silence': 30,
-    'courtJester': 50,
-    'smokeBomb': 15,
-    'shame': 10,
-    'protection': 75,
-    'taunt': 5,
-    'mock': 10,
-    'challenge': 20,
-    'joust': 30,
-    'duel': 50
-  };
-
-  return prices[action] || 5;
+// Check if there is a weekly discount
+export const hasWeeklyDiscount = (): boolean => {
+  // In a real application, this might be based on the current week/day or fetched from an API
+  // For now, we'll just return a static value
+  return true;
 };
 
-/**
- * Get the tier of a mockery action
- * @param action The mockery action to get the tier for
- * @returns The tier as a MockeryTier
- */
-export const getShameActionTier = (action: MockeryAction): MockeryTier => {
-  const tiers: Partial<Record<MockeryAction, MockeryTier>> = {
-    'tomatoes': 'common',
-    'eggs': 'common',
-    'jester': 'common',
-    'stocks': 'uncommon',
-    'shame': 'uncommon',
-    'smokeBomb': 'uncommon',
-    'putridEggs': 'rare',
-    'silence': 'rare',
-    'courtJester': 'rare',
-    'crown': 'legendary',
-    'protection': 'legendary',
-    'taunt': 'common',
-    'mock': 'common',
-    'challenge': 'uncommon',
-    'joust': 'rare',
-    'duel': 'legendary'
-  };
-
-  return tiers[action] || 'common';
-};
-
-/**
- * Get the cooldown time for a mockery action in milliseconds
- * @param action The mockery action
- * @returns Cooldown time in milliseconds
- */
-export const getShameActionCooldown = (action: MockeryAction): number => {
-  const baseCooldown = 30 * 1000; // 30 seconds base cooldown
-  const multipliers: Partial<Record<MockeryTier, number>> = {
-    'common': 1,
-    'uncommon': 2,
-    'rare': 3,
-    'epic': 4,
-    'legendary': 5,
-    'royal': 6,
-    'basic': 1,
-    'premium': 3,
-    'silver': 2,
-    'bronze': 1
-  };
-  
-  const tier = getShameActionTier(action);
-  return baseCooldown * (multipliers[tier] || 1);
-};
-
-/**
- * Get the duration a shame effect stays applied in milliseconds
- * @param action The mockery action
- * @returns Duration in milliseconds
- */
-export const getShameActionDuration = (action: MockeryAction): number => {
-  const baseDuration = 3600 * 1000; // 1 hour base duration
-  const multipliers: Partial<Record<MockeryTier, number>> = {
-    'common': 1,      // 1 hour
-    'uncommon': 3,    // 3 hours
-    'rare': 6,        // 6 hours
-    'epic': 12,       // 12 hours 
-    'legendary': 24,  // 24 hours
-    'royal': 48,      // 48 hours
-    'basic': 1,       // 1 hour
-    'premium': 12,    // 12 hours
-    'silver': 3,      // 3 hours
-    'bronze': 2       // 2 hours
-  };
-  
-  const tier = getShameActionTier(action);
-  return baseDuration * (multipliers[tier] || 1);
-};
-
-/**
- * Check if the action has a weekly discount
- * @param action The mockery action
- * @returns Whether the action has a weekly discount
- */
-export const hasWeeklyDiscount = (action: MockeryAction): boolean => {
-  // For demo purposes, let's say stocks is discounted this week
-  const discountedAction = getWeeklyDiscountedAction();
-  return action === discountedAction;
-};
-
-/**
- * Get the action that is discounted this week
- * @returns The discounted action
- */
+// Get the weekly discounted action
 export const getWeeklyDiscountedAction = (): MockeryAction => {
-  // This would typically be fetched from an API or database
-  // For now, let's hardcode it to 'stocks'
-  return 'stocks';
+  // In a real application, this might rotate weekly or be fetched from an API
+  // For now, we'll just return a static value
+  return 'tomatoes';
 };
 
-/**
- * Get the discounted price for a shame action
- * @param action The mockery action
- * @returns The discounted price
- */
-export const getDiscountedShamePrice = (action: MockeryAction): number => {
-  const regularPrice = getShameActionPrice(action);
-  // 50% discount
-  return regularPrice * 0.5;
+// Get the price for a shame action
+export const getShameActionPrice = (action: MockeryAction): number => {
+  return getMockeryActionPrice(action);
 };
 
-/**
- * Get mockery name for display
- * @param action The mockery action
- * @returns A human-readable name for the mockery action
- */
-export const getMockeryName = (action: MockeryAction): string => {
-  const names: Partial<Record<MockeryAction, string>> = {
-    'tomatoes': 'Rotten Tomatoes',
-    'eggs': 'Rancid Eggs',
-    'stocks': 'Public Stocks',
-    'crown': 'Fool\'s Crown',
-    'jester': 'Jester\'s Hat',
-    'putridEggs': 'Putrid Eggs',
-    'silence': 'Royal Silence',
-    'courtJester': 'Court Jester',
-    'smokeBomb': 'Smoke Bomb',
-    'shame': 'Public Shame',
-    'protection': 'Royal Protection',
-    'taunt': 'Royal Taunt',
-    'mock': 'Public Mockery',
-    'challenge': 'Royal Challenge',
-    'joust': 'Royal Joust',
-    'duel': 'Royal Duel'
+// Get the discounted price for a shame action
+export const getDiscountedShamePrice = (action: MockeryAction, tier: string = 'basic'): number => {
+  const basePrice = getShameActionPrice(action);
+  
+  // Apply different discount rates based on tier
+  const discountRate = tier === 'premium' || tier === 'royal' ? 0.5 :
+                       tier === 'pro' ? 0.3 :
+                       0.2; // Basic tier or unknown
+  
+  return Math.floor(basePrice * (1 - discountRate));
+};
+
+// Calculate bulk discount for shame actions
+export const getBulkDiscount = (quantity: number): number => {
+  if (quantity >= 10) return 0.25;
+  if (quantity >= 5) return 0.15;
+  if (quantity >= 3) return 0.1;
+  return 0;
+};
+
+// Get discounted bulk price
+export const getBulkPrice = (action: MockeryAction, quantity: number): number => {
+  const unitPrice = getShameActionPrice(action);
+  const discount = getBulkDiscount(quantity);
+  const totalPrice = unitPrice * quantity * (1 - discount);
+  return Math.floor(totalPrice);
+};
+
+// Get additional discount based on VIP status
+export const getVIPDiscount = (isVIP: boolean): number => {
+  return isVIP ? 0.15 : 0;
+};
+
+// Get tier-specific discount rates
+export const getTierDiscountRates = (): Partial<Record<MockeryTier, number>> => {
+  return {
+    'common': 0.05,
+    'uncommon': 0.1,
+    'rare': 0.15,
+    'epic': 0.2,
+    'legendary': 0.25,
+    'royal': 0.3,
+    basic: 0.1,
+    premium: 0.2
   };
-
-  return names[action] || action;
 };
 
-/**
- * Get mockery description for display
- * @param action The mockery action
- * @returns A description of what the mockery action does
- */
-export const getMockeryDescription = (action: MockeryAction): string => {
-  const descriptions: Partial<Record<MockeryAction, string>> = {
-    'tomatoes': 'Splatter their profile with rotten tomatoes for 24 hours',
-    'eggs': 'Pelt their profile with rancid eggs for 24 hours',
-    'stocks': 'Lock them in the public stocks for all to see for 3 days',
-    'crown': 'Force them to wear a fool\'s crown for a week',
-    'jester': 'Dress them as a court jester for 24 hours',
-    'putridEggs': 'Assault them with the most putrid eggs in the kingdom for 3 days',
-    'silence': 'Prevent them from speaking in public forums for 12 hours',
-    'courtJester': 'Assign them as your personal jester for 3 days',
-    'smokeBomb': 'Drop a smoke bomb on their profile for 24 hours',
-    'shame': 'Ring the bell of shame on their profile for 24 hours',
-    'protection': 'Protect yourself from mockery for 3 days',
-    'taunt': 'Publicly taunt another noble for 24 hours',
-    'mock': 'Mock another noble publicly for 48 hours',
-    'challenge': 'Challenge a noble to a contest with a public posting',
-    'joust': 'Challenge a noble to a joust with royal fanfare',
-    'duel': 'Challenge a noble to a formal duel with witnesses'
-  };
-
-  return descriptions[action] || 'Apply a mysterious effect';
+// Get preferred target discount (for targets frequently shamed by this user)
+export const getPreferredTargetDiscount = (targetUserId: string, shameCount: number): number => {
+  if (shameCount >= 10) return 0.2;
+  if (shameCount >= 5) return 0.1;
+  if (shameCount >= 3) return 0.05;
+  return 0;
 };
 
-export default {
-  getShameActionPrice,
-  getShameActionTier,
-  getShameActionCooldown,
-  getShameActionDuration,
-  hasWeeklyDiscount,
-  getWeeklyDiscountedAction,
-  getDiscountedShamePrice,
-  getMockeryName,
-  getMockeryDescription
+// Get time-based discounts (happy hour, etc.)
+export const getTimeBasedDiscount = (): number => {
+  const now = new Date();
+  const hour = now.getHours();
+  const day = now.getDay();
+  
+  // Happy hour: 8pm-10pm
+  if (hour >= 20 && hour < 22) return 0.2;
+  
+  // Weekend discount
+  if (day === 0 || day === 6) return 0.1;
+  
+  return 0;
+};
+
+// Calculate final shame price with all applicable discounts
+export const getFinalShamePrice = (
+  action: MockeryAction,
+  quantity: number = 1,
+  tier: string = 'basic',
+  isVIP: boolean = false,
+  targetShameCount: number = 0
+): number => {
+  const basePrice = getShameActionPrice(action);
+  const tierDiscountRates = getTierDiscountRates();
+  const tierDiscount = tierDiscountRates[tier as MockeryTier] || 0;
+  const vipDiscount = getVIPDiscount(isVIP);
+  const bulkDiscount = getBulkDiscount(quantity);
+  const preferredDiscount = getPreferredTargetDiscount('', targetShameCount);
+  const timeDiscount = getTimeBasedDiscount();
+  
+  // Max discount can't exceed 60%
+  const totalDiscountRate = Math.min(
+    0.6,
+    tierDiscount + vipDiscount + bulkDiscount + preferredDiscount + timeDiscount
+  );
+  
+  const finalPrice = basePrice * quantity * (1 - totalDiscountRate);
+  return Math.max(1, Math.floor(finalPrice)); // Minimum price of 1
 };

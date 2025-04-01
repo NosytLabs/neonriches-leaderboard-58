@@ -1,237 +1,182 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
-import { LeaderboardUser, SortByOptions } from '@/types/leaderboard';
-import LeaderboardCard from './LeaderboardCard';
-import { fetchLeaderboard } from '@/services/leaderboardService';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import LeaderboardList from './components/LeaderboardList';
+import { UserProfile } from '@/types/user-consolidated';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Crown } from 'lucide-react';
-import { UserProfile, UserSettings } from '@/types/user-consolidated';
+import { Trophy, Flame, Calendar, Trending, History, Coins } from 'lucide-react';
+import { useSound } from '@/hooks/use-sound';
+import { sortBy } from 'lodash';
+import { useAuth } from '@/hooks/useAuth';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import ShameModalWrapper from '../dashboard/leaderboard/ShameModalWrapper';
+import { MockeryAction } from '@/types/mockery-types';
+import { ensureNumber } from '@/utils/typeConverters';
 
-const CombinedLeaderboard: React.FC = () => {
+const CombinedLeaderboard = () => {
   const { user } = useAuth();
-  const { toast } = useToast();
-  const [users, setUsers] = useState<LeaderboardUser[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<LeaderboardUser[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [sortBy, setSortBy] = useState<SortByOptions>('rank');
-  const [teamFilter, setTeamFilter] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<string>('all');
-  
-  // Default user settings if not available
-  const defaultSettings: UserSettings = {
-    profileVisibility: 'public',
-    allowProfileLinks: true,
-    theme: 'dark',
-    notifications: true,
-    emailNotifications: true,
-    marketingEmails: false,
-    showRank: true,
-    darkMode: true,
-    soundEffects: true,
-    newFollowerAlerts: true,
-    teamNotifications: true,
-    showTeam: true,
-    showSpending: true,
-    showBadges: true,
-  };
-  
-  const settings = user?.settings || defaultSettings;
+  const sound = useSound();
+  const [leaderboardData, setLeaderboardData] = useState<UserProfile[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedLeaderboard, setSelectedLeaderboard] = useState<string>('weekly');
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [shameAction, setShameAction] = useState<MockeryAction>('tomatoes');
   
   useEffect(() => {
-    const loadLeaderboard = async () => {
+    const fetchLeaderboardData = async () => {
       setLoading(true);
+      
       try {
-        // Convert teamFilter to number if it's a numeric string, otherwise pass null or string
-        const teamFilterParam = teamFilter ? 
-                               (isNaN(Number(teamFilter)) ? teamFilter : Number(teamFilter)) : 
-                               null;
-        
-        const data = await fetchLeaderboard(sortBy, teamFilterParam);
-        
-        // Ensure all data is properly formatted as LeaderboardUser objects
-        const formattedData: LeaderboardUser[] = data.map((item: any): LeaderboardUser => ({
-          id: typeof item.id === 'string' ? item.id : String(item.id),
-          username: item.username,
-          displayName: item.displayName || item.username,
-          profileImage: item.profileImage || '/assets/default-avatar.png',
-          tier: item.tier,
-          team: item.team || null,
-          rank: item.rank || 0,
-          totalSpent: item.totalSpent || 0,
-          walletBalance: item.walletBalance || 0,
-          previousRank: item.previousRank || 0,
-          spendStreak: item.spendStreak || 0,
-          amountSpent: item.amountSpent || item.totalSpent || 0
-        }));
-
-        setUsers(formattedData);
-        setFilteredUsers(formattedData.slice(0, 10));
-        setTotalPages(Math.ceil(formattedData.length / 10));
+        // In a real app, this would fetch from an API
+        setTimeout(() => {
+          const mockData: UserProfile[] = Array.from({ length: 10 }).map((_, index) => ({
+            id: `user-${index + 1}`,
+            username: `noble${index + 1}`,
+            displayName: `Noble User ${index + 1}`,
+            profileImage: `https://source.unsplash.com/random/?portrait&${index}`,
+            tier: index < 3 ? 'royal' : index < 6 ? 'premium' : 'basic',
+            team: ['red', 'blue', 'green', 'gold', 'purple'][index % 5],
+            rank: index + 1,
+            totalSpent: Math.floor(10000 / (index + 1)), 
+            amountSpent: Math.floor(10000 / (index + 1)), // Adding amountSpent to match UserProfile type
+            previousRank: ensureNumber(Math.floor(Math.random() * 20)), // Convert to number
+            joinedDate: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
+            isVerified: index < 3,
+            walletBalance: Math.floor(Math.random() * 1000),
+            spendStreak: index < 5 ? index + 1 : 0
+          }));
+          
+          setLeaderboardData(mockData);
+          setLoading(false);
+        }, 800);
       } catch (error) {
-        console.error("Error fetching leaderboard:", error);
-        toast({
-          title: "Error loading leaderboard",
-          description: "Please try again later",
-          variant: "destructive"
-        });
-      } finally {
+        console.error('Error fetching leaderboard data:', error);
         setLoading(false);
       }
     };
     
-    loadLeaderboard();
-  }, [sortBy, teamFilter, toast]);
+    fetchLeaderboardData();
+  }, [selectedLeaderboard]);
   
-  useEffect(() => {
-    const start = (page - 1) * 10;
-    const end = start + 10;
-    setFilteredUsers(users.slice(start, end));
-  }, [page, users]);
-  
-  const handlePageChange = (newPage: number) => {
-    if (newPage > 0 && newPage <= totalPages) {
-      setPage(newPage);
-    }
+  const handleLeaderboardChange = (value: string) => {
+    sound.playSound('click');
+    setSelectedLeaderboard(value);
   };
   
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    if (value === 'all') {
-      setTeamFilter(null);
-    } else {
-      setTeamFilter(value);
-    }
-    setPage(1);
+  const handleProfileClick = (userId: string, username: string) => {
+    console.log(`Clicked on user profile: ${username} (${userId})`);
+    // Could navigate to profile page or show profile modal
   };
   
-  // Create currentUser object only if user exists
-  const createCurrentUserProfile = (user: UserProfile | null): UserProfile | undefined => {
-    if (!user) return undefined;
-    
-    return {
-      id: user.id,
-      username: user.username,
-      displayName: user.displayName || user.username,
-      profileImage: user.profileImage || '/assets/default-avatar.png',
-      tier: user.tier,
-      team: user.team || null,
-      rank: user.rank || 0,
-      totalSpent: user.totalSpent || 0,
-      joinedDate: user.joinedDate || new Date().toISOString(),
-      isVerified: user.isVerified || false,
-      walletBalance: user.walletBalance || 0,
-      previousRank: user.previousRank || 0,
-      spendStreak: user.spendStreak || 0,
-      amountSpent: user.amountSpent || user.totalSpent || 0
-    };
+  const handleShameUser = (user: UserProfile) => {
+    setSelectedUser(user);
+    setShowModal(true);
+    sound.playSound('notification');
   };
   
-  const currentUser = createCurrentUserProfile(user);
+  const handleConfirmShame = (userId: string, type: MockeryAction) => {
+    setShowModal(false);
+    sound.playSound('mockery');
+    console.log(`Applied ${type} to user ${userId}`);
+    // In a real app, this would call an API to apply the shame effect
+  };
+  
+  const sortLeaderboardData = () => {
+    // Sort by total spent, highest first
+    return sortBy(leaderboardData, user => -user.totalSpent);
+  };
   
   return (
-    <div className="w-full">
-      <Card className="glass-morphism border-white/10">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Crown className="h-5 w-5 mr-2 text-royal-gold" />
-            Throne Leaderboard
-          </CardTitle>
-        </CardHeader>
-        
-        <CardContent className="p-0">
-          <Tabs defaultValue="all" value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <div className="px-6 pb-2">
-              <TabsList className="w-full grid-cols-5">
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="red">Crimson</TabsTrigger>
-                <TabsTrigger value="blue">Azure</TabsTrigger>
-                <TabsTrigger value="green">Emerald</TabsTrigger>
-                <TabsTrigger value="gold">Gold</TabsTrigger>
-              </TabsList>
-            </div>
-            
-            <TabsContent value="all" className="m-0">
-              <LeaderboardCard
-                users={filteredUsers}
-                loading={loading}
-                currentUser={currentUser}
-                settings={settings}
-              />
-            </TabsContent>
-            
-            <TabsContent value="red" className="m-0">
-              <LeaderboardCard
-                users={filteredUsers}
-                loading={loading}
-                currentUser={user?.team === 'red' ? currentUser : undefined}
-                settings={settings}
-              />
-            </TabsContent>
-            
-            <TabsContent value="blue" className="m-0">
-              <LeaderboardCard
-                users={filteredUsers}
-                loading={loading}
-                currentUser={user?.team === 'blue' ? currentUser : undefined}
-                settings={settings}
-              />
-            </TabsContent>
-            
-            <TabsContent value="green" className="m-0">
-              <LeaderboardCard
-                users={filteredUsers}
-                loading={loading}
-                currentUser={user?.team === 'green' ? currentUser : undefined}
-                settings={settings}
-              />
-            </TabsContent>
-            
-            <TabsContent value="gold" className="m-0">
-              <LeaderboardCard
-                users={filteredUsers}
-                loading={loading}
-                currentUser={user?.team === 'gold' ? currentUser : undefined}
-                settings={settings}
-              />
-            </TabsContent>
-          </Tabs>
+    <Card className="glass-morphism border-white/10">
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <Trophy className="h-5 w-5 mr-2 text-royal-gold" />
+          Royal Leaderboard
+        </CardTitle>
+      </CardHeader>
+      
+      <CardContent>
+        <Tabs defaultValue={selectedLeaderboard} onValueChange={handleLeaderboardChange}>
+          <TabsList className="grid grid-cols-4 mb-4">
+            <TabsTrigger value="daily" className="flex items-center justify-center">
+              <Flame className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Daily</span>
+            </TabsTrigger>
+            <TabsTrigger value="weekly" className="flex items-center justify-center">
+              <Calendar className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Weekly</span>
+            </TabsTrigger>
+            <TabsTrigger value="monthly" className="flex items-center justify-center">
+              <Trending className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Monthly</span>
+            </TabsTrigger>
+            <TabsTrigger value="alltime" className="flex items-center justify-center">
+              <History className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">All-Time</span>
+            </TabsTrigger>
+          </TabsList>
           
-          <div className="flex justify-between items-center p-4 border-t border-white/10">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handlePageChange(page - 1)}
-              disabled={page === 1}
-              className="text-xs"
-            >
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Previous
-            </Button>
-            
-            <div className="text-xs text-muted-foreground">
-              Page {page} of {totalPages}
-            </div>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handlePageChange(page + 1)}
-              disabled={page === totalPages}
-              className="text-xs"
-            >
-              Next
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+          <TabsContent value="daily">
+            <LeaderboardList 
+              users={sortLeaderboardData()}
+              loading={loading}
+              currentUserId={user?.id || ''}
+              onProfileClick={handleProfileClick}
+              onShameUser={handleShameUser}
+            />
+          </TabsContent>
+          
+          <TabsContent value="weekly">
+            <LeaderboardList 
+              users={sortLeaderboardData()}
+              loading={loading}
+              currentUserId={user?.id || ''}
+              onProfileClick={handleProfileClick}
+              onShameUser={handleShameUser}
+            />
+          </TabsContent>
+          
+          <TabsContent value="monthly">
+            <LeaderboardList 
+              users={sortLeaderboardData()}
+              loading={loading}
+              currentUserId={user?.id || ''}
+              onProfileClick={handleProfileClick}
+              onShameUser={handleShameUser}
+            />
+          </TabsContent>
+          
+          <TabsContent value="alltime">
+            <LeaderboardList 
+              users={sortLeaderboardData()}
+              loading={loading}
+              currentUserId={user?.id || ''}
+              onProfileClick={handleProfileClick}
+              onShameUser={handleShameUser}
+            />
+          </TabsContent>
+        </Tabs>
+        
+        <div className="mt-4 flex justify-center">
+          <Button variant="outline" className="glass-morphism border-white/10">
+            <Coins className="h-4 w-4 mr-2" />
+            View Full Leaderboard
+          </Button>
+        </div>
+      </CardContent>
+      
+      {selectedUser && (
+        <ShameModalWrapper 
+          showModal={showModal}
+          selectedUser={selectedUser}
+          shameAction={shameAction}
+          onOpenChange={setShowModal}
+          onConfirm={handleConfirmShame}
+        />
+      )}
+    </Card>
   );
 };
 

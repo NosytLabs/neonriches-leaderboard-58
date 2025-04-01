@@ -6,6 +6,39 @@ export const getUserTier = (user: UserProfile): string => {
   return user.tier || 'free';
 };
 
+// Marketing benefits by tier
+export const getMarketingBenefitsByTier = (tier: string) => {
+  const benefits = {
+    free: {
+      profileLinks: 1,
+      analytics: false,
+      customization: false,
+      protection: 0
+    },
+    basic: {
+      profileLinks: 3,
+      analytics: true,
+      customization: false,
+      protection: 24
+    },
+    premium: {
+      profileLinks: 5,
+      analytics: true,
+      customization: true,
+      protection: 48
+    },
+    royal: {
+      profileLinks: 10,
+      analytics: true,
+      customization: true,
+      protection: 72
+    }
+  };
+
+  // Use the tier if it exists in the benefits object, otherwise return free benefits
+  return benefits[tier as keyof typeof benefits] || benefits.free;
+};
+
 // Define the available tiers with their details
 export const tiers = {
   free: {
