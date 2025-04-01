@@ -13,6 +13,7 @@ import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { UserProfile } from '@/types/user-consolidated';
+import { adaptToStandardUserProfile } from '@/utils/userTypeAdapter';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -73,12 +74,15 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Convert user to the required format with totalSpent
+  // Convert consolidated user to required format with totalSpent for compatibility
   const consolidatedUser: UserProfile = {
     ...user as any,
     totalSpent: user.totalSpent || user.amountSpent || 0,
     amountSpent: user.amountSpent || user.totalSpent || 0
   };
+
+  // Adapt the user profile to standard format when passing to components that expect that type
+  const standardUser = adaptToStandardUserProfile(consolidatedUser);
 
   const handleSpend = () => {
     toast({
@@ -139,7 +143,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="team">
-            <TeamStatusCard user={consolidatedUser} />
+            <TeamStatusCard user={standardUser} />
           </TabsContent>
           
           <TabsContent value="achievements">
@@ -147,7 +151,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="upgrade">
-            <CashThroneUpgrade user={consolidatedUser} />
+            <CashThroneUpgrade user={standardUser} />
           </TabsContent>
         </div>
       </Tabs>

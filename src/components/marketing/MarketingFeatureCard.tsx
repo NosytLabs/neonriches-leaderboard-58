@@ -1,125 +1,110 @@
 
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Lock, Star, Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useAuth } from '@/hooks';
-import useFeatureAccess, { Feature } from '@/hooks/use-feature-access';
+import { useToast } from '@/hooks/use-toast';
+import { LucideIcon } from 'lucide-react';
+import { useSound } from '@/hooks/use-sound';
+import { useFeatureAccess, Feature } from '@/hooks/use-feature-access';
 
 interface MarketingFeatureCardProps {
-  id: string;
-  title: string;
-  description: string;
-  tier: string;
-  price: number;
-  icon?: React.ReactNode;
-  className?: string;
-  features?: string[];
+  feature: Feature;
+  icon: LucideIcon;
+  onPurchase?: () => void;
 }
 
 const MarketingFeatureCard: React.FC<MarketingFeatureCardProps> = ({
-  id,
-  title,
-  description,
-  tier,
-  price,
-  icon,
-  className,
-  features = []
+  feature,
+  icon: Icon,
+  onPurchase
 }) => {
-  const { user } = useAuth();
-  const { isUserPro, getUpgradeUrl } = useFeatureAccess();
-  
-  const userTier = user?.tier || 'basic';
-  const userSubscription = user?.subscription;
-  
-  const isActiveSubscription = userSubscription?.status === 'active';
-  const isTierAvailable = userTier === tier || (userSubscription?.tier === tier && isActiveSubscription);
-  
-  // Check if user already has this tier or higher
-  const getTierLevel = (tier: string) => {
-    const levels: Record<string, number> = {
-      'free': 0,
-      'basic': 1,
-      'plus': 2,
-      'premium': 3,
-      'royal': 4,
-      'diamond': 5
-    };
-    return levels[tier] || 0;
-  };
-  
-  const currentTierLevel = getTierLevel(userTier);
-  const cardTierLevel = getTierLevel(tier);
-  const isCurrentTier = currentTierLevel === cardTierLevel;
-  const isAlreadyUpgraded = currentTierLevel > cardTierLevel;
-  
-  return (
-    <Card className={cn(
-      "glass-morphism border-white/10 transition-all duration-300 hover:shadow-lg",
-      isTierAvailable && "border-royal-gold/30",
-      isCurrentTier && "border-royal-gold/50 shadow-royal-gold/20 shadow-sm",
-      className
-    )}>
-      <CardHeader className={cn(
-        "text-center",
-        isCurrentTier && "bg-royal-gold/10"
-      )}>
-        <div className="flex justify-center mb-2">
-          {icon}
-        </div>
-        <CardTitle className="font-bold text-lg capitalize">{title}</CardTitle>
-        
-        {isCurrentTier && (
-          <Badge className="bg-royal-gold text-black font-medium mx-auto mt-2">
-            Current Plan
-          </Badge>
-        )}
-        
-        {isAlreadyUpgraded && (
-          <Badge variant="outline" className="bg-gray-800/50 border-white/20 mx-auto mt-2">
-            <Check className="h-3 w-3 mr-1" />
-            Included in your plan
-          </Badge>
-        )}
-      </CardHeader>
+  const featureAccess = useFeatureAccess();
+  const { toast } = useToast();
+  const sound = useSound();
+  const [purchasing, setPurchasing] = React.useState(false);
+
+  const hasAccess = featureAccess.hasAccess(feature.id);
+
+  const handlePurchase = async () => {
+    setPurchasing(true);
+    
+    try {
+      const result = await featureAccess.purchaseFeatureIndividually(feature.id);
       
-      <CardContent className="pt-4">
-        <p className="text-white/70 text-center mb-4">{description}</p>
+      if (result.success) {
+        sound.playSound('purchase');
+        toast({
+          title: "Feature Unlocked",
+          description: `You've successfully unlocked ${feature.name}!`,
+          variant: "success"
+        });
         
-        <div className="text-center mb-6">
-          <span className="text-3xl font-bold">${price}</span>
-          <span className="text-white/60 ml-1">/month</span>
-        </div>
+        if (onPurchase) onPurchase();
         
-        <div className="space-y-2 mb-6">
-          {features.map((feature, index) => (
-            <div key={index} className="flex items-start">
-              <Check className="h-4 w-4 mr-2 mt-1 text-royal-gold" />
-              <p className="text-sm text-white/80">{feature}</p>
+        // If there's a URL for checkout, redirect
+        if (result.url) {
+          window.location.href = result.url;
+        }
+      } else {
+        sound.playSound('error');
+        toast({
+          title: "Purchase Failed",
+          description: "Unable to complete your purchase. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error("Purchase error:", error);
+      sound.playSound('error');
+      toast({
+        title: "Purchase Error",
+        description: "An unexpected error occurred. Please try again later.",
+        variant: "destructive"
+      });
+    } finally {
+      setPurchasing(false);
+    }
+  };
+
+  return (
+    <Card className="overflow-hidden border-white/10 bg-black/30">
+      <CardHeader className="bg-gradient-to-r from-indigo-900/30 to-purple-900/30">
+        <CardTitle className="flex items-center gap-2">
+          <Icon className="h-5 w-5 text-indigo-300" />
+          {feature.name}
+          {hasAccess && (
+            <Badge variant="outline" className="ml-auto bg-green-900/30 text-green-300 border-green-500/50">
+              Unlocked
+            </Badge>
+          )}
+        </CardTitle>
+        <CardDescription>
+          {feature.description}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="pt-6">
+        <div className="space-y-2">
+          {feature.tier.map((tier, i) => (
+            <div key={i} className="flex items-center text-sm">
+              <div className="w-2 h-2 rounded-full bg-indigo-400 mr-2" />
+              <span>{tier}</span>
             </div>
           ))}
         </div>
       </CardContent>
-      
       <CardFooter>
-        {isCurrentTier ? (
-          <Button className="w-full" disabled>
-            Current Plan
-          </Button>
-        ) : isAlreadyUpgraded ? (
+        {hasAccess ? (
           <Button variant="outline" className="w-full" disabled>
-            Included in {userTier}
+            Already Unlocked
           </Button>
         ) : (
           <Button 
-            className="w-full bg-royal-gold hover:bg-royal-gold/90 text-black"
-            onClick={() => window.location.href = getUpgradeUrl(id as Feature)}
+            onClick={handlePurchase}
+            disabled={purchasing}
+            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
           >
-            {!isUserPro && <Lock className="h-4 w-4 mr-2" />}
-            {isUserPro ? 'Change Plan' : 'Upgrade Now'}
+            {purchasing ? "Processing..." : `Unlock for $${feature.price}`}
           </Button>
         )}
       </CardFooter>

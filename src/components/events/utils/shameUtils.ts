@@ -1,118 +1,144 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery-types';
-import { getMockeryActionPrice } from '@/utils/mockeryUtils';
+import { MockeryAction, MockeryTier } from "@/types/mockery-types";
+import { UserTier } from "@/types/user";
 
-// Check if there is a weekly discount
-export const hasWeeklyDiscount = (): boolean => {
-  // In a real application, this might be based on the current week/day or fetched from an API
-  // For now, we'll just return a static value
-  return true;
+/**
+ * Get the base price for a mockery action
+ */
+export const getShameBasePrice = (action: MockeryAction): number => {
+  const basePrices: Record<MockeryAction, number> = {
+    tomatoes: 5,
+    eggs: 10,
+    putridEggs: 15,
+    crown: 25,
+    stocks: 30,
+    jester: 35,
+    courtJester: 40,
+    shame: 50,
+    silence: 75,
+    smokeBomb: 20,
+    protection: 100,
+    taunt: 15,
+    mock: 25,
+    challenge: 50,
+    joust: 75,
+    duel: 100
+  };
+
+  return basePrices[action] || 10;
 };
 
-// Get the weekly discounted action
-export const getWeeklyDiscountedAction = (): MockeryAction => {
-  // In a real application, this might rotate weekly or be fetched from an API
-  // For now, we'll just return a static value
-  return 'tomatoes';
-};
-
-// Get the price for a shame action
-export const getShameActionPrice = (action: MockeryAction): number => {
-  return getMockeryActionPrice(action);
-};
-
-// Get the discounted price for a shame action
-export const getDiscountedShamePrice = (action: MockeryAction, tier: string = 'basic'): number => {
-  const basePrice = getShameActionPrice(action);
+/**
+ * Get the discounted price for a user based on their tier and the shame action
+ */
+export const getDiscountedShamePrice = (action: MockeryAction, tier: UserTier): number => {
+  const basePrice = getShameBasePrice(action);
   
-  // Apply different discount rates based on tier
-  const discountRate = tier === 'premium' || tier === 'royal' ? 0.5 :
-                       tier === 'pro' ? 0.3 :
-                       0.2; // Basic tier or unknown
+  // Apply tier-based discount
+  const tierDiscount = getTierDiscount(tier);
+  const discountedPrice = basePrice * (1 - tierDiscount);
   
-  return Math.floor(basePrice * (1 - discountRate));
+  // Ensure the price is never below 1
+  return Math.max(1, Math.round(discountedPrice));
 };
 
-// Calculate bulk discount for shame actions
-export const getBulkDiscount = (quantity: number): number => {
-  if (quantity >= 10) return 0.25;
-  if (quantity >= 5) return 0.15;
-  if (quantity >= 3) return 0.1;
-  return 0;
+/**
+ * Get the discount percentage based on user tier (0-1)
+ */
+export const getTierDiscount = (tier: string): number => {
+  const tierDiscounts: Partial<Record<string, number>> = {
+    'basic': 0,
+    'standard': 0.05,
+    'pro': 0.1,
+    'premium': 0.15,
+    'royal': 0.2,
+    'founder': 0.25,
+    'legendary': 0.3
+  };
+
+  return tierDiscounts[tier] || 0;
 };
 
-// Get discounted bulk price
-export const getBulkPrice = (action: MockeryAction, quantity: number): number => {
-  const unitPrice = getShameActionPrice(action);
-  const discount = getBulkDiscount(quantity);
-  const totalPrice = unitPrice * quantity * (1 - discount);
-  return Math.floor(totalPrice);
+/**
+ * Check if the user can afford the shame action
+ */
+export const canAffordShame = (
+  action: MockeryAction,
+  walletBalance: number,
+  userTier: UserTier
+): boolean => {
+  const price = getDiscountedShamePrice(action, userTier);
+  return walletBalance >= price;
 };
 
-// Get additional discount based on VIP status
-export const getVIPDiscount = (isVIP: boolean): number => {
-  return isVIP ? 0.15 : 0;
+/**
+ * Get recommended shame actions based on budget
+ */
+export const getRecommendedShameActions = (
+  budget: number,
+  userTier: UserTier
+): MockeryAction[] => {
+  const allActions: MockeryAction[] = [
+    'tomatoes', 'eggs', 'putridEggs', 'crown', 'stocks',
+    'jester', 'courtJester', 'shame', 'silence', 'smokeBomb',
+    'protection', 'taunt', 'mock', 'challenge', 'joust', 'duel'
+  ];
+
+  return allActions.filter(action => {
+    const price = getDiscountedShamePrice(action, userTier);
+    return price <= budget;
+  });
 };
 
-// Get tier-specific discount rates
-export const getTierDiscountRates = (): Partial<Record<MockeryTier | string, number>> => {
+/**
+ * Get tier-based premium shame actions
+ */
+export const getPremiumShameActions = (userTier: UserTier): MockeryAction[] => {
+  const tierActionMap: Record<string, MockeryAction[]> = {
+    'basic': ['tomatoes', 'eggs'],
+    'standard': ['tomatoes', 'eggs', 'putridEggs', 'jester'],
+    'pro': ['tomatoes', 'eggs', 'putridEggs', 'jester', 'crown', 'stocks'],
+    'premium': ['tomatoes', 'eggs', 'putridEggs', 'jester', 'crown', 'stocks', 'courtJester', 'smokeBomb'],
+    'royal': ['tomatoes', 'eggs', 'putridEggs', 'jester', 'crown', 'stocks', 'courtJester', 'smokeBomb', 'shame', 'silence'],
+    'legendary': ['tomatoes', 'eggs', 'putridEggs', 'jester', 'crown', 'stocks', 'courtJester', 'smokeBomb', 'shame', 'silence', 'protection'],
+    'founder': ['tomatoes', 'eggs', 'putridEggs', 'jester', 'crown', 'stocks', 'courtJester', 'smokeBomb', 'shame', 'silence', 'protection', 'taunt', 'mock', 'challenge', 'joust', 'duel']
+  };
+
+  return tierActionMap[String(userTier)] || ['tomatoes', 'eggs'];
+};
+
+/**
+ * Get shame tier prices 
+ */
+export const getShameTierPrices = (action: MockeryAction): Partial<Record<MockeryTier, number>> => {
+  // Base price for the action
+  const basePrice = getShameBasePrice(action);
+  
+  // Tier multipliers
   return {
-    'common': 0.05,
-    'uncommon': 0.1,
-    'rare': 0.15,
-    'epic': 0.2,
-    'legendary': 0.25,
-    'royal': 0.3,
-    'basic': 0.1,
-    'premium': 0.2
+    'common': basePrice,
+    'uncommon': basePrice * 1.5,
+    'rare': basePrice * 2,
+    'epic': basePrice * 3,
+    'legendary': basePrice * 5
   };
 };
 
-// Get preferred target discount (for targets frequently shamed by this user)
-export const getPreferredTargetDiscount = (targetUserId: string, shameCount: number): number => {
-  if (shameCount >= 10) return 0.2;
-  if (shameCount >= 5) return 0.1;
-  if (shameCount >= 3) return 0.05;
-  return 0;
-};
-
-// Get time-based discounts (happy hour, etc.)
-export const getTimeBasedDiscount = (): number => {
-  const now = new Date();
-  const hour = now.getHours();
-  const day = now.getDay();
+/**
+ * Get shame user tier prices
+ */
+export const getShameUserTierPrices = (action: MockeryAction): Partial<Record<string, number>> => {
+  // Base price for the action
+  const basePrice = getShameBasePrice(action);
   
-  // Happy hour: 8pm-10pm
-  if (hour >= 20 && hour < 22) return 0.2;
-  
-  // Weekend discount
-  if (day === 0 || day === 6) return 0.1;
-  
-  return 0;
-};
-
-// Calculate final shame price with all applicable discounts
-export const getFinalShamePrice = (
-  action: MockeryAction,
-  quantity: number = 1,
-  tier: string = 'basic',
-  isVIP: boolean = false,
-  targetShameCount: number = 0
-): number => {
-  const basePrice = getShameActionPrice(action);
-  const tierDiscountRates = getTierDiscountRates();
-  const tierDiscount = tierDiscountRates[tier as MockeryTier] || 0;
-  const vipDiscount = getVIPDiscount(isVIP);
-  const bulkDiscount = getBulkDiscount(quantity);
-  const preferredDiscount = getPreferredTargetDiscount('', targetShameCount);
-  const timeDiscount = getTimeBasedDiscount();
-  
-  // Max discount can't exceed 60%
-  const totalDiscountRate = Math.min(
-    0.6,
-    tierDiscount + vipDiscount + bulkDiscount + preferredDiscount + timeDiscount
-  );
-  
-  const finalPrice = basePrice * quantity * (1 - totalDiscountRate);
-  return Math.max(1, Math.floor(finalPrice)); // Minimum price of 1
+  // Target user tier multipliers (higher tier users cost more to shame)
+  return {
+    'basic': basePrice,
+    'standard': basePrice * 1.1,
+    'pro': basePrice * 1.25,
+    'premium': basePrice * 1.5,
+    'royal': basePrice * 2,
+    'legendary': basePrice * 3,
+    'founder': basePrice * 5
+  };
 };

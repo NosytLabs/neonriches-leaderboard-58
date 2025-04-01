@@ -1,148 +1,121 @@
 
-import { useAuth } from '@/contexts/auth';
+import { useState, useCallback } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/use-toast';
 
-interface FeatureAccessHook {
-  canAccessFeature: (featureId: string) => boolean;
-  isUserPro: boolean;
-  isUserRoyal: boolean;
-  getUserTier: () => string;
+export interface Feature {
+  id: string;
+  name: string;
+  description: string;
+  tier: string[];
+  price: number;
+  priceId?: string;
+  category: string;
+}
+
+export interface FeatureAccessHookResult {
+  hasAccess: (featureId: string) => boolean;
+  isLoading: boolean;
+  getUpgradeUrl: (featureId: string) => string;
+  getMarketingFeaturePriceId: (featureId: string) => string;
+  purchaseFeatureIndividually: (featureId: string, success?: () => void) => Promise<{ success: boolean; url?: string; }>;
 }
 
 /**
- * Custom hook for checking feature access based on user tier
+ * Hook for checking feature access
  */
-export const useFeatureAccess = (): FeatureAccessHook => {
+export const useFeatureAccess = (): FeatureAccessHookResult => {
   const { user } = useAuth();
-  
-  // Premium tier hierarchy from lowest to highest
-  const tierHierarchy = ['basic', 'bronze', 'silver', 'gold', 'premium', 'royal'];
-  
-  /**
-   * Check if user has access to a specific feature
-   */
-  const canAccessFeature = (featureId: string): boolean => {
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Check if the user has access to a feature
+  const hasAccess = useCallback((featureId: string) => {
     if (!user) return false;
-    
-    // Check if user has directly purchased the feature
-    if (user.purchasedFeatures && user.purchasedFeatures.includes(featureId)) {
-      return true;
-    }
-    
-    // Check feature access based on tier
-    const userTier = getUserTier();
-    
-    // Define which features are available at which tiers
-    const tierFeatures: Record<string, string[]> = {
-      'basic': [
-        'basic_profile',
-        'basic_mockery',
-        'leaderboard_view'
-      ],
-      'bronze': [
-        'basic_profile',
-        'basic_mockery',
-        'leaderboard_view',
-        'profile_badges',
-        'basic_analytics'
-      ],
-      'silver': [
-        'basic_profile',
-        'basic_mockery',
-        'leaderboard_view',
-        'profile_badges',
-        'basic_analytics',
-        'silver_mockery',
-        'team_benefits'
-      ],
-      'gold': [
-        'basic_profile',
-        'basic_mockery',
-        'leaderboard_view',
-        'profile_badges',
-        'basic_analytics',
-        'silver_mockery',
-        'team_benefits',
-        'gold_mockery',
-        'profile_animations',
-        'marketing_dashboard'
-      ],
-      'premium': [
-        'basic_profile',
-        'basic_mockery',
-        'leaderboard_view',
-        'profile_badges',
-        'basic_analytics',
-        'silver_mockery',
-        'team_benefits',
-        'gold_mockery',
-        'profile_animations',
-        'marketing_dashboard',
-        'premium_mockery',
-        'advanced_analytics',
-        'custom_profile'
-      ],
-      'royal': [
-        'basic_profile',
-        'basic_mockery',
-        'leaderboard_view',
-        'profile_badges',
-        'basic_analytics',
-        'silver_mockery',
-        'team_benefits',
-        'gold_mockery',
-        'profile_animations',
-        'marketing_dashboard',
-        'premium_mockery',
-        'advanced_analytics',
-        'custom_profile',
-        'royal_mockery',
-        'royal_protection',
-        'custom_titles',
-        'featured_placement'
-      ]
+
+    // Assume certain tiers have access to specific features
+    const tierFeatureMap: Record<string, string[]> = {
+      'royal': ['all', 'analytics', 'marketing', 'boost', 'customize', 'premium', 'verified', 'export', 'bribery'],
+      'premium': ['analytics', 'marketing', 'boost', 'customize', 'premium'],
+      'pro': ['analytics', 'boost', 'customize'],
+      'basic': ['basic']
     };
-    
-    // Get features available for user's tier
-    const availableFeatures = tierFeatures[userTier] || tierFeatures.basic;
-    
-    return availableFeatures.includes(featureId);
-  };
-  
-  /**
-   * Get user's subscription tier
-   */
-  const getUserTier = (): string => {
-    if (!user) return 'basic';
-    
-    // Check for the tier from user object
-    const tier = user.tier || 'basic';
-    
-    return tier.toLowerCase();
-  };
-  
-  /**
-   * Check if user has a pro-level subscription
-   */
-  const isUserPro = (): boolean => {
-    const userTier = getUserTier();
-    const proTiers = ['gold', 'premium', 'royal'];
-    
-    return proTiers.includes(userTier);
-  };
-  
-  /**
-   * Check if user has royal tier
-   */
-  const isUserRoyal = (): boolean => {
-    return getUserTier() === 'royal';
-  };
-  
+
+    // Special case for 'all' feature
+    if (tierFeatureMap[user.tier]?.includes('all')) return true;
+
+    // Check if user has direct access via purchasedFeatures
+    if (user.purchasedFeatures?.includes(featureId)) return true;
+
+    // Check if user's tier includes this feature
+    return tierFeatureMap[user.tier]?.includes(featureId) || false;
+  }, [user]);
+
+  // Get feature upgrade URL (if user doesn't have access)
+  const getUpgradeUrl = useCallback((featureId: string) => {
+    return `/subscription?feature=${featureId}`;
+  }, []);
+
+  // Get feature price ID for marketing features
+  const getMarketingFeaturePriceId = useCallback((featureId: string) => {
+    const featurePriceIds: Record<string, string> = {
+      'analytics': 'price_analytics',
+      'marketing': 'price_marketing',
+      'boost': 'price_boost',
+      'customize': 'price_customize',
+      'premium': 'price_premium',
+      'verified': 'price_verified',
+      'export': 'price_export',
+      'bribery': 'price_bribery'
+    };
+
+    return featurePriceIds[featureId] || '';
+  }, []);
+
+  // Purchase a feature individually
+  const purchaseFeatureIndividually = useCallback(async (
+    featureId: string,
+    successCallback?: () => void
+  ): Promise<{ success: boolean; url?: string; }> => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to purchase this feature."
+      });
+      return { success: false };
+    }
+
+    setIsLoading(true);
+
+    try {
+      // In a real app, this would call an API to create a checkout session
+      // For this demo, we'll just simulate a successful purchase
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      // Call success callback if provided
+      if (successCallback) successCallback();
+
+      setIsLoading(false);
+      return { 
+        success: true,
+        // For redirection to checkout, we'd return a URL
+        // url: 'https://example.com/checkout/session_id'
+      };
+    } catch (error) {
+      console.error('Error purchasing feature:', error);
+      setIsLoading(false);
+      return { success: false };
+    }
+  }, [user, toast]);
+
   return {
-    canAccessFeature,
-    isUserPro: isUserPro(),
-    isUserRoyal: isUserRoyal(),
-    getUserTier
+    hasAccess,
+    isLoading,
+    getUpgradeUrl,
+    getMarketingFeaturePriceId,
+    purchaseFeatureIndividually
   };
 };
 
 export default useFeatureAccess;
+export type { Feature as Feature };
