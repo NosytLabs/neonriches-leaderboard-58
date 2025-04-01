@@ -79,7 +79,8 @@ const EnhancedDashboard = () => {
   const userWithRequired = ensureTotalSpent(user as UserProfile);
   
   // Then adapt to ensure all other properties are correctly set
-  const standardUser = adaptToStandardUserProfile(userWithRequired);
+  // Cast the result to ConsolidatedUserProfile to satisfy the type requirements of components
+  const standardUser = adaptToStandardUserProfile(userWithRequired) as unknown as ConsolidatedUserProfile;
 
   const handleSpend = () => {
     toast({
