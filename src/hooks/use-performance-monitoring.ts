@@ -31,6 +31,37 @@ export const usePerformanceMonitoring = () => {
             if (fcpEntry) {
               console.info(`[Performance] FCP: ${fcpEntry.startTime.toFixed(2)}ms`);
             }
+            
+            // Log LCP metrics if available
+            if ('PerformanceObserver' in window) {
+              try {
+                const lcpObserver = new PerformanceObserver((entryList) => {
+                  const entries = entryList.getEntries();
+                  const lastEntry = entries[entries.length - 1];
+                  console.info(`[Performance] LCP: ${lastEntry.startTime.toFixed(2)}ms`);
+                  
+                  // Analyze resource loading for LCP element
+                  if ('element' in lastEntry) {
+                    const lcpElement = lastEntry.element;
+                    if (lcpElement) {
+                      const tagName = lcpElement.tagName.toLowerCase();
+                      console.info(`[Performance] LCP element: <${tagName}>`);
+                      
+                      // Check if it was preloaded
+                      if (tagName === 'img') {
+                        const src = (lcpElement as HTMLImageElement).src;
+                        const wasPreloaded = document.querySelector(`link[rel="preload"][href="${src}"]`);
+                        console.info(`[Performance] LCP image ${src} was ${wasPreloaded ? 'preloaded ✅' : 'not preloaded ❌'}`);
+                      }
+                    }
+                  }
+                });
+                
+                lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
+              } catch (error) {
+                console.warn('[Performance] LCP monitoring error:', error);
+              }
+            }
           }, 0);
         });
       }

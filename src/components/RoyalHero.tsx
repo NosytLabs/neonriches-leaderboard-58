@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { generateAbsurdCTA } from '@/utils/absurdityGenerator';
 import RandomAbsurdFact from '@/components/ui/random-absurd-fact';
 import { formatCurrency } from '@/utils/formatters';
+import { preloadImage } from '@/utils/resourcePreload';
 
 interface RoyalHeroProps {
   className?: string;
@@ -18,6 +19,19 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({ className }) => {
   const { isAuthenticated, user } = useAuth();
   const [ctaText, setCtaText] = useState<string>(generateAbsurdCTA());
   const [showFact, setShowFact] = useState<boolean>(false);
+  
+  useEffect(() => {
+    const criticalHeroImages = [
+      '/throne-assets/crown-icon.svg',
+      '/throne-assets/throne-icon.svg',
+      '/throne-assets/royal-seal.svg'
+    ];
+    
+    Promise.all(criticalHeroImages.map(src => preloadImage(src)))
+      .then(() => console.info('[Performance] Hero images preloaded'))
+      .catch(err => console.warn('[Performance] Error preloading hero images:', err));
+      
+  }, []);
   
   useEffect(() => {
     const interval = setInterval(() => {

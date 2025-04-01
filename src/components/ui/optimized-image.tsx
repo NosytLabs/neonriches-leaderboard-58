@@ -18,6 +18,7 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   format?: 'auto' | 'webp' | 'avif';
   sizes?: string;
   onLoad?: () => void;
+  importance?: 'auto' | 'high' | 'low';
 }
 
 /**
@@ -27,6 +28,7 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
  * - Blur-up loading
  * - Modern image formats (WebP/AVIF)
  * - Proper aspect ratio
+ * - Resource priority hints
  */
 const OptimizedImage: React.FC<OptimizedImageProps> = ({
   src,
@@ -44,6 +46,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   format = 'auto',
   sizes,
   onLoad,
+  importance,
   ...props
 }) => {
   const [imgSrc, setImgSrc] = useState<string>(priority ? src : blurDataURL || placeholder);
@@ -168,6 +171,8 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
           isLoading ? 'opacity-0' : 'opacity-100',
           'w-full h-full'
         )}
+        importance={importance}
+        fetchpriority={priority ? "high" : "auto"}
         {...props}
       />
     </div>

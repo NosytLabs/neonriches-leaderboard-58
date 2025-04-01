@@ -1,18 +1,33 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import OptimizedImage from './optimized-image';
 import { usePerformanceMonitoring } from '@/hooks/use-performance-monitoring';
 import Lazy3D from './lazy-3d';
+import { preloadImage } from '@/utils/resourcePreload';
 
 const PerformanceDemo: React.FC = () => {
   const [imagesLoaded, setImagesLoaded] = useState(0);
+  const [preloadedImages, setPreloadedImages] = useState<string[]>([]);
   const { markStart, markEnd } = usePerformanceMonitoring();
   
   // Start performance measurement when component mounts
-  React.useEffect(() => {
+  useEffect(() => {
     markStart('PerformanceDemo');
     return () => markEnd('PerformanceDemo');
   }, [markStart, markEnd]);
+  
+  // Preload the priority image to improve LCP
+  useEffect(() => {
+    // Only preload the priority image
+    preloadImage('https://images.unsplash.com/photo-1488590528505-98d2b5aba04b')
+      .then(() => {
+        console.log('[Performance] Priority image preloaded');
+        setPreloadedImages(prev => [...prev, 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b']);
+      })
+      .catch(err => {
+        console.error('[Performance] Error preloading image:', err);
+      });
+  }, []);
   
   const handleImageLoad = () => {
     setImagesLoaded(prev => prev + 1);
@@ -28,12 +43,13 @@ const PerformanceDemo: React.FC = () => {
         </p>
         <div className="mt-4 text-sm text-muted-foreground">
           <p>Images loaded: {imagesLoaded} / 4</p>
+          <p>Preloaded images: {preloadedImages.length}</p>
         </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <h3 className="font-medium mb-2">Priority Image (loads immediately)</h3>
+          <h3 className="font-medium mb-2">Priority Image (preloaded + loads immediately)</h3>
           <OptimizedImage
             src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
             alt="Tech image"
@@ -41,6 +57,7 @@ const PerformanceDemo: React.FC = () => {
             height={400}
             priority={true}
             onLoad={handleImageLoad}
+            importance="high"
           />
         </div>
         

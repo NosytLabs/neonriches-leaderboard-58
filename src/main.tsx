@@ -5,6 +5,10 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './styles/main.css';
 import './styles/animations.css';
+import { preloadCriticalAssets } from './utils/resourcePreload';
+
+// Start preloading critical resources as early as possible
+preloadCriticalAssets();
 
 // Initialize performance monitoring in production
 if (process.env.NODE_ENV === 'production') {
