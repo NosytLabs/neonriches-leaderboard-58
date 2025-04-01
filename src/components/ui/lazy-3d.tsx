@@ -1,68 +1,44 @@
 
-import React, { useState, useEffect } from 'react';
-import DynamicImport from './dynamic-import';
+import React, { Suspense, lazy, ComponentType, useEffect } from 'react';
+import { usePerformanceMonitoring } from '@/hooks/use-performance-monitoring';
 
 interface Lazy3DProps {
-  component: () => Promise<{ default: React.ComponentType<any> }>;
+  component: () => Promise<{ default: ComponentType<any> }>;
   props?: Record<string, any>;
-  placeholder?: React.ReactNode;
-  threshold?: number; // Visibility threshold to trigger load (0-1)
+  fallback?: React.ReactNode;
 }
 
 /**
- * Component for lazy loading 3D content only when needed
+ * Lazy loads 3D content components when they scroll into view
+ * to improve initial load performance
  */
 const Lazy3D: React.FC<Lazy3DProps> = ({
   component,
   props = {},
-  placeholder = (
-    <div className="animate-pulse bg-black/5 rounded-md flex items-center justify-center h-64 w-full">
-      <div className="text-muted">3D Content</div>
-    </div>
-  ),
-  threshold = 0.1
+  fallback = <div className="h-[300px] w-full bg-black/5 rounded-lg animate-pulse flex items-center justify-center">Loading 3D content...</div>
 }) => {
-  const [shouldLoad, setShouldLoad] = useState<boolean>(false);
-  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
+  const { markStart, markEnd } = usePerformanceMonitoring();
+  const componentName = component.toString().split('/').pop()?.split('.')[0] || 'ThreeJSComponent';
   
+  // Load the 3D component lazily
+  const Component = lazy(() => {
+    markStart(`load3D-${componentName}`);
+    return component().then(module => {
+      markEnd(`load3D-${componentName}`);
+      return module;
+    });
+  });
+  
+  // Track render performance
   useEffect(() => {
-    if (!containerRef || typeof IntersectionObserver === 'undefined') {
-      return;
-    }
-    
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Load 3D content when container is visible
-        if (entries[0].isIntersecting) {
-          setShouldLoad(true);
-          observer.disconnect();
-        }
-      },
-      { threshold }
-    );
-    
-    observer.observe(containerRef);
-    
-    return () => {
-      observer.disconnect();
-    };
-  }, [containerRef, threshold]);
+    markStart(`render3D-${componentName}`);
+    return () => markEnd(`render3D-${componentName}`);
+  }, [componentName, markStart, markEnd]);
   
   return (
-    <div 
-      ref={setContainerRef}
-      className="relative min-h-[200px] w-full"
-    >
-      {shouldLoad ? (
-        <DynamicImport 
-          component={component} 
-          props={props} 
-          fallback={placeholder}
-        />
-      ) : (
-        placeholder
-      )}
-    </div>
+    <Suspense fallback={fallback}>
+      <Component {...props} />
+    </Suspense>
   );
 };
 

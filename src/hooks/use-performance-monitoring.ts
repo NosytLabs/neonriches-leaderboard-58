@@ -1,10 +1,20 @@
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { markComponentRenderStart, markComponentRenderEnd, initPerformanceMonitoring } from '@/utils/performanceMonitoring';
 
 export const usePerformanceMonitoring = () => {
   const isInitialized = useRef(false);
 
+  // Memoize mark functions to prevent unnecessary re-renders
+  const markStart = useCallback((componentName: string) => {
+    markComponentRenderStart(componentName);
+  }, []);
+  
+  const markEnd = useCallback((componentName: string) => {
+    markComponentRenderEnd(componentName);
+  }, []);
+
+  // Initialize performance monitoring once
   useEffect(() => {
     if (!isInitialized.current) {
       initPerformanceMonitoring();
@@ -21,34 +31,15 @@ export const usePerformanceMonitoring = () => {
             if (fcpEntry) {
               console.info(`[Performance] FCP: ${fcpEntry.startTime.toFixed(2)}ms`);
             }
-            
-            // Track Largest Contentful Paint
-            if ('PerformanceObserver' in window) {
-              try {
-                const lcpObserver = new PerformanceObserver((entryList) => {
-                  const entries = entryList.getEntries();
-                  const lastEntry = entries[entries.length - 1];
-                  console.info(`[Performance] LCP: ${lastEntry.startTime.toFixed(2)}ms`);
-                });
-                
-                lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
-              } catch (error) {
-                console.warn('[Performance] LCP monitoring not supported in this browser');
-              }
-            }
           }, 0);
         });
       }
     }
-    
-    return () => {
-      // Cleanup if needed
-    };
   }, []);
 
   return {
-    markStart: markComponentRenderStart,
-    markEnd: markComponentRenderEnd
+    markStart,
+    markEnd
   };
 };
 
