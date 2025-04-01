@@ -4,8 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Paintbrush, Sparkles, Star, Lock, Crown, Square as SquareIcon, Image as ImageIcon, Wallet as WalletIcon } from 'lucide-react';
-import { UserProfile } from '@/types/user-consolidated';
+import { Paintbrush, Sparkles, Star, Lock, Crown as CrownIcon, Square, Image as ImageIcon, Wallet } from 'lucide-react';
+import { UserProfile } from '@/types/user';
 import { CosmeticItem } from '@/types/cosmetics';
 import { formatCurrency } from '@/utils/formatters';
 import CosmeticCard from './CosmeticCard';
@@ -29,22 +29,166 @@ const ProfileCustomization: React.FC<ProfileCustomizationProps> = ({
 
   useEffect(() => {
     const mockAvailableCosmetics: CosmeticItem[] = [
-      { id: 'default', name: 'Default', description: 'The standard SpendThrone theme', price: 0, type: 'theme', rarity: 'common', category: 'theme', enabled: true },
-      { id: 'royal-gold', name: 'Royal Gold', description: 'A luxurious gold theme for royalty', price: 500, type: 'theme', rarity: 'epic', category: 'theme', enabled: true },
-      { id: 'neon-future', name: 'Neon Future', description: 'Cyberpunk-inspired neon styling', price: 300, type: 'theme', rarity: 'rare', category: 'theme', enabled: true },
-      { id: 'dark-court', name: 'Dark Court', description: 'Elegant dark styling for the sophisticated', price: 250, type: 'theme', rarity: 'rare', category: 'theme', enabled: true },
-      { id: 'default-bg', name: 'Default Background', description: 'Standard profile background', price: 0, type: 'background', rarity: 'common', category: 'background', enabled: true },
-      { id: 'throne-room', name: 'Throne Room', description: 'Show off your royal status', price: 750, type: 'background', rarity: 'legendary', category: 'background', enabled: true },
-      { id: 'space-station', name: 'Space Station', description: 'View your kingdom from orbit', price: 500, type: 'background', rarity: 'epic', category: 'background', enabled: true },
-      { id: 'treasure-vault', name: 'Treasure Vault', description: 'Surrounded by your wealth', price: 400, type: 'background', rarity: 'rare', category: 'background', enabled: true },
-      { id: 'no-effect', name: 'No Effect', description: 'No special effects', price: 0, type: 'effect', rarity: 'common', category: 'effect', enabled: true },
-      { id: 'sparkle', name: 'Sparkle Effect', description: 'Add a sparkling effect to your profile', price: 200, type: 'effect', rarity: 'uncommon', category: 'effect', enabled: true },
-      { id: 'glow', name: 'Royal Glow', description: 'Surround your profile with a royal glow', price: 350, type: 'effect', rarity: 'rare', category: 'effect', enabled: true },
-      { id: 'confetti', name: 'Wealth Rain', description: 'Make it rain coins on your profile', price: 450, type: 'effect', rarity: 'epic', category: 'effect', enabled: true },
-      { id: 'default-title', name: 'No Title', description: 'No special title', price: 0, type: 'title', rarity: 'common', category: 'title', enabled: true },
-      { id: 'highness', name: 'Your Highness', description: 'A title of distinction and nobility', price: 1000, type: 'title', rarity: 'legendary', category: 'title', enabled: true },
-      { id: 'lord', name: 'Lord of Spending', description: 'Show off your spending power', price: 750, type: 'title', rarity: 'epic', category: 'title', enabled: true },
-      { id: 'digital-noble', name: 'Digital Noble', description: 'A title for the virtual aristocracy', price: 500, type: 'title', rarity: 'rare', category: 'title', enabled: true }
+      { 
+        id: 'default', 
+        name: 'Default', 
+        description: 'The standard SpendThrone theme', 
+        price: 0, 
+        type: 'theme', 
+        rarity: 'common', 
+        category: 'theme', 
+        enabled: true 
+      },
+      { 
+        id: 'royal-gold', 
+        name: 'Royal Gold', 
+        description: 'A luxurious gold theme for royalty', 
+        price: 500, 
+        type: 'theme', 
+        rarity: 'epic', 
+        category: 'theme', 
+        enabled: true 
+      },
+      { 
+        id: 'neon-future', 
+        name: 'Neon Future', 
+        description: 'Cyberpunk-inspired neon styling', 
+        price: 300, 
+        type: 'theme', 
+        rarity: 'rare', 
+        category: 'theme', 
+        enabled: true 
+      },
+      { 
+        id: 'dark-court', 
+        name: 'Dark Court', 
+        description: 'Elegant dark styling for the sophisticated', 
+        price: 250, 
+        type: 'theme', 
+        rarity: 'rare', 
+        category: 'theme', 
+        enabled: true 
+      },
+      { 
+        id: 'default-bg', 
+        name: 'Default Background', 
+        description: 'Standard profile background', 
+        price: 0, 
+        type: 'background', 
+        rarity: 'common', 
+        category: 'background', 
+        enabled: true 
+      },
+      { 
+        id: 'throne-room', 
+        name: 'Throne Room', 
+        description: 'Show off your royal status', 
+        price: 750, 
+        type: 'background', 
+        rarity: 'legendary', 
+        category: 'background', 
+        enabled: true 
+      },
+      { 
+        id: 'space-station', 
+        name: 'Space Station', 
+        description: 'View your kingdom from orbit', 
+        price: 500, 
+        type: 'background', 
+        rarity: 'epic', 
+        category: 'background', 
+        enabled: true 
+      },
+      { 
+        id: 'treasure-vault', 
+        name: 'Treasure Vault', 
+        description: 'Surrounded by your wealth', 
+        price: 400, 
+        type: 'background', 
+        rarity: 'rare', 
+        category: 'background', 
+        enabled: true 
+      },
+      { 
+        id: 'no-effect', 
+        name: 'No Effect', 
+        description: 'No special effects', 
+        price: 0, 
+        type: 'effect', 
+        rarity: 'common', 
+        category: 'effect', 
+        enabled: true 
+      },
+      { 
+        id: 'sparkle', 
+        name: 'Sparkle Effect', 
+        description: 'Add a sparkling effect to your profile', 
+        price: 200, 
+        type: 'effect', 
+        rarity: 'uncommon', 
+        category: 'effect', 
+        enabled: true 
+      },
+      { 
+        id: 'glow', 
+        name: 'Royal Glow', 
+        description: 'Surround your profile with a royal glow', 
+        price: 350, 
+        type: 'effect', 
+        rarity: 'rare', 
+        category: 'effect', 
+        enabled: true 
+      },
+      { 
+        id: 'confetti', 
+        name: 'Wealth Rain', 
+        description: 'Make it rain coins on your profile', 
+        price: 450, 
+        type: 'effect', 
+        rarity: 'epic', 
+        category: 'effect', 
+        enabled: true 
+      },
+      { 
+        id: 'default-title', 
+        name: 'No Title', 
+        description: 'No special title', 
+        price: 0, 
+        type: 'title', 
+        rarity: 'common', 
+        category: 'title', 
+        enabled: true 
+      },
+      { 
+        id: 'highness', 
+        name: 'Your Highness', 
+        description: 'A title of distinction and nobility', 
+        price: 1000, 
+        type: 'title', 
+        rarity: 'legendary', 
+        category: 'title', 
+        enabled: true 
+      },
+      { 
+        id: 'lord', 
+        name: 'Lord of Spending', 
+        description: 'Show off your spending power', 
+        price: 750, 
+        type: 'title', 
+        rarity: 'epic', 
+        category: 'title', 
+        enabled: true 
+      },
+      { 
+        id: 'digital-noble', 
+        name: 'Digital Noble', 
+        description: 'A title for the virtual aristocracy', 
+        price: 500, 
+        type: 'title', 
+        rarity: 'rare', 
+        category: 'title', 
+        enabled: true 
+      }
     ];
     
     setAvailableItems(mockAvailableCosmetics);
@@ -135,11 +279,11 @@ const ProfileCustomization: React.FC<ProfileCustomizationProps> = ({
         <Tabs defaultValue={activeCategory} onValueChange={setActiveCategory}>
           <TabsList className="grid grid-cols-4 mb-6">
             <TabsTrigger value="title" className="flex items-center gap-1.5">
-              <Crown className="h-4 w-4" />
+              <CrownIcon className="h-4 w-4" />
               Titles
             </TabsTrigger>
             <TabsTrigger value="border" className="flex items-center gap-1.5">
-              <SquareIcon className="h-4 w-4" />
+              <Square className="h-4 w-4" />
               Borders
             </TabsTrigger>
             <TabsTrigger value="background" className="flex items-center gap-1.5">
@@ -185,7 +329,7 @@ const ProfileCustomization: React.FC<ProfileCustomizationProps> = ({
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-sm font-semibold text-white/60">Available for Purchase</h3>
               <Badge variant="outline" className="bg-black/20">
-                <WalletIcon className="h-3 w-3 mr-1.5" />
+                <Wallet className="h-3 w-3 mr-1.5" />
                 Balance: {formatCurrency(user?.walletBalance || 0)}
               </Badge>
             </div>

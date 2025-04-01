@@ -1,6 +1,6 @@
 
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-export type CosmeticCategory = 'title' | 'border' | 'background' | 'effect' | 'theme' | 'badge' | 'emoji' | 'color' | 'font';
+export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique' | 'royal';
+export type CosmeticCategory = 'title' | 'border' | 'background' | 'effect' | 'theme' | 'badge' | 'emoji' | 'color' | 'font' | 'appearance' | 'profile' | 'interaction';
 
 export interface CosmeticItem {
   id: string;
@@ -16,6 +16,9 @@ export interface CosmeticItem {
   cssClass?: string;
   restrictedTo?: string[];
   icon?: string;
+  imageSrc?: string; // Add this to fix imageSrc property errors
+  cost?: number; // Add this for backward compatibility
+  image?: string; // Add this for backward compatibility
 }
 
 export interface UserCosmetics {
@@ -37,7 +40,20 @@ export interface UserCosmetics {
   activeEffect?: string;
   activeBadge?: string;
   activeTheme?: string;
+  // Legacy compatibility fields
+  borders?: string[];
+  colors?: string[];
+  fonts?: string[];
+  emojis?: string[];
+  titles?: string[];
+  backgrounds?: string[];
+  effects?: string[];
+  badges?: string[];
+  themes?: string[];
 }
+
+// Alias UserCosmetics as UserCosmeticState for backward compatibility
+export type UserCosmeticState = UserCosmetics;
 
 export interface SocialLink {
   id: string | number;
@@ -52,4 +68,11 @@ export interface SocialLink {
   title?: string;
   label?: string;
   type?: string;
+}
+
+export interface CosmeticPurchaseResult {
+  success: boolean;
+  message: string;
+  item?: CosmeticItem;
+  updatedCosmetics?: UserCosmetics;
 }

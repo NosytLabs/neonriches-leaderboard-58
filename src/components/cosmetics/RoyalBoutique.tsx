@@ -47,6 +47,7 @@ const RoyalBoutique = () => {
     }
   };
 
+  // Create sample cosmetic items with correct properties
   const bordersCategory: CosmeticItem[] = [
     {
       id: 'border-1',
@@ -57,8 +58,8 @@ const RoyalBoutique = () => {
       cssClass: 'border-gold',
       rarity: 'rare',
       type: 'premium',
-      imageSrc: '/images/cosmetics/border-gold.png',
-      enabled: true
+      enabled: true,
+      previewUrl: '/images/cosmetics/border-gold.png'
     },
     {
       id: 'border-2',
@@ -69,8 +70,8 @@ const RoyalBoutique = () => {
       cssClass: 'border-silver',
       rarity: 'uncommon',
       type: 'standard',
-      imageSrc: '/images/cosmetics/border-silver.png',
-      enabled: true
+      enabled: true,
+      previewUrl: '/images/cosmetics/border-silver.png'
     },
     {
       id: 'border-3',
@@ -81,8 +82,8 @@ const RoyalBoutique = () => {
       cssClass: 'border-dragon-scale',
       rarity: 'epic',
       type: 'exclusive',
-      imageSrc: '/images/cosmetics/border-dragon.png',
-      enabled: true
+      enabled: true,
+      previewUrl: '/images/cosmetics/border-dragon.png'
     },
   ];
 
@@ -96,8 +97,8 @@ const RoyalBoutique = () => {
       cssClass: 'text-royal-purple',
       rarity: 'epic',
       type: 'premium',
-      imageSrc: '/images/cosmetics/color-purple.png',
-      enabled: true
+      enabled: true,
+      previewUrl: '/images/cosmetics/color-purple.png'
     },
     {
       id: 'color-2',
@@ -108,8 +109,8 @@ const RoyalBoutique = () => {
       cssClass: 'text-emerald-green',
       rarity: 'uncommon',
       type: 'standard',
-      imageSrc: '/images/cosmetics/color-emerald.png',
-      enabled: true
+      enabled: true,
+      previewUrl: '/images/cosmetics/color-emerald.png'
     },
     {
       id: 'color-3',
@@ -120,8 +121,8 @@ const RoyalBoutique = () => {
       cssClass: 'text-golden-yellow',
       rarity: 'rare',
       type: 'exclusive',
-      imageSrc: '/images/cosmetics/color-gold.png',
-      enabled: true
+      enabled: true,
+      previewUrl: '/images/cosmetics/color-gold.png'
     },
   ];
 
@@ -135,8 +136,8 @@ const RoyalBoutique = () => {
       cssClass: 'font-medieval',
       rarity: 'legendary',
       type: 'premium',
-      imageSrc: '/images/cosmetics/font-medieval.png',
-      enabled: true
+      enabled: true,
+      previewUrl: '/images/cosmetics/font-medieval.png'
     },
     {
       id: 'font-2',
@@ -147,8 +148,8 @@ const RoyalBoutique = () => {
       cssClass: 'font-elegant-serif',
       rarity: 'rare',
       type: 'standard',
-      imageSrc: '/images/cosmetics/font-serif.png',
-      enabled: true
+      enabled: true,
+      previewUrl: '/images/cosmetics/font-serif.png'
     },
     {
       id: 'font-3',
@@ -159,16 +160,16 @@ const RoyalBoutique = () => {
       cssClass: 'font-bold-sans',
       rarity: 'uncommon',
       type: 'standard',
-      imageSrc: '/images/cosmetics/font-sans.png',
-      enabled: true
+      enabled: true,
+      previewUrl: '/images/cosmetics/font-sans.png'
     },
   ];
 
   // Create empty arrays for remaining categories
   const emptyArray: CosmeticItem[] = [];
   
-  // Updated to include all required categories
-  const allCosmetics: Record<CosmeticCategory, CosmeticItem[]> = {
+  // Updated to include all required categories and valid types
+  const allCosmetics: Record<string, CosmeticItem[]> = {
     border: bordersCategory,
     color: colorsCategory,
     font: fontsCategory,
@@ -177,17 +178,14 @@ const RoyalBoutique = () => {
     background: emptyArray,
     effect: emptyArray,
     badge: emptyArray,
-    theme: emptyArray,
-    appearance: emptyArray,
-    profile: emptyArray,
-    interaction: emptyArray
+    theme: emptyArray
   };
 
   // Helper function to check if a user owns a cosmetic
   const userOwnsCosmetic = (category: string, itemId: string): boolean => {
     if (!user || !user.cosmetics) return false;
     
-    const categoryItems = user.cosmetics[category];
+    const categoryItems = user.cosmetics[category as keyof typeof user.cosmetics];
     if (!categoryItems) return false;
     
     // Check if the category items is an array and contains the item id
@@ -227,7 +225,7 @@ const RoyalBoutique = () => {
                           </CardHeader>
                           <CardContent className="flex items-center justify-between">
                             <img
-                              src={item.imageSrc || '/images/cosmetics/default.png'}
+                              src={item.previewUrl || '/images/cosmetics/default.png'}
                               alt={item.name}
                               className="w-20 h-20 object-cover rounded-md"
                             />

@@ -30,7 +30,12 @@ export const adaptToStandardUserProfile = (user: UserProfile & { totalSpent: num
 
   return {
     ...user,
-    profileBoosts: adaptedProfileBoosts
+    // Ensure all required properties are present
+    tier: user.tier || 'basic',
+    team: user.team || 'none',
+    profileBoosts: adaptedProfileBoosts,
+    // If the user.joinedDate doesn't exist, set a fallback
+    joinedDate: user.joinedDate || user.joinDate || user.createdAt || user.joinedAt || new Date().toISOString()
   };
 };
 
