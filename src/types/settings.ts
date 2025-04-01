@@ -45,6 +45,9 @@ export interface AccessibilitySettings {
   reducedTransparency: boolean;
 }
 
+// Theme type
+export type ThemeType = 'light' | 'dark' | 'royal' | 'system';
+
 // All Settings Context Type
 export interface SettingsContextType {
   // Basic settings
@@ -53,9 +56,9 @@ export interface SettingsContextType {
   resetSettings: () => void;
   
   // Theme settings
-  theme: 'light' | 'dark';
+  theme: ThemeType;
   isDarkTheme: boolean;
-  setTheme: (theme: 'light' | 'dark') => void;
+  setTheme: (theme: ThemeType) => void;
   
   // Sound settings
   soundConfig: SoundConfig;

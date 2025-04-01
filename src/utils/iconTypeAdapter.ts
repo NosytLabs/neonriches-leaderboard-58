@@ -22,9 +22,15 @@ export const adaptIconName = (name: string): string => {
 /**
  * Adapts an icon size value to the correct format
  */
-export const adaptIconSize = (size: IconSize | number): IconSize | number => {
+export const adaptIconSize = (size: IconSize | MedievalIconSize | string): IconSize => {
   if (typeof size === 'number') {
-    return size;
+    // Map number to closest icon size
+    if (size <= 4) return 'xs';
+    if (size <= 5) return 'sm';
+    if (size <= 6) return 'md';
+    if (size <= 8) return 'lg';
+    if (size <= 10) return 'xl';
+    return '2xl';
   }
   
   // Map the size if needed

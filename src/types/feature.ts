@@ -11,7 +11,12 @@ export type Feature =
   | 'profile-verification' 
   | 'royal-wishing-well' 
   | 'premium-alerts' 
-  | 'team-management';
+  | 'team-management'
+  | 'marketing-basic'
+  | 'marketing-pro'
+  | 'marketing-premium'
+  | 'marketing-royal'
+  | 'marketing_dashboard';
 
 export interface FeatureInfo {
   id: Feature;

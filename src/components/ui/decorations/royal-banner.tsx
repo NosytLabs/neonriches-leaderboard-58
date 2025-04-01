@@ -9,10 +9,12 @@ const RoyalBanner: React.FC<BaseDecorationProps & { text?: string }> = ({
   color = 'gold',
   size = 'md',
   animated = false,
+  animate = false,
   className,
   text
 }) => {
-  const sizeClass = sizeClasses[size];
+  const actualAnimate = animated || animate; // Support both prop names
+  const sizeClass = sizeClasses[size as keyof typeof sizeClasses];
   
   return (
     <div className={cn(
@@ -48,7 +50,7 @@ const RoyalBanner: React.FC<BaseDecorationProps & { text?: string }> = ({
                  size === 'lg' ? 'lg' : 
                  size === 'xl' ? 'xl' : 'lg'}
             color={color as any}
-            animated={animated}
+            animated={actualAnimate}
           />
         </div>
         

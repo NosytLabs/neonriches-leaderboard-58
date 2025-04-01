@@ -53,7 +53,7 @@ const FeatureAccessCard: React.FC<FeatureAccessCardProps> = ({
         toast({
           title: "Unlock Failed",
           description: response.error || "Could not unlock feature at this time",
-          variant: "error",
+          variant: "destructive",
         });
       }
     } catch (error) {
@@ -61,7 +61,7 @@ const FeatureAccessCard: React.FC<FeatureAccessCardProps> = ({
       toast({
         title: "Error",
         description: "An unexpected error occurred",
-        variant: "error",
+        variant: "destructive",
       });
     } finally {
       setIsProcessing(false);

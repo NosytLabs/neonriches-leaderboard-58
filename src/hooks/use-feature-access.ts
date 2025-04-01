@@ -8,6 +8,10 @@ export interface FeatureAccessHookResult {
   unlockFeature: (feature: Feature) => Promise<FeatureAccessResponse>;
   isUnlocking: boolean;
   accessError: string | null;
+  hasAccess: (feature: Feature) => boolean;
+  isUserPro: boolean;
+  canAccessFeature: (feature: Feature) => boolean;
+  purchaseFeatureIndividually: (featureId: Feature) => Promise<{success: boolean, url?: string}>;
 }
 
 /**
@@ -57,37 +61,49 @@ export const useFeatureAccess = (): FeatureAccessHookResult => {
   }, []);
 
   // A function to check if a user has access to a feature
-  const checkFeatureAccess = useCallback(async (feature: Feature): Promise<boolean> => {
-    setIsLoading(true);
+  const hasAccess = useCallback((feature: Feature): boolean => {
+    // For demo, let's say the user has access to these features
+    const availableFeatures: Feature[] = [
+      'analytics',
+      'link-tracking',
+      'status-boosts',
+      'visibility-enhancements',
+      'certificate-creation',
+      'marketing-basic'
+    ];
     
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // For demo, let's say the user has access to these features
-      const availableFeatures: Feature[] = [
-        'analytics',
-        'link-tracking',
-        'status-boosts',
-        'visibility-enhancements',
-        'certificate-creation'
-      ];
-      
-      return availableFeatures.includes(feature);
-    } catch (error) {
-      console.error('Error checking feature access:', error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
+    return availableFeatures.includes(feature);
+  }, []);
+
+  const canAccessFeature = useCallback((feature: Feature): boolean => {
+    return hasAccess(feature);
+  }, [hasAccess]);
+  
+  // Mock function to check if user is pro
+  const isUserPro = true;
+  
+  // Mock function to purchase feature individually
+  const purchaseFeatureIndividually = useCallback(async (featureId: Feature): Promise<{success: boolean, url?: string}> => {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    return {
+      success: true,
+      url: `/features/${featureId}`
+    };
   }, []);
 
   return {
     isLoading,
     unlockFeature,
     isUnlocking,
-    accessError
+    accessError,
+    hasAccess,
+    isUserPro,
+    canAccessFeature,
+    purchaseFeatureIndividually
   };
 };
 
-// No need to re-export types that are already exported elsewhere
+// Export the Feature type
+export type { Feature };

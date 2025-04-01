@@ -9,20 +9,23 @@ const CrossedSwords: React.FC<BaseDecorationProps> = ({
   color = 'gold',
   size = 'md',
   animate = false,
+  animated = false,
   className = ''
 }) => {
+  const actualAnimate = animated || animate; // Support both prop names
+  
   // Define size classes directly
   const sizeClasses = {
-    xs: { container: 'w-6 h-6', border: 'border-1', icon: 'xs' as const },
-    sm: { container: 'w-8 h-8', border: 'border-1', icon: 'sm' as const },
-    md: { container: 'w-12 h-12', border: 'border-2', icon: 'md' as const },
-    lg: { container: 'w-16 h-16', border: 'border-2', icon: 'lg' as const },
-    xl: { container: 'w-24 h-24', border: 'border-3', icon: 'xl' as const }
+    xs: { container: 'w-6 h-6', border: 'border-1', icon: 'xs' },
+    sm: { container: 'w-8 h-8', border: 'border-1', icon: 'sm' },
+    md: { container: 'w-12 h-12', border: 'border-2', icon: 'md' },
+    lg: { container: 'w-16 h-16', border: 'border-2', icon: 'lg' },
+    xl: { container: 'w-24 h-24', border: 'border-3', icon: 'xl' }
   };
   
-  const sizeClass = sizeClasses[size];
+  const sizeClass = sizeClasses[size as keyof typeof sizeClasses];
   const containerSize = sizeClass.container;
-  const animationClass = animate ? 'animate-pulse-slow' : '';
+  const animationClass = actualAnimate ? 'animate-pulse-slow' : '';
   
   return (
     <div className={cn(
@@ -34,7 +37,7 @@ const CrossedSwords: React.FC<BaseDecorationProps> = ({
       <div className="absolute transform -rotate-45 -translate-x-1">
         <MedievalIcon 
           name="sword" 
-          size={adaptIconSize(sizeClass.icon)} 
+          size={sizeClass.icon} 
           color={adaptIconColor(color)} 
         />
       </div>
@@ -42,7 +45,7 @@ const CrossedSwords: React.FC<BaseDecorationProps> = ({
       <div className="absolute transform rotate-45 translate-x-1">
         <MedievalIcon 
           name="sword" 
-          size={adaptIconSize(sizeClass.icon)} 
+          size={sizeClass.icon} 
           color={adaptIconColor(color)} 
         />
       </div>

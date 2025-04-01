@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sparkles, Crown, Shield, Eye, Link, Medal, Palette, Megaphone, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/auth';
-import useFeatureAccess from '@/hooks/use-feature-access';
+import { useFeatureAccess } from '@/hooks/use-feature-access';
 import usePageTracking from '@/hooks/usePageTracking';
 
 const ProfileEnhancements = () => {

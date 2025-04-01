@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Paintbrush, Monitor, Sun, Moon, Crown } from 'lucide-react';
 import { Label } from '@/components/ui/label';
@@ -6,12 +7,13 @@ import { Button } from '@/components/ui/button';
 import SettingsLayout from './SettingsLayout';
 import { useSettings } from '@/hooks/useSettings';
 import { motion } from 'framer-motion';
+import { ThemeType } from '@/types/settings';
 
 const AppearanceSettings: React.FC = () => {
   const { theme, setTheme, isDarkTheme } = useSettings();
   
   const handleThemeChange = (value: string) => {
-    setTheme(value as 'dark' | 'light' | 'system' | 'royal');
+    setTheme(value as ThemeType);
   };
   
   const getThemeIcon = (currentTheme: string) => {
