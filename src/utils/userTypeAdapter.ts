@@ -23,7 +23,7 @@ export const adaptToStandardUserProfile = (user: UserProfile & { totalSpent: num
   const adaptedProfileBoosts = Array.isArray(user.profileBoosts) 
     ? user.profileBoosts.map(boost => ({
         ...boost,
-        level: boost.level ?? 1,
+        level: boost.level || 1, // Ensure level is always provided
         isActive: boost.isActive ?? true,
         strength: boost.strength ?? 1,
         appliedBy: boost.appliedBy ?? 'system'

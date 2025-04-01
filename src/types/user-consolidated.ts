@@ -101,7 +101,7 @@ export interface UserCosmetics {
 export interface ProfileBoost {
   id: string;
   type: string;
-  level?: number;
+  level: number; // Changed from optional to required to match user.d.ts
   startDate: string;
   endDate: string;
   appliedBy?: string;
@@ -126,12 +126,12 @@ export interface UserProfile {
   email?: string;
   profileImage?: string;
   bio?: string;
-  joinedDate: string;  // Made required to match User type
+  joinedDate: string;  // Required to match User type
   joinDate?: string;
   joinedAt?: string;
   createdAt?: string;
   totalSpent: number;
-  amountSpent: number;  // Made required to match User type
+  amountSpent: number;  // Required to match User type
   spentAmount?: number;  // Legacy field - use totalSpent instead
   walletBalance?: number;
   rank?: number;
@@ -209,7 +209,7 @@ export interface SocialLink {
   verified?: boolean;
   primary?: boolean;
   clicks?: number;
-  title?: string;
+  title?: string; // Added to match the version in user.d.ts
   label?: string;
   type?: string;
 }
