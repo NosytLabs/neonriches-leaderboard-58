@@ -1,3 +1,4 @@
+
 import {
   ArrowDown,
   ArrowLeft,
@@ -177,7 +178,6 @@ import {
   Square,
   Underline,
   VideoOff,
-  Voicemail,
   Volume1,
   VolumeX,
   WifiOff,
@@ -1118,5 +1118,5 @@ import {
   Dices926,
   Dices927,
   Dices928,
-  Dices929,
-};
+  Dices929
+}
