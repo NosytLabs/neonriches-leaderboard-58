@@ -1,20 +1,113 @@
 
-import { User, UserProfile } from '@/types/user';
-import { Certificate, CertificateType, CertificateTeam, CertificateRepository, CertificateTemplateFactory, CertificateTemplate } from '@/types/certificates';
-import { createCertificateRepository } from '@/repositories/certificateRepository';
-import DefaultCertificateTemplateFactory from '@/factories/certificateTemplateFactory';
+import { User, UserProfile } from '@/types/user-consolidated';
+import { Certificate, CertificateType, CertificateTeam, CertificateTemplate } from '@/types/certificates';
 
-// Create the mock certificate NFT creation function since it doesn't exist
+// Mock certificate repository interface
+const certificateRepository = {
+  getCertificateById: async (id: string): Promise<Certificate | null> => {
+    // Mock implementation
+    return {
+      id,
+      title: 'Sample Certificate',
+      description: 'This is a sample certificate',
+      imageUrl: '/images/certificates/default.png',
+      dateIssued: new Date().toISOString(),
+      status: 'pending',
+      type: 'nobility',
+      userId: 'user-1'
+    };
+  },
+  
+  getCertificatesForUser: async (userId: string): Promise<Certificate[]> => {
+    // Mock implementation
+    return [
+      {
+        id: 'cert-1',
+        title: 'Royal Spender',
+        description: 'For exceptional spending',
+        imageUrl: '/images/certificates/default.png',
+        dateIssued: new Date().toISOString(),
+        status: 'minted',
+        type: 'spending',
+        userId: userId,
+        team: 'red'
+      }
+    ];
+  },
+  
+  getMintedCertificatesForUser: async (userId: string): Promise<Certificate[]> => {
+    // Mock implementation
+    return [];
+  },
+  
+  updateCertificate: async (certificate: Certificate): Promise<boolean> => {
+    // Mock implementation
+    return true;
+  },
+  
+  createCertificate: async (certificate: Certificate): Promise<Certificate> => {
+    // Mock implementation
+    return certificate;
+  },
+  
+  deleteCertificate: async (id: string): Promise<boolean> => {
+    // Mock implementation
+    return true;
+  }
+};
+
+// Mock template factory
+const templateFactory = {
+  getTemplatesForUser: async (user: UserProfile): Promise<CertificateTemplate[]> => {
+    // Mock implementation
+    return [
+      {
+        id: 'template-1',
+        name: 'Noble Certificate',
+        description: 'A certificate for nobility',
+        previewUrl: '/images/certificates/template-noble.png',
+        imageUrl: '/images/certificates/template-noble.png',
+        type: 'nobility',
+        team: 'red'
+      },
+      {
+        id: 'template-2',
+        name: 'Spending Champion',
+        description: 'A certificate for big spenders',
+        previewUrl: '/images/certificates/template-spending.png',
+        imageUrl: '/images/certificates/template-spending.png',
+        type: 'spending',
+        team: 'blue'
+      }
+    ];
+  },
+  
+  createTemplateFromCertificate: async (certificate: Certificate): Promise<CertificateTemplate> => {
+    // Mock implementation
+    return {
+      id: `template-${Date.now()}`,
+      name: certificate.title,
+      description: certificate.description,
+      previewUrl: certificate.imageUrl,
+      imageUrl: certificate.imageUrl,
+      type: certificate.type || 'nobility',
+      team: certificate.team
+    };
+  },
+  
+  getTemplateById: async (id: string): Promise<CertificateTemplate | null> => {
+    // Mock implementation
+    return null;
+  }
+};
+
+// Create the mock certificate NFT creation function
 const createCertificateNFT = async (data: any) => {
   return {
     success: true,
     mintAddress: `mint_${Math.random().toString(36).substring(2, 9)}`
   };
 };
-
-// Create instances of repository and factory
-const certificateRepository = createCertificateRepository();
-const templateFactory = new DefaultCertificateTemplateFactory();
 
 /**
  * Generates a certificate of nobility for the user
@@ -72,6 +165,7 @@ export const mintCertificateAsNFT = async (
       const updatedCertificate = {
         ...certificate,
         isMinted: true,
+        status: 'minted',
         mintAddress: result.mintAddress
       };
       

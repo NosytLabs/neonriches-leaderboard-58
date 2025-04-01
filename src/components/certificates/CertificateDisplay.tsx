@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Certificate } from '@/types/certificates';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated';
 import { formatDate } from '@/utils/formatters';
 import { Download, Share2, Award, Clock } from 'lucide-react';
 
@@ -54,12 +54,14 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
     }
   };
 
-  // Handle the dateIssued safely to avoid toString on never error
+  // Handle the dateIssued safely
   const formattedDate = certificate.dateIssued 
     ? typeof certificate.dateIssued === 'string' 
       ? formatDate(certificate.dateIssued) 
       : formatDate(new Date(certificate.dateIssued).toISOString())
-    : 'No date';
+    : certificate.issuedAt 
+      ? formatDate(certificate.issuedAt)
+      : 'No date';
 
   return (
     <Card className="glass-morphism border-white/10 overflow-hidden">
@@ -90,14 +92,14 @@ const CertificateDisplay: React.FC<CertificateDisplayProps> = ({
             size="sm" 
             className="glass-morphism border-white/10" 
             onClick={handleMint}
-            disabled={isMinting || Boolean(certificate.mintAddress)}
+            disabled={isMinting || Boolean(certificate.mintAddress) || certificate.status === 'minted' || certificate.isMinted}
           >
             {isMinting ? (
               <>
                 <div className="h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
                 Minting...
               </>
-            ) : certificate.mintAddress ? (
+            ) : certificate.mintAddress || certificate.status === 'minted' || certificate.isMinted ? (
               <>
                 <Award className="h-4 w-4 mr-2" />
                 Minted

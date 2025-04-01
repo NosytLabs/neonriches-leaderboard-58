@@ -33,19 +33,12 @@ const CertificatePage: React.FC = () => {
     certificateId: id 
   });
   
-  const handleMint = async (cert: Certificate): Promise<string> => {
-    const result = await mintCertificate(cert);
-    return result ? 'success' : 'failed';
+  const handleMint = async (cert: Certificate): Promise<boolean> => {
+    return await mintCertificate(cert);
   };
   
   const handleShare = async (cert: Certificate): Promise<string> => {
-    const imageUrl = await generateShareableImage(cert);
-    if (imageUrl) {
-      // Implementation would depend on how sharing is handled in the app
-      console.log('Share certificate:', imageUrl);
-      return imageUrl;
-    }
-    return '';
+    return await generateShareableImage(cert);
   };
   
   const handleDownload = (cert: Certificate): void => {

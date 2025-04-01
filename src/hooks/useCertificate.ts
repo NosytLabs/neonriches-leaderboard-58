@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Certificate, CertificateTemplate, CertificateType } from '@/types/certificates';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated';
 import certificateService from '@/services/certificateService';
 import { useToast } from '@/hooks/use-toast';
 
@@ -77,7 +77,8 @@ export const useCertificate = ({ user, certificateId }: UseCertificateProps) => 
           setCertificate({
             ...certificate,
             isMinted: true,
-            mintAddress: result.mintAddress
+            mintAddress: result.mintAddress,
+            status: 'minted'
           });
         }
         
@@ -87,7 +88,8 @@ export const useCertificate = ({ user, certificateId }: UseCertificateProps) => 
             ? { 
                 ...cert, 
                 isMinted: true, 
-                mintAddress: result.mintAddress
+                mintAddress: result.mintAddress,
+                status: 'minted'
               }
             : cert
         );

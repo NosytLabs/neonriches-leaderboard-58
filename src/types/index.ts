@@ -3,7 +3,8 @@
 // Using explicit re-exports to avoid ambiguity
 
 // User types
-export type { UserProfile, User, Gender, TeamType, TeamColor } from './user-consolidated';
+export type { UserProfile, User, Gender } from './user-consolidated';
+export type { TeamType, TeamColor } from './user-consolidated';
 export type { ProfileBoost } from './boost';
 export type { UserSettings } from './user';
 
@@ -16,7 +17,13 @@ export type {
 } from './cosmetics';
 
 // Certificate types
-export type { Certificate, CertificateTemplate } from './certificates';
+export type { 
+  Certificate, 
+  CertificateTemplate,
+  CertificateType,
+  CertificateStyle,
+  CertificateTeam
+} from './certificates';
 
 // Explicitly re-export SocialLink from a single source to avoid ambiguity
 export type { SocialLink } from './user-consolidated';
