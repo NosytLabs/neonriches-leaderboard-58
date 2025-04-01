@@ -1,7 +1,7 @@
 
 import { UserCosmetics } from './cosmetics';
 
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze';
 export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'none' | 'neutral';
 export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
 
@@ -29,8 +29,8 @@ export interface ProfileBoost {
   level: number;
   startDate: string;
   endDate: string;
-  appliedBy?: string;
-  strength?: number;
+  appliedBy: string;
+  strength: number;
   name?: string;
   description?: string;
   duration?: number;
@@ -49,7 +49,7 @@ export interface SocialLink {
   verified?: boolean;
   primary?: boolean;
   clicks?: number;
-  title?: string; // Add title property
+  title?: string;
   label?: string;
   type?: string;
 }
@@ -103,7 +103,7 @@ export interface UserProfile {
   amountSpent: number; 
   spentAmount?: number; // For backward compatibility
   walletBalance?: number;
-  isFounder: boolean;
+  isFounder?: boolean;
   isVerified?: boolean;
   isVIP?: boolean;
   isProtected?: boolean;
@@ -111,8 +111,8 @@ export interface UserProfile {
   spendStreak?: number;
   lastActive?: string;
   lastLogin?: string;
-  following?: string[] | number;
-  followers?: string[] | number;
+  following?: string[];
+  followers?: string[];
   cosmetics: UserCosmetics;
   settings: UserSettings;
   profileBoosts?: ProfileBoost[];

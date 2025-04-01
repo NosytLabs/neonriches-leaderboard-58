@@ -1,10 +1,15 @@
 
-import { useSettings } from '@/contexts/SettingsContext';
+import { useContext } from 'react';
+import { SettingsContext } from '@/contexts/SettingsContext';
 
 // This hook is a wrapper around the sound settings portion of useSettings
 // for compatibility with existing components
 export const useSoundsConfig = () => {
-  const settings = useSettings();
+  const settings = useContext(SettingsContext);
+  
+  if (!settings) {
+    throw new Error('useSoundsConfig must be used within a SettingsProvider');
+  }
   
   return {
     soundConfig: settings.soundConfig,

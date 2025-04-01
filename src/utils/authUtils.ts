@@ -1,6 +1,5 @@
-
 // Authentication utility functions and constants
-import { UserTier, UserProfile } from '@/types/user';
+import { UserTier, UserProfile, TeamColor } from '@/types/user';
 import { ProfileBoost } from '@/types/boost';
 import { UserCosmetics } from '@/types/cosmetics';
 import { UserSettings } from '@/types/user-consolidated';
@@ -78,13 +77,13 @@ export const getDefaultUser = (email: string, username: string): UserProfile => 
     profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${username}`,
     bio: '',
     tier: 'basic' as UserTier,
-    team: 'none',
+    team: 'none' as TeamColor,
     rank: 0,
     walletBalance: 5.00, // Starting balance
     totalSpent: 0,
     amountSpent: 0,
     joinedDate: now,
-    joinDate: now, // For backward compatibility
+    createdAt: now, // Add createdAt instead of joinDate
     isVerified: false,
     cosmetics: {
       border: ['starter-border'],
@@ -111,7 +110,7 @@ export const getDefaultUser = (email: string, username: string): UserProfile => 
       rankChangeAlerts: false,
       showTeam: true,
       showSpending: true,
-      showBadges: true // Add the missing showBadges property
+      showBadges: true
     },
     followers: [] as string[], // Fix type for followers
     following: [] as string[], // Fix type for following
@@ -278,7 +277,7 @@ export const createMockUser = (overrides = {}) => {
     displayName: 'Test User',
     profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${Math.random()}`,
     bio: 'This is a test user account',
-    joinedDate: new Date().toISOString(), // Use joinedDate to match type
+    joinedDate: new Date().toISOString(),
     rank: Math.floor(Math.random() * 1000) + 1,
     previousRank: Math.floor(Math.random() * 1000) + 1,
     totalSpent: Math.floor(Math.random() * 10000),

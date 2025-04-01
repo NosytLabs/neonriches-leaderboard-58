@@ -1,13 +1,14 @@
 
 import { useState, useCallback } from 'react';
-import { SoundType, SoundOptions } from '@/types/sound-types';
+import { SoundType, SoundOptions, UseSoundHook } from '@/types/sound-types';
+import { useSoundsConfig } from './use-sounds-config';
 
 /**
  * Custom hook for playing sound effects
  */
-export const useSound = () => {
-  const [muted, setMuted] = useState(false);
-  const [volume, setVolumeState] = useState(0.5);
+export const useSound = (): UseSoundHook => {
+  const { soundConfig, toggleSounds } = useSoundsConfig();
+  const [volume, setVolumeState] = useState(soundConfig.volume || 0.5);
   
   // Basic sound paths
   const soundPaths: Record<string, string> = {
@@ -49,7 +50,7 @@ export const useSound = () => {
    * Play a sound with options
    */
   const playSound = useCallback((type: SoundType, options?: SoundOptions) => {
-    if (muted) return;
+    if (soundConfig.muted || !soundConfig.enabled) return;
     
     // Get the sound path or use a default
     const soundPath = soundPaths[type] || soundPaths.notification;
@@ -79,38 +80,14 @@ export const useSound = () => {
     } catch (err) {
       console.error(`Error setting up sound (${type}):`, err);
     }
-  }, [muted, volume, soundPaths]);
+  }, [soundConfig.muted, soundConfig.enabled, volume, soundPaths]);
   
-  /**
-   * Toggle mute state
-   */
-  const toggleMute = useCallback(() => {
-    setMuted(prevMuted => !prevMuted);
-    return !muted;
-  }, [muted]);
-  
-  /**
-   * Set volume level
-   */
-  const changeVolume = useCallback((newVolume: number) => {
-    // Ensure volume is between 0 and 1
-    const clampedVolume = Math.max(0, Math.min(1, newVolume));
-    setVolumeState(clampedVolume);
-  }, []);
-
   /**
    * Stop a sound (placeholder implementation)
    */
   const stopSound = useCallback((type?: SoundType) => {
     // Simple placeholder implementation
     console.log(`Stopping sound: ${type || 'all'}`);
-  }, []);
-
-  /**
-   * Toggle sound enabled status
-   */
-  const toggleSounds = useCallback(() => {
-    setMuted(prev => !prev);
   }, []);
 
   // Add a compatibility method for the play function that some components are using
@@ -121,14 +98,9 @@ export const useSound = () => {
   return {
     playSound,
     play,
-    isMuted: muted,
-    toggleMute,
-    setMuted,
-    volume,
-    setVolume: changeVolume,
     stopSound,
     toggleSounds,
-    isSoundEnabled: !muted,
+    isSoundEnabled: !soundConfig.muted && soundConfig.enabled,
     currentVolume: volume
   };
 };

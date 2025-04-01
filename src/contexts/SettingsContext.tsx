@@ -1,204 +1,156 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import { SoundConfig } from '@/types/sound-types';
 
-// Define types for settings
-export interface ProfileSettings {
-  publicProfile: boolean;
-  showRank: boolean;
-  showTeam: boolean;
-  showSpending: boolean;
-  rankChangeAlerts: boolean;
-  teamChangeAlerts: boolean;
-  achievementAlerts: boolean;
-  showEmailOnProfile: boolean;
-}
-
-export interface AccessibilitySettings {
-  textSize: number;
-  highContrast: boolean;
-  reducedMotion: boolean;
-  reducedTransparency: boolean;
-}
-
-export type ThemeType = 'light' | 'dark' | 'royal' | 'system';
-
-export interface SettingsContextType {
-  // Sound settings
+interface SettingsContextType {
+  theme: 'light' | 'dark' | 'system';
+  isDarkTheme: boolean;
+  setTheme: (theme: 'light' | 'dark' | 'system') => void;
+  userSettings: {
+    theme: string;
+    notifications: boolean;
+    emailNotifications: boolean;
+    soundEffects: boolean;
+    profileVisibility: string;
+    showBadges: boolean;
+    showTeam: boolean;
+    showSpending: boolean;
+    showRank: boolean;
+    allowProfileLinks: boolean;
+    marketingEmails: boolean;
+    showEmailOnProfile: boolean;
+    rankChangeAlerts: boolean;
+  };
+  updateSettings: (settings: Partial<SettingsContextType['userSettings']>) => void;
+  isLoading: boolean;
   soundConfig: SoundConfig;
   toggleSounds: () => void;
   toggleMuted: () => void;
   setVolume: (volume: number) => void;
   togglePremium: () => void;
-  
-  // Theme settings
-  theme: ThemeType;
-  setTheme: (theme: ThemeType) => void;
-  isDarkTheme: boolean;
-  
-  // Notification settings
+  profileSettings: any;
+  updateProfileSettings: (settings: any) => void;
   notifications: boolean;
   toggleNotifications: () => void;
-  
-  // Profile settings
-  profileSettings: ProfileSettings;
-  updateProfileSettings: (settings: Partial<ProfileSettings>) => void;
-  
-  // Accessibility settings
-  accessibilitySettings: AccessibilitySettings;
-  updateAccessibilitySettings: (settings: Partial<AccessibilitySettings>) => void;
-  
-  // Loading state
-  isLoading: boolean;
 }
 
-const defaultSoundConfig: SoundConfig = {
-  enabled: true,
-  volume: 0.5,
-  effects: {},
-  music: false,
-  musicVolume: 0.3,
-  muted: false,
-  premium: false
+const defaultSettings: SettingsContextType = {
+  theme: 'system',
+  isDarkTheme: true,
+  setTheme: () => {},
+  userSettings: {
+    theme: 'dark',
+    notifications: true,
+    emailNotifications: true,
+    soundEffects: true,
+    profileVisibility: 'public',
+    showBadges: true,
+    showTeam: true,
+    showSpending: true,
+    showRank: true,
+    allowProfileLinks: true,
+    marketingEmails: false,
+    showEmailOnProfile: false,
+    rankChangeAlerts: true
+  },
+  updateSettings: () => {},
+  isLoading: false,
+  soundConfig: {
+    enabled: true,
+    volume: 0.5,
+    music: false,
+    musicVolume: 0.3,
+    muted: false,
+    premium: false
+  },
+  toggleSounds: () => {},
+  toggleMuted: () => {},
+  setVolume: () => {},
+  togglePremium: () => {},
+  profileSettings: {},
+  updateProfileSettings: () => {},
+  notifications: true,
+  toggleNotifications: () => {}
 };
 
-const defaultProfileSettings: ProfileSettings = {
-  publicProfile: true,
-  showRank: true,
-  showTeam: true,
-  showSpending: true,
-  rankChangeAlerts: false,
-  teamChangeAlerts: false,
-  achievementAlerts: false,
-  showEmailOnProfile: false
-};
+export const SettingsContext = createContext<SettingsContextType>(defaultSettings);
 
-const defaultAccessibilitySettings: AccessibilitySettings = {
-  textSize: 100,
-  highContrast: false,
-  reducedMotion: false,
-  reducedTransparency: false
-};
-
-const SettingsContext = createContext<SettingsContextType | null>(null);
-
-export const SettingsProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [settings, setSettings] = useState(() => {
+    const savedSettings = localStorage.getItem('userSettings');
+    return savedSettings ? JSON.parse(savedSettings) : defaultSettings.userSettings;
+  });
+  
+  const [theme, setThemeState] = useState<'light' | 'dark' | 'system'>(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return (savedTheme as any) || 'system';
+  });
+  
   const [soundConfig, setSoundConfig] = useState<SoundConfig>(() => {
-    // Try to load from localStorage
-    try {
-      const savedConfig = localStorage.getItem('soundConfig');
-      return savedConfig ? JSON.parse(savedConfig) : defaultSoundConfig;
-    } catch (error) {
-      console.error('Error loading sound config:', error);
-      return defaultSoundConfig;
-    }
-  });
-  
-  const [theme, setThemeState] = useState<ThemeType>(() => {
-    try {
-      const savedTheme = localStorage.getItem('theme');
-      return (savedTheme as ThemeType) || 'dark';
-    } catch (error) {
-      return 'dark';
-    }
-  });
-  
-  const [notifications, setNotifications] = useState<boolean>(() => {
-    try {
-      const savedNotifications = localStorage.getItem('notifications');
-      return savedNotifications ? JSON.parse(savedNotifications) : true;
-    } catch (error) {
-      return true;
-    }
-  });
-  
-  const [profileSettings, setProfileSettings] = useState<ProfileSettings>(() => {
-    try {
-      const savedSettings = localStorage.getItem('profileSettings');
-      return savedSettings ? JSON.parse(savedSettings) : defaultProfileSettings;
-    } catch (error) {
-      return defaultProfileSettings;
-    }
-  });
-  
-  const [accessibilitySettings, setAccessibilitySettings] = useState<AccessibilitySettings>(() => {
-    try {
-      const savedSettings = localStorage.getItem('accessibilitySettings');
-      return savedSettings ? JSON.parse(savedSettings) : defaultAccessibilitySettings;
-    } catch (error) {
-      return defaultAccessibilitySettings;
-    }
+    const savedConfig = localStorage.getItem('soundConfig');
+    return savedConfig ? JSON.parse(savedConfig) : defaultSettings.soundConfig;
   });
   
   const [isLoading, setIsLoading] = useState(false);
   
-  // Compute if dark theme is active
-  const isDarkTheme = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  
-  // Save to localStorage when settings change
+  const [profileSettings, setProfileSettings] = useState({
+    visibility: 'public',
+    allowLinks: true,
+    showEmail: false
+  });
+
   useEffect(() => {
-    try {
-      localStorage.setItem('soundConfig', JSON.stringify(soundConfig));
-    } catch (error) {
-      console.error('Error saving sound config:', error);
-    }
-  }, [soundConfig]);
+    localStorage.setItem('userSettings', JSON.stringify(settings));
+  }, [settings]);
   
   useEffect(() => {
-    try {
-      localStorage.setItem('theme', theme);
-    } catch (error) {
-      console.error('Error saving theme setting:', error);
+    localStorage.setItem('theme', theme);
+    
+    // Apply theme to document
+    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
   }, [theme]);
   
   useEffect(() => {
-    try {
-      localStorage.setItem('notifications', JSON.stringify(notifications));
-    } catch (error) {
-      console.error('Error saving notifications setting:', error);
-    }
-  }, [notifications]);
+    localStorage.setItem('soundConfig', JSON.stringify(soundConfig));
+  }, [soundConfig]);
   
-  useEffect(() => {
-    try {
-      localStorage.setItem('profileSettings', JSON.stringify(profileSettings));
-    } catch (error) {
-      console.error('Error saving profile settings:', error);
-    }
-  }, [profileSettings]);
+  const updateSettings = (newSettings: Partial<SettingsContextType['userSettings']>) => {
+    setSettings(prev => ({ ...prev, ...newSettings }));
+  };
   
-  useEffect(() => {
-    try {
-      localStorage.setItem('accessibilitySettings', JSON.stringify(accessibilitySettings));
-    } catch (error) {
-      console.error('Error saving accessibility settings:', error);
-    }
-  }, [accessibilitySettings]);
+  const setTheme = (newTheme: 'light' | 'dark' | 'system') => {
+    setThemeState(newTheme);
+  };
   
-  // Sound functions
+  const isDarkTheme = 
+    theme === 'dark' || 
+    (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    
   const toggleSounds = () => {
     setSoundConfig(prev => ({
       ...prev,
       enabled: !prev.enabled
     }));
   };
-
+  
   const toggleMuted = () => {
     setSoundConfig(prev => ({
       ...prev,
       muted: !prev.muted
     }));
   };
-
+  
   const setVolume = (volume: number) => {
-    const clampedVolume = Math.min(Math.max(volume, 0), 1);
     setSoundConfig(prev => ({
       ...prev,
-      volume: clampedVolume
+      volume: Math.max(0, Math.min(1, volume))
     }));
   };
-
+  
   const togglePremium = () => {
     setSoundConfig(prev => ({
       ...prev,
@@ -206,61 +158,32 @@ export const SettingsProvider: React.FC<{children: React.ReactNode}> = ({ childr
     }));
   };
   
-  // Theme function
-  const setTheme = (newTheme: ThemeType) => {
-    setThemeState(newTheme);
+  const updateProfileSettings = (newSettings: any) => {
+    setProfileSettings(prev => ({ ...prev, ...newSettings }));
   };
   
-  // Notification function
   const toggleNotifications = () => {
-    setNotifications(prev => !prev);
+    updateSettings({ notifications: !settings.notifications });
   };
   
-  // Profile settings function
-  const updateProfileSettings = (updates: Partial<ProfileSettings>) => {
-    setProfileSettings(prev => ({
-      ...prev,
-      ...updates
-    }));
-  };
-  
-  // Accessibility settings function
-  const updateAccessibilitySettings = (updates: Partial<AccessibilitySettings>) => {
-    setAccessibilitySettings(prev => ({
-      ...prev,
-      ...updates
-    }));
-  };
-
   return (
-    <SettingsContext.Provider 
-      value={{ 
-        // Sound settings
-        soundConfig, 
-        toggleSounds, 
-        toggleMuted, 
+    <SettingsContext.Provider
+      value={{
+        theme,
+        isDarkTheme,
+        setTheme,
+        userSettings: settings,
+        updateSettings,
+        isLoading,
+        soundConfig,
+        toggleSounds,
+        toggleMuted,
         setVolume,
         togglePremium,
-        
-        // Theme settings
-        theme,
-        setTheme,
-        isDarkTheme,
-        
-        // Notification settings
-        notifications,
-        toggleNotifications,
-        
-        // Profile settings
         profileSettings,
         updateProfileSettings,
-        
-        // Accessibility settings
-        accessibilitySettings,
-        updateAccessibilitySettings,
-        
-        // Loading state
-        isLoading
+        notifications: settings.notifications,
+        toggleNotifications
       }}
     >
       {children}
@@ -268,44 +191,6 @@ export const SettingsProvider: React.FC<{children: React.ReactNode}> = ({ childr
   );
 };
 
-// Export the hook for using the settings context
-export const useSettings = () => {
-  const context = useContext(SettingsContext);
-  
-  if (!context) {
-    console.error('useSettings must be used within a SettingsProvider');
-    // Return default settings to prevent runtime errors
-    return {
-      // Sound settings
-      soundConfig: defaultSoundConfig,
-      toggleSounds: () => {},
-      toggleMuted: () => {},
-      setVolume: () => {},
-      togglePremium: () => {},
-      
-      // Theme settings
-      theme: 'dark' as ThemeType,
-      setTheme: () => {},
-      isDarkTheme: true,
-      
-      // Notification settings
-      notifications: true,
-      toggleNotifications: () => {},
-      
-      // Profile settings
-      profileSettings: defaultProfileSettings,
-      updateProfileSettings: () => {},
-      
-      // Accessibility settings
-      accessibilitySettings: defaultAccessibilitySettings,
-      updateAccessibilitySettings: () => {},
-      
-      // Loading state
-      isLoading: false
-    };
-  }
-  
-  return context;
-};
+export const useSettings = () => useContext(SettingsContext);
 
 export default SettingsContext;

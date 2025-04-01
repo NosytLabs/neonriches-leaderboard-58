@@ -28,7 +28,18 @@ export type SoundType =
   | 'finish'
   | 'withdrawal'
   | 'transfer'
-  | 'team';
+  | 'team'
+  | 'protection' 
+  | 'sparkle'
+  | 'trumpet'
+  | 'medallion'
+  | 'seal'
+  | 'royal'
+  | 'rank_up'
+  | 'coinDrop'
+  | 'royalAnnouncement'
+  | 'swordClash'
+  | 'noblesLaugh';
 
 export interface SoundOptions {
   volume?: number;
@@ -59,4 +70,20 @@ export interface PremiumSoundPackDetails {
   sounds: SoundType[];
   features: string[];
   isPurchased?: boolean;
+}
+
+export interface UseSoundHook {
+  playSound: (type: SoundType, options?: SoundOptions) => void;
+  stopSound: (type?: SoundType) => void;
+  setMuted?: (muted: boolean) => void;
+  setVolume?: (volume: number) => void;
+  toggleMuted?: () => boolean;
+  isMuted?: boolean;
+  play?: (type: SoundType, options?: SoundOptions) => void;
+  pauseSound?: (type?: SoundType) => void;
+  resumeSound?: (type?: SoundType) => void;
+  isPlaying?: (type: SoundType) => boolean;
+  currentVolume?: number;
+  toggleSounds: () => void;
+  isSoundEnabled: boolean;
 }
