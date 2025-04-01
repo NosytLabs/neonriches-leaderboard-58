@@ -36,3 +36,26 @@ export function getTeamColorClass(team: string | null | undefined): string {
     default: return 'text-gray-400';
   }
 }
+
+/**
+ * Ensure a value is converted to a string ID
+ */
+export function ensureStringId(id: string | number | undefined): string {
+  if (id === undefined) return '';
+  return String(id);
+}
+
+/**
+ * Convert any value to a string safely
+ */
+export function safeToString(value: any): string {
+  if (value === null || value === undefined) return '';
+  if (typeof value === 'object') {
+    try {
+      return JSON.stringify(value);
+    } catch (e) {
+      return String(value);
+    }
+  }
+  return String(value);
+}

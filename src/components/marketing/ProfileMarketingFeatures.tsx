@@ -4,7 +4,7 @@ import { UserProfile } from '@/types/user';
 
 export interface ProfileMarketingFeaturesProps {
   user: UserProfile;
-  onBoostProfile?: () => void; // Make this prop required
+  onBoostProfile: () => void; // Make this prop required
 }
 
 const ProfileMarketingFeatures: React.FC<ProfileMarketingFeaturesProps> = ({ 

@@ -1,148 +1,174 @@
-import { UserProfile } from "@/types/user";
-import { TeamColor } from "@/types/team";
 
-export async function getSession() {
-  try {
-    const data = { session: null };
-    return data;
-  } catch (error) {
-    console.error("Unexpected error getting session:", error);
-    return { data: { session: null } };
+// Mock authentication service for development
+import { UserProfile } from '@/types/user-consolidated';
+
+// Mock supabase client
+const supabase = {
+  auth: {
+    signInWithPassword: async ({ email, password }: { email: string, password: string }) => {
+      console.log("Sign in with password", { email, password });
+      // Mock successful login
+      return {
+        data: {
+          session: {
+            user: {
+              id: "mock-user-id",
+              email
+            }
+          }
+        },
+        error: null
+      };
+    },
+    signOut: async () => {
+      console.log("Sign out");
+      return { error: null };
+    },
+    getSession: async () => {
+      // Return a mock session
+      return {
+        data: {
+          session: {
+            user: {
+              id: "mock-user-id",
+              email: "user@example.com"
+            }
+          }
+        }
+      };
+    }
+  },
+  // Add other needed methods
+  from: (table: string) => ({
+    select: () => ({
+      eq: (field: string, value: any) => ({
+        single: () => ({
+          data: getMockUser(),
+          error: null
+        })
+      })
+    }),
+    update: () => ({
+      eq: () => ({
+        single: () => ({
+          data: getMockUser(),
+          error: null
+        })
+      })
+    }),
+    insert: () => ({
+      single: () => ({
+        data: getMockUser(),
+        error: null
+      })
+    })
+  })
+};
+
+// Mock user data
+const getMockUser = (): UserProfile => ({
+  id: "mock-user-id",
+  username: "royaluser",
+  displayName: "Royal User",
+  email: "user@example.com",
+  profileImage: "/images/avatars/default.jpg",
+  bio: "Mock user for development",
+  walletBalance: 1000,
+  totalSpent: 2500,
+  rank: 42,
+  team: "blue",
+  tier: "premium",
+  joinDate: new Date().toISOString()
+});
+
+/**
+ * Sign in with email and password
+ */
+export const signInWithPassword = async (email: string, password: string) => {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    throw new Error(error.message);
   }
-}
 
-export async function getUserDetails(userId: string): Promise<UserProfile | null> {
-  try {
-    // Mock implementation
-    return mockUser as UserProfile;
-  } catch (error) {
-    console.error("Unexpected error fetching user details:", error);
+  // Return session data
+  return data;
+};
+
+/**
+ * Sign out the current user
+ */
+export const signOut = async () => {
+  const { error } = await supabase.auth.signOut();
+  
+  if (error) {
+    throw new Error(error.message);
+  }
+  
+  return true;
+};
+
+/**
+ * Get the current user profile
+ */
+export const getCurrentUser = async () => {
+  // Get session
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (!session) {
     return null;
   }
-}
-
-export async function loadClientSession() {
-  try {
-    return { session: null };
-  } catch (error) {
-    console.error("Unexpected error loading client session:", error);
-    return { session: null };
+  
+  // Get user profile from profiles table
+  const { data, error } = await supabase
+    .from('profiles')
+    .select()
+    .eq('id', session.user.id)
+    .single();
+  
+  if (error) {
+    console.error('Error fetching user profile:', error);
+    return null;
   }
-}
+  
+  return data as UserProfile;
+};
 
-export async function accessProtected() {
-  const { data } = await getSession();
-
-  if (!data.session) {
-    // Mock redirect
-    console.log("Redirecting to sign-in page");
-  }
-}
-
-export async function signOut() {
-  try {
-    // Use the imported supabase client
-    return await supabase.auth.signOut();
-  } catch (error) {
-    console.error('Sign out error:', error);
-    throw error;
-  }
-}
-
-export async function register(formData: FormData) {
-  const email = String(formData.get('email'));
-  const password = String(formData.get('password'));
-  const username = String(formData.get('username'));
-
-  console.log(`Mock register: ${username}, ${email}`);
-
-  return { success: true, data: { user: mockUser } };
-}
-
-export async function signIn(formData: FormData) {
-  const email = String(formData.get('email'));
-  const password = String(formData.get('password'));
-
-  console.log(`Mock sign in: ${email}`);
-
+/**
+ * Sign in with magic link via email
+ */
+export const signInWithEmail = async (email: string) => {
+  // Mock implementation
+  console.log("Sending magic link to:", email);
   return { success: true };
-}
-
-// Fix missing joinedDate property in mock user
-const mockUser = {
-  id: "user123",
-  username: "johndoe",
-  displayName: "John Doe",
-  email: "john@example.com",
-  joinedAt: new Date().toISOString(),
-  joinedDate: new Date().toISOString(), // Add this
-  walletBalance: 1000,
-  amountSpent: 500,
-  totalSpent: 500,
-  rank: 42,
-  previousRank: 50,
-  team: "blue" as TeamColor,
-  tier: "premium",
-  // ... include other required properties
 };
 
-export const mockAuthService = {
-  login: async (email: string, password?: string): Promise<UserProfile | null> => {
-    // Simulate successful login
-    console.log(`Mock login attempt for email: ${email}`);
-    return mockUser as UserProfile;
-  },
-
-  register: async (username: string, email: string, password?: string): Promise<UserProfile | null> => {
-    // Simulate successful registration
-    console.log(`Mock registration attempt for username: ${username}, email: ${email}`);
-    return mockUser as UserProfile;
-  },
-
-  logout: async (): Promise<void> => {
-    // Simulate successful logout
-    console.log('Mock logout successful');
-  },
-
-  updateUser: async (updates: Partial<UserProfile>): Promise<UserProfile | null> => {
-    // Simulate updating user profile
-    console.log('Mock user update:', updates);
-    return { ...mockUser, ...updates } as UserProfile;
-  },
-
-  getUser: async (id: string): Promise<UserProfile | null> => {
-    // Simulate fetching user
-    console.log(`Mock fetching user with ID: ${id}`);
-    return mockUser as UserProfile;
-  },
+/**
+ * Verify MFA code
+ */
+export const verifyMfaCode = async (code: string) => {
+  // Mock implementation
+  console.log("Verifying MFA code:", code);
+  return { success: true };
 };
 
-export const refreshSession = async () => {
-  try {
-    const response = await supabase.auth.refreshSession();
-    
-    // Handle both response formats - some versions return { data: { session } } and others return { session } directly
-    const session = response.data?.session || response.session;
-    
-    return session ? true : false;
-  } catch (error) {
-    console.error('Error refreshing session:', error);
-    return false;
-  }
+/**
+ * Sign in with Google OAuth
+ */
+export const signInWithGoogle = async () => {
+  // Mock implementation
+  console.log("Signing in with Google");
+  return { success: true };
 };
 
-export const authenticateUser = async (email: string, password: string) => {
-  try {
-    const response = await supabase.auth.signIn({ email, password });
-    
-    // Handle different response formats
-    if ('data' in response) {
-      return response.data.session;
-    } else {
-      return response.session;
-    }
-  } catch (error) {
-    console.error('Authentication error:', error);
-    throw error;
-  }
+/**
+ * Reset password
+ */
+export const resetPassword = async (email: string) => {
+  // Mock implementation
+  console.log("Resetting password for:", email);
+  return { success: true };
 };

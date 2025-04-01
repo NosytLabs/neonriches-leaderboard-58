@@ -1,12 +1,21 @@
 
-export type UserTier = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'royal';
+/**
+ * User tier types
+ */
+export type UserTier = 'free' | 'basic' | 'premium' | 'royal' | 'founder';
 
+/**
+ * Tier details interface
+ */
 export interface TierDetails {
-  name: UserTier;
+  id: UserTier;
+  name: string;
   label: string;
-  minSpend: number;
-  maxSpend: number | null;
+  description: string;
   color: string;
+  icon?: string;
+  features?: string[];
   benefits: string[];
-  icon: string;
+  minSpend: number;
+  maxSpend?: number;
 }

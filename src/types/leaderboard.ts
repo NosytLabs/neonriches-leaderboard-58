@@ -1,71 +1,62 @@
 
 import { TeamColor } from './team';
+import { UserTier } from './tier';
 
+/**
+ * LeaderboardUser interface
+ */
 export interface LeaderboardUser {
   id: string;
+  userId: string;
   username: string;
   displayName?: string;
   profileImage?: string;
-  avatarUrl?: string; // Add for backward compatibility
-  tier?: string;
-  team?: TeamColor;
-  rank: number;
-  previousRank?: number;
-  walletBalance?: number;
   totalSpent: number;
-  spentAmount?: number;  // For backward compatibility
-  amountSpent?: number;  // For backward compatibility
-  isVerified?: boolean;
+  rank: number;
+  team: TeamColor;
+  tier: UserTier;
   spendStreak?: number;
-  // Add missing properties for dashboard components
-  isProtected?: boolean;
+  walletBalance?: number;
+  previousRank?: number;
+  joinDate?: string;
+  isVerified?: boolean;
+  // Add missing properties used in components
   rankChange?: number;
   spendChange?: number;
-  joinedAt?: string;     // Add joinedAt as an optional property
+  isProtected?: boolean;
+  avatarUrl?: string;
 }
 
-export interface LeaderboardFilter {
-  timeframe?: 'day' | 'week' | 'month' | 'all';
-  team?: TeamColor | null;
-  limit?: number;
-  sort?: string;         // Add sort option
-  search?: string;       // Add search option
-  tier?: string;         // Add tier filter
-}
+/**
+ * LeaderboardFilter type
+ */
+export type LeaderboardFilter = 'all' | 'day' | 'week' | 'month' | 'team';
 
-// Add this interface for PersistentLeaderboard.tsx
-export interface TypedLeaderboardFilter extends LeaderboardFilter {
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-}
-
-// Export types for solanaService
-export interface LeaderboardEntry extends LeaderboardUser {}
-
+/**
+ * OnChainLeaderboardEntry type
+ */
 export interface OnChainLeaderboardEntry {
-  publicKey: string;     // Correct property name
-  amount: number;
+  address: string;
+  displayName: string;
   rank: number;
-  username?: string;
-  profileImage?: string;
-  timestamp?: string;    // Add timestamp
+  totalSpent: number;
+  // Add missing properties
+  pubkey?: string;
 }
 
+/**
+ * SolanaTransaction type
+ */
 export interface SolanaTransaction {
-  id?: string;           // Add optional id
-  signature?: string;
-  slot?: number;
-  timestamp: number | string; // Allow string or number
+  id: string;
+  userId: string;
   amount: number;
-  sender: string;
-  receiver: string;
-  status: 'confirmed' | 'pending' | 'failed' | 'completed'; // Add 'completed'
-  type: 'spend' | 'deposit' | 'withdrawal' | 'transfer' | 'purchase'; // Add 'purchase'
-  transactionHash?: string; // Add missing property
+  timestamp: string;
+  status: 'confirmed' | 'pending' | 'failed';
+  type: 'spend' | 'deposit' | 'withdrawal' | 'transfer';
+  signature?: string;
+  recipient?: string;
 }
 
-// Add SortByOptions for components
-export interface SortByOptions {
-  value: string;
-  label: string;
-}
+// Alias for backward compatibility
+export type TypedLeaderboardFilter = LeaderboardFilter;

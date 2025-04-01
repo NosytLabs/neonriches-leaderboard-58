@@ -1,168 +1,24 @@
 
-// Adding TeamColor export to fix import errors
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze';
-
-export interface ProfileImage {
-  id: string;
-  url: string;
-  caption?: string;
-  isPrimary?: boolean;
-  type: 'profile' | 'banner' | 'gallery';
-  uploadedAt?: string;
-}
-
-export interface ProfileLink {
-  id: string;
-  platform: string;
-  url: string;
-  title?: string;
-  label?: string;
-  icon?: string;
-  clicks?: number;
-}
-
-export interface SocialLink {
-  id: string;
-  platform: string;
-  url: string;
-  title: string; // Make title required to match usage in components
-  icon?: string;
-  clicks?: number;
-  username?: string;
-  display?: string;
-  verified?: boolean;
-  primary?: boolean;
-  label?: string;
-  type?: string;
-}
-
-export type TeamType = TeamColor;
-
-export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'legendary' | 'founder' | 'whale' | 'shark' | 'dolphin' | 'noble' | 'standard' | 'elite' | 'platinum' | 'diamond' | 'vip' | 'gold' | 'silver' | 'bronze';
-
-export interface ProfileBoost {
-  id: string;
-  startDate: string;
-  endDate: string;
-  level: number;
-  type: string;
-  strength: number;
-  appliedBy: string; // Make this required to match
-  isActive: boolean;
-  cssClass?: string;
-}
-
-export interface UserCosmetics {
-  border?: string[];
-  color?: string[];
-  font?: string[];
-  emoji?: string[];
-  title?: string[];
-  background?: string[];
-  effect?: string[];
-  badge?: string[];
-  theme?: string[];
-  activeBorder?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeEmoji?: string;
-  activeTitle?: string;
-  activeBackground?: string;
-  activeEffect?: string;
-  activeBadge?: string;
-  activeTheme?: string;
-}
-
-export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'friends';
-  allowProfileLinks: boolean;
-  theme: 'light' | 'dark' | 'royal' | 'system';
-  notifications: boolean;
-  emailNotifications: boolean;
-  marketingEmails: boolean;
-  showRank: boolean;
-  darkMode: boolean;
-  soundEffects: boolean;
-  showBadges: boolean;
-  showTeam: boolean;
-  showSpending: boolean;
-  showEmailOnProfile?: boolean;
-  rankChangeAlerts?: boolean;
-  newFollowerAlerts?: boolean;
-  teamNotifications?: boolean;
-  language?: string;
-  allowMessages?: boolean;
-  publicProfile?: boolean;
-  shameAlerts?: boolean;
-}
+import { TeamColor } from './team';
+import { UserTier } from './tier';
 
 export interface UserProfile {
-  id: string;
+  id: string | number;
   username: string;
+  email?: string;
   displayName?: string;
   profileImage?: string;
   bio?: string;
-  location?: string;
-  joinedDate: string;
-  isVerified?: boolean;
-  following?: string[];
-  followers?: string[];
-  team?: TeamColor | null;
-  tier: string; // Made tier required to match user-consolidated.ts
-  rank?: number;
-  totalSpent: number; // Make this required to match
-  amountSpent: number; // Make this required to match
-  spentAmount?: number; // For backward compatibility
   walletBalance?: number;
-  previousRank?: number;
-  spendStreak?: number;
-  profileBoosts?: ProfileBoost[];
-  settings?: UserSettings;
-  cosmetics?: UserCosmetics;
-  certificateNFT?: {
-    mintAddress: string; // Make mintAddress required
-    mintDate: string;    // Make mintDate required
-    mintedAt?: string;   // Add for compatibility
-  };
-  gender?: string;
-  profileViews?: number;
-  profileClicks?: number;
-  purchasedFeatures?: string[];
-  subscription?: any;
-  activeTitle?: string;
-  lastActive?: string;
-  isVIP?: boolean;
-  role?: string;
-  email?: string;
-  boostCount?: number;
-  socialLinks?: SocialLink[] | Record<string, string>;
-  badges?: string[]; // Add badges property
-  achievements?: string[]; // Add achievements property
-  
-  // Compatibility with old code
-  joinDate?: string;
-  joinedAt?: string;
-  createdAt?: string;
-  avatarUrl?: string;
-  isAdmin?: boolean;
-  isProtected?: boolean;
-  isFounder?: boolean;
-}
-
-// Adding User type alias to fix import errors
-export type User = UserProfile;
-
-// Add Gender type for better type safety
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
-
-// Extend with additional types as needed
-export interface Team {
-  id: string;
-  name: string;
-  color: string;
-  members: number;
-  leader?: string;
   totalSpent?: number;
   rank?: number;
-  description?: string;
+  team?: TeamColor | string;
+  tier?: UserTier | string;
+  joinDate?: string;
+  isVerified?: boolean;
+  lastActive?: string;
+  amountSpent?: number;
 }
+
+// Re-export for backward compatibility
+export interface User extends UserProfile {}
