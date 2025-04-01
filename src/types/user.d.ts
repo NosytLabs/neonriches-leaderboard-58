@@ -49,7 +49,7 @@ export interface SocialLink {
   verified?: boolean;
   primary?: boolean;
   clicks?: number;
-  title?: string; // Title property
+  title?: string; // Add title property
   label?: string;
   type?: string;
 }

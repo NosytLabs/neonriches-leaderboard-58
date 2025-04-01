@@ -79,8 +79,8 @@ const EnhancedDashboard = () => {
   const userWithRequired = ensureTotalSpent(user as UserProfile);
   
   // Then adapt to ensure all other properties are correctly set
-  // Use type assertion to UserProfile to ensure compatibility with component props
-  const standardUser = adaptToStandardUserProfile(userWithRequired) as UserProfile;
+  // Convert to the ConsolidatedUserProfile type to match the components' expectations
+  const standardUser = adaptToStandardUserProfile(userWithRequired) as unknown as ConsolidatedUserProfile;
 
   const handleSpend = () => {
     toast({
@@ -99,7 +99,7 @@ const EnhancedDashboard = () => {
     sound.playSound('success');
   };
 
-  // Create props objects with the properly typed user
+  // Create component props with appropriate type casting
   const welcomeProps = { user: standardUser };
   const overviewProps = { 
     user: standardUser,
