@@ -2,18 +2,21 @@ import React from 'react';
 import { UserProfile } from '@/types/user-consolidated';
 import { RocketIcon, CrownIcon, StarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { safeToString } from '@/utils/typeConverters';
 
 interface ProfileBoostedContentProps {
   user: UserProfile;
   boostType?: 'rocket' | 'crown' | 'star';
   className?: string;
+  type?: string;
+  children?: React.ReactNode;
 }
 
 const ProfileBoostedContent: React.FC<ProfileBoostedContentProps> = ({
   user,
   boostType = 'rocket',
-  className
+  className,
+  type,
+  children
 }) => {
   let IconComponent = RocketIcon;
   let boostText = 'Boosted Profile';
@@ -35,6 +38,14 @@ const ProfileBoostedContent: React.FC<ProfileBoostedContentProps> = ({
       IconComponent = RocketIcon;
       boostText = 'Boosted Profile';
       break;
+  }
+  
+  if (children) {
+    return (
+      <div className={cn("flex items-center space-x-2 rounded-md", className)}>
+        {children}
+      </div>
+    );
   }
   
   return (

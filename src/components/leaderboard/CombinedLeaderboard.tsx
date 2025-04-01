@@ -11,8 +11,8 @@ import { UserProfile, TeamColor } from '@/types/user';
 import { useAuth } from '@/hooks/useAuth';
 import { useSound } from '@/hooks/use-sound';
 import { MockeryAction } from '@/types/mockery-types';
-import { ensureNumber } from '@/utils/stringUtils';
-import { safeTeamColor } from '@/utils/typeConverters';
+import { ensureNumber } from '@/utils/typeConverters';
+import { toTeamColor } from '@/utils/typeConverters';
 
 interface CombinedLeaderboardProps {
   maxVisible?: number;
@@ -59,7 +59,7 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
             displayName: `Noble User ${index + 1}`,
             profileImage: `https://source.unsplash.com/random/?portrait&${index}`,
             tier: index < 3 ? 'royal' : index < 6 ? 'premium' : 'basic',
-            team: safeTeamColor(['red', 'blue', 'green', 'gold', 'purple'][index % 5]),
+            team: toTeamColor(['red', 'blue', 'green', 'gold', 'purple'][index % 5]),
             rank: index + 1,
             totalSpent: Math.floor(10000 / (index + 1)), 
             amountSpent: Math.floor(10000 / (index + 1)),

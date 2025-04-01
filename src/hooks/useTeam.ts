@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { TeamColor, TeamData } from '@/types/team';
 import { useAuth } from '@/hooks/useAuth';
-import { teamService } from '@/services/teamService';
+import { getTeamColor, getTeamName, getTeamMotto, getTeamBenefits } from '@/utils/teamUtils';
 
 const useTeam = () => {
   const { user, updateUser } = useAuth();
@@ -49,22 +49,6 @@ const useTeam = () => {
     }
   };
   
-  const getTeamColor = (team: TeamColor): string => {
-    return teamService.getTeamColor(team);
-  };
-  
-  const getTeamName = (team: TeamColor): string => {
-    return teamService.getTeamName(team);
-  };
-  
-  const getTeamMotto = (team: TeamColor): string => {
-    return teamService.getTeamMotto(team);
-  };
-  
-  const getTeamBenefits = (team: TeamColor): string[] => {
-    return teamService.getTeamBenefits(team);
-  };
-  
   return {
     currentTeam,
     changeTeam,
@@ -78,3 +62,5 @@ const useTeam = () => {
 };
 
 export default useTeam;
+// Also export named for components that expect named import
+export { useTeam };

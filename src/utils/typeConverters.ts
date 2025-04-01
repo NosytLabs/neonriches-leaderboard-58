@@ -48,3 +48,37 @@ export const toTeamColor = (team: string | TeamColor | null | undefined): TeamCo
       return 'none';
   }
 };
+
+/**
+ * Helper function to ensure IDs are always strings
+ * @param id - ID to convert to string
+ * @returns String ID
+ */
+export const ensureStringId = (id: string | number | null | undefined): string => {
+  if (id === null || id === undefined) {
+    return '';
+  }
+  return String(id);
+};
+
+/**
+ * Helper alias for toTeamColor
+ * @param team - Team value to convert
+ * @returns Valid TeamColor
+ */
+export const safeTeamColor = toTeamColor;
+
+/**
+ * Ensure a value is a number
+ * @param value - Value to convert to number
+ * @param defaultValue - Default value if conversion fails
+ * @returns Number value
+ */
+export const ensureNumber = (value: any, defaultValue = 0): number => {
+  if (value === null || value === undefined) {
+    return defaultValue;
+  }
+  
+  const num = Number(value);
+  return isNaN(num) ? defaultValue : num;
+};
