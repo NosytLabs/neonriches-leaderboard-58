@@ -62,6 +62,9 @@ export const getMockeryActionPrice = (action: MockeryAction): number => {
   return costs[action] || 10;
 };
 
+// Alias for getMockeryActionPrice for backward compatibility
+export const getMockeryCost = getMockeryActionPrice;
+
 // Get icon for each mockery action
 export const getMockeryActionIcon = (action: MockeryAction) => {
   const icons: Record<string, any> = {
@@ -92,7 +95,7 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
   return colors[action] || 'text-gray-400';
 };
 
-// Add the missing function to get tier color class
+// Add the function to get tier color class
 export const getMockeryTierColorClass = (tier: MockeryTier): string => {
   const colorClasses: Record<MockeryTier, string> = {
     'common': 'text-gray-300',

@@ -86,7 +86,7 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({
     }
   };
   
-  const handleTeamChange = (team: any) => {
+  const handleTeamChange = (team: "red" | "blue" | "green") => {
     setFormData(prev => ({ ...prev, team }));
   };
   

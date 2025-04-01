@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import CertificateDisplay from '@/components/certificates/CertificateDisplay';
 import { useCertificate } from '@/hooks/useCertificate';
 import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
+import { Certificate } from '@/types/certificates';
 
 const CertificatePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +21,46 @@ const CertificatePage: React.FC = () => {
   
   const [activeTab, setActiveTab] = useState<string>(user?.team || 'default');
   
+  // Create properly typed handlers
+  const handleMint = async (cert: Certificate): Promise<boolean> => {
+    try {
+      if (mintCertificate) {
+        const result = await mintCertificate(cert);
+        return Boolean(result);
+      }
+      return false;
+    } catch (error) {
+      console.error('Error minting certificate:', error);
+      return false;
+    }
+  };
+  
+  const handleShare = async (cert: Certificate): Promise<string> => {
+    try {
+      if (generateShareableImage) {
+        const imageUrl = await generateShareableImage(cert);
+        if (imageUrl) {
+          console.log('Share certificate:', imageUrl);
+          return imageUrl;
+        }
+      }
+      return '';
+    } catch (error) {
+      console.error('Error sharing certificate:', error);
+      return '';
+    }
+  };
+  
+  const handleDownload = (cert: Certificate): void => {
+    // Implementation would depend on how downloading works in the app
+    console.log('Download certificate:', cert);
+  };
+  
+  // Process user data to ensure it has required fields
+  const processedUser = user ? ensureTotalSpent(user) : null;
+  const standardUser = processedUser ? adaptToStandardUserProfile(processedUser) : null;
+  
+  // Use the certificate hook with the processed user
   const { 
     certificate, 
     templates, 
@@ -29,30 +70,9 @@ const CertificatePage: React.FC = () => {
     mintCertificate, 
     generateShareableImage 
   } = useCertificate({ 
-    user: user ? ensureTotalSpent(adaptToStandardUserProfile(ensureTotalSpent(user))) : null, 
+    user: standardUser, 
     certificateId: id 
   });
-  
-  const handleMint = async (cert: any) => {
-    const result = await mintCertificate(cert);
-    return result || ''; // Return empty string if result is falsy
-  };
-  
-  const handleShare = async (cert: any) => {
-    const imageUrl = await generateShareableImage(cert);
-    if (imageUrl) {
-      // Implementation would depend on how sharing is handled in the app
-      console.log('Share certificate:', imageUrl);
-      return imageUrl;
-    }
-    return '';
-  };
-  
-  const handleDownload = async (cert: any) => {
-    // Implementation would depend on how downloading works in the app
-    console.log('Download certificate:', cert);
-    return '';
-  };
   
   if (!user) {
     return (
@@ -69,8 +89,6 @@ const CertificatePage: React.FC = () => {
       </div>
     );
   }
-
-  const processedUser = ensureTotalSpent(adaptToStandardUserProfile(ensureTotalSpent(user)));
   
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -94,7 +112,7 @@ const CertificatePage: React.FC = () => {
               {certificate ? (
                 <CertificateDisplay 
                   certificate={certificate}
-                  user={processedUser}
+                  user={standardUser}
                   onMint={handleMint}
                   onShare={handleShare}
                   onDownload={handleDownload}
@@ -127,7 +145,7 @@ const CertificatePage: React.FC = () => {
                               <CertificateDisplay 
                                 key={cert.id}
                                 certificate={cert}
-                                user={processedUser}
+                                user={standardUser}
                                 onMint={handleMint}
                                 onShare={handleShare}
                                 onDownload={handleDownload}
