@@ -7,6 +7,7 @@ import { Crown, Shield, AlertTriangle } from 'lucide-react';
 import { getMockeryName, getMockeryDescription, getMockeryTier, getMockeryActionPrice, getMockeryTierColorClass } from '@/utils/mockeryUtils';
 import { MockeryAction } from '@/types/mockery';
 import { useToast } from '@/hooks/use-toast';
+import TomatoIcon from '@/components/icons/TomatoIcon';
 
 const MockeryComponent = () => {
   const { toast } = useToast();

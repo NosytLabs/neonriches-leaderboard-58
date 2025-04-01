@@ -2,6 +2,7 @@
 import React from 'react';
 import { Egg, Lock, Target, Flame } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery';
+import TomatoIcon from '@/components/icons/TomatoIcon';
 
 interface MockeryIconRendererProps {
   action: MockeryAction;
@@ -24,7 +25,7 @@ const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({
   
   switch (action) {
     case 'tomatoes':
-      return <Flame size={iconSize} className={`text-red-500 ${className}`} />;
+      return <TomatoIcon size={iconSize} className={`text-red-500 ${className}`} />;
     case 'eggs':
       return <Egg size={iconSize} className={`text-amber-300 ${className}`} />;
     case 'stocks':
