@@ -1,5 +1,6 @@
 
 import { useContext } from 'react';
+import { SoundConfig } from '@/hooks/sounds/types';
 import { SettingsContext } from '@/contexts/SettingsContext';
 
 /**

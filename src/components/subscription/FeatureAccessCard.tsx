@@ -3,9 +3,16 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Lock, CheckCircle, AlertCircle, ShoppingBag } from 'lucide-react';
-import { useFeatureAccess, Feature } from '@/hooks/use-feature-access';
+import { useFeatureAccess } from '@/hooks/use-feature-access';
 import { createSubscription } from '@/services/stripeService';
 import { useToast } from '@/hooks/use-toast';
+
+interface Feature {
+  id: string;
+  name: string;
+  description: string;
+  price?: number;
+}
 
 interface FeatureAccessCardProps {
   feature: Feature;
@@ -30,10 +37,10 @@ const FeatureAccessCard: React.FC<FeatureAccessCardProps> = ({
   purchaseIndividually = false,
   children
 }) => {
-  const { canAccessFeature, isLoading, purchaseFeatureIndividually, getMarketingFeaturePriceId } = useFeatureAccess();
+  const { canAccessFeature, isLoading, purchaseFeatureIndividually } = useFeatureAccess();
   const { toast } = useToast();
   // Use canAccessFeature instead of hasAccess
-  const hasFeatureAccess = canAccessFeature(feature);
+  const hasFeatureAccess = canAccessFeature(feature.id);
   
   const handleUpgrade = async () => {
     if (!upgradePriceId) {
@@ -48,8 +55,16 @@ const FeatureAccessCard: React.FC<FeatureAccessCardProps> = ({
     try {
       const result = await createSubscription(upgradePriceId);
       
-      if (result?.url) {
-        window.location.href = result.url;
+      if (result && result.success) {
+        if (result.redirectUrl) {
+          window.location.href = result.redirectUrl;
+        } else {
+          toast({
+            title: "Subscription Created",
+            description: "Your subscription has been processed successfully",
+            variant: "success"
+          });
+        }
       } else {
         throw new Error("Failed to create subscription");
       }

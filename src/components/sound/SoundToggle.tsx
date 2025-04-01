@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Volume2, VolumeX } from 'lucide-react';
 import { useSound } from '@/hooks/sounds/use-sound';
@@ -15,11 +14,15 @@ export const SoundToggle: React.FC<SoundToggleProps> = ({ className }) => {
   const { soundConfig, toggleMuted } = useSoundsConfig();
   const [isMuted, setIsMuted] = useState(soundConfig?.muted || false);
   
+  useEffect(() => {
+    setIsMuted(soundConfig?.muted || false);
+  }, [soundConfig?.muted]);
+  
   const handleToggle = () => {
     toggleMuted();
-    setIsMuted(!isMuted);
+    const newMutedState = !isMuted;
+    setIsMuted(newMutedState);
     
-    // Play a sound when unmuting to provide immediate feedback
     if (isMuted) {
       setTimeout(() => {
         sound.playSound('click');

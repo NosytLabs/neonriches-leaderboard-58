@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,8 +26,8 @@ const getTeamMotto = (team: string) => {
   }
 };
 
-const getTeamBenefit = (team: string, index: number) => {
-  const benefits = {
+const getTeamBenefit = (team: string): string[] => {
+  const benefits: Record<string, string[]> = {
     red: [
       "20% bonus on direct deposits",
       "Exclusive crimson profile frames",
@@ -44,7 +45,7 @@ const getTeamBenefit = (team: string, index: number) => {
     ]
   };
   
-  return benefits[team as keyof typeof benefits]?.[index] || "Unknown benefit";
+  return benefits[team] || ["Unknown benefit"];
 };
 
 const getTeamAbsurdStat = (team: string) => {
@@ -59,8 +60,6 @@ const getTeamAbsurdStat = (team: string) => {
       return "Teams have wasted enough money to fund a small nation";
   }
 };
-
-export type TeamColor = 'red' | 'green' | 'blue';
 
 export interface TeamSelectionProps {
   selectedTeam?: TeamColor;

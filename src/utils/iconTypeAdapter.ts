@@ -27,7 +27,7 @@ export const adaptIconColor = (color: IconColor | string): MedievalIconColor => 
 /**
  * Adapt a standard icon size to a medieval icon size
  */
-export const adaptIconSize = (size: IconSize | number): MedievalIconSize => {
+export const adaptIconSize = (size: IconSize | number | string): MedievalIconSize => {
   if (typeof size === 'number') {
     if (size <= 16) return 'sm';
     if (size <= 24) return 'md';
@@ -36,21 +36,25 @@ export const adaptIconSize = (size: IconSize | number): MedievalIconSize => {
   }
   
   // If it's already a size string
-  switch (size) {
-    case 'xs': return 'xs';
-    case 'sm': return 'sm';
-    case 'md': return 'md';
-    case 'lg': return 'lg';
-    case 'xl': return 'xl';
-    case '2xl': return 'xl';
-    default: return 'md';
+  if (typeof size === 'string') {
+    switch (size) {
+      case 'xs': return 'xs';
+      case 'sm': return 'sm';
+      case 'md': return 'md';
+      case 'lg': return 'lg';
+      case 'xl': return 'xl';
+      case '2xl': return 'xl';
+      default: return 'md';
+    }
   }
+  
+  return 'md';
 };
 
 /**
  * Convert a string name to a medieval icon name
  */
-export const toMedievalIconName = (name: string): MedievalIconName => {
+export const adaptIconName = (name: string): MedievalIconName => {
   const medievalIconMap: Record<string, MedievalIconName> = {
     'crown': 'crown',
     'shield': 'shield',
@@ -58,7 +62,7 @@ export const toMedievalIconName = (name: string): MedievalIconName => {
     'banner': 'banner',
     'scroll': 'scroll',
     'goblet': 'goblet',
-    'castle': 'castle', // Added to MedievalIconName
+    'castle': 'castle',
     'dragon': 'dragon',
     'knight': 'knight',
     'king': 'king',
@@ -80,43 +84,15 @@ export const toMedievalIconName = (name: string): MedievalIconName => {
     'flag': 'flag',
     'axe': 'axe',
     'mace': 'mace',
+    'key': 'key'
   };
   
-  return medievalIconMap[name] || 'crown';
-};
-
-/**
- * Convert a string color to a medieval icon color
- */
-export const toMedievalIconColor = (color: string | undefined): MedievalIconColor => {
-  if (!color) return 'gold';
-  
-  const medievalColorMap: Record<string, MedievalIconColor> = {
-    'gold': 'gold',
-    'royal': 'royal',
-    'silver': 'silver',
-    'bronze': 'bronze',
-    'red': 'red',
-    'blue': 'blue',
-    'green': 'green',
-    'purple': 'purple',
-    'default': 'gold',
-  };
-  
-  return medievalColorMap[color] || 'gold';
-};
-
-/**
- * Convert a string name to an icon name
- */
-export const adaptIconName = (name: string): string => {
-  return name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+  const sanitizedName = name.toLowerCase();
+  return medievalIconMap[sanitizedName] || 'crown';
 };
 
 export default {
   adaptIconColor,
   adaptIconSize,
-  toMedievalIconName,
-  toMedievalIconColor,
   adaptIconName
 };

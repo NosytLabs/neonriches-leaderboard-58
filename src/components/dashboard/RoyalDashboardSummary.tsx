@@ -66,7 +66,7 @@ const RoyalDashboardSummary = () => {
         description="Total funds in your royal account"
         change={12}
         changeType="positive"
-        icon={<MedievalIcon name="coins" size="sm" color="gold" />}
+        icon={<MedievalIcon name="coin" size="sm" color="gold" />}
       />
       <StatCard
         title="Rank"
