@@ -1,37 +1,27 @@
 
 import { useContext } from 'react';
-import { SoundConfig } from '@/hooks/sounds/types';
-import { SettingsContext } from '@/contexts/SettingsContext';
+import { SoundConfig } from '@/types/settings';
+import SettingsContext from '@/contexts/SettingsContext';
+import { useSettings } from '@/contexts/SettingsContext';
 
 /**
  * A hook to access sound configuration from the settings context
  */
 export const useSoundsConfig = () => {
-  const context = useContext(SettingsContext);
-  
-  if (!context) {
-    console.error('useSoundsConfig must be used within a SettingsProvider');
-    // Return a default config to prevent runtime errors
-    return {
-      soundConfig: {
-        enabled: true,
-        muted: false,
-        volume: 0.5,
-        premium: false
-      },
-      toggleSounds: () => {},
-      toggleMuted: () => {},
-      togglePremium: () => {},
-      setVolume: () => {}
-    };
-  }
+  const {
+    soundConfig,
+    toggleSounds,
+    toggleMuted,
+    togglePremium,
+    setVolume
+  } = useSettings();
   
   return {
-    soundConfig: context.soundConfig,
-    toggleSounds: context.toggleSounds,
-    toggleMuted: context.toggleMuted,
-    togglePremium: context.togglePremium,
-    setVolume: context.setVolume
+    soundConfig,
+    toggleSounds,
+    toggleMuted,
+    togglePremium,
+    setVolume
   };
 };
 

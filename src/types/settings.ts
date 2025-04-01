@@ -1,41 +1,23 @@
 
+// User Settings Interface
 export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'friends';
-  allowProfileLinks: boolean;
-  theme: 'light' | 'dark' | 'royal' | 'system';
+  theme: string;
   notifications: boolean;
   emailNotifications: boolean;
-  marketingEmails: boolean;
+  soundEffects: boolean;
+  profileVisibility: 'public' | 'friends' | 'private';
+  showBadges: boolean;
   showRank: boolean;
   darkMode: boolean;
-  soundEffects: boolean;
-  showBadges: boolean;
   showTeam: boolean;
   showSpending: boolean;
-  showEmailOnProfile?: boolean;
-  rankChangeAlerts?: boolean;
-  newFollowerAlerts?: boolean;
-  teamNotifications?: boolean;
+  allowProfileLinks: boolean;
+  marketingEmails: boolean;
+  showEmailOnProfile: boolean;
+  rankChangeAlerts: boolean;
 }
 
-export interface AccessibilitySettings {
-  textSize: number;
-  highContrast: boolean;
-  reducedMotion: boolean;
-  reducedTransparency: boolean;
-}
-
-export interface ProfileSettings {
-  publicProfile: boolean;
-  showRank: boolean;
-  showTeam: boolean;
-  showSpending: boolean;
-  rankChangeAlerts?: boolean;
-  teamChangeAlerts?: boolean;
-  achievementAlerts?: boolean;
-  showEmailOnProfile?: boolean;
-}
-
+// Sound Configuration
 export interface SoundConfig {
   enabled: boolean;
   muted: boolean;
@@ -43,25 +25,57 @@ export interface SoundConfig {
   premium: boolean;
 }
 
+// Profile Settings
+export interface ProfileSettings {
+  publicProfile: boolean;
+  showRank: boolean;
+  showTeam: boolean;
+  showSpending: boolean;
+  rankChangeAlerts: boolean;
+  teamChangeAlerts: boolean;
+  achievementAlerts: boolean;
+  showEmailOnProfile: boolean;
+}
+
+// Accessibility Settings
+export interface AccessibilitySettings {
+  textSize: number;
+  highContrast: boolean;
+  reducedMotion: boolean;
+  reducedTransparency: boolean;
+}
+
+// All Settings Context Type
 export interface SettingsContextType {
+  // Basic settings
   userSettings: UserSettings;
-  updateSettings: (newSettings: Partial<UserSettings>) => void;
+  updateSettings: (settings: Partial<UserSettings>) => void;
   resetSettings: () => void;
+  
+  // Theme settings
+  theme: 'light' | 'dark';
   isDarkTheme: boolean;
-  theme: 'light' | 'dark' | 'royal' | 'system';
-  setTheme: (theme: 'light' | 'dark' | 'royal' | 'system') => void;
+  setTheme: (theme: 'light' | 'dark') => void;
+  
+  // Sound settings
   soundConfig: SoundConfig;
   toggleSounds: () => void;
   toggleMuted: () => void;
   togglePremium: () => void;
   setVolume: (volume: number) => void;
-
-  // Added properties for settings components
-  accessibilitySettings: AccessibilitySettings;
-  updateAccessibilitySettings: (settings: Partial<AccessibilitySettings>) => void;
+  
+  // Profile settings
   profileSettings: ProfileSettings;
   updateProfileSettings: (settings: Partial<ProfileSettings>) => void;
+  
+  // Notification settings
   notifications: boolean;
   toggleNotifications: () => void;
+  
+  // Accessibility settings
+  accessibilitySettings: AccessibilitySettings;
+  updateAccessibilitySettings: (settings: Partial<AccessibilitySettings>) => void;
+  
+  // Loading state
   isLoading: boolean;
 }

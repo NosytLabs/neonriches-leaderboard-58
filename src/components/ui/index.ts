@@ -27,30 +27,28 @@ import { Progress } from './progress';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './dialog';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from './table';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './sheet';
-// import { RoyalDivider } from './royal-divider';
-// import { RoyalBadge } from './royal-badge';
-// import { RoyalCard } from './royal-card';
-import { IconSystem } from './icon-system';
+import IconSystem from './icon-system';
 import { Icon } from './icon';
-// import { EnhancedSkeleton } from './enhanced-skeleton';
-import { DateFormatter } from './date-formatter';
-import { Pagination } from './pagination';
-import { AspectImage } from './aspect-image';
-import { RateLimit } from './rate-limit';
-import { Sparkles } from './sparkles';
-import { RankBadge } from './rank-badge';
-import { UserAvatar } from './user-avatar';
-import { LinkPreview } from './link-preview';
-import { SpendingChart } from './spending-chart';
+import DateFormatter from './date-formatter';
+import RoyalDivider from './royal-divider';
+import RoyalBadge from './royal-badge';
+import RoyalCard from './royal-card';
 import MedievalIcon from './medieval-icon';
+
+// Comment out missing components until they are implemented
+// import { AspectImage } from './aspect-image';
+// import { RateLimit } from './rate-limit';
+// import { Sparkles } from './sparkles';
+// import { RankBadge } from './rank-badge';
+// import { UserAvatar } from './user-avatar';
+// import { LinkPreview } from './link-preview';
+// import { SpendingChart } from './spending-chart';
+// import { EnhancedSkeleton } from './enhanced-skeleton';
 // import { ProfileCard } from './profile-card';
 // import { FloatingEffect } from './floating-effect';
 // import { GlassMorphism } from './glass-morphism';
 // import { RoyalAccordion } from './royal-accordion';
 // import { RoyalAlert } from './royal-alert';
-import RoyalDivider from './royal-divider';
-import RoyalBadge from './royal-badge';
-import RoyalCard from './royal-card';
 
 export {
   AspectRatio,
@@ -85,16 +83,16 @@ export {
   IconSystem,
   Input,
   Label,
-  LinkPreview,
-  Pagination,
+  // LinkPreview,
+  // Pagination,
   Popover,
   PopoverContent,
   PopoverTrigger,
   Progress,
   RadioGroup,
   RadioGroupItem,
-  RankBadge,
-  RateLimit,
+  // RankBadge,
+  // RateLimit,
   RoyalBadge,
   RoyalCard,
   RoyalDivider,
@@ -115,8 +113,8 @@ export {
   SheetTrigger,
   Skeleton,
   Slider,
-  Sparkles,
-  SpendingChart,
+  // Sparkles,
+  // SpendingChart,
   Switch,
   Table,
   TableBody,
@@ -142,7 +140,7 @@ export {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-  UserAvatar,
+  // UserAvatar,
   MedievalIcon,
-  AspectImage
+  // AspectImage
 };

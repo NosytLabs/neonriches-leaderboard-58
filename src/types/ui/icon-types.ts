@@ -3,6 +3,7 @@ import { LucideIcon } from 'lucide-react';
 
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type MedievalIconSize = IconSize;
+export type MedievalIconName = string;
 
 export type IconColor = 
   | 'default'

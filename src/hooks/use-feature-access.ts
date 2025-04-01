@@ -1,132 +1,93 @@
 
 import { useState, useCallback } from 'react';
-import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-
-export interface Feature {
-  id: string;
-  name: string;
-  description: string;
-  tier: string[];
-  price: number;
-  priceId?: string;
-  category: string;
-}
+import { Feature, FeatureAccessResponse } from '@/types/feature';
 
 export interface FeatureAccessHookResult {
-  hasAccess: (featureId: string) => boolean;
   isLoading: boolean;
-  getUpgradeUrl: (featureId: string) => string;
-  getMarketingFeaturePriceId: (featureId: string) => string;
-  canAccessFeature: (featureId: string) => boolean;
-  isUserPro: boolean;
-  purchaseFeatureIndividually: (featureId: string, successCallback?: () => void) => Promise<{ success: boolean; url?: string; }>;
+  unlockFeature: (feature: Feature) => Promise<FeatureAccessResponse>;
+  isUnlocking: boolean;
+  accessError: string | null;
 }
 
 /**
- * Hook for checking feature access
+ * A hook for handling feature access and unlocking
  */
 export const useFeatureAccess = (): FeatureAccessHookResult => {
-  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isUnlocking, setIsUnlocking] = useState<boolean>(false);
+  const [accessError, setAccessError] = useState<string | null>(null);
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
 
-  // Check if the user has access to a feature
-  const hasAccess = useCallback((featureId: string) => {
-    if (!user) return false;
-
-    // Assume certain tiers have access to specific features
-    const tierFeatureMap: Record<string, string[]> = {
-      'royal': ['all', 'analytics', 'marketing', 'boost', 'customize', 'premium', 'verified', 'export', 'bribery'],
-      'premium': ['analytics', 'marketing', 'boost', 'customize', 'premium'],
-      'pro': ['analytics', 'boost', 'customize'],
-      'basic': ['basic']
-    };
-
-    // Special case for 'all' feature
-    if (tierFeatureMap[user.tier]?.includes('all')) return true;
-
-    // Check if user has direct access via purchasedFeatures
-    if (user.purchasedFeatures?.includes(featureId)) return true;
-
-    // Check if user's tier includes this feature
-    return tierFeatureMap[user.tier]?.includes(featureId) || false;
-  }, [user]);
-
-  // Get feature upgrade URL (if user doesn't have access)
-  const getUpgradeUrl = useCallback((featureId: string) => {
-    return `/subscription?feature=${featureId}`;
-  }, []);
-
-  // Get marketing feature price ID
-  const getMarketingFeaturePriceId = useCallback((featureId: string) => {
-    const featurePriceIds: Record<string, string> = {
-      'analytics': 'price_analytics',
-      'marketing': 'price_marketing',
-      'boost': 'price_boost',
-      'customize': 'price_customize',
-      'premium': 'price_premium',
-      'verified': 'price_verified',
-      'export': 'price_export',
-      'bribery': 'price_bribery'
-    };
-
-    return featurePriceIds[featureId] || '';
-  }, []);
-
-  // Purchase a feature individually
-  const purchaseFeatureIndividually = useCallback(async (
-    featureId: string,
-    successCallback?: () => void
-  ): Promise<{ success: boolean; url?: string; }> => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please sign in to purchase this feature."
-      });
-      return { success: false };
-    }
-
-    setIsLoading(true);
-
+  // Mock feature unlock function
+  const unlockFeature = useCallback(async (feature: Feature): Promise<FeatureAccessResponse> => {
+    setIsUnlocking(true);
+    setAccessError(null);
+    
     try {
-      // In a real app, this would call an API to create a checkout session
-      // For this demo, we'll just simulate a successful purchase
-      await new Promise(resolve => setTimeout(resolve, 800));
-
-      // Call success callback if provided
-      if (successCallback) successCallback();
-
-      setIsLoading(false);
-      return { 
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // For testing purposes, we'll "unlock" all features except one
+      if (feature === 'royal-wishing-well') {
+        setAccessError('This feature requires a subscription upgrade.');
+        return {
+          success: false,
+          error: 'This feature requires a subscription upgrade.',
+          redirectUrl: '/subscription'
+        };
+      }
+      
+      // Success path
+      return {
         success: true,
-        // For redirection to checkout, we'd return a URL
-        url: `/subscription/success?feature=${featureId}`
+        subscriptionId: 'mock-sub-123',
+        redirectUrl: `/features/${feature}`
       };
     } catch (error) {
-      console.error('Error purchasing feature:', error);
-      setIsLoading(false);
-      return { success: false };
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      setAccessError(errorMessage);
+      return {
+        success: false,
+        error: errorMessage
+      };
+    } finally {
+      setIsUnlocking(false);
     }
-  }, [user, toast]);
+  }, []);
 
-  // Check if user can access a feature (alias to hasAccess)
-  const canAccessFeature = useCallback((featureId: string) => {
-    return hasAccess(featureId);
-  }, [hasAccess]);
-
-  // Check if the user is on Pro tier or higher
-  const isUserPro = Boolean(user && ['pro', 'premium', 'royal', 'legendary'].includes(user.tier));
+  // A function to check if a user has access to a feature
+  const checkFeatureAccess = useCallback(async (feature: Feature): Promise<boolean> => {
+    setIsLoading(true);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // For demo, let's say the user has access to these features
+      const availableFeatures: Feature[] = [
+        'analytics',
+        'link-tracking',
+        'status-boosts',
+        'visibility-enhancements',
+        'certificate-creation'
+      ];
+      
+      return availableFeatures.includes(feature);
+    } catch (error) {
+      console.error('Error checking feature access:', error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   return {
-    hasAccess,
     isLoading,
-    getUpgradeUrl,
-    getMarketingFeaturePriceId,
-    canAccessFeature,
-    isUserPro,
-    purchaseFeatureIndividually
+    unlockFeature,
+    isUnlocking,
+    accessError
   };
 };
 
-export type { Feature };
+// No need to re-export types that are already exported elsewhere
