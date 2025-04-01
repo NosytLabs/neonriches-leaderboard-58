@@ -1,184 +1,190 @@
 
-import { TeamColor, TeamType, TeamData, TeamTheme } from '@/types/team';
-import { teams, getTeamById } from '@/data/teamData';
+import { TeamColor } from '@/types/team';
+import { teamNames, teamMottos, teamTaglines, teamMascots, teamValues } from '@/utils/team/teamInfo';
+import { teamLore, teamHistory } from '@/utils/team/teamLore';
+import { teamColors, teamHexColors } from '@/utils/team/teamColors';
+import { teamBenefits, teamDescriptions } from '@/utils/team/teamBenefits';
 
 /**
- * TeamService - Service class that handles all team-related operations
- * Following Single Responsibility Principle, this class is responsible for team data operations only
+ * Service for handling team-related functionality
  */
 class TeamService {
   /**
-   * Get team data by team identifier
-   */
-  public getTeam(team: TeamType | TeamColor): TeamData {
-    return getTeamById(team as TeamColor);
-  }
-
-  /**
-   * Get team color (CSS color code)
-   */
-  public getTeamColor(team: TeamType | TeamColor): string {
-    return this.getTeam(team).color;
-  }
-
-  /**
-   * Get team name
-   */
-  public getTeamName(team: TeamType | TeamColor): string {
-    return this.getTeam(team).name;
-  }
-
-  /**
-   * Get team motto
-   */
-  public getTeamMotto(team: TeamType | TeamColor): string {
-    return this.getTeam(team).motto;
-  }
-
-  /**
-   * Get team benefits
-   */
-  public getTeamBenefit(team: TeamType | TeamColor): string[] {
-    return this.getTeam(team).benefits;
-  }
-
-  /**
-   * Get team security guarantee
-   */
-  public getTeamSecurityGuarantee(team: TeamType | TeamColor): string {
-    return this.getTeam(team).securityGuarantee;
-  }
-
-  /**
-   * Get team absurd statistic
-   */
-  public getTeamAbsurdStat(team: TeamType | TeamColor): string {
-    return this.getTeam(team).absurdStat;
-  }
-
-  /**
-   * Get team historical note
-   */
-  public getTeamHistoricalNote(team: TeamType | TeamColor): string {
-    return this.getTeam(team).historicalNote;
-  }
-
-  /**
-   * Get team NFT joke
-   */
-  public getTeamNFTJoke(team: TeamType | TeamColor): string {
-    return this.getTeam(team).nftJoke;
-  }
-
-  /**
-   * Get team crypto roast
-   */
-  public getTeamCryptoRoast(team: TeamType | TeamColor): string {
-    return this.getTeam(team).cryptoRoast;
-  }
-
-  /**
-   * Get complete theme object for a team
-   */
-  public getTeamTheme(team: TeamType | TeamColor): TeamTheme {
-    const color = this.getTeamColor(team);
-    
-    // Create a themed set of colors based on the team's primary color
-    return {
-      primary: color,
-      secondary: this.adjustColor(color, 0.8),
-      accent: this.adjustColor(color, 1.2),
-      text: this.isLightColor(color) ? '#1f2937' : '#f9fafb',
-      border: this.adjustColor(color, 0.7),
-      background: this.adjustColor(color, 0.1)
-    };
-  }
-
-  /**
-   * Check if all teams have valid data
-   * This is useful for testing
-   */
-  public validateTeamData(): boolean {
-    const requiredFields = [
-      'name', 'motto', 'color', 'benefits', 
-      'securityGuarantee', 'absurdStat', 'historicalNote', 
-      'nftJoke', 'cryptoRoast'
-    ];
-
-    for (const teamId in teams) {
-      const team = teams[teamId as TeamColor];
-      
-      // Check if all required fields are present
-      for (const field of requiredFields) {
-        if (!team[field as keyof TeamData]) {
-          console.error(`Team ${teamId} is missing ${field}`);
-          return false;
-        }
-      }
-      
-      // Check if benefits is an array with items
-      if (!Array.isArray(team.benefits) || team.benefits.length === 0) {
-        console.error(`Team ${teamId} benefits should be a non-empty array`);
-        return false;
-      }
-    }
-    
-    return true;
-  }
-
-  /**
    * Get all available teams
+   * @returns Array of team colors
    */
-  public getAllTeams(): TeamData[] {
-    return Object.values(teams);
+  getAllTeams(): TeamColor[] {
+    return ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze'];
   }
 
   /**
-   * Utility method to adjust a color's brightness
-   * @param hexColor Hex color code
-   * @param factor Factor to adjust brightness (>1 for lighter, <1 for darker)
+   * Get the display name for a team
+   * @param team - Team color identifier
+   * @returns The display name for the team
    */
-  private adjustColor(hexColor: string, factor: number): string {
-    // Remove the hash
-    hexColor = hexColor.replace('#', '');
-    
-    // Parse the hex values
-    let r = parseInt(hexColor.substring(0, 2), 16);
-    let g = parseInt(hexColor.substring(2, 4), 16);
-    let b = parseInt(hexColor.substring(4, 6), 16);
-    
-    // Adjust the brightness
-    r = Math.min(255, Math.max(0, Math.round(r * factor)));
-    g = Math.min(255, Math.max(0, Math.round(g * factor)));
-    b = Math.min(255, Math.max(0, Math.round(b * factor)));
-    
-    // Convert back to hex
-    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  getTeamName(team: TeamColor): string {
+    return teamNames[team] || 'Unknown Team';
   }
 
   /**
-   * Determine if a color is light or dark
-   * @param hexColor Hex color code
+   * Get the color hex code for a team
+   * @param team - Team color identifier
+   * @returns The color hex code
    */
-  private isLightColor(hexColor: string): boolean {
-    // Remove the hash
-    hexColor = hexColor.replace('#', '');
-    
-    // Parse the hex values
-    const r = parseInt(hexColor.substring(0, 2), 16);
-    const g = parseInt(hexColor.substring(2, 4), 16);
-    const b = parseInt(hexColor.substring(4, 6), 16);
-    
-    // Calculate perceived brightness
-    // Formula: (0.299*R + 0.587*G + 0.114*B)
-    const brightness = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    
-    return brightness > 0.5;
+  getTeamColor(team: TeamColor): string {
+    return teamColors[team] || '#AAAAAA';
+  }
+
+  /**
+   * Get the hex color for a team
+   * @param team - Team color identifier
+   * @returns The hex color code
+   */
+  getTeamHexColor(team: TeamColor): string {
+    return teamHexColors[team] || '#AAAAAA';
+  }
+
+  /**
+   * Get the motto for a team
+   * @param team - Team color identifier
+   * @returns The team motto
+   */
+  getTeamMotto(team: TeamColor): string {
+    return teamMottos[team] || 'Unknown Motto';
+  }
+
+  /**
+   * Get the benefits for a team
+   * @param team - Team color identifier
+   * @returns Array of team benefits
+   */
+  getTeamBenefits(team: TeamColor): string[] {
+    return teamBenefits[team] || [];
+  }
+
+  /**
+   * Get the lore for a team
+   * @param team - Team color identifier
+   * @returns The team lore
+   */
+  getTeamLore(team: TeamColor): string {
+    return teamLore[team] || 'No lore available';
+  }
+
+  /**
+   * Get the theme for a team
+   * @param team - Team color identifier
+   * @returns The team theme object
+   */
+  getTeamTheme(team: TeamColor): any {
+    // Define team-specific themes
+    const themes: Record<TeamColor, any> = {
+      red: {
+        primary: '#FF4136',
+        secondary: '#DC3545',
+        accent: '#FF6B6B',
+        text: '#FFFFFF',
+        border: '#FF6B6B',
+        background: '#2D0A0A',
+        backgroundSecondary: '#3D1515',
+        hoverBg: '#4D1515',
+        activeBg: '#5D1515'
+      },
+      blue: {
+        primary: '#0074D9',
+        secondary: '#1E88E5',
+        accent: '#64B5F6',
+        text: '#FFFFFF',
+        border: '#64B5F6',
+        background: '#0A192F',
+        backgroundSecondary: '#152238',
+        hoverBg: '#1A2A4A',
+        activeBg: '#1F3256'
+      },
+      green: {
+        primary: '#2ECC40',
+        secondary: '#4CAF50',
+        accent: '#81C784',
+        text: '#FFFFFF',
+        border: '#81C784',
+        background: '#0F2A1A',
+        backgroundSecondary: '#1A3828',
+        hoverBg: '#1F4330',
+        activeBg: '#285038'
+      },
+      gold: {
+        primary: '#FFDC00',
+        secondary: '#FFC107',
+        accent: '#FFD54F',
+        text: '#212121',
+        border: '#FFD54F',
+        background: '#2A2000',
+        backgroundSecondary: '#382A0A',
+        hoverBg: '#453615',
+        activeBg: '#524020'
+      },
+      purple: {
+        primary: '#B10DC9',
+        secondary: '#9C27B0',
+        accent: '#BA68C8',
+        text: '#FFFFFF',
+        border: '#BA68C8',
+        background: '#1E0A29',
+        backgroundSecondary: '#2A1238',
+        hoverBg: '#351547',
+        activeBg: '#421956'
+      },
+      none: {
+        primary: '#85144b',
+        secondary: '#E91E63',
+        accent: '#F06292',
+        text: '#FFFFFF',
+        border: '#F06292',
+        background: '#1A0914',
+        backgroundSecondary: '#2A1020',
+        hoverBg: '#3A162C',
+        activeBg: '#4A1C38'
+      },
+      neutral: {
+        primary: '#AAAAAA',
+        secondary: '#9E9E9E',
+        accent: '#BDBDBD',
+        text: '#FFFFFF',
+        border: '#BDBDBD',
+        background: '#1F1F1F',
+        backgroundSecondary: '#2A2A2A',
+        hoverBg: '#353535',
+        activeBg: '#404040'
+      },
+      silver: {
+        primary: '#C0C0C0',
+        secondary: '#BDBDBD',
+        accent: '#E0E0E0',
+        text: '#212121',
+        border: '#E0E0E0',
+        background: '#2A2A2A',
+        backgroundSecondary: '#353535',
+        hoverBg: '#404040',
+        activeBg: '#4A4A4A'
+      },
+      bronze: {
+        primary: '#CD7F32',
+        secondary: '#BF8040',
+        accent: '#D2A76F',
+        text: '#FFFFFF',
+        border: '#D2A76F',
+        background: '#2A1F0A',
+        backgroundSecondary: '#352815',
+        hoverBg: '#40311C',
+        activeBg: '#4A3923'
+      }
+    };
+
+    return themes[team] || themes.neutral;
   }
 }
 
-// Create a singleton instance
-const teamService = new TeamService();
+export const teamService = new TeamService();
 
-export { teamService };
+// For compatibility with default imports
 export default teamService;

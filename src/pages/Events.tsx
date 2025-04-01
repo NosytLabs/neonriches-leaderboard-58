@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Shell from '@/components/Shell';
+import { Shell } from '@/components/ui/Shell';
 import { PageHeader } from '@/components/ui/page-header';
 import PublicShamingFestival from '@/components/events/PublicShamingFestival';
 import UpcomingEvents from '@/components/events/UpcomingEvents';

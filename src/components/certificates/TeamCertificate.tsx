@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -7,10 +6,10 @@ import { Download, Share2, Award, Crown, Shield, Wallet, ExternalLink } from 'lu
 import { UserProfile } from '@/types/user';
 import { Certificate } from '@/types/certificate';
 import { formatDate } from '@/utils/formatters/dateFormatters';
-import { getTeamName, getTeamColor, getTeamBorderColor } from '@/utils/teamUtils';
+import { getTeamName, getTeamColor, getTeamTailwindBgColor } from '@/utils/teamUtils';
 import { useSolana } from '@/contexts/SolanaContext';
 import html2canvas from 'html2canvas';
-import { TeamColor } from '@/types/team'; // Import TeamColor from team.ts instead
+import { TeamColor } from '@/types/team';
 
 interface TeamCertificateProps {
   user: UserProfile;
@@ -34,12 +33,10 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
   const [isSharing, setIsSharing] = useState(false);
   const certificateRef = useRef<HTMLDivElement>(null);
   
-  // Convert user.team to a valid TeamColor that works with both types
   const userTeam = (user.team || 'none') as TeamColor;
-  // Get team data using the team utilities
   const teamName = getTeamName(userTeam);
   const teamColor = getTeamColor(userTeam);
-  const teamBorder = getTeamBorderColor(userTeam);
+  const teamTailwindBgColor = getTeamTailwindBgColor(userTeam);
   const createdDate = certificate?.issuedAt || new Date().toISOString();
   
   const getCertificateTitle = () => {
@@ -215,19 +212,19 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
     <div className="flex flex-col items-center space-y-6">
       <div 
         ref={certificateRef} 
-        className={`relative max-w-2xl w-full p-8 parchment-bg border-8 ${teamBorder} rounded-lg shadow-xl`}
+        className={`relative max-w-2xl w-full p-8 parchment-bg border-8 ${teamTailwindBgColor} rounded-lg shadow-xl`}
       >
         <div className="absolute top-0 left-0 w-16 h-16">
-          <div className={`absolute top-2 left-2 w-8 h-8 border-t-2 border-l-2 ${teamBorder}`}></div>
+          <div className={`absolute top-2 left-2 w-8 h-8 border-t-2 border-l-2 ${teamTailwindBgColor}`}></div>
         </div>
         <div className="absolute top-0 right-0 w-16 h-16">
-          <div className={`absolute top-2 right-2 w-8 h-8 border-t-2 border-r-2 ${teamBorder}`}></div>
+          <div className={`absolute top-2 right-2 w-8 h-8 border-t-2 border-r-2 ${teamTailwindBgColor}`}></div>
         </div>
         <div className="absolute bottom-0 left-0 w-16 h-16">
-          <div className={`absolute bottom-2 left-2 w-8 h-8 border-b-2 border-l-2 ${teamBorder}`}></div>
+          <div className={`absolute bottom-2 left-2 w-8 h-8 border-b-2 border-l-2 ${teamTailwindBgColor}`}></div>
         </div>
         <div className="absolute bottom-0 right-0 w-16 h-16">
-          <div className={`absolute bottom-2 right-2 w-8 h-8 border-b-2 border-r-2 ${teamBorder}`}></div>
+          <div className={`absolute bottom-2 right-2 w-8 h-8 border-b-2 border-r-2 ${teamTailwindBgColor}`}></div>
         </div>
 
         <div className="space-y-6 text-center">
@@ -272,7 +269,7 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
             
             <div className="flex justify-between items-end mt-6">
               <div>
-                <div className={`royal-seal ${teamBorder.replace('border', 'bg')}`}>
+                <div className={`royal-seal ${teamTailwindBgColor.replace('border', 'bg')}`}>
                   <span className="text-white text-xs">ROYAL SEAL</span>
                 </div>
               </div>

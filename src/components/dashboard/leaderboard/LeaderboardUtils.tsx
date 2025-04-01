@@ -1,7 +1,6 @@
-
 import { LeaderboardUser } from '@/types/leaderboard';
 import { TeamColor } from '@/types/team';
-import { asTeamColor } from '@/utils/teamUtils';
+import { toTeamColor } from '@/utils/typeConverters';
 
 // Export the type properly
 export type { LeaderboardUser };
@@ -14,7 +13,7 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     displayName: "King Midas",
     profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
     tier: "royal",
-    team: asTeamColor("gold"),
+    team: toTeamColor("gold"),
     rank: 1,
     previousRank: 1,
     totalSpent: 15000,
@@ -29,7 +28,7 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     displayName: "Sir Spend-A-Lot",
     profileImage: "https://randomuser.me/api/portraits/men/2.jpg",
     tier: "premium",
-    team: asTeamColor("red"),
+    team: toTeamColor("red"),
     rank: 2,
     previousRank: 4,
     totalSpent: 12000,
@@ -44,7 +43,7 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     displayName: "Lady Fortune",
     profileImage: "https://randomuser.me/api/portraits/women/3.jpg",
     tier: "premium",
-    team: asTeamColor("blue"),
+    team: toTeamColor("blue"),
     rank: 3,
     previousRank: 2,
     totalSpent: 10000,
@@ -59,7 +58,7 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     displayName: "Gold Hoarder",
     profileImage: "https://randomuser.me/api/portraits/men/4.jpg",
     tier: "pro",
-    team: asTeamColor("green"),
+    team: toTeamColor("green"),
     rank: 4,
     previousRank: 3,
     totalSpent: 7500,
@@ -74,7 +73,7 @@ export const mockLeaderboardData: LeaderboardUser[] = [
     displayName: "Royal Spender",
     profileImage: "https://randomuser.me/api/portraits/women/5.jpg",
     tier: "basic",
-    team: asTeamColor("blue"),
+    team: toTeamColor("blue"),
     rank: 5,
     previousRank: 5,
     totalSpent: 5000,

@@ -1,243 +1,107 @@
 
-import { UserProfile } from '@/types/user';
-import { UserCosmetics } from '@/types/cosmetics';
-import { ProfileBoost } from '@/types/user';
-import { toTeamColor } from '@/utils/typeConverters';
+import { UserProfile } from '@/types/user-consolidated';
+
+interface ProcessUserOptions {
+  // Add any options for processing user data
+  includePrivateData?: boolean;
+}
 
 /**
- * Creates a default user object with initial values
+ * Process user data from the server to match the frontend User type
+ * @param userData - Raw user data from the server
+ * @param options - Processing options
+ * @returns - Processed user data
  */
-export const getDefaultUser = (email: string, username: string): UserProfile => {
-  const now = new Date().toISOString();
+export const processUser = (
+  userData: any, 
+  options: ProcessUserOptions = {}
+): UserProfile | null => {
+  if (!userData) return null;
   
-  // Initialize cosmetics with empty arrays for each category
-  const cosmetics: UserCosmetics = {
-    border: [],
-    color: [],
-    font: [],
-    emoji: [],
-    title: [],
-    background: [],
-    effect: [],
-    badge: [],
-    theme: []
+  // Normalize the data fields from various possible sources
+  const user: UserProfile = {
+    id: userData.id || userData.userId || '',
+    username: userData.username || '',
+    displayName: userData.displayName || userData.userName || userData.username || '',
+    email: userData.email || '',
+    profileImage: userData.profileImage || userData.avatar || '',
+    bio: userData.bio || '',
+    joinedDate: userData.joinedDate || userData.joinDate || userData.createdAt || new Date().toISOString(),
+    isVerified: Boolean(userData.isVerified),
+    team: userData.team || 'none',
+    tier: userData.tier || 'free',
+    rank: userData.rank || 0,
+    previousRank: userData.previousRank || 0,
+    walletBalance: userData.walletBalance || 0,
+    totalSpent: userData.totalSpent || userData.amountSpent || 0,
+    // Add other fields as needed
   };
   
-  // Add some starter cosmetics for new users
-  cosmetics.border.push('starter-border');
-  cosmetics.color.push('starter-color');
-  cosmetics.title.push('newcomer');
-  
-  return {
-    id: `user-${Date.now()}`,
-    email,
-    username,
-    displayName: username,
-    profileImage: `https://api.dicebear.com/7.x/personas/svg?seed=${username}`,
-    bio: '',
-    tier: 'bronze',
-    team: null,
-    rank: 0,
-    walletBalance: 5.00, // Starting balance
-    totalSpent: 0,
-    amountSpent: 0,
-    joinedDate: now,
-    isVerified: false,
-    cosmetics,
-    spendStreak: 0,
-    following: [], // Initialize as empty array
-    followers: [], // Initialize as empty array
-    settings: {
-      showRank: true,
-      showTeam: true,
-      showSpending: true,
-      showEmailOnProfile: false,
-      darkMode: true,
-      profileVisibility: 'public',
-      allowProfileLinks: true,
-      theme: 'dark',
-      notifications: true,
-      emailNotifications: false,
-      marketingEmails: false,
-      soundEffects: true,
-      showBadges: true,
-      rankChangeAlerts: false,
-      allowMessages: true,
-      newFollowerAlerts: false,
-      teamNotifications: false,
-      language: 'en',
-      publicProfile: true,
-      shameAlerts: false
-    },
-    profileBoosts: []
-  };
-};
-
-/**
- * Adds a profile boost with specified duration in days
- */
-export const addProfileBoostWithDays = (user: UserProfile, days: number, strength: number = 1, type: string = 'general'): ProfileBoost[] => {
-  if (!user) return [];
-  
-  const now = new Date();
-  const endDate = new Date();
-  endDate.setDate(now.getDate() + days);
-  
-  const profileBoost: ProfileBoost = {
-    id: `boost-${Date.now()}`,
-    startDate: now.toISOString(),
-    endDate: endDate.toISOString(),
-    level: strength,
-    type,
-    strength,
-    appliedBy: 'user',
-    isActive: true
-  };
-  
-  const profileBoosts = user.profileBoosts || [];
-  return [...profileBoosts, profileBoost];
-};
-
-/**
- * Adds a cosmetic to a user by category string
- */
-export const addCosmeticByCategoryString = (user: UserProfile, cosmeticId: string, category: string): UserCosmetics => {
-  if (!user || !cosmeticId || !category) return user.cosmetics || {};
-  
-  const cosmetics = { ...(user.cosmetics || {}) } as UserCosmetics;
-  
-  // Map legacy category names to the current property names
-  const categoryMap: Record<string, keyof UserCosmetics> = {
-    'borders': 'border',
-    'colors': 'color',
-    'fonts': 'font',
-    'emojis': 'emoji',
-    'titles': 'title',
-    'backgrounds': 'background',
-    'effects': 'effect',
-    'badges': 'badge',
-    'themes': 'theme',
-    'border': 'border',
-    'color': 'color',
-    'font': 'font',
-    'emoji': 'emoji',
-    'title': 'title',
-    'background': 'background',
-    'effect': 'effect',
-    'badge': 'badge',
-    'theme': 'theme'
-  };
-  
-  // Get the correct property name
-  const propertyName = categoryMap[category] || category as keyof UserCosmetics;
-  
-  // Initialize the property as an array if it doesn't exist
-  if (!cosmetics[propertyName]) {
-    cosmetics[propertyName] = [];
+  // Optional fields
+  if (userData.followers) {
+    user.followers = Array.isArray(userData.followers) ? userData.followers : [];
   }
   
-  // Add cosmetic if it doesn't already exist
-  if (Array.isArray(cosmetics[propertyName])) {
-    const currentItems = cosmetics[propertyName] as string[];
-    if (!currentItems.includes(cosmeticId)) {
-      cosmetics[propertyName] = [...currentItems, cosmeticId];
-    }
+  if (userData.following) {
+    user.following = Array.isArray(userData.following) ? userData.following : [];
   }
   
-  return cosmetics;
-};
-
-/**
- * Calculates user tier based on spending
- */
-export const calculateUserTier = (totalSpent: number): UserProfile['tier'] => {
-  if (totalSpent >= 1000) return 'royal';
-  if (totalSpent >= 500) return 'platinum';
-  if (totalSpent >= 200) return 'gold';
-  if (totalSpent >= 50) return 'silver';
-  return 'bronze';
-};
-
-/**
- * Gets the background CSS class for a user tier
- */
-export const getTierBackgroundClass = (tier: UserProfile['tier']): string => {
-  switch (tier) {
-    case 'bronze': return 'bg-amber-900/20';
-    case 'silver': return 'bg-slate-400/20';
-    case 'gold': return 'bg-yellow-500/20';
-    case 'platinum': return 'bg-indigo-400/20';
-    case 'royal': return 'bg-royal-gold/20';
-    case 'premium': return 'bg-purple-500/20';
-    case 'pro': return 'bg-blue-500/20';
-    case 'basic': return 'bg-green-500/20';
-    case 'free': return 'bg-gray-500/20';
-    default: return 'bg-gray-600/20';
+  if (userData.cosmetics) {
+    user.cosmetics = userData.cosmetics;
   }
+  
+  if (userData.achievements) {
+    user.achievements = userData.achievements;
+  }
+  
+  if (userData.settings) {
+    user.settings = userData.settings;
+  }
+  
+  return user;
 };
 
 /**
- * Gets the text color CSS class for a user tier
+ * Sanitize user data for storage or transmission
+ * @param user - User data to sanitize
+ * @returns Sanitized user data
  */
-export const getTierTextClass = (tier: UserProfile['tier']): string => {
-  switch (tier) {
-    case 'bronze': return 'text-amber-600';
-    case 'silver': return 'text-slate-400';
-    case 'gold': return 'text-yellow-500';
-    case 'platinum': return 'text-indigo-400';
-    case 'royal': return 'text-royal-gold';
-    case 'premium': return 'text-purple-500';
-    case 'pro': return 'text-blue-500';
-    case 'basic': return 'text-green-500';
-    case 'free': return 'text-gray-400';
-    default: return 'text-gray-400';
-  }
+export const sanitizeUserData = (user: UserProfile): Partial<UserProfile> => {
+  if (!user) return {};
+  
+  // Create a copy without sensitive information
+  const sanitizedUser = { ...user };
+  
+  // Remove sensitive information
+  delete (sanitizedUser as any).token;
+  delete (sanitizedUser as any).refreshToken;
+  delete (sanitizedUser as any).passwordHash;
+  
+  return sanitizedUser;
 };
 
 /**
- * Gets the border color CSS class for a user tier
+ * Check if the user has the required permissions
+ * @param user - User to check
+ * @param requiredPermissions - Permissions needed
+ * @returns Boolean indicating if user has permission
  */
-export const getTierBorderClass = (tier: UserProfile['tier']): string => {
-  switch (tier) {
-    case 'bronze': return 'border-amber-600/30';
-    case 'silver': return 'border-slate-400/30';
-    case 'gold': return 'border-yellow-500/30';
-    case 'platinum': return 'border-indigo-400/30';
-    case 'royal': return 'border-royal-gold/30';
-    case 'premium': return 'border-purple-500/30';
-    case 'pro': return 'border-blue-500/30';
-    case 'basic': return 'border-green-500/30';
-    case 'free': return 'border-gray-400/30';
-    default: return 'border-gray-400/30';
+export const hasPermission = (
+  user: UserProfile | null, 
+  requiredPermissions: string[]
+): boolean => {
+  if (!user) return false;
+  
+  // If no permissions are required, grant access
+  if (!requiredPermissions || requiredPermissions.length === 0) {
+    return true;
   }
-};
-
-/**
- * Gets amount needed to reach next tier
- */
-export const getAmountToNextTier = (totalSpent: number): { amount: number; nextTier: UserProfile['tier'] } => {
-  if (totalSpent < 50) {
-    return { amount: 50 - totalSpent, nextTier: 'silver' };
-  } else if (totalSpent < 200) {
-    return { amount: 200 - totalSpent, nextTier: 'gold' };
-  } else if (totalSpent < 500) {
-    return { amount: 500 - totalSpent, nextTier: 'platinum' };
-  } else if (totalSpent < 1000) {
-    return { amount: 1000 - totalSpent, nextTier: 'royal' };
-  }
-  // Already at highest tier
-  return { amount: 0, nextTier: 'royal' };
-};
-
-export const mockProfileBoost = (overrides = {}): ProfileBoost => {
-  return {
-    id: `boost_${Math.random().toString(36).substr(2, 9)}`,
-    startDate: new Date().toISOString(),
-    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-    level: Math.floor(Math.random() * 3) + 1,
-    type: 'visibility',
-    strength: Math.floor(Math.random() * 5) + 1,
-    appliedBy: `user_${Math.random().toString(36).substr(2, 9)}`,
-    isActive: true
-  };
+  
+  // Check if user has the permissions
+  const userPermissions = user.permissions || [];
+  
+  // Check if any of the required permissions match the user's permissions
+  return requiredPermissions.some(permission => 
+    userPermissions.includes(permission)
+  );
 };

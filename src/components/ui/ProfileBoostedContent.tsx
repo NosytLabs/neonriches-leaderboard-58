@@ -1,52 +1,46 @@
-
 import React from 'react';
-import { cn } from '@/lib/utils';
 import { UserProfile } from '@/types/user-consolidated';
-import { safeToString, ensureStringId } from '@/utils/typeConverters';
+import { RocketIcon, CrownIcon, StarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { safeToString } from '@/utils/typeConverters';
 
 interface ProfileBoostedContentProps {
   user: UserProfile;
-  type?: 'text' | 'profile' | 'content';
+  boostType?: 'rocket' | 'crown' | 'star';
   className?: string;
-  children: React.ReactNode;
 }
 
-/**
- * Wraps content and applies boost effects based on user profile boosts
- */
-const ProfileBoostedContent = ({
+const ProfileBoostedContent: React.FC<ProfileBoostedContentProps> = ({
   user,
-  type = 'content',
-  className,
-  children
-}: ProfileBoostedContentProps) => {
-  // Convert user to the proper type to avoid type errors
-  const userId = ensureStringId(user.id);
+  boostType = 'rocket',
+  className
+}) => {
+  let IconComponent = RocketIcon;
+  let boostText = 'Boosted Profile';
   
-  // Get active boosts. In a real app, would determine if boosts are active,
-  // here we'll just assume all boosts in the array are active.
-  const activeBoosts = user.profileBoosts || [];
-  
-  // Extract CSS classes from boosts
-  const boostClasses = activeBoosts
-    .filter(boost => boost.isActive)
-    .map(boost => {
-      // Check if boost has cssClass property
-      return boost.cssClass || '';
-    })
-    .filter(Boolean);
-  
-  // Combine all classes
-  const classNames = cn(
-    className,
-    ...boostClasses,
-    type === 'profile' && 'profile-boosted',
-    type === 'text' && 'text-boosted',
-  );
+  switch (boostType) {
+    case 'rocket':
+      IconComponent = RocketIcon;
+      boostText = 'Rocket Boosted';
+      break;
+    case 'crown':
+      IconComponent = CrownIcon;
+      boostText = 'Royal Profile';
+      break;
+    case 'star':
+      IconComponent = StarIcon;
+      boostText = 'Star Profile';
+      break;
+    default:
+      IconComponent = RocketIcon;
+      boostText = 'Boosted Profile';
+      break;
+  }
   
   return (
-    <div className={classNames} data-user-id={userId}>
-      {children}
+    <div className={cn("flex items-center space-x-2 rounded-md bg-secondary p-2 text-sm", className)}>
+      <IconComponent className="h-4 w-4 text-primary" />
+      <span>{boostText}</span>
     </div>
   );
 };

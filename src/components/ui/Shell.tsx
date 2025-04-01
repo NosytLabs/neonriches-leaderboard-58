@@ -1,5 +1,7 @@
 
 import React from 'react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 interface ShellProps {
   children: React.ReactNode;
@@ -7,18 +9,21 @@ interface ShellProps {
   as?: React.ElementType;
 }
 
-const Shell = ({ 
+export const Shell: React.FC<ShellProps> = ({ 
   children, 
   className = '', 
   as: Component = 'div' 
-}: ShellProps) => {
+}) => {
   return (
-    <Component className={`container mx-auto px-4 md:px-6 ${className}`}>
-      {children}
+    <Component className={`flex flex-col min-h-screen ${className}`}>
+      <Header />
+      <main className="flex-1">
+        {children}
+      </main>
+      <Footer />
     </Component>
   );
 };
 
 // Export both as default and named export to support different import styles
-export { Shell };
 export default Shell;

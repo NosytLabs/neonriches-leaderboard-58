@@ -31,7 +31,6 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
   const [mintSuccess, setMintSuccess] = useState(false);
   const certificateRef = useRef<HTMLDivElement>(null);
   
-  // Use optional chaining and prepare certificate NFT data
   const certificateNFT = user?.certificateNFT || null;
   
   const getTeamColor = (team: string | null | undefined) => {
@@ -104,7 +103,6 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
     setIsMinting(true);
     
     try {
-      // Convert user to compatible format
       const userForService: UserProfileUser = {
         id: safeToString(user.id),
         username: user.username,
@@ -152,7 +150,6 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
     window.open(url, '_blank');
   };
   
-  // Safely handle date formatting
   const joinedDate = user.joinedDate || user.joinDate || user.createdAt || new Date().toString();
   const formattedDate = formatDate(joinedDate);
   

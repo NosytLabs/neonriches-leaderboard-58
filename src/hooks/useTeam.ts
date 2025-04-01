@@ -62,7 +62,7 @@ const useTeam = () => {
   };
   
   const getTeamBenefits = (team: TeamColor): string[] => {
-    return teamService.getTeamBenefit(team);
+    return teamService.getTeamBenefits(team);
   };
   
   return {
