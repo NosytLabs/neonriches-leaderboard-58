@@ -1,86 +1,43 @@
+
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from '@/contexts/auth/AuthProvider';
-import { ThemeProvider } from '@/providers/theme-provider';
 
-// Core pages
-import Home from '@/pages/Home';
-import Login from '@/pages/Login';
-import SignUp from '@/pages/SignUp';
-import Dashboard from '@/pages/Dashboard';
-import Leaderboard from '@/pages/Leaderboard';
-import NotFound from '@/pages/NotFound';
-import About from '@/pages/About';
-import Privacy from '@/pages/Privacy';
-import Terms from '@/pages/Terms';
-import Profile from '@/pages/Profile';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import StatusCenter from '@/pages/StatusCenter';
-import Mockery from '@/pages/Mockery';
+// Pages
+import Index from '@/pages/Index';
 import Features from '@/pages/Features';
-import Teams from '@/pages/Teams';
-import Deposit from '@/pages/Deposit';
-import Stats from '@/pages/Stats';
-import ProfileEnhancements from '@/pages/ProfileEnhancements';
-import Marketing from '@/pages/Marketing';
+import Mockery from '@/pages/Mockery';
+import ComingSoon from '@/components/ComingSoon';
 
-function App() {
+// We'll use the ComingSoon component for pages that aren't fully implemented yet
+const App = () => {
   return (
-    <HelmetProvider>
-      <ThemeProvider defaultTheme="dark" storageKey="spendthrone-theme">
-        <AuthProvider>
-          <Routes>
-            {/* Landing Page */}
-            <Route path="/" element={<Home />} />
-            
-            {/* Main App Pages */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/status-through-history" element={<StatusCenter />} />
-            <Route path="/mockery" element={<Mockery />} />
-            <Route path="/features" element={<Features />} />
-            <Route path="/teams" element={<Teams />} />
-            <Route path="/deposit" element={<Deposit />} />
-            <Route path="/stats" element={<Stats />} />
-            <Route path="/profile-enhancements" element={<ProfileEnhancements />} />
-            <Route path="/marketing" element={<Marketing />} />
-            
-            {/* Protected User Pages */}
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/profile" 
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              } 
-            />
-            <Route path="/profile/:username" element={<Profile />} />
-            
-            {/* Redirection routes for backwards compatibility */}
-            <Route path="/home" element={<Navigate to="/" replace />} />
-            
-            {/* Catch-all for 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Toaster />
-        </AuthProvider>
-      </ThemeProvider>
-    </HelmetProvider>
+    <>
+      <AuthProvider>
+        <Routes>
+          {/* Core Pages */}
+          <Route path="/" element={<Index />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/mockery" element={<Mockery />} />
+          
+          {/* Placeholder pages using ComingSoon */}
+          <Route path="/leaderboard" element={<ComingSoon title="Royal Leaderboard" description="See who's spending the most in our satirical kingdom." />} />
+          <Route path="/deposit" element={<ComingSoon title="Royal Treasury" description="Add to your coffers and climb the ranks." />} />
+          <Route path="/profile" element={<ComingSoon title="Noble Profile" description="View your royal status and mockery history." />} />
+          <Route path="/stats" element={<ComingSoon title="Kingdom Statistics" description="Analyze spending patterns across the realm." />} />
+          <Route path="/teams" element={<ComingSoon title="Royal Alliances" description="Form teams with other nobles to showcase collective wealth." />} />
+          <Route path="/login" element={<ComingSoon title="Royal Authentication" description="Access your noble account." />} />
+          <Route path="/signup" element={<ComingSoon title="Join the Nobility" description="Create your account and begin your ascent." />} />
+          <Route path="/status-through-history" element={<ComingSoon title="Status Through History" description="Learn how wealth has been flaunted throughout the ages." />} />
+          
+          {/* Redirect for any unmatched routes */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+        <Toaster />
+      </AuthProvider>
+    </>
   );
-}
+};
 
 export default App;

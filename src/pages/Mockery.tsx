@@ -1,16 +1,16 @@
 
 import React from 'react';
-import Layout from '@/components/layout/Layout';
+import AppLayout from '@/layouts/AppLayout';
 import { motion } from 'framer-motion';
-import RoyalMockeryFestival from '@/components/mockery/RoyalMockeryFestival';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown, Target, ShieldAlert, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import MockeryComponent from '@/components/mockery/MockeryComponent';
 
 const Mockery = () => {
   return (
-    <Layout>
+    <AppLayout>
       <div className="container mx-auto px-4 py-12">
         <motion.div 
           className="text-center max-w-4xl mx-auto mb-10"
@@ -27,7 +27,7 @@ const Mockery = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
-            <RoyalMockeryFestival />
+            <MockeryComponent />
           </div>
           
           <div className="space-y-6">
@@ -96,7 +96,7 @@ const Mockery = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </AppLayout>
   );
 };
 
