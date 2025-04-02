@@ -11,7 +11,7 @@ export const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
-// Alias for formatCurrency for backward compatibility
+// Format dollar amount (alias for formatCurrency)
 export const formatDollarAmount = formatCurrency;
 
 // Format number with commas

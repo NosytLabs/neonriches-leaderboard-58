@@ -1,6 +1,6 @@
 
 // Define the available team colors
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze';
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze' | 'crimson';
 
 // Define the available mockery actions
 export type MockeryAction = 
@@ -25,7 +25,8 @@ export type MockeryAction =
   | 'joust'
   | 'duel'
   | 'carrot'
-  | 'fish';
+  | 'fish'
+  | 'gift';
 
 // Define the mockery tiers
 export type MockeryTier = 
@@ -39,7 +40,8 @@ export type MockeryTier =
   | 'premium'
   | 'standard'
   | 'silver'
-  | 'bronze';
+  | 'bronze'
+  | 'crimson';
 
 // Define user tiers
 export type UserTier = 

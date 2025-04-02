@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/select';
 import { Search } from 'lucide-react';
 import { LeaderboardFilter } from '@/types/leaderboard';
+import { TeamColor } from '@/types/mockery-types';
 
 interface LeaderboardFiltersProps {
   filter: LeaderboardFilter;
@@ -75,8 +76,8 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
           </div>
           
           <Select
-            value={filter.team || 'all'}
-            onValueChange={(value) => onFilterChange({ team: value })}
+            value={filter.team as ('all' | TeamColor) || 'all'}
+            onValueChange={(value: 'all' | TeamColor) => onFilterChange({ team: value })}
           >
             <SelectTrigger className="bg-black/40 border-white/10">
               <SelectValue placeholder="Team" />
@@ -107,8 +108,8 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
           </Select>
           
           <Select
-            value={filter.timeframe || 'all'}
-            onValueChange={(value) => onFilterChange({ timeframe: value })}
+            value={(filter.timeframe as 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all') || 'all'}
+            onValueChange={(value: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all') => onFilterChange({ timeframe: value })}
           >
             <SelectTrigger className="bg-black/40 border-white/10">
               <SelectValue placeholder="Time Frame" />

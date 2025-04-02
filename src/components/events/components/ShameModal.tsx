@@ -39,7 +39,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
 }) => {
   const regularPrice = getMockeryActionPrice(shameType);
   const finalPrice = hasDiscount 
-    ? getDiscountedShamePrice(shameType, targetUser.tier) 
+    ? getDiscountedShamePrice(shameType) 
     : regularPrice;
   
   return (

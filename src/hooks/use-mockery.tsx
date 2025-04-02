@@ -1,5 +1,4 @@
 
-// Update the MockedUser initializations to include all required fields
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useSound } from '@/hooks/use-sound';
@@ -87,26 +86,32 @@ export const useMockery = () => {
     });
   }, [toast]);
   
-  // Add mock events for display
+  // Add mock events for display that match MockeryEvent interface
   const mockEvents: MockeryEvent[] = [
     {
       id: "event1",
+      fromUserId: "currentUser",
+      toUserId: "user1",
       action: "tomatoes",
       targetId: "user1",
       fromId: "currentUser",
       timestamp: new Date().toISOString(),
       isAnonymous: false,
       message: "You got tomatoes!",
-      appliedBy: "user123"
+      appliedBy: "user123",
+      seen: false
     },
     {
       id: "event2",
+      fromUserId: "currentUser",
+      toUserId: "user2",
       action: "crown",
       targetId: "user2",
       fromId: "currentUser",
       timestamp: new Date(Date.now() - 86400000).toISOString(),
       isAnonymous: true,
-      appliedBy: "user456"
+      appliedBy: "user456",
+      seen: false
     }
   ];
   

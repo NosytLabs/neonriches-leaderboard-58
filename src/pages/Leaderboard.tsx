@@ -15,14 +15,14 @@ const Leaderboard = () => {
   const { user } = auth;
   const { loading, mockLeaderboardData } = useMockLeaderboard?.() || { loading: true, mockLeaderboardData: [] };
   
-  // Initialize filter state
+  // Initialize filter state with sortDirection
   const [filter, setFilter] = useState<LeaderboardFilter>({
     team: 'all',
     tier: 'all',
     timeframe: 'all-time',
     search: '',
     sortBy: 'rank',
-    sortDirection: 'asc' // Add sortDirection to fix the error
+    sortDirection: 'asc'
   });
   
   const [filteredUsers, setFilteredUsers] = useState<LeaderboardUser[]>([]);
