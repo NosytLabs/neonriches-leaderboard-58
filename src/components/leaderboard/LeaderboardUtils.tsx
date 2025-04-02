@@ -1,15 +1,28 @@
 
-import { UserProfile } from '@/types/user';
-import { formatCurrency, formatDate } from '@/utils/formatters';
+// Re-export from the main utils file for backwards compatibility
+import { 
+  formatRankNumber, 
+  formatMoney, 
+  formatCurrency, 
+  formatTimeAgo 
+} from '@/utils/leaderboardUtils';
 
-export const getPositionChangeColor = (user: UserProfile) => {
+export {
+  formatRankNumber,
+  formatMoney,
+  formatCurrency,
+  formatTimeAgo
+};
+
+// For backwards compatibility
+export const getPositionChangeColor = (user: any) => {
   if (!user.previousRank) return 'text-white/60';
   if (user.previousRank > user.rank) return 'text-green-500'; // Moved up
   if (user.previousRank < user.rank) return 'text-red-500'; // Moved down
   return 'text-white/60'; // No change
 };
 
-export const getPositionChangeIcon = (user: UserProfile) => {
+export const getPositionChangeIcon = (user: any) => {
   if (!user.previousRank) return null;
   if (user.previousRank > user.rank) return 'up';
   if (user.previousRank < user.rank) return 'down';
@@ -24,15 +37,3 @@ export const getTeamColor = (team: string | null | undefined) => {
     default: return 'text-white/60';
   }
 };
-
-export const formatRankNumber = (rank: number) => {
-  return rank?.toLocaleString() || '-';
-};
-
-export const formatMoney = (amount: number | undefined) => {
-  if (amount === undefined) return '$0.00';
-  return `$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-};
-
-// Re-export formatters from the main utility for convenience
-export { formatCurrency, formatDate };

@@ -1,4 +1,4 @@
 
-import { Shell } from './shell/Shell';
-export { Shell };
-export default Shell;
+// Direct re-export for cleaner imports
+export { Shell } from './shell/Shell';
+export { default } from './shell/Shell';

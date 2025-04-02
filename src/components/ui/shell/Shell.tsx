@@ -8,6 +8,10 @@ interface ShellProps {
   transparent?: boolean;
 }
 
+/**
+ * Main application shell component that provides consistent layout
+ * with header and footer for all pages
+ */
 const Shell: React.FC<ShellProps> = ({ children, transparent = false }) => {
   return (
     <div className="flex flex-col min-h-screen">

@@ -1,6 +1,11 @@
 
 import { TeamColor } from '@/types/mockery-types';
 
+/**
+ * Comprehensive Team Utilities
+ * Consolidates all team-related utility functions into a single file.
+ */
+
 // Team name utilities
 export const getTeamName = (team: TeamColor): string => {
   switch (team) {
@@ -28,7 +33,7 @@ export const getTeamName = (team: TeamColor): string => {
   }
 };
 
-// Team color utilities
+// Team color text utilities
 export const getTeamColor = (team: TeamColor): string => {
   switch (team) {
     case 'red':
@@ -168,6 +173,21 @@ export const asTeamColor = (team: string | TeamColor | null | undefined): TeamCo
   return 'none';
 };
 
+// Helper functions for leaderboard team display
+export const getPositionChangeColor = (previousRank?: number, currentRank?: number) => {
+  if (!previousRank) return 'text-white/60';
+  if (previousRank > (currentRank || 0)) return 'text-green-500'; // Moved up
+  if (previousRank < (currentRank || 0)) return 'text-red-500'; // Moved down
+  return 'text-white/60'; // No change
+};
+
+export const getPositionChangeIcon = (previousRank?: number, currentRank?: number) => {
+  if (!previousRank) return null;
+  if (previousRank > (currentRank || 0)) return 'up';
+  if (previousRank < (currentRank || 0)) return 'down';
+  return null;
+};
+
 // For backwards compatibility
 export const getTeamTailwindBgColor = getTeamBorderColor;
 export const getTeamDisplayName = getTeamName;
@@ -183,5 +203,7 @@ export default {
   getTeamBenefits,
   asTeamColor,
   getTeamDisplayName,
-  getTeamColorClass
+  getTeamColorClass,
+  getPositionChangeColor,
+  getPositionChangeIcon
 };

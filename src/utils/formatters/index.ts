@@ -42,6 +42,8 @@ export const formatFileSize = (bytes: number): string => {
   return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
 };
 
+export { formatCurrency as formatDollarAmount };
+
 // Also export default for backwards compatibility
 export default {
   formatCurrency,
