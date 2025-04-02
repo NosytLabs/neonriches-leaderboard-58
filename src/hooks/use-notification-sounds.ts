@@ -1,6 +1,6 @@
 
-import { useSound } from './use-sound';
-import { SoundType, SoundOptions, UseNotificationSoundsReturn } from '@/hooks/sound-types';
+import { useSound } from './useSound';
+import { SoundType, SoundOptions, UseNotificationSoundsReturn } from '@/types/sound-types';
 
 export const useNotificationSounds = (): UseNotificationSoundsReturn => {
   const { 
@@ -56,7 +56,14 @@ export const useNotificationSounds = (): UseNotificationSoundsReturn => {
       challenge: 'challenge',
       joust: 'joust',
       duel: 'duel',
-      fish: 'fish'
+      fish: 'fish',
+      deposit: 'deposit',
+      rank_up: 'rank_up',
+      level_up: 'level_up',
+      throne: 'throne',
+      boost: 'boost',
+      unlock: 'unlock',
+      mockery: 'mockery'
     };
 
     // Use the mapped sound type or fallback to notification

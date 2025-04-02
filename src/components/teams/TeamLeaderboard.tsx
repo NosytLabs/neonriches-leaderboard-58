@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ArrowUp, ArrowDown, Search, Trophy } from 'lucide-react';
+import { ArrowUp, ArrowDown, Search, Trophy, Users, Medal } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { TeamData } from '@/types/team-data';
+import { TeamData, TeamColor } from '@/types/team-data';
 import { toTeamColor } from '@/utils/typeConverters';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/utils/formatters';
+import { Badge } from '@/components/ui/badge';
 
 interface TeamLeaderboardProps {
   teams?: TeamData[];
@@ -24,6 +26,7 @@ const mockTeams: TeamData[] = [
     logoUrl: "/teams/gold-logo.png",
     members: 120,
     totalContribution: 250000,
+    totalSpent: 250000,
     rank: 1,
     previousRank: 2,
     benefits: ["Royal protection", "Crown badge", "Extended mockery options"]
@@ -36,6 +39,7 @@ const mockTeams: TeamData[] = [
     logoUrl: "/teams/blue-logo.png",
     members: 240,
     totalContribution: 180000,
+    totalSpent: 180000,
     rank: 2,
     previousRank: 1,
     benefits: ["Team boost bonuses", "Special events access", "Community rewards"]
@@ -48,6 +52,7 @@ const mockTeams: TeamData[] = [
     logoUrl: "/teams/red-logo.png",
     members: 205,
     totalContribution: 160000,
+    totalSpent: 160000,
     rank: 3,
     previousRank: 3,
     benefits: ["Rival bonuses", "Comeback mechanics", "Team challenges"]
@@ -60,6 +65,7 @@ const mockTeams: TeamData[] = [
     logoUrl: "/teams/green-logo.png",
     members: 320,
     totalContribution: 120000,
+    totalSpent: 120000,
     rank: 4,
     previousRank: 5,
     benefits: ["Growth bonuses", "New member rewards", "Group incentives"]
@@ -72,6 +78,7 @@ const mockTeams: TeamData[] = [
     logoUrl: "/teams/purple-logo.png",
     members: 90,
     totalContribution: 90000,
+    totalSpent: 90000,
     rank: 5,
     previousRank: 4,
     benefits: ["Prestige badges", "Exclusive cosmetics", "VIP events"]
@@ -156,7 +163,7 @@ const TeamLeaderboard: React.FC<TeamLeaderboardProps> = ({
                     {getRankChangeIcon(team)}
                   </div>
                   <div className="text-sm text-muted-foreground flex items-center space-x-2">
-                    <span><Users className="inline h-3 w-3 mr-1" />{team.members?.length || team.memberCount}</span>
+                    <span><Users className="inline h-3 w-3 mr-1" />{team.members}</span>
                     <span>•</span>
                     <span>{formatCurrency(team.totalContribution || team.totalSpent)}</span>
                   </div>

@@ -48,8 +48,8 @@ export type SoundType =
   | 'courtJester'
   | 'smokeBomb'
   | 'fish'
-  | 'deposit' // Add deposit as it's used in code
-  | 'rank_up' // Add these to cover usage in the code
+  | 'deposit' 
+  | 'rank_up' 
   | 'mockery'
   | 'level_up'
   | 'throne'
