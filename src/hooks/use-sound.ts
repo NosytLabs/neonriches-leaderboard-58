@@ -25,7 +25,9 @@ export const useSound = () => {
   return {
     playSound,
     stopSound,
-    play: playSound
+    play: playSound,
+    isSoundEnabled: true,
+    currentVolume: 1.0
   };
 };
 

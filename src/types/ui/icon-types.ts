@@ -27,6 +27,13 @@ export type IconColor =
   | 'danger'
   | 'royal'
   | 'gold'
+  | 'silver'
+  | 'crimson'
+  | 'emerald'
+  | 'red'
+  | 'blue'
+  | 'green'
+  | 'purple'
   | string;
 
 // Common icon style type
@@ -67,7 +74,14 @@ export const iconColorMap = {
   'warning': 'text-yellow-500',
   'danger': 'text-red-500',
   'royal': 'text-purple-500',
-  'gold': 'text-yellow-400'
+  'gold': 'text-yellow-400',
+  'silver': 'text-gray-300',
+  'crimson': 'text-royal-crimson',
+  'emerald': 'text-emerald-500',
+  'red': 'text-red-500',
+  'blue': 'text-blue-500',
+  'green': 'text-green-500',
+  'purple': 'text-purple-500'
 };
 
 // Lucide icon type for type safety
@@ -76,7 +90,49 @@ export type LucideIcon = React.ForwardRefExoticComponent<
 >;
 
 // Medieval icon types
-export type MedievalIconName = string;
+export type MedievalIconName = 
+  | 'crown'
+  | 'shield'
+  | 'sword'
+  | 'castle'
+  | 'chalice'
+  | 'dragon'
+  | 'flag'
+  | 'fleur-de-lis'
+  | 'goblet'
+  | 'knight'
+  | 'royal-crown'
+  | 'scroll'
+  | 'throne'
+  | 'tower'
+  | 'treasure-chest'
+  | 'coat-of-arms'
+  | 'medal'
+  | 'gem'
+  | 'heart'
+  | 'trophy'
+  | 'key'
+  | 'coins'
+  | 'wallet'
+  | 'seal'
+  | 'sparkles'
+  | 'user'
+  | 'users'
+  | 'Crown'
+  | 'Scroll'
+  | 'Coins'
+  | 'Shield'
+  | 'Sparkles'
+  | 'Trophy'
+  | 'Users'
+  | 'User'
+  | 'banner'
+  | 'dagger'
+  | 'coin'
+  | 'potion'
+  | 'treasure-chest'
+  | string;
+
 export type MedievalIconColor = IconColor;
 
 export interface MedievalIconProps {

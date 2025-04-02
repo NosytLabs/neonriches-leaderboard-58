@@ -42,7 +42,20 @@ export type MockeryAction =
   | 'fish'
   | 'thumbsDown'
   | 'alert'
-  | 'warning';
+  | 'warning'
+  | 'team'
+  | 'mockery'
+  | 'transfer'
+  | 'wish'
+  | 'medal'
+  | 'level_up'
+  | 'rank_up'
+  | 'deposit'
+  | 'withdrawal'
+  | 'purchase'
+  | 'achievement'
+  | 'error'
+  | 'success';
 
 export type MockeryTier = 
   | 'common'
@@ -103,12 +116,14 @@ export type LeaderboardUser = {
   createdAt?: string;
   rankChange?: number;
   spendChange?: number;
+  spentAmount?: number;
+  avatarUrl?: string;
 };
 
 export type LeaderboardFilter = {
   team: TeamColor | 'all';
   tier: UserTier | 'all';
-  timeframe: 'day' | 'week' | 'month' | 'all' | 'today' | 'all-time' | 'week' | 'month' | 'year';
+  timeframe: 'day' | 'week' | 'month' | 'all' | 'today' | 'all-time' | 'year';
   sortBy: 'rank' | 'spent' | 'streak' | 'username';
   search?: string;
 };
@@ -172,4 +187,5 @@ export type Gender =
   | 'queen'
   | 'jester'
   | 'noble'
-  | 'prefer-not-to-say';
+  | 'prefer-not-to-say'
+  | 'non-binary';

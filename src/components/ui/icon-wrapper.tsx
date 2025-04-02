@@ -9,6 +9,8 @@ interface IconWrapperProps {
   color?: IconColor;
   className?: string;
   medieval?: boolean;
+  style?: IconStyle;
+  animated?: boolean;
 }
 
 /**
@@ -20,13 +22,15 @@ const IconWrapper: React.FC<IconWrapperProps> = ({
   size = 'md',
   color = 'default',
   className,
-  medieval = false
+  medieval = false,
+  style,
+  animated = false
 }) => {
   // Safety check
   if (!icon) return null;
   
   // Get the style based on whether it's medieval or not
-  const iconStyle: IconStyle = medieval ? 'medieval' : 'default';
+  const iconStyle: IconStyle = style || (medieval ? 'medieval' : 'default');
   
   return (
     <IconSystem
@@ -35,6 +39,7 @@ const IconWrapper: React.FC<IconWrapperProps> = ({
       color={color}
       className={className}
       style={iconStyle}
+      animated={animated}
     />
   );
 };

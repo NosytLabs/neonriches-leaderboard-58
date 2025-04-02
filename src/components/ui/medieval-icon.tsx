@@ -19,7 +19,9 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
     : `h-${size} w-${size}`;
   
   // Get color class
-  const colorClass = iconColorMap[color as keyof typeof iconColorMap] || 'text-current';
+  const colorClass = typeof color === 'string' && color in iconColorMap
+    ? iconColorMap[color as keyof typeof iconColorMap]
+    : 'text-current';
   
   // Animation class
   const animationClass = animated ? 'animate-pulse' : '';

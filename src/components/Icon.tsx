@@ -4,7 +4,7 @@ import { IconProps } from '@/types/ui/icon-types';
 import { Icon as IconComponent } from '@/components/ui/icon';
 
 const Icon = React.forwardRef<SVGSVGElement, IconProps>(
-  ({ icon, name, size = 'md', color = 'default', className, animated, style = 'default', ...props }, ref) => {
+  ({ icon, name, size = 'md', color = 'default', className, animated = false, style = 'default', ...props }, ref) => {
     // Ensure either icon or name is provided
     const iconName = icon || name;
     

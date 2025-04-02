@@ -49,7 +49,8 @@ export type SoundType =
   | 'upgrade'
   | 'down'
   | 'up'
-  | 'warning';
+  | 'warning'
+  | 'levelUp'; // Added for compatibility with useSound.ts
 
 export interface SoundOptions {
   volume?: number;

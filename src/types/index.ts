@@ -8,17 +8,19 @@
 export type { 
   MockeryAction,
   MockeryTier,
-  TeamData
+  TeamData,
+  TeamColor
 } from './mockery-types';
 
 // User types - these override mockery-types when there's a conflict
 export type {
   UserProfile,
   UserSettings,
-  TeamColor,
-  Gender,
-  TeamType
+  Gender
 } from './user-consolidated';
+
+// Re-export TeamType for backward compatibility
+export type TeamType = TeamColor;
 
 export type {
   AuthState,
@@ -59,7 +61,6 @@ export type {
 } from './boost';
 
 export type {
-  TeamColor as TeamColorEnum,
   TeamMember,
   TeamRole,
   TeamStats,
@@ -82,12 +83,6 @@ export type { SoundType, SoundOptions, SoundConfig } from './sound-types';
 // For backwards compatibility
 import { UserProfile } from './user-consolidated';
 export type User = UserProfile;
-
-// No more direct re-exports of conflicting types
-// Instead, using named types above to avoid conflicts
-
-// Don't re-export the mockery-types that cause conflicts
-// Use explicit named exports instead
 
 // Re-export types from mocktypes.ts to ensure consistency
 export type { 

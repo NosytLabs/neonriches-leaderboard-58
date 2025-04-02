@@ -28,9 +28,6 @@ export type CosmeticType =
 // String literal type for category
 export type CosmeticCategory = CosmeticType | string;
 
-// No conflicting exports
-export { CosmeticType };
-
 export type CosmeticRarity = 
   | 'common'
   | 'uncommon'

@@ -39,10 +39,16 @@ export interface UserCosmetics {
   effect: string[];
   badge: string[];
   theme: string[];
+  [key: string]: string[] | string | undefined; // Added index signature
   activeTitle?: string;
   activeBorder?: string;
   activeBackground?: string;
   activeEffect?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string;
+  activeBadge?: string;
+  activeTheme?: string;
 }
 
 export interface ProfileBoost {
@@ -128,7 +134,7 @@ export interface UserProfile {
   };
 }
 
-// For backwards compatibility
+// Re-export relevant types for backward compatibility
 export type { TeamColor, UserTier, Gender };
 export type TeamType = TeamColor;
 export type User = UserProfile;
