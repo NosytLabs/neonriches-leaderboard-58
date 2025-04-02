@@ -12,14 +12,16 @@ export type SoundType =
   | 'purchase'
   | 'transfer'
   | 'message'
-  | 'level_up'
+  | 'level_up'  // Changed from level-up to match other code
   | 'rank_up'
   | 'reward'
   | 'achievement'
   | 'royal'
   | 'coin'
   | 'chime'
-  | 'alert';
+  | 'alert'
+  | 'mockery'    // Add missing sound types
+  | 'fanfare';   // Add missing sound type
 
 // Sound pack types for premium sounds
 export type SoundPackType = 

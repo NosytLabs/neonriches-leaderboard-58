@@ -56,6 +56,8 @@ export interface SocialLink {
   title?: string;
   verified?: boolean;
   username?: string;
+  label?: string;
+  icon?: string;
 }
 
 export interface UserProfile {
@@ -105,6 +107,6 @@ export interface UserProfile {
   };
 }
 
-// Export types for use elsewhere
+// Export types for use elsewhere - use 'export type' to avoid conflicts
 export type { UserTier, TeamColor, TeamColor as TeamType };
 export type User = UserProfile;

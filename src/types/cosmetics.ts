@@ -85,3 +85,16 @@ export interface CosmeticFilter {
 
 // Create UserCosmeticState for compatibility
 export type UserCosmeticState = UserCosmetics;
+
+// Export SocialLink interface for components that import it from cosmetics
+export interface SocialLink {
+  id?: string;
+  platform: string;
+  url: string;
+  title?: string;
+  verified?: boolean;
+  username?: string;
+  label?: string;
+  icon?: string;
+  display?: string;
+}

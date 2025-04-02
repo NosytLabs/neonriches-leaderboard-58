@@ -20,8 +20,13 @@ export interface LeaderboardUser {
   joinedAt?: string;     // Add joinedAt as an optional property
   spendChange?: number;  // Add additional fields from error messages
   rankChange?: number;
-  // Add thumbsDown for compatibility
   thumbsDown?: number;
+  // Fields to support conversion from/to UserProfile
+  email?: string;
+  bio?: string;
+  joinedDate?: string;
+  settings?: any;
+  carrot?: number;       // Add mockery action type
 }
 
 export interface LeaderboardFilter {

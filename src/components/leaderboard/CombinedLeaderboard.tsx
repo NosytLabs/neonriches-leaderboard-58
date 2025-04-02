@@ -59,7 +59,7 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
               displayName: `Noble User ${index + 1}`,
               profileImage: `https://source.unsplash.com/random/?portrait&${index}`,
               tier: index < 3 ? 'royal' : index < 6 ? 'silver' : 'basic',
-              team: ['red', 'blue', 'green', 'gold', 'purple'][index % 5],
+              team: (['red', 'blue', 'green', 'gold', 'purple'][index % 5]) as any,
               rank: index + 1,
               totalSpent: Math.floor(10000 / (index + 1)), 
               previousRank: index + 3 > 10 ? index - 2 : index + 3,
@@ -120,6 +120,24 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
     setVisibleCount(prevCount => prevCount + count);
   };
 
+  // Convert LeaderboardUser array to a type that's compatible with LeaderboardList
+  const convertToCompatibleUser = (users: LeaderboardUser[]): any[] => {
+    return users.map(user => ({
+      ...user,
+      // Add minimal fields expected by LeaderboardList component
+      id: user.id,
+      userId: user.userId,
+      displayName: user.displayName || user.username,
+      username: user.username,
+      profileImage: user.profileImage,
+      totalSpent: user.totalSpent,
+      isVerified: user.isVerified || false,
+      isProtected: user.isProtected,
+      rank: user.rank,
+      team: user.team
+    }));
+  }
+
   return (
     <div className={`${className} ${hideOnMobile ? 'hidden md:block' : ''}`}>
       <Card className="glass-morphism border-white/10">
@@ -155,7 +173,7 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
             
             <TabsContent value="all">
               <LeaderboardList 
-                users={leaderboardData}
+                users={convertToCompatibleUser(leaderboardData)}
                 loading={loading}
                 currentUserId={user?.id || ''}
                 onProfileClick={(userId, username) => console.log(`Clicked on ${username}`)}
@@ -165,7 +183,7 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
             
             <TabsContent value="trending">
               <LeaderboardList 
-                users={leaderboardData}
+                users={convertToCompatibleUser(leaderboardData)}
                 loading={loading}
                 currentUserId={user?.id || ''}
                 onProfileClick={(userId, username) => console.log(`Clicked on ${username}`)}
@@ -175,7 +193,7 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
             
             <TabsContent value="top">
               <LeaderboardList 
-                users={leaderboardData}
+                users={convertToCompatibleUser(leaderboardData)}
                 loading={loading}
                 currentUserId={user?.id || ''}
                 onProfileClick={(userId, username) => console.log(`Clicked on ${username}`)}
@@ -185,7 +203,7 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
             
             <TabsContent value="royal">
               <LeaderboardList 
-                users={leaderboardData}
+                users={convertToCompatibleUser(leaderboardData)}
                 loading={loading}
                 currentUserId={user?.id || ''}
                 onProfileClick={(userId, username) => console.log(`Clicked on ${username}`)}

@@ -56,3 +56,16 @@ export const getInitials = (name: string): string => {
   
   return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
 };
+
+/**
+ * Format a dollar amount with appropriate formatting
+ */
+export const formatDollarAmount = (amount: number | undefined, decimals = 2): string => {
+  if (amount === undefined || amount === null) return '$0';
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  }).format(amount);
+};

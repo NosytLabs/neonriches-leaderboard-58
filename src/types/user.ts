@@ -1,4 +1,3 @@
-
 import { UserProfile as ConsolidatedUserProfile } from './user-consolidated';
 
 export type UserTier = 'free' | 'basic' | 'premium' | 'royal' | 'gold' | 'silver' | 'bronze' | 'elite' | 'pro' | 'legendary' | 'diamond' | 'platinum' | 'founder' | 'vip' | 'whale' | 'standard';
@@ -58,9 +57,12 @@ export interface SocialLink {
   id?: string;
   platform: string;
   url: string;
+  title?: string;
   verified?: boolean;
   username?: string;
-  title?: string;
+  label?: string;
+  icon?: string;
+  display?: string;
 }
 
 export interface UserProfile {
@@ -122,6 +124,7 @@ export interface ProfileImage {
   url: string;
   isPrimary: boolean;
   caption?: string;
+  type?: string; // Added type property that was missing
 }
 
 // Add ProfileLink type for compatibility with LinksEditor

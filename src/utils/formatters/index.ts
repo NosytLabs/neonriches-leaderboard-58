@@ -1,47 +1,52 @@
 
-/**
- * Central export point for all formatter utilities
- */
+// Re-export all formatters from individual files
 
-export * from './dateFormatters';
-export * from './numberFormatters';
-export * from './stringFormatters';
-export * from './currencyFormatters';
-export * from './addressFormatters';
-export * from './fileFormatters';
-
-// Re-export specific formatters for backward compatibility
-import { formatCurrency, formatDollarAmount, formatWithUnit, formatCompactNumber, formatPercent, formatCompactDollar, formatHistoricalValue } from './currencyFormatters';
-import { formatNumber } from './numberFormatters';
-import { formatDate, formatTimeAgo, formatRelativeTime } from './dateFormatters';
-import { formatFileSize } from './fileFormatters';
-
-export {
-  formatCurrency,
-  formatDollarAmount,
-  formatWithUnit,
-  formatCompactNumber,
-  formatPercent,
-  formatCompactDollar,
-  formatHistoricalValue,
+// Number formatters
+export { 
   formatNumber,
-  formatDate,
-  formatTimeAgo,
-  formatRelativeTime,
-  formatFileSize
+  formatPercent,
+  formatCompact,
+  formatOrdinal,
+  formatSignedNumber
+} from './numberFormatters';
+
+// String formatters
+export {
+  truncateString,
+  capitalizeFirstLetter,
+  toTitleCase,
+  stripHtmlTags,
+  formatUsername,
+  getInitials,
+  formatDollarAmount
+} from './stringFormatters';
+
+// Format date
+export const formatDate = (dateString: string): string => {
+  if (!dateString) return '';
+  
+  try {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }).format(date);
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return '';
+  }
 };
 
-export default {
-  formatCurrency,
-  formatDollarAmount,
-  formatWithUnit,
-  formatCompactNumber,
-  formatPercent,
-  formatCompactDollar,
-  formatHistoricalValue,
-  formatNumber,
-  formatDate,
-  formatTimeAgo,
-  formatRelativeTime,
-  formatFileSize
+// Format currency
+export const formatCurrency = (value: number | undefined, options = {}): string => {
+  if (value === undefined || value === null) return '$0';
+  
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+    ...options
+  }).format(value);
 };

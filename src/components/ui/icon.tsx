@@ -35,12 +35,12 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
     const iconProps = {
       ref,
       className: cn(sizeClass, colorClass, animatedClass, className),
-      'aria-hidden': 'true',
+      'aria-hidden': true, // Changed from string to boolean
       ...props
     };
 
-    // Fix the createElement call to properly type the component
-    return React.createElement(IconComponent as React.ComponentType<React.SVGProps<SVGSVGElement>>, iconProps);
+    // @ts-ignore - Using createElement with the Lucide icon component
+    return React.createElement(IconComponent, iconProps);
   }
 );
 
