@@ -1,76 +1,73 @@
 
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/Badge';
-import { Check, Crown } from 'lucide-react';
-import { formatCurrency } from '@/utils/formatters';
+import { Check, X } from 'lucide-react';
 
 export interface SubscriptionPlan {
   id: string;
   name: string;
   description: string;
-  price: {
-    monthly: number;
-    yearly: number;
-  };
+  price: number;
   features: string[];
   popular?: boolean;
   tier: string;
-  cta?: string;
+  interval?: 'monthly' | 'yearly';
 }
 
 export interface SubscriptionPlanCardProps {
   plan: SubscriptionPlan;
-  onSelect: (plan: SubscriptionPlan) => void;
-  isActive?: boolean;
-  billingInterval?: 'monthly' | 'yearly';
+  onSelect?: (plan: SubscriptionPlan) => void;
+  isCurrentPlan?: boolean;
+  billingInterval?: string;
 }
 
-const SubscriptionPlanCard: React.FC<SubscriptionPlanCardProps> = ({
+export const SubscriptionPlanCard: React.FC<SubscriptionPlanCardProps> = ({
   plan,
   onSelect,
-  isActive = false,
-  billingInterval = 'monthly'
+  isCurrentPlan = false,
+  billingInterval
 }) => {
-  const price = billingInterval === 'monthly' ? plan.price.monthly : plan.price.yearly;
+  const handleSelect = () => {
+    if (onSelect) {
+      onSelect(plan);
+    }
+  };
+
+  const displayInterval = billingInterval || plan.interval || 'monthly';
   
   return (
-    <Card className={`flex flex-col h-full ${isActive ? 'border-primary' : 'border-border'} ${
-      plan.popular ? 'shadow-lg' : ''
-    }`}>
+    <Card className={`w-full ${isCurrentPlan ? 'border-primary' : 'border-border'}`}>
       <CardHeader>
         {plan.popular && (
-          <Badge variant="outline" className="mb-2 self-start">
-            Most Popular
-          </Badge>
+          <Badge className="self-start mb-2">Popular</Badge>
         )}
         <CardTitle>{plan.name}</CardTitle>
-        <div className="text-3xl font-bold">
-          {formatCurrency(price)}
-          <span className="text-sm font-normal text-muted-foreground">
-            /{billingInterval === 'monthly' ? 'month' : 'year'}
-          </span>
-        </div>
-        <p className="text-sm text-muted-foreground">{plan.description}</p>
+        <CardDescription>{plan.description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow">
+      <CardContent>
+        <div className="mb-4">
+          <span className="text-3xl font-bold">${plan.price}</span>
+          <span className="text-muted-foreground">/{displayInterval}</span>
+        </div>
         <ul className="space-y-2">
-          {plan.features.map((feature, i) => (
-            <li key={i} className="flex items-center">
-              <Check size={18} className="mr-2 text-green-500" />
-              <span className="text-sm">{feature}</span>
+          {plan.features.map((feature, index) => (
+            <li key={index} className="flex items-center">
+              <Check className="h-4 w-4 mr-2 text-green-500" />
+              <span>{feature}</span>
             </li>
           ))}
         </ul>
       </CardContent>
       <CardFooter>
         <Button 
-          className="w-full" 
-          variant={isActive ? "outline" : "default"}
-          onClick={() => onSelect(plan)}
+          onClick={handleSelect}
+          className="w-full"
+          variant={isCurrentPlan ? "outline" : "default"}
+          disabled={isCurrentPlan}
         >
-          {isActive ? 'Current Plan' : plan.cta || 'Select Plan'}
+          {isCurrentPlan ? 'Current Plan' : 'Select Plan'}
         </Button>
       </CardFooter>
     </Card>

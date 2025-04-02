@@ -9,7 +9,7 @@ export interface ShellProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const Shell = ({ children, className, variant, ...props }: ShellProps) => {
   return (
-    <div className={cn("w-full", className)} {...props}>
+    <div className={cn("w-full", variant && `shell-${variant}`, className)} {...props}>
       {children}
     </div>
   );

@@ -48,7 +48,11 @@ export type MockeryAction =
   | 'taunt'
   | 'thumbsDown'
   | 'trumpet'
-  | 'confetti';
+  | 'confetti'
+  | 'shame'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection';
 
 export type MockeryTier = 
   | 'common'
@@ -95,7 +99,7 @@ export interface LeaderboardFilter {
   limit?: number;
 }
 
-// Add the TeamData and MockeryEvent interfaces for imports
+// Add the TeamData interface with all required properties
 export interface TeamData {
   id: string;
   name: string;
@@ -124,13 +128,16 @@ export interface MockeryEvent {
   message?: string;
   tier: MockeryTier;
   cost?: number;
+  type?: string; // Required by some components
 }
 
 export interface MockeryUser {
   id: string;
   username: string;
+  displayName: string; // Add required by some components
   profileImage: string;
   rank: number;
   tier: UserTier;
   team: TeamColor;
+  userId?: string; // Add required by some components
 }

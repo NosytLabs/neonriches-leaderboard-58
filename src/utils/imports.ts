@@ -1,36 +1,39 @@
 
-// This file is used to re-export components with consistent casing to avoid errors
+// This file centralizes and re-exports commonly used components and utilities
+// to reduce import statements throughout the application
 
-// UI Components with proper casing
-// Use correct casing for Badge import
-export { Badge } from "@/components/ui/Badge";
-export { Button } from "@/components/ui/button";
-export { Input } from "@/components/ui/input";
-export { Label } from "@/components/ui/label";
-export { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-export { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-export { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-export { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-export { Switch } from "@/components/ui/switch";
-export { Skeleton } from "@/components/ui/skeleton";
-export { Separator } from "@/components/ui/separator";
+// UI Components
+export * from '@/components/ui';
 
 // Hooks
-export { useToast, useToastContext } from "@/hooks/use-toast";
-export { useAuth } from "@/hooks/useAuth";
-export { default as useSound } from "@/hooks/useSound";
-export { default as useLeaderboard } from "@/hooks/useLeaderboard";
+export { useToast } from '@/hooks/use-toast';
+export { useUser } from '@/hooks/useUser';
+export { useAuth } from '@/hooks/useAuth';
+export { useLocalStorage } from '@/hooks/useLocalStorage';
+export { useMockLeaderboard } from '@/hooks/useMockLeaderboard';
+export { useCertificate } from '@/hooks/useCertificate';
 
 // Utils
-export { cn } from "@/lib/utils";
-export { toTeamColor } from "@/utils/typeConverters";
-export { formatCurrency, formatDate } from "@/utils/formatters";
-export { getMockeryName, getMockeryDescription, getMockeryActionIcon, getMockeryTier, getMockeryCost } from "@/utils/mockery";
+export { cn } from '@/lib/utils';
+export { 
+  formatDollarAmount, 
+  formatTimeAgo, 
+  truncateAddress, 
+  formatNumber, 
+  formatCurrency,
+  formatDate,
+  formatFileSize
+} from '@/utils/formatters';
+export { toTeamColor } from '@/utils/typeConverters';
+export { getMockeryName, getMockeryDescription } from '@/utils/mockeryUtils';
 
-// Types
-export type { TeamColor, UserTier, MockeryAction, MockeryTier } from "@/types/mockery-types";
-export type { LeaderboardUser, LeaderboardFilter } from "@/types/leaderboard";
-export type { UserProfile } from "@/types/user-consolidated";
+// Contexts
+export { AuthProvider } from '@/contexts/auth';
+
+// Exported types
+export type { 
+  UserProfile,
+  TeamColor,
+  UserTier
+} from '@/types/user';
 

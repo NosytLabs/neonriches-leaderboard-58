@@ -102,4 +102,5 @@ export interface UserProfile {
   achievements?: string[];
   badges?: string[];
   boostCount?: number;
+  activeTitle?: string;
 }

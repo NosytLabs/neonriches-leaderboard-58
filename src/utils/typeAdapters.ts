@@ -4,6 +4,7 @@ import { UserProfile } from '@/types/user';
 import { LeaderboardUser } from '@/types/leaderboard';
 import { LeaderboardUser as MockeryLeaderboardUser } from '@/types/mockery-types';
 import { Certificate } from '@/types/certificate';
+import { SocialLink as SocialLinkInterface } from '@/types/user-types';
 
 /**
  * Adapts a user profile to ensure it has all required fields
@@ -59,15 +60,15 @@ export const adaptUserProfile = (user: Partial<ConsolidatedUserProfile> | Partia
     following: user.following,
     profileViews: user.profileViews,
     profileClicks: user.profileClicks,
-    socialLinks: user.socialLinks,
+    socialLinks: user.socialLinks as (SocialLinkInterface[] | Record<string, string>),
     purchasedFeatures: user.purchasedFeatures,
-    subscription: user.subscription,
+    subscription: user.subscription as UserSubscription,
     gender: user.gender,
     boostCount: user.boostCount,
     badges: user.badges,
     achievements: user.achievements,
     lastActive: user.lastActive,
-    activeTitle: user.activeTitle,
+    activeTitle: (user as any).activeTitle,
     certificateNFT: user.certificateNFT,
   };
 };
@@ -90,11 +91,10 @@ export const adaptLeaderboardUser = (user: MockeryLeaderboardUser): LeaderboardU
     spendStreak: user.spendStreak || 0,
     walletBalance: user.walletBalance || 0,
     previousRank: user.previousRank || user.rank || 0,
-    joinDate: user.joinDate || '',
-    isVerified: user.isVerified || false,
     rankChange: user.rankChange || 0,
     spendChange: user.spendChange || 0,
     isProtected: user.isProtected || false,
+    isVerified: user.isVerified || false,
   };
 };
 
@@ -146,5 +146,6 @@ export const adaptCertificate = (cert: Partial<Certificate>): Certificate => {
     isMinted: cert.isMinted || false,
     issuedAt: cert.issuedAt || cert.dateIssued || new Date().toISOString(),
     expiresAt: cert.expiresAt || '',
+    previewUrl: cert.previewUrl || cert.imageUrl || '',
   };
 };

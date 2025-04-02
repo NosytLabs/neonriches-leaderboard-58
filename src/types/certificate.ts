@@ -84,7 +84,7 @@ export interface CertificateTemplate {
   requiresFounder?: boolean;
 }
 
-// Export this interface to ensure compatability
+// Export this interface to ensure compatibility
 export interface UseCertificateResult {
   certificates: Certificate[];
   templates: CertificateTemplate[];

@@ -83,3 +83,35 @@ export const formatCurrency = (amount: number): string => {
     maximumFractionDigits: 2,
   }).format(amount);
 };
+
+/**
+ * Format a date string
+ */
+export const formatDate = (date: Date | string | number, options: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric'
+}): string => {
+  const dateObj = typeof date === 'string' || typeof date === 'number' 
+    ? new Date(date) 
+    : date;
+    
+  if (isNaN(dateObj.getTime())) {
+    console.error('Invalid date:', date);
+    return 'Invalid date';
+  }
+  
+  return new Intl.DateTimeFormat('en-US', options).format(dateObj);
+};
+
+/**
+ * Format file size in KB, MB, etc.
+ */
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
+  
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  
+  return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
+};
