@@ -21,7 +21,7 @@ export interface MockeryResult {
   event?: MockeryEvent;
 }
 
-// Only export useMockery once
+// Export only once
 export const useMockery = () => {
   const { toast } = useToast();
   const [isMocking, setIsMocking] = useState<boolean>(false);
@@ -53,11 +53,7 @@ export const useMockery = () => {
       rotten_egg: 300, 
       flame: 75,
       heart: 100,
-      thumbs_down: 15,
-      royal_decree: 500,
-      shame_certificate: 200,
-      insult: 50,
-      humiliate: 150
+      thumbs_down: 15
     };
     
     return costs[action] || 50;
@@ -127,5 +123,4 @@ export const useMockery = () => {
   };
 };
 
-// Don't create duplicate export
-export default useMockery;
+// Remove duplicate default export

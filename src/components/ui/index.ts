@@ -37,13 +37,15 @@ export * from './textarea';
 export * from './tooltip';
 export { Shell } from './shell';
 
-// Export toast components - fixing the missing Toaster export
+// Export toast components
 export { 
   Toast, 
   ToastProvider, 
   ToastViewport,
-  Toaster // Add the Toaster export
 } from './toast';
+
+// Create and export a Toaster component directly
+export { Toaster } from '../ui/toaster';
 
 // Export the remaining functionality from toast
 export type { 
