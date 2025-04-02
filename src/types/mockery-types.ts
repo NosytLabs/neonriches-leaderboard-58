@@ -1,20 +1,42 @@
 
 import { TeamColor } from './user';
 
+// Define all possible mockery actions - expanded to include all the ones used in the codebase
 export type MockeryAction = 
-  | 'shame'
-  | 'egg'
-  | 'mock'
-  | 'downvote'
   | 'taunt'
-  | 'gift';
+  | 'shame'
+  | 'jester'
+  | 'mock'
+  | 'challenge'
+  | 'joust'
+  | 'duel'
+  | 'tomatoes'
+  | 'eggs'
+  | 'egg'
+  | 'crown'
+  | 'stocks'
+  | 'putridEggs'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection'
+  | 'downvote'
+  | 'gift'
+  | 'target';
 
+// Define all possible mockery tiers
 export type MockeryTier = 
-  | 'basic'
-  | 'standard'
-  | 'premium'
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary'
   | 'royal'
-  | 'silver';
+  | 'basic'
+  | 'premium'
+  | 'silver'
+  | 'bronze'
+  | 'standard';
 
 export interface MockeryReaction {
   id: string;
@@ -53,6 +75,7 @@ export interface MockedUser {
   totalSpent: number;
   rank: number;
   spendStreak: number;
+  reason?: string; // Added to fix property error
 }
 
 export interface MockeryProfile {
@@ -85,12 +108,16 @@ export interface LeaderboardUser {
   rankChange?: number;
 }
 
-export type MockeryAction = 
-  | 'shame'
-  | 'egg'
-  | 'mock'
-  | 'downvote'
-  | 'taunt'
-  | 'gift';
+export interface MockeryEvent {
+  id: string;
+  action: MockeryAction;
+  targetId: string;
+  fromId: string;
+  timestamp: string;
+  isAnonymous: boolean;
+  message?: string;
+  duration?: number;
+}
 
-export { TeamColor };
+// Export type for compatibility with isolated modules
+export type { TeamColor };

@@ -1,21 +1,38 @@
 
-/**
- * Team color options
- */
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'silver' | 'bronze' | 'neutral' | 'none';
+import { TeamColor } from './user';
 
-/**
- * Team data interface
- */
 export interface TeamData {
   id: string;
   name: string;
   color: TeamColor;
   description: string;
+  motto: string;
+  icon: string;
   memberCount: number;
   totalSpent: number;
-  leaderUsername: string;
-  leaderProfileImage?: string;
-  rank: number;
-  previousRank?: number;
+  position: number;
+  banner?: string;
+  founder?: string;
+  benefits?: string[];
+  history?: string;
 }
+
+export interface TeamStanding {
+  teamId: string;
+  teamName: string;
+  teamColor: TeamColor;
+  position: number;
+  totalSpent: number;
+  memberCount: number;
+  weeklyChange: number;
+}
+
+export interface TeamJoinRequest {
+  userId: string;
+  username: string;
+  teamId: string;
+  requestDate: string;
+  status: 'pending' | 'approved' | 'rejected';
+}
+
+export { TeamColor };

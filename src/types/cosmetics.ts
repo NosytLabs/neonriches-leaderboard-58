@@ -1,62 +1,86 @@
 
-export type CosmeticType = 'border' | 'color' | 'effect' | 'theme' | 'background' | 'title' | 'font' | 'frame' | 'badge' | 'banner' | 'emote' | 'avatar' | 'nameplate' | 'sound';
-export type CosmeticCategory = 'border' | 'color' | 'effect' | 'theme' | 'background' | 'title' | 'font' | 'frame' | 'badge' | 'banner' | 'emote' | 'avatar' | 'nameplate' | 'sound' | 'appearance';
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique';
+// Define all the necessary cosmic types to match what's used in the code
+export type CosmeticCategory = 
+  | 'border'
+  | 'color'
+  | 'font'
+  | 'emoji'
+  | 'title'
+  | 'background'
+  | 'effect'
+  | 'badge'
+  | 'theme'
+  | 'appearance'
+  | 'interaction'
+  | 'profile';
+
+export type CosmeticType = 
+  | 'premium'
+  | 'standard'
+  | 'exclusive'
+  | 'epic'
+  | 'legendary'
+  | 'rare'
+  | 'uncommon'
+  | 'common'
+  | 'basic'
+  | 'emoji'
+  | 'profile';
+
+export type CosmeticRarity = 
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
+  | 'legendary'
+  | 'royal';
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
-  price: number;
-  cost?: number; // Alias for price to maintain backward compatibility
-  type: CosmeticType;
+  price?: number;
+  cost?: number;
   category: CosmeticCategory;
-  cssClass?: string;
-  rarity: CosmeticRarity;
+  cssClass: string;
+  rarity: CosmeticRarity | string;
+  type: CosmeticType | string;
   enabled: boolean;
   previewUrl?: string;
-  image?: string;
-  acquiredAt?: string;
-  expiresAt?: string;
-  isLimited?: boolean;
-  isPromotional?: boolean;
-  isExclusive?: boolean;
-  tierRequired?: string;
-  minRank?: number;
-  requirements?: string[];
+  imageSrc?: string;
 }
 
 export interface UserCosmetics {
-  items: CosmeticItem[];
-  equipped: {
-    border?: string;
-    color?: string;
-    effect?: string;
-    theme?: string;
-    background?: string;
-    title?: string;
-    font?: string;
-    frame?: string;
-    badge?: string;
-    banner?: string;
-    emote?: string;
-    avatar?: string;
-    nameplate?: string;
-    sound?: string;
+  border: string[];
+  color: string[];
+  font: string[];
+  emoji: string[];
+  title: string[];
+  background: string[];
+  effect: string[];
+  badge: string[];
+  theme: string[];
+  items?: CosmeticItem[];
+  equipped?: {
+    [key in CosmeticCategory]?: string;
   };
-  activeTitle?: string; // For backward compatibility
-  activeBorder?: string; // For backward compatibility
-  activeBackground?: string; // For backward compatibility
-  activeEffect?: string; // For backward compatibility
 }
 
-export interface CosmeticStoreItem extends CosmeticItem {
-  isOwned: boolean;
-  isFeatured?: boolean;
-  discount?: number;
-  originalPrice?: number;
-  endsAt?: string;
+export interface CosmeticFilter {
+  category?: CosmeticCategory;
+  rarity?: CosmeticRarity;
+  search?: string;
+  sortBy?: 'name' | 'price' | 'rarity' | 'newest';
+  owned?: boolean;
 }
 
-export type CosmeticFilterType = 'all' | CosmeticCategory | 'owned' | 'not-owned' | 'limited' | 'exclusive';
-export type CosmeticSortType = 'newest' | 'price-asc' | 'price-desc' | 'rarity' | 'alphabetical';
+// Adding SocialLink for the components requiring it
+export interface SocialLink {
+  id?: string;
+  platform: string;
+  url: string;
+  title: string;
+  displayText?: string;
+  icon?: string; 
+  label?: string;
+}

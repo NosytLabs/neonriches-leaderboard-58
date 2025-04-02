@@ -45,3 +45,52 @@ export const defaultLeaderboardFilter: LeaderboardFilter = {
   skip: 0,
   sortBy: 'rank'
 };
+
+// Define the LeaderboardUser interface
+export interface LeaderboardUser {
+  id: string;
+  userId: string;
+  username: string;
+  displayName: string;
+  profileImage: string;
+  tier: string;
+  team: TeamColor;
+  rank: number;
+  previousRank: number;
+  totalSpent: number;
+  spentAmount?: number;
+  walletBalance: number;
+  isVerified: boolean;
+  isProtected: boolean;
+  spendStreak: number;
+  spendChange?: number;
+  rankChange?: number;
+}
+
+// Define typed version of the filter
+export interface TypedLeaderboardFilter extends LeaderboardFilter {
+  sortBy: string;
+  timeframe: string;
+  team: string;
+}
+
+// Define other needed types for OnChain and SolanaTransaction
+export interface OnChainLeaderboardEntry {
+  address: string;
+  username: string;
+  totalSpent: number;
+  rank: number;
+  lastTx: string;
+}
+
+export interface SolanaTransaction {
+  id: string;
+  signature: string;
+  amount: number;
+  timestamp: string;
+  block: number;
+  type: 'deposit' | 'withdrawal' | 'transfer' | 'spend';
+  status: 'confirmed' | 'pending' | 'failed';
+  sender: string;
+  receiver?: string;
+}

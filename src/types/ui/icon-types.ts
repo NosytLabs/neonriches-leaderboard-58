@@ -1,26 +1,39 @@
 
+import React, { CSSProperties } from 'react';
 import { LucideProps } from 'lucide-react';
-import { CSSProperties } from 'react';
 
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | string;
-export type IconStyle = 'default' | 'medieval';
-export type MedievalIconName = 'crown' | 'sword' | 'shield' | 'scroll' | 'potion' | 'coin' | 'key' | 'dagger' | 'banner' | 'castle' | 'chalice' | 'dragon' | 'flag' | 'throne' | 'tower' | 'coins';
-export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type MedievalIconColor = 'gold' | 'silver' | 'crimson' | 'royal' | 'emerald' | 'default';
-export type IconColor = 'default' | 'primary' | 'secondary' | 'muted' | 'gold' | 'silver' | 'crimson' | 'royal' | 'emerald' | string;
+// Extended type for IconStyle to include 'default' and 'medieval'
+export type IconStyle = 'default' | 'medieval' | 'royal' | 'vintage';
 
+// Extended MedievalIconSize to include the value used in the codebase
+export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+export type MedievalIconColor = 'default' | 'primary' | 'secondary' | 'gold' | 'royal' | 'accent';
+export type MedievalIconName = 
+  | 'crown' 
+  | 'sword' 
+  | 'shield' 
+  | 'scroll' 
+  | 'chalice' 
+  | 'castle' 
+  | 'dragon' 
+  | 'knight' 
+  | 'king' 
+  | 'queen' 
+  | 'treasure-chest';
+
+// Make IconProps extend LucideProps but allow for IconStyle
 export interface IconProps extends Omit<LucideProps, 'ref'> {
-  name?: string;
   icon?: string;
-  size?: IconSize;
-  className?: string;
+  name?: string;
+  size?: string | number;
+  color?: string;
   style?: IconStyle | CSSProperties;
-  color?: IconColor;
+  className?: string;
   animated?: boolean;
 }
 
 export interface MedievalIconProps {
-  name: MedievalIconName;
+  name: MedievalIconName | string;
   size?: MedievalIconSize;
   color?: MedievalIconColor;
   className?: string;
@@ -28,23 +41,19 @@ export interface MedievalIconProps {
 }
 
 export const iconSizeMap: Record<string, string> = {
-  'xs': 'w-3 h-3',
-  'sm': 'w-4 h-4',
-  'md': 'w-6 h-6',
-  'lg': 'w-8 h-8',
-  'xl': 'w-10 h-10',
-  '2xl': 'w-12 h-12',
-  '3xl': 'w-16 h-16'
+  xs: 'w-3 h-3',
+  sm: 'w-4 h-4',
+  md: 'w-5 h-5',
+  lg: 'w-6 h-6',
+  xl: 'w-8 h-8',
+  '2xl': 'w-10 h-10'
 };
 
 export const iconColorMap: Record<string, string> = {
-  'default': 'text-current',
-  'primary': 'text-primary',
-  'secondary': 'text-secondary',
-  'muted': 'text-muted-foreground',
-  'gold': 'text-royal-gold',
-  'silver': 'text-gray-300',
-  'crimson': 'text-royal-crimson',
-  'royal': 'text-royal-purple',
-  'emerald': 'text-emerald-500'
+  default: 'text-current',
+  primary: 'text-primary',
+  secondary: 'text-secondary',
+  gold: 'text-royal-gold',
+  royal: 'text-royal-purple',
+  accent: 'text-accent'
 };

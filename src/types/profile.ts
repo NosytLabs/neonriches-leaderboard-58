@@ -19,6 +19,8 @@ export interface ProfileLink {
 
 export interface SocialLink extends ProfileLink {
   title: string; // Make title required in SocialLink
+  icon?: string; // Added for compatibility
+  label?: string; // Added for compatibility
 }
 
 export interface ProfileSettings {
