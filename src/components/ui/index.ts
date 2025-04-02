@@ -1,16 +1,16 @@
 
-// Fix casing issues for all component imports
-// Use consistent casing for all exports
-
-// Core UI components
+// Export UI components
 export * from './accordion';
+export * from './alert-dialog';
 export * from './alert';
+export * from './aspect-ratio';
 export * from './avatar';
-export * from './badge'; // Use lowercase consistently
+export * from './badge';
 export * from './button';
 export * from './calendar';
 export * from './card';
 export * from './checkbox';
+export * from './collapsible';
 export * from './command';
 export * from './context-menu';
 export * from './dialog';
@@ -34,12 +34,26 @@ export * from './switch';
 export * from './table';
 export * from './tabs';
 export * from './textarea';
-export * from './toast';
-export * from './toggle';
 export * from './tooltip';
-export * from './use-toast';
-export * from './shell'; // Use lowercase for shell
+export { Shell } from './shell';
 
-// Additional UI components
-export * from './loading-spinner';
-export * from './random-absurd-fact';
+// Export toast components explicitly to avoid duplicate exports
+export { 
+  Toaster, 
+  ToastProvider, 
+  ToastViewport 
+} from './toast';
+
+// Export the remaining functionality from toast
+export type { 
+  ToastProps, 
+  ToastActionElement 
+} from './toast';
+
+export { 
+  useToast, 
+  toast 
+} from './use-toast';
+
+// Export icon component
+export { Icon } from './icon';

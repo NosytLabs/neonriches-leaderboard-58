@@ -6,14 +6,12 @@ import Footer from '@/components/Footer';
 interface ShellProps {
   children: React.ReactNode;
   transparent?: boolean;
-  variant?: string; // Add variant prop to fix type errors
+  className?: string; // Changed variant to className for better compatibility
 }
 
-const Shell: React.FC<ShellProps> = ({ children, transparent = false, variant }) => {
-  const shellClass = variant ? `shell-${variant}` : '';
-  
+const Shell: React.FC<ShellProps> = ({ children, transparent = false, className = '' }) => {
   return (
-    <div className={`flex flex-col min-h-screen ${shellClass}`}>
+    <div className={`flex flex-col min-h-screen ${className}`}>
       <Header transparent={transparent} />
       <main className="flex-1">
         {children}

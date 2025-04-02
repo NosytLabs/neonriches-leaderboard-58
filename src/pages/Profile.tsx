@@ -13,7 +13,7 @@ const Profile = () => {
   const { username } = useParams<{ username: string }>();
 
   return (
-    <Shell variant="profile">
+    <Shell className="shell-profile">
       <Card className="glass-morphism border-white/10">
         <CardHeader className="flex items-center justify-between">
           <CardTitle className="text-2xl font-bold">Profile Page</CardTitle>

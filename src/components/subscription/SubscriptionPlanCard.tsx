@@ -24,8 +24,8 @@ const SubscriptionPlanCard: React.FC<SubscriptionPlanCardProps> = ({
 }) => {
   // Use billingInterval to determine which price to show
   const displayPrice = typeof plan.price === 'object' 
-    ? plan.price[billingInterval as keyof typeof plan.price] || plan.price.monthly 
-    : plan.price;
+    ? (plan.price?.[billingInterval as keyof typeof plan.price] || plan.price?.monthly || 0)
+    : (plan.price || 0);
 
   const handleSelect = () => {
     if (!disabled && onSelect) {
@@ -45,7 +45,7 @@ const SubscriptionPlanCard: React.FC<SubscriptionPlanCardProps> = ({
             <CardTitle>{plan.name}</CardTitle>
             <CardDescription>{plan.description}</CardDescription>
           </div>
-          {plan.popular && <Badge variant="secondary">Popular</Badge>}
+          {plan.isPopular && <Badge variant="secondary">Popular</Badge>}
         </div>
       </CardHeader>
       <CardContent>
@@ -58,20 +58,26 @@ const SubscriptionPlanCard: React.FC<SubscriptionPlanCardProps> = ({
           </div>
         </div>
         <ul className="space-y-2">
-          {plan.features.map((feature, i) => (
-            <li key={i} className="flex items-center gap-2">
-              {feature.included ? (
-                <CheckIcon className="h-4 w-4 text-primary" />
-              ) : (
-                <XIcon className="h-4 w-4 text-muted-foreground" />
-              )}
-              <span 
-                className={feature.included ? "" : "text-muted-foreground"}
-              >
-                {feature.name}
-              </span>
-            </li>
-          ))}
+          {(plan.features || []).map((feature, i) => {
+            // Handle feature as string or object with included property
+            const isFeatureIncluded = typeof feature === 'string' ? true : (feature.included || false);
+            const featureName = typeof feature === 'string' ? feature : (feature.name || '');
+
+            return (
+              <li key={i} className="flex items-center gap-2">
+                {isFeatureIncluded ? (
+                  <CheckIcon className="h-4 w-4 text-primary" />
+                ) : (
+                  <XIcon className="h-4 w-4 text-muted-foreground" />
+                )}
+                <span 
+                  className={isFeatureIncluded ? "" : "text-muted-foreground"}
+                >
+                  {featureName}
+                </span>
+              </li>
+            );
+          })}
         </ul>
       </CardContent>
       <CardFooter>

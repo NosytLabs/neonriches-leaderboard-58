@@ -4,7 +4,7 @@
  */
 
 import { SocialLink as ConsolidatedSocialLink } from '@/types/user-consolidated';
-import { SocialLink as UserSocialLink } from '@/types/user';
+import { SocialLink as UserSocialLink } from '@/types/user-types';
 import { SocialLink as CosmeticSocialLink } from '@/types/cosmetics';
 
 /**

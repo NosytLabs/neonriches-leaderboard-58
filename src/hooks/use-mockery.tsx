@@ -1,3 +1,4 @@
+
 import { useState, useCallback } from 'react';
 import { MockeryAction, MockeryEvent, MockeryUser } from '@/types/mockery-types';
 import { useToast } from './use-toast';
@@ -13,6 +14,7 @@ interface UseMockeryResult {
   resetMockery: () => void;
 }
 
+// Modify to use the updated MockeryEvent type
 export const useMockery = (): UseMockeryResult => {
   const [targetUser, setTargetUser] = useState<MockeryUser | null>(null);
   const [isMocking, setIsMocking] = useState<boolean>(false);
@@ -24,37 +26,45 @@ export const useMockery = (): UseMockeryResult => {
   const mockUsers: { [key: string]: MockeryUser } = {
     "user1": {
       id: "1",
-      userId: "1", // Add userId for compatibility
       username: "kingspender",
       displayName: "King Spender",
       profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
       team: "gold",
       tier: "royal",
-      rank: 1,
-      totalSpent: 15000 // Added required property
+      rank: 1
     },
     "user2": {
       id: "2",
-      userId: "2", // Add userId for compatibility
       username: "queenofcash",
       displayName: "Queen of Cash",
       profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
       team: "purple",
       tier: "premium",
-      rank: 2,
-      totalSpent: 12000 // Added required property
+      rank: 2
     },
     "user3": {
       id: "3",
-      userId: "3", // Add userId for compatibility
       username: "statuschaser",
       displayName: "Status Chaser",
       profileImage: "https://randomuser.me/api/portraits/men/3.jpg",
       team: "red",
       tier: "basic",
-      rank: 3,
-      totalSpent: 8000 // Added required property
+      rank: 3
     }
+  };
+
+  // Function to calculate cost for an action
+  const costForAction = (action: MockeryAction): number => {
+    // Simple cost calculation
+    const costs: Partial<Record<MockeryAction, number>> = {
+      tomato: 10,
+      egg: 15,
+      crown: 100,
+      stocks: 75,
+      jester: 50,
+      protection: 250
+    };
+    return costs[action] || 20;
   };
 
   // Function to mock a user with a specific action
@@ -80,76 +90,40 @@ export const useMockery = (): UseMockeryResult => {
       // Create a mock result
       const result: MockeryEvent = {
         id: `mock-${Date.now()}`,
-        type: action, // Use type instead of action for consistency
-        fromUserId: "current-user",
-        toUserId: user.userId || '', // Use userId for compatibility
+        actionType: action,
+        senderId: "current-user",
+        senderName: "Current User",
+        targetId: user.id,
+        targetName: user.username,
         timestamp: new Date().toISOString(),
-        fromUser: mockUsers["user1"],
-        toUser: user,
-        cost: costForAction(action) // Add cost for compatibility
+        tier: 'common',
+        cost: costForAction(action)
       };
       
       setMockeryResult(result);
-      
-      // Show a toast notification
       toast({
-        title: 'Mockery Successful',
-        description: `You used ${action} on ${user.displayName}`,
-        variant: 'success'
+        title: "Mockery Applied",
+        description: `You have successfully applied ${action} to ${user.username}.`,
       });
       
       return true;
     } catch (error) {
       console.error('Error mocking user:', error);
-      
       toast({
-        title: 'Mockery Failed',
-        description: 'There was an error processing your mockery',
-        variant: 'destructive'
+        title: "Mockery Failed",
+        description: "Unable to apply mockery at this time.",
+        variant: "destructive",
       });
-      
       return false;
     } finally {
       setIsMocking(false);
     }
   }, [toast, sound]);
 
-  // Calculate cost for different actions
-  const costForAction = useCallback((action: MockeryAction): number => {
-    const costs: Record<string, number> = {
-      tomato: 10,
-      egg: 15,
-      rotten_egg: 25,
-      crown: 100,
-      heart: 5,
-      laugh: 5,
-      skull: 30,
-      thumbs_down: 5,
-      flame: 20,
-      putridEgg: 50,
-      stocks: 75,
-      shame: 60,
-      protection: 150,
-      jester: 40,
-      courtJester: 80,
-      silence: 120,
-      smokeBomb: 90,
-      taunt: 30,
-      mock: 40,
-      challenge: 100,
-      joust: 200,
-      duel: 200,
-      fish: 25
-    };
-    
-    return costs[action] || 10;
-  }, []);
-
-  // Reset the mockery state
-  const resetMockery = useCallback(() => {
+  const resetMockery = () => {
     setTargetUser(null);
     setMockeryResult(null);
-  }, []);
+  };
 
   return {
     targetUser,
@@ -160,5 +134,3 @@ export const useMockery = (): UseMockeryResult => {
     resetMockery
   };
 };
-
-export default useMockery;
