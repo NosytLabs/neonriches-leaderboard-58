@@ -1,26 +1,11 @@
 
 import { useCallback } from 'react';
-import { SoundType, SoundOptions } from '@/types/sound-types';
+import { SoundType, SoundOptions, UseSoundHook } from '@/types/sound-types';
+import { useSoundsConfig } from './sounds/use-sounds-config';
 
-// Create a function that will be returned by the hook
-export type SoundFunction = (type: SoundType, options?: SoundOptions) => void;
+export const useSound = (): UseSoundHook => {
+  const { soundConfig, toggleSounds, toggleMuted, setVolume } = useSoundsConfig();
 
-// The main hook interface
-export interface SoundHook {
-  playSound: SoundFunction;
-  stopSound: (type?: SoundType) => void;
-  play: SoundFunction;
-  isSoundEnabled: boolean;
-  currentVolume: number;
-  toggleMuted: () => boolean;
-  soundConfig: {
-    enabled: boolean;
-    muted: boolean;
-    volume: number;
-  };
-}
-
-export const useSound = (): SoundHook => {
   const playSound = useCallback((type: SoundType, options?: SoundOptions) => {
     console.log(`Playing sound: ${type} with options:`, options);
     // Actual sound implementation would go here
@@ -31,34 +16,44 @@ export const useSound = (): SoundHook => {
     // Actual sound stopping implementation would go here
   }, []);
 
+  const pauseSound = useCallback((type?: SoundType) => {
+    console.log(`Pausing sound: ${type || 'all'}`);
+    // Pause implementation
+  }, []);
+
+  const resumeSound = useCallback((type?: SoundType) => {
+    console.log(`Resuming sound: ${type || 'all'}`);
+    // Resume implementation
+  }, []);
+
+  const isPlaying = useCallback((type: SoundType) => {
+    // Mock implementation
+    return false;
+  }, []);
+
   const play = useCallback((type: SoundType, options?: SoundOptions) => {
     playSound(type, options);
   }, [playSound]);
 
-  const toggleMuted = useCallback(() => {
-    console.log('Toggling sound muted state');
-    return false; // Mock implementation
-  }, []);
-
   return {
     playSound,
     stopSound,
+    pauseSound,
+    resumeSound,
+    isPlaying,
     play,
-    isSoundEnabled: true,
-    currentVolume: 1.0,
+    isSoundEnabled: soundConfig?.enabled || true,
+    currentVolume: soundConfig?.volume || 1.0,
+    toggleSounds,
     toggleMuted,
-    soundConfig: {
-      enabled: true,
-      muted: false,
-      volume: 0.5
-    }
+    setVolume,
+    soundConfig
   };
 };
 
 // Also export default as a function that returns the hook result
-const defaultUseSound = (): SoundFunction => {
-  const { play } = useSound();
-  return play;
+const defaultUseSound = (): UseSoundHook => {
+  return useSound();
 };
 
 export default defaultUseSound;

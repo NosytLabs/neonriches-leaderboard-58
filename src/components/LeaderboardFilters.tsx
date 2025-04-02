@@ -10,7 +10,17 @@ import {
   SelectValue 
 } from '@/components/ui/select';
 import { Search } from 'lucide-react';
-import { LeaderboardFilter, TeamColor, UserTier } from '@/types/mockery-types';
+import { TeamColor, UserTier } from '@/types/mockery-types';
+
+// Define a proper type for the LeaderboardFilter
+interface LeaderboardFilter {
+  team: 'all' | TeamColor;
+  tier: 'all' | UserTier;
+  timeframe: 'all-time' | 'today' | 'week' | 'month' | 'year';
+  search: string;
+  sortBy: 'rank' | 'spent' | 'username';
+  sortDirection: 'asc' | 'desc';
+}
 
 interface LeaderboardFiltersProps {
   filter: LeaderboardFilter;

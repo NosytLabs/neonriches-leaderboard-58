@@ -19,6 +19,7 @@ export type SoundType =
   | 'message'
   | 'deposit'
   | 'withdrawal'
+  | 'withdraw'
   | 'mockery'
   | 'shame'
   | 'protection'
@@ -37,7 +38,29 @@ export type SoundType =
   | 'unlock'
   | 'wish'
   | 'chime'
-  | 'badge';
+  | 'badge'
+  | 'toggle'
+  | 'upgrade'
+  | 'down'
+  | 'up'
+  | 'parchmentUnfurl'
+  | 'pageChange'
+  | 'inkScribble'
+  | 'advertisement'
+  | 'effect'
+  | 'taunt'
+  | 'joust'
+  | 'duel'
+  | 'tomatoes'
+  | 'eggs'
+  | 'putridEggs'
+  | 'stocks'
+  | 'crown'
+  | 'jester'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'silence'
+  | 'throne';
 
 export interface SoundOptions {
   volume?: number;
@@ -59,3 +82,30 @@ export interface SoundConfig {
   music: boolean;
   ambience: boolean;
 }
+
+export interface PremiumSoundPackDetails {
+  id?: string;
+  name: string;
+  description: string;
+  price: number;
+  sounds: SoundType[];
+  previewSound?: SoundType;
+}
+
+export interface UseSoundHook {
+  playSound: (type: SoundType, options?: SoundOptions) => void;
+  play: (type: SoundType, options?: SoundOptions) => void;
+  stopSound: (type?: SoundType) => void;
+  pauseSound?: (type?: SoundType) => void;
+  resumeSound?: (type?: SoundType) => void;
+  isPlaying?: (type: SoundType) => boolean;
+  isSoundEnabled: boolean;
+  toggleSounds?: () => boolean;
+  toggleMuted: () => boolean;
+  setVolume?: (volume: number) => void;
+  currentVolume: number;
+  soundConfig?: SoundConfig;
+  currentSound?: SoundType | null;
+}
+
+export type SoundFunction = (type: SoundType, options?: SoundOptions) => void;

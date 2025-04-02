@@ -4,7 +4,7 @@ import { SoundType, SoundOptions } from '@/types/sound-types';
 import { useSound } from './use-sound';
 
 interface UseNotificationSoundsReturn {
-  playSound: (type: SoundType) => void;
+  playSound: (type: SoundType, options?: SoundOptions) => void;
   mute: () => void;
   unmute: () => void;
   isMuted: boolean;
@@ -27,22 +27,22 @@ const useNotificationSounds = (): UseNotificationSoundsReturn => {
   }, [playSoundFn]);
   
   const mute = useCallback(() => {
-    if (!soundConfig.muted) {
+    if (soundConfig.muted === false) {
       toggleMuted();
     }
-  }, [toggleMuted, soundConfig.muted]);
+  }, [toggleMuted, soundConfig?.muted]);
   
   const unmute = useCallback(() => {
-    if (soundConfig.muted) {
+    if (soundConfig.muted === true) {
       toggleMuted();
     }
-  }, [toggleMuted, soundConfig.muted]);
+  }, [toggleMuted, soundConfig?.muted]);
   
   return {
     playSound,
     mute,
     unmute,
-    isMuted: soundConfig.muted
+    isMuted: soundConfig?.muted || false
   };
 };
 

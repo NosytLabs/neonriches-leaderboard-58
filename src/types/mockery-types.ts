@@ -25,7 +25,7 @@ export type UserTier =
   | 'legendary';
 
 // Define the mockery tier options
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal' | 'basic';
 
 // Define the mockery actions
 export type MockeryAction = 
@@ -40,7 +40,21 @@ export type MockeryAction =
   | 'react'
   | 'mock'
   | 'praise'
-  | 'invite';
+  | 'invite'
+  | 'tomatoes'
+  | 'eggs'
+  | 'putridEggs'
+  | 'stocks'
+  | 'crown'
+  | 'jester'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'silence'
+  | 'protection'
+  | 'taunt'
+  | 'joust'
+  | 'duel'
+  | 'thumbsDown';
 
 // Define gender options
 export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble' | 'none';
@@ -56,6 +70,10 @@ export interface TeamData {
   crest: string;
   leaderUsername?: string;
   leaderAvatar?: string;
+  members?: number; // Added for compatibility
+  logoUrl?: string; // Added for compatibility
+  totalContribution?: number; // Added for compatibility
+  previousRank?: number; // Added for compatibility
 }
 
 // Define the leaderboard user interface
@@ -78,21 +96,19 @@ export interface LeaderboardUser {
   rankChange?: number;
   spendChange?: number;
   avatarUrl?: string;
+  walletBalance?: number; // Added for compatibility
 }
 
-// Define the leaderboard filter options
-export type LeaderboardFilter = 
-  | 'all'
-  | 'team-red'
-  | 'team-blue'
-  | 'team-green'
-  | 'team-gold'
-  | 'team-purple'
-  | 'friends'
-  | 'following'
-  | 'followers'
-  | 'vip'
-  | 'new';
+// Define the leaderboard filter interface
+export interface LeaderboardFilter {
+  team: 'all' | TeamColor;
+  tier: 'all' | UserTier;
+  timeframe: 'all-time' | 'today' | 'week' | 'month' | 'year';
+  search: string;
+  sortBy: 'rank' | 'spent' | 'username';
+  sortDirection: 'asc' | 'desc';
+  limit?: number; // Added for compatibility
+}
 
 // Define the mockery event interface
 export interface MockeryEvent {
@@ -104,6 +120,7 @@ export interface MockeryEvent {
   message?: string;
   amount?: number;
   visibility: 'public' | 'private' | 'team';
+  fromUserId?: string; // Added for compatibility
 }
 
 // Define the mocked user interface
@@ -114,4 +131,5 @@ export interface MockedUser {
   profileImage: string;
   tier: UserTier;
   team: TeamColor;
+  userId?: string; // Added for compatibility
 }
