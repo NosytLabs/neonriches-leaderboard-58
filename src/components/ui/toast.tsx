@@ -28,17 +28,15 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        default: "border border-white/10 glass-morphism text-foreground",
+        default: "border bg-background text-foreground",
         destructive:
           "destructive group border-destructive bg-destructive text-destructive-foreground",
-        success:
-          "success group border-success/20 bg-success/10 text-success-foreground",
-        royal:
-          "royal group border-royal-purple/20 bg-royal-purple/10 text-royal-purple",
-        outline: "border border-white/10 bg-transparent text-foreground",
+        success: "border-green-500/20 bg-green-500/10 text-green-600",
+        gold: "border-royal-gold/20 bg-royal-gold/10 text-royal-gold",
+        warning: "border-amber-500/20 bg-amber-500/10 text-amber-600",
+        outline: "border border-input bg-background",
         secondary: "border bg-secondary text-secondary-foreground",
-        gold: "border-transparent bg-yellow-600/20 text-yellow-500 shadow hover:bg-yellow-600/30",
-        warning: "border-transparent bg-warning text-warning-foreground shadow hover:bg-warning/80",
+        royal: "border-royal-purple/20 bg-royal-purple/10 text-royal-purple",
       },
     },
     defaultVariants: {
@@ -50,12 +48,16 @@ const toastVariants = cva(
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
-    VariantProps<typeof toastVariants>
->(({ className, variant, ...props }, ref) => {
+    VariantProps<typeof toastVariants> & {
+      action?: React.ReactNode
+      duration?: number
+    }
+>(({ className, variant, action, duration, ...props }, ref) => {
   return (
     <ToastPrimitives.Root
       ref={ref}
       className={cn(toastVariants({ variant }), className)}
+      duration={duration}
       {...props}
     />
   )
@@ -69,7 +71,7 @@ const ToastAction = React.forwardRef<
   <ToastPrimitives.Action
     ref={ref}
     className={cn(
-      "inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-white/20 bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive",
+      "inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive",
       className
     )}
     {...props}

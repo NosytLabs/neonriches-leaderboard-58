@@ -24,7 +24,8 @@ export interface BoostEffect {
   // Add missing properties
   icon?: string;
   previewImage?: string;
-  strength?: number; // Add strength property
+  strength?: number;
+  allowStacking?: boolean;
 }
 
 export interface ProfileBoost {

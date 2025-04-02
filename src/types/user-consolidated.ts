@@ -1,60 +1,16 @@
 
-import { TeamColor } from './team';
-import { ProfileBoost } from './boost';
-import { UserCosmetics } from './cosmetics';
-import { SocialLink } from './cosmetics';
+import { TeamColor, UserTier } from "./mockery-types";
+import { UserCosmetics } from "./cosmetics";
+import { ProfileBoost } from "./boost";
 
-// User profile consolidated type to prevent duplicate declarations
-export interface UserProfile {
-  id: string;
-  username: string;
-  displayName?: string;
-  email?: string;
-  profileImage: string;
-  bio?: string;
-  joinedDate: string;
-  joinDate?: string;
-  createdAt?: string;
-  isVerified?: boolean;
-  isProtected?: boolean;
-  isVIP?: boolean; // Added for compatibility
-  tier: string;
-  team: string;
-  rank: number;
-  previousRank: number;
-  totalSpent: number;
-  amountSpent: number;
-  walletBalance?: number;
-  settings: UserSettings;
-  profileBoosts?: ProfileBoost[];
-  cosmetics: UserCosmetics;
-  lastActive?: string;
-  activeTitle?: string;
-  spendStreak?: number;
-  profileViews?: number;
-  profileClicks?: number;
-  subscription?: UserSubscription;
-  purchasedFeatures?: string[];
-  certificates?: string[];
-  certificateNFT?: {
-    mintAddress: string;
-    mintDate: string;
-    dateIssued?: string;
-  };
-  gender?: string;
-  // Add missing properties for type compatibility
-  following?: string[];
-  followers?: string[];
-  achievements?: string[];
-  badges?: string[];
-  boostCount?: number; // Added for KingmakerFeature
-  socialLinks?: SocialLink[];
-}
+export { TeamColor, UserTier };
+
+export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
 
 export interface UserSettings {
-  profileVisibility: "public" | "private" | "followers" | "friends";
+  profileVisibility: 'public' | 'private' | 'followers' | 'friends';
   allowProfileLinks: boolean;
-  theme: string;
+  theme: string; // Use string to accommodate custom themes
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
@@ -62,31 +18,96 @@ export interface UserSettings {
   darkMode: boolean;
   soundEffects: boolean;
   showBadges: boolean;
-  showTeam: boolean;
-  showSpending: boolean;
-  // Added missing properties
   showEmailOnProfile?: boolean;
   rankChangeAlerts?: boolean;
+  showTeam: boolean;
+  showSpending: boolean;
   newFollowerAlerts?: boolean;
   teamNotifications?: boolean;
+  shameAlerts?: boolean;
+  publicProfile?: boolean;
+  language?: string;
+  allowMessages?: boolean;
 }
 
 export interface UserSubscription {
   id: string;
+  planId: string;
   tier: string;
-  status: 'active' | 'canceled' | 'past_due' | 'trialing';
+  status: 'active' | 'cancelled' | 'paused';
   startDate: string;
+  nextBillingDate: string;
   endDate?: string;
-  renewalDate?: string;
-  price: number;
-  interval: 'monthly' | 'yearly';
-  features: string[];
-  planId?: string; // Added for compatibility
-  nextBillingDate?: string; // Added for compatibility
+  autoRenew?: boolean;
+  amount?: number;
 }
 
-export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say';
+export interface SocialLink {
+  id?: string;
+  platform: string;
+  url: string;
+  title?: string;
+  username?: string;
+  verified?: boolean;
+  icon?: string;
+  clicks?: number;
+  label?: string;
+}
 
-// Export the TeamColor type for compatibility
-export type { TeamColor };
-export type TeamType = TeamColor; // Re-export TeamType for compatibility
+export interface ProfileLink {
+  id?: string;
+  platform: string;
+  url: string;
+  title?: string;
+  icon?: string;
+  label?: string;
+  clicks?: number;
+}
+
+export interface UserProfile {
+  id: string;
+  username: string;
+  displayName: string;
+  email?: string;
+  profileImage: string;
+  bio: string;
+  joinedDate: string;
+  tier: UserTier;
+  team: TeamColor;
+  rank: number;
+  previousRank: number;
+  totalSpent: number;
+  amountSpent: number;
+  walletBalance?: number;
+  isFounder?: boolean;
+  isVerified?: boolean;
+  isVIP?: boolean;
+  isProtected?: boolean;
+  isAdmin?: boolean;
+  spendStreak?: number;
+  lastActive?: string;
+  lastLogin?: string;
+  following?: string[];
+  followers?: string[];
+  cosmetics: UserCosmetics;
+  settings: UserSettings;
+  profileBoosts?: ProfileBoost[];
+  socialLinks?: SocialLink[] | Record<string, string>;
+  profileViews?: number;
+  profileClicks?: number;
+  purchasedFeatures?: string[];
+  subscription?: UserSubscription;
+  teamRank?: number;
+  activeTitle?: string;
+  certificateNFT?: {
+    mintAddress: string;
+    mintDate: string;
+    dateIssued?: string;
+  };
+  // Compatibility fields
+  joinDate?: string;
+  joinedAt?: string;
+  createdAt?: string;
+  boostCount?: number;
+  gender?: string;
+}

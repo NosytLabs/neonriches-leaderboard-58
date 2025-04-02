@@ -10,8 +10,22 @@ export type MockeryAction =
   | 'crown' 
   | 'torch' 
   | 'shame_bell'
-  | 'carrot'  // Added for PublicShamingFeature.tsx
-  | 'confetti'; // Added for mockeryUtils.ts
+  | 'carrot'
+  | 'confetti'
+  | 'taunt'
+  | 'shame'
+  | 'mock'
+  | 'challenge'
+  | 'joust'
+  | 'duel'
+  | 'protection'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'putridEggs'
+  | 'stocks'
+  | 'jester'
+  | 'thumbsDown';
 
 export type MockeryTier = 
   | 'common' 
@@ -19,7 +33,9 @@ export type MockeryTier =
   | 'rare' 
   | 'epic' 
   | 'legendary'
-  | 'premium'; // Added for mockeryUtils.ts
+  | 'premium'
+  | 'royal'
+  | 'basic';
 
 export interface MockedUser {
   id: string;
@@ -29,7 +45,8 @@ export interface MockedUser {
   rank: number;
   tier: UserTier;
   team: TeamColor;
-  action?: MockeryAction; // Added for use-mockery.tsx
+  action?: MockeryAction; 
+  userId?: string;
 }
 
 export interface MockeryEvent {
@@ -41,7 +58,8 @@ export interface MockeryEvent {
   targetUsername: string;
   timestamp: string;
   message?: string;
-  toUserId?: string; // Added for use-mockery.tsx
+  toUserId?: string;
+  action?: MockeryAction;
 }
 
 export interface LeaderboardUser {
@@ -61,7 +79,11 @@ export interface LeaderboardUser {
   isProtected?: boolean;
   amountSpent?: number;
   userId?: string;
-  spentAmount?: number; // Added for mockData.ts
+  spentAmount?: number;
+  rankChange?: number;
+  spendChange?: number;
+  avatarUrl?: string;
+  joinDate?: string; 
 }
 
 export interface MockeryAction {
@@ -81,4 +103,31 @@ export interface MockeryResponse {
   actionId?: string;
   mockedUserId?: string;
   tier?: MockeryTier;
+}
+
+// Export TeamColor and UserTier to ensure they're accessible when importing from this file
+export { TeamColor, UserTier };
+
+// Export LeaderboardFilter type
+export interface LeaderboardFilter {
+  team?: string | 'all';
+  tier?: string | 'all';
+  timeframe?: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all';
+  search?: string;
+  sortBy?: 'rank' | 'spent' | 'username';
+  sortDirection?: 'asc' | 'desc';
+  limit?: number;
+}
+
+// Export TeamData
+export interface TeamData {
+  color: TeamColor;
+  name: string;
+  description: string;
+  memberCount: number;
+  totalSpent: number;
+  captain?: string;
+  motto?: string;
+  benefits?: string[];
+  icon?: string;
 }

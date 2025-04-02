@@ -7,75 +7,57 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Format a date string to a more readable format
- * @param dateString The date string to format
- * @param options Formatting options
- * @returns Formatted date string
+ * Format a number as currency
  */
-export function formatDate(dateString: string, options: Intl.DateTimeFormatOptions = {}) {
-  if (!dateString) return '';
-  
-  const date = new Date(dateString);
-  
-  // Default formatting options
-  const defaultOptions: Intl.DateTimeFormatOptions = {
+export function formatCurrency(amount: number, currency = 'USD', options = {}): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    ...options
+  }).format(amount)
+}
+
+/**
+ * Format a date string or timestamp
+ */
+export function formatDate(
+  date: Date | string | number,
+  options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'short',
-    day: 'numeric',
-    ...options
-  };
+    day: 'numeric'
+  }
+): string {
+  const dateObj = typeof date === 'string' || typeof date === 'number' 
+    ? new Date(date) 
+    : date;
+    
+  if (isNaN(dateObj.getTime())) {
+    console.error('Invalid date:', date);
+    return 'Invalid date';
+  }
   
-  return new Intl.DateTimeFormat('en-US', defaultOptions).format(date);
+  return new Intl.DateTimeFormat('en-US', options).format(dateObj);
 }
 
 /**
- * Format a number with commas
- * @param num The number to format
- * @returns Formatted number string
+ * Convert a string to be safe for display
  */
-export function formatNumber(num: number): string {
-  return new Intl.NumberFormat('en-US').format(num);
-}
-
-/**
- * Calculate the time elapsed since a date
- * @param dateString The date to calculate from
- * @returns A human-readable string of time elapsed
- */
-export function timeAgo(dateString: string): string {
-  if (!dateString) return '';
+export function safeToString(value: any): string {
+  if (value === null || value === undefined) {
+    return '';
+  }
   
-  const date = new Date(dateString);
-  const now = new Date();
-  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  if (typeof value === 'string') {
+    return value;
+  }
   
-  // Time units in seconds
-  const minute = 60;
-  const hour = minute * 60;
-  const day = hour * 24;
-  const week = day * 7;
-  const month = day * 30;
-  const year = day * 365;
-  
-  if (seconds < minute) {
-    return 'just now';
-  } else if (seconds < hour) {
-    const minutes = Math.floor(seconds / minute);
-    return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
-  } else if (seconds < day) {
-    const hours = Math.floor(seconds / hour);
-    return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
-  } else if (seconds < week) {
-    const days = Math.floor(seconds / day);
-    return `${days} ${days === 1 ? 'day' : 'days'} ago`;
-  } else if (seconds < month) {
-    const weeks = Math.floor(seconds / week);
-    return `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
-  } else if (seconds < year) {
-    const months = Math.floor(seconds / month);
-    return `${months} ${months === 1 ? 'month' : 'months'} ago`;
-  } else {
-    const years = Math.floor(seconds / year);
-    return `${years} ${years === 1 ? 'year' : 'years'} ago`;
+  try {
+    return String(value);
+  } catch (e) {
+    console.error('Error converting value to string:', e);
+    return '';
   }
 }

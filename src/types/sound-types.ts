@@ -34,7 +34,15 @@ export type SoundType =
   | 'team'
   | 'trumpet'
   | 'medallion'
-  | 'royalAnnouncement';
+  | 'royalAnnouncement'
+  | 'royal_announcement'
+  | 'throne'
+  | 'toggle'
+  | 'alert'
+  | 'badge'
+  | 'upgrade'
+  | 'down'
+  | 'up';
 
 export interface SoundConfig {
   enabled: boolean;
@@ -52,7 +60,7 @@ export interface PremiumSoundPackDetails {
   price: number;
   previews: Record<SoundType, string>;
   purchasable: boolean;
-  icon?: string; // Added for compatibility
+  icon?: string;
 }
 
 export interface SoundHook {
@@ -62,6 +70,9 @@ export interface SoundHook {
   toggleMute: () => boolean;
   isMuted: boolean;
   isPlaying: boolean;
+  pauseSound?: () => void;
+  resumeSound?: () => void;
+  currentSound?: string | null;
 }
 
 export interface UseSoundHook {
@@ -71,6 +82,23 @@ export interface UseSoundHook {
   toggleMute: () => boolean;
   isMuted: boolean;
   isPlaying: (type: SoundType) => boolean;
+  soundConfig?: SoundConfig;
+  toggleMuted?: () => boolean;
+  pauseSound?: () => void;
 }
 
 export type SoundEffectMap = Record<SoundType, HTMLAudioElement>;
+
+export interface SoundOptions {
+  volume?: number;
+  loop?: boolean;
+  rate?: number;
+  detune?: number;
+  muted?: boolean;
+}
+
+export interface UseNotificationSoundsReturn {
+  playNotificationSound: (type: SoundType) => void;
+  isSoundEnabled: boolean;
+  toggleSound: () => void;
+}

@@ -70,7 +70,7 @@ export interface IconProps {
   size?: IconSize | number;
   color?: IconColor | string;
   className?: string;
-  style?: IconStyle;
+  style?: IconStyle | React.CSSProperties;
   animated?: boolean;
   [key: string]: any;
 }
@@ -116,3 +116,10 @@ export const iconColorMap: Record<IconColor, string> = {
   'green': 'text-green-500',
   'purple': 'text-purple-500'
 };
+
+export interface IconAdapterProps {
+  name: string;
+  size?: IconSize;
+  color?: string;
+  className?: string;
+}

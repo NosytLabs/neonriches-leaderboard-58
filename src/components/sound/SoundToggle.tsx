@@ -1,44 +1,32 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Volume2, VolumeX } from 'lucide-react';
-import { useSound } from '@/hooks/sounds/use-sound';
-import { cn } from '@/lib/utils';
+import { useSound } from '@/hooks/use-sound';
 
 interface SoundToggleProps {
   className?: string;
 }
 
-export const SoundToggle: React.FC<SoundToggleProps> = ({ className }) => {
-  const sound = useSound();
-  const { soundConfig, toggleMuted, playSound } = sound;
-  const [isMuted, setIsMuted] = useState(soundConfig?.muted || false);
+const SoundToggle: React.FC<SoundToggleProps> = ({ className }) => {
+  const { isMuted, setVolume, playSound } = useSound();
   
-  useEffect(() => {
-    setIsMuted(soundConfig?.muted || false);
-  }, [soundConfig?.muted]);
-  
-  const handleToggle = () => {
-    if (toggleMuted) {
-      toggleMuted();
-      const newMutedState = !isMuted;
-      setIsMuted(newMutedState);
-      
-      if (!newMutedState) {
-        setTimeout(() => {
-          playSound('click', { volume: 0.5 });
-        }, 50);
-      }
+  const toggleSound = () => {
+    if (isMuted) {
+      setVolume(0.5);
+      playSound('click');
+    } else {
+      setVolume(0);
     }
   };
   
   return (
     <Button
       variant="ghost"
-      size="sm"
-      className={cn("px-2", className)}
-      onClick={handleToggle}
-      aria-label={isMuted ? "Unmute Sounds" : "Mute Sounds"}
+      size="icon"
+      onClick={toggleSound}
+      className={className}
+      aria-label={isMuted ? "Enable sound" : "Mute sound"}
     >
       {isMuted ? (
         <VolumeX className="h-5 w-5" />

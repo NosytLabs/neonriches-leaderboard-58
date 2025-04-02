@@ -4,7 +4,7 @@ import { TeamColor } from "./team";
 export type CertificateType = 'nobility' | 'spending' | 'achievement' | 'membership' | 'rank' | 'team';
 export type CertificateStatus = 'pending' | 'minted' | 'verified' | 'revoked';
 export type CertificateTeam = TeamColor | 'none';
-export type CertificateStyle = 'standard' | 'premium' | 'royal' | 'legendary';
+export type CertificateStyle = 'standard' | 'premium' | 'royal' | 'legendary' | 'classic';
 
 export interface Certificate {
   id: string;
@@ -20,6 +20,9 @@ export interface Certificate {
   recipientId: string;
   userId?: string;
   team?: CertificateTeam;
+  issuedAt?: string;
+  mintAddress?: string;
+  tier?: string;
 }
 
 export interface CertificateTemplate {
@@ -32,6 +35,7 @@ export interface CertificateTemplate {
   team: CertificateTeam;
   style: CertificateStyle;
   available: boolean;
+  availableForTier?: string; // Add missing property
 }
 
 export interface CertificateService {
