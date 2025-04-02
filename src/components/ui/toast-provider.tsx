@@ -22,7 +22,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
         onOpenChange: (open) => {
           setToasts((prevToasts) =>
             prevToasts.map((t) =>
-              t.id === toast.id ? { ...t, open } : t
+              t.id === (toast.id || "") ? { ...t, open } : t
             )
           );
         },
