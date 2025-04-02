@@ -1,9 +1,15 @@
 
-export type CertificateType = 'spending' | 'achievement' | 'rank' | 'royal' | 'team' | 'founding' | 'special';
+/**
+ * Certificate type definitions
+ */
 
-export type CertificateStyle = 'classic' | 'royal' | 'modern' | 'vintage' | 'minimalist' | 'ornate';
+import { TeamColor } from './mockery-types';
 
-export type CertificateTeam = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none';
+export type CertificateType = 'spending' | 'achievement' | 'rank' | 'royal' | 'team' | 'founding' | 'special' | 'nobility' | 'event';
+
+export type CertificateStyle = 'classic' | 'royal' | 'modern' | 'vintage' | 'minimalist' | 'ornate' | 'medieval' | 'elegant';
+
+export type CertificateTeam = TeamColor | 'neutral';
 
 export interface Certificate {
   id: string;
@@ -19,6 +25,18 @@ export interface Certificate {
   team?: CertificateTeam;
   tier?: string;
   metadata?: Record<string, any>;
+  thumbnailUrl?: string;
+  isPublic?: boolean;
+  dateIssued?: string;
+  dateExpires?: string;
+  isVerified?: boolean;
+  templateId?: string;
+  keywords?: string[];
+  signature?: string;
+  status?: string;
+  isMinted?: boolean;
+  createdAt?: string;
+  issuedAt?: string;
 }
 
 export interface CertificateTemplate {
@@ -36,4 +54,10 @@ export interface CertificateTemplate {
     teamRequired?: boolean;
     tierRequired?: string;
   };
+  name?: string;
+  previewUrl?: string;
+  team?: CertificateTeam;
+  availableForTier?: string[];
+  availableForRank?: number[];
+  requiresFounder?: boolean;
 }

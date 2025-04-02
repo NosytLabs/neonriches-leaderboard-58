@@ -1,7 +1,6 @@
 
 import { LeaderboardUser } from '@/types/leaderboard';
-import { UserProfile } from '@/types/user';
-import { TeamColor, UserTier } from '@/types/mockery-types';
+import { UserProfile, TeamColor, UserTier, Gender } from '@/types/mockery-types';
 
 /**
  * Safely converts any string to TeamColor type
@@ -44,6 +43,24 @@ export const toUserTier = (tier: string | null | undefined): UserTier => {
 };
 
 /**
+ * Safely converts string to Gender
+ */
+export const toGender = (gender: string | null | undefined): Gender => {
+  if (!gender) return 'none';
+  
+  const validGenders: Gender[] = [
+    'male', 'female', 'other', 'none', 'king', 'queen', 
+    'jester', 'noble', 'prefer-not-to-say'
+  ];
+  
+  if (validGenders.includes(gender as Gender)) {
+    return gender as Gender;
+  }
+  
+  return 'none';
+};
+
+/**
  * Convert LeaderboardUser to UserProfile
  */
 export const toUserProfile = (user: LeaderboardUser): UserProfile => {
@@ -52,15 +69,15 @@ export const toUserProfile = (user: LeaderboardUser): UserProfile => {
     username: user.username,
     displayName: user.displayName || user.username,
     profileImage: user.profileImage || user.avatarUrl || '',
-    joinedDate: user.joinedDate || user.joinDate || new Date().toISOString(),
+    joinedDate: user.joinedDate || user.joinDate || user.createdAt || new Date().toISOString(),
     isVerified: user.isVerified || false,
     team: toTeamColor(user.team),
     tier: toUserTier(user.tier),
     rank: user.rank || 0,
     previousRank: user.previousRank || user.rank || 0,
-    walletBalance: user.walletBalance || 0,
     totalSpent: user.totalSpent || 0,
-    amountSpent: user.totalSpent || 0,
+    amountSpent: user.amountSpent || user.totalSpent || 0,
+    walletBalance: user.walletBalance || 0,
     isProtected: user.isProtected || false,
     spendStreak: user.spendStreak || 0,
     settings: {
@@ -88,29 +105,6 @@ export const toUserProfile = (user: LeaderboardUser): UserProfile => {
       badge: [],
       theme: []
     }
-  };
-};
-
-/**
- * Convert a UserProfile to a LeaderboardUser
- */
-export const leaderboardUserToProfile = (user: UserProfile): LeaderboardUser => {
-  return {
-    id: user.id,
-    userId: user.id,
-    username: user.username,
-    displayName: user.displayName,
-    profileImage: user.profileImage || '',
-    team: user.team as string,
-    tier: user.tier,
-    rank: user.rank,
-    previousRank: user.previousRank,
-    totalSpent: user.totalSpent,
-    isVerified: user.isVerified || false,
-    isProtected: user.isProtected || false,
-    walletBalance: user.walletBalance,
-    spendStreak: user.spendStreak,
-    joinedDate: user.joinedDate
   };
 };
 

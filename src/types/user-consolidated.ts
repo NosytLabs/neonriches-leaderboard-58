@@ -1,7 +1,10 @@
 
-export type UserTier = 'free' | 'basic' | 'premium' | 'gold' | 'silver' | 'bronze' | 'elite' | 'pro' | 'royal' | 'legendary' | 'diamond' | 'platinum' | 'founder' | 'vip' | 'whale' | 'standard' | 'shark' | 'dolphin' | 'noble';
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'silver' | 'bronze' | 'neutral' | 'none' | 'crimson';
-export type Gender = 'male' | 'female' | 'other' | 'none' | 'king' | 'queen' | 'jester' | 'noble' | 'prefer-not-to-say';
+/**
+ * User Profile consolidated type definitions
+ * Acts as the single source of truth for user profile data
+ */
+
+import { TeamColor, UserTier, Gender } from './mockery-types';
 
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'followers' | 'friends';
@@ -77,7 +80,7 @@ export interface UserProfile {
   id: string;
   username: string;
   displayName: string;
-  email?: string; // Change to optional to match user.ts
+  email?: string;
   profileImage: string;
   bio?: string;
   joinedDate: string;
@@ -92,6 +95,7 @@ export interface UserProfile {
   isFounder?: boolean;
   isVIP?: boolean;
   isProtected?: boolean;
+  isAdmin?: boolean;
   settings: UserSettings;
   cosmetics?: UserCosmetics;
   socialLinks?: SocialLink[];
@@ -110,7 +114,7 @@ export interface UserProfile {
   teamRank?: number;
   joinDate?: string;
   createdAt?: string;
-  isAdmin?: boolean;
+  activeTitle?: string;
   certificateNFT?: {
     mintAddress: string;
     mintDate: string;
@@ -124,8 +128,7 @@ export interface UserProfile {
   };
 }
 
-// Use export type to avoid conflicting exports
-export type { UserTier as UserTierType };
-export type { TeamColor as TeamColorType };
+// For backwards compatibility
+export type { TeamColor, UserTier, Gender };
 export type TeamType = TeamColor;
 export type User = UserProfile;

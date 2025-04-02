@@ -22,7 +22,6 @@ const Icon = React.forwardRef<SVGSVGElement, IconProps>(
         color={color}
         className={className}
         animated={animated}
-        style={style}
         {...props}
       />
     );

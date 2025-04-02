@@ -1,37 +1,15 @@
 
-// Define sound system types
-export type SoundType = 
-  | 'click'
-  | 'success'
-  | 'error'
-  | 'notification'
-  | 'achievement'
-  | 'chime'
-  | 'levelUp'
-  | 'level_up'    // alias for levelUp
-  | 'purchase'
-  | 'royal'
-  | 'claim'
-  | 'coin'
-  | 'swoosh'
-  | 'message'
-  | 'reward'
-  | 'fanfare'
-  | 'rank_up'     // keep both formats for compatibility
-  | 'rankUp'      // alternative format
-  | 'transfer'
-  | 'boost'
-  | 'unlock'
-  | 'loading'
-  | 'complete'
-  | 'alert'
-  | 'join'
-  | 'leave'
-  | 'badge'
-  | 'deposit'
-  | 'withdrawal'
-  | 'protection'
-  | 'sparkle';
+/**
+ * Sound system type definitions
+ */
+
+import { SoundType as CoreSoundType, SoundOptions as CoreSoundOptions } from './mockery-types';
+
+export type SoundType = CoreSoundType | 
+  'chime' | 'levelUp' | 'claim' | 'swoosh' | 'message' | 'reward' | 
+  'fanfare' | 'rankUp' | 'transfer' | 'unlock' | 'loading' | 
+  'complete' | 'alert' | 'join' | 'leave' | 'badge' | 'protection' | 
+  'sparkle';
 
 export type SoundPackType = 
   | 'default'
@@ -40,16 +18,14 @@ export type SoundPackType =
   | 'minimal'
   | 'classic'
   | 'modern'
-  | 'retro';
+  | 'retro'
+  | 'medieval'
+  | 'fantasy';
 
-export interface SoundOptions {
-  volume?: number;
-  loop?: boolean;
-  playbackRate?: number;
+export interface SoundOptions extends CoreSoundOptions {
   interrupt?: boolean;
   onEnded?: () => void;
-  onEnd?: () => void;       // Alias for onEnded
-  onComplete?: () => void;  // Alias for onEnded
+  onComplete?: () => void;
 }
 
 export interface SoundConfig {
@@ -64,15 +40,15 @@ export interface PremiumSoundPackDetails {
   name: string;
   description: string;
   price: number;
-  icon: string;
-  preview: string;
-  previewSound: string;
-  sounds: string[];
-  features: string[];
-  enabled: boolean;
+  icon?: string;
+  preview?: string;
+  previewSound: SoundType;
+  sounds: SoundType[];
+  features?: string[];
+  enabled?: boolean;
+  tags?: string[];
 }
 
-// Export to avoid duplicate declaration conflicts
 export interface AudioOptions {
   volume?: number;
   interrupt?: boolean;
@@ -99,7 +75,6 @@ export interface UseSoundReturn {
   stopAll: () => void;
 }
 
-// Re-export the Sound interface from hooks/sounds
 export interface Sound {
   id: string;
   type: SoundType;

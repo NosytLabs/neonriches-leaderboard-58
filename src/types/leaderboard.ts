@@ -1,22 +1,26 @@
 
+/**
+ * Leaderboard type definitions
+ */
+
 import { TeamColor, UserTier } from './mockery-types';
 
 export interface LeaderboardUser {
   id: string;
-  userId: string; // Required property to match constraints
+  userId: string;
   username: string;
   displayName?: string;
   profileImage: string;
   avatarUrl?: string; // For compatibility
-  team: string | TeamColor;
-  tier: string | UserTier;
+  team: TeamColor;
+  tier: UserTier;
   rank: number;
   previousRank?: number;
   totalSpent: number;
   amountSpent?: number; // For backward compatibility
   spentAmount?: number; // Legacy field
   isVerified?: boolean;
-  isProtected: boolean; // Required property to match constraints
+  isProtected: boolean;
   walletBalance?: number;
   spendStreak?: number;
   // Additional fields needed across the codebase
@@ -59,9 +63,8 @@ export interface LeaderboardStats {
 }
 
 export interface LeaderboardFilter {
-  team?: string | 'all';
-  tier?: string | 'all';
-  // Use both timeframe and timeFrame for compatibility
+  team?: TeamColor | 'all';
+  tier?: UserTier | 'all';
   timeframe?: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all' | string;
   timeFrame?: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all' | string;
   search?: string;
@@ -70,7 +73,6 @@ export interface LeaderboardFilter {
   sortDirection?: 'asc' | 'desc';
 }
 
-// Additional types used in the codebase
 export interface SortByOptions {
   value: string;
   label: string;

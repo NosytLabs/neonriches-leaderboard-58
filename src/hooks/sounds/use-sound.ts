@@ -1,15 +1,14 @@
 
-import { useState, useCallback } from 'react';
-import { SoundType, SoundOptions, UseSoundHook } from '@/hooks/sounds/types';
-import { useSoundsConfig } from './useSoundsConfig';
+import { useCallback } from 'react';
+import { SoundType, SoundOptions } from '@/types/sound-types';
+import { useSoundsConfig } from './use-sounds-config';
 import getSoundPath from '@/utils/getSoundPath';
 
 /**
  * Custom hook for playing sound effects
  */
-export const useSound = (): UseSoundHook => {
+export const useSound = () => {
   const { soundConfig, toggleSounds, toggleMuted, setVolume } = useSoundsConfig();
-  const [volume, setVolumeState] = useState(soundConfig.volume || 0.5);
   
   /**
    * Play a sound with options
@@ -19,19 +18,25 @@ export const useSound = (): UseSoundHook => {
     
     // Get the sound path
     const soundPath = getSoundPath(type);
-    if (!soundPath) return;
+    if (!soundPath) {
+      console.warn(`Sound path for type ${type} not found`);
+      return;
+    }
     
     try {
       // Create a new audio element
       const audio = new Audio(soundPath);
       
       // Set volume
-      audio.volume = options?.volume !== undefined ? options.volume : volume;
+      audio.volume = options?.volume !== undefined ? options.volume : soundConfig.volume;
       
       // Set other options
       if (options?.playbackRate) {
         audio.playbackRate = options.playbackRate;
       }
+      
+      // Set loop option
+      audio.loop = options?.loop || false;
       
       // Attach onend callback if provided
       if (options?.onEnd) {
@@ -45,7 +50,7 @@ export const useSound = (): UseSoundHook => {
     } catch (err) {
       console.error(`Error setting up sound (${type}):`, err);
     }
-  }, [soundConfig.muted, soundConfig.enabled, volume]);
+  }, [soundConfig.muted, soundConfig.enabled, soundConfig.volume]);
   
   /**
    * Stop a sound (placeholder implementation)
@@ -91,7 +96,7 @@ export const useSound = (): UseSoundHook => {
     resumeSound,
     isPlaying,
     isSoundEnabled: !soundConfig.muted && soundConfig.enabled,
-    currentVolume: volume,
+    currentVolume: soundConfig.volume,
     toggleMuted: wrappedToggleMuted,
     toggleSounds: wrappedToggleSounds,
     setVolume

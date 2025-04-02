@@ -1,6 +1,11 @@
 
+/**
+ * Format utility functions
+ */
+
 // Re-export all formatters from individual files
 export * from './dollarFormatters';
+export * from './urlFormatters';
 
 // Basic formatters
 export const formatCurrency = (amount: number | undefined): string => {
@@ -42,16 +47,6 @@ export const formatTimeAgo = (dateString: string): string => {
   return `${daysAgo} day${daysAgo !== 1 ? 's' : ''} ago`;
 };
 
-// Additional formatters
-export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
-  
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(1024));
-  
-  return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
-};
-
 export const formatNumber = (number: number, decimals = 0): string => {
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: decimals,
@@ -67,16 +62,30 @@ export const formatPercent = (decimal: number): string => {
   }).format(decimal);
 };
 
-// Export formatDollarAmount specifically for compatibility
-export { formatDollarAmount } from './dollarFormatters';
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
+  
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  
+  return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
+};
 
-// Default export as well for compatibility
+// Also export default for backwards compatibility
 export default {
   formatCurrency,
   formatDate,
   formatTimeAgo,
-  formatFileSize,
   formatNumber,
   formatPercent,
-  formatDollarAmount
+  formatFileSize,
+  formatDollarAmount: (amount: number) => formatCurrency(amount),
+  getInitials: (name: string) => {
+    return name
+      .split(' ')
+      .map(part => part.charAt(0))
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  }
 };

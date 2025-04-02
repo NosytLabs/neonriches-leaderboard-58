@@ -1,32 +1,27 @@
 
-// Re-export types from individual type files
-// Using explicit re-exports to avoid ambiguity
+/**
+ * Central types export file
+ * This consolidates all type exports to minimize import conflicts
+ */
+
+// Core types
+export * from './mockery-types';
 
 // User types
-export type { UserProfile, User, Gender } from './user-consolidated';
-export type { TeamType, TeamColor } from './user-consolidated';
-export type { ProfileBoost } from './boost';
-export type { UserSettings } from './user';
+export * from './user-consolidated';
+export * from './auth-context';
 
-// Cosmetics types
-export type { 
-  CosmeticItem, 
-  CosmeticRarity, 
-  CosmeticCategory,
-  UserCosmetics
-} from './cosmetics';
+// Feature-specific types
+export * from './certificates';
+export * from './cosmetics';
+export * from './boost';
+export * from './team';
+export * from './leaderboard';
 
-// Certificate types
-export type { 
-  Certificate, 
-  CertificateTemplate,
-  CertificateType,
-  CertificateStyle,
-  CertificateTeam
-} from './certificates';
+// UI types
+export * from './ui/icon-types';
+export * from './sound-types';
 
-// Explicitly re-export SocialLink from a single source to avoid ambiguity
-export type { SocialLink } from './user-consolidated';
-
-// Re-export other types as needed
-// Make sure to avoid duplicates by using explicit exports
+// For backwards compatibility
+import { UserProfile } from './user-consolidated';
+export type User = UserProfile;

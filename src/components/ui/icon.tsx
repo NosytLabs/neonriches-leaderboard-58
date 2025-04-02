@@ -5,17 +5,19 @@ import * as LucideIcons from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LucideProps } from 'lucide-react';
 
-// Define the size map here to avoid any type issues
+// Define the size map 
 const iconSizeMap = {
   xs: 'h-3 w-3',
   sm: 'h-4 w-4',
   md: 'h-5 w-5',
   lg: 'h-6 w-6',
   xl: 'h-8 w-8',
-  '2xl': 'w-10 h-10'
+  '2xl': 'w-10 h-10',
+  '3xl': 'w-16 h-16',
+  '4xl': 'w-20 h-20'
 };
 
-// Define color map here to avoid any type issues
+// Define color map
 const iconColorMap = {
   default: 'text-foreground',
   primary: 'text-primary',
@@ -40,8 +42,13 @@ const iconColorMap = {
 
 export const Icon = forwardRef<SVGSVGElement, IconProps>(
   ({ icon, name, size = 'md', color = 'default', className = '', animated = false, ...props }, ref) => {
-    // Use name as fallback for icon (for backward compatibility)
-    const iconName = (icon || name) as keyof typeof LucideIcons;
+    // Use either icon or name prop for backwards compatibility
+    const iconName = (icon || name || '') as keyof typeof LucideIcons;
+    
+    if (!iconName) {
+      console.warn('Icon component must have either icon or name prop');
+      return null;
+    }
     
     // Get the Lucide icon component
     const LucideIcon = iconName in LucideIcons ? LucideIcons[iconName] : null;
@@ -61,7 +68,7 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
     
     // Determine color class - handle both string literal types and CSS class strings
     let colorClass = '';
-    if (color in iconColorMap) {
+    if (typeof color === 'string' && color in iconColorMap) {
       colorClass = iconColorMap[color as keyof typeof iconColorMap];
     } else {
       colorClass = color as string; // Allow custom color classes

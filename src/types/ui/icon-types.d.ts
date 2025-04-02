@@ -1,6 +1,26 @@
 
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
-export type IconColor = 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal' | 'default';
+export type IconColor = 
+  | 'default' 
+  | 'primary'
+  | 'secondary'
+  | 'muted'
+  | 'accent'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'info'
+  | 'gold' 
+  | 'silver' 
+  | 'crimson' 
+  | 'emerald' 
+  | 'royal'
+  | 'red'
+  | 'blue'
+  | 'green'
+  | 'purple';
+
+export type IconStyle = 'default' | 'medieval';
 
 export type MedievalIconName = 
   | 'crown'
@@ -44,30 +64,27 @@ export type MedievalIconName =
   | 'potion'
   | 'treasure-chest';
 
-export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
-export type MedievalIconColor = 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal' | 'default';
-
 export interface IconProps {
   icon?: string;
-  name: string;
-  size?: MedievalIconSize | number;
-  color?: MedievalIconColor;
+  name?: string;
+  size?: IconSize | number;
+  color?: IconColor | string;
   className?: string;
-  style?: 'default' | 'medieval';
+  style?: IconStyle;
   animated?: boolean;
   [key: string]: any;
 }
 
 export interface MedievalIconProps {
   name: MedievalIconName;
-  size?: MedievalIconSize;
-  color?: MedievalIconColor;
+  size?: IconSize;
+  color?: IconColor;
   className?: string;
   animated?: boolean;
 }
 
 // Icon size mapping
-export const iconSizeMap: Record<MedievalIconSize, string> = {
+export const iconSizeMap: Record<IconSize, string> = {
   'xs': 'w-3 h-3',
   'sm': 'w-4 h-4',
   'md': 'w-6 h-6',
@@ -79,11 +96,23 @@ export const iconSizeMap: Record<MedievalIconSize, string> = {
 };
 
 // Icon color mapping
-export const iconColorMap: Record<MedievalIconColor, string> = {
-  'default': 'text-white',
+export const iconColorMap: Record<IconColor, string> = {
+  'default': 'text-foreground',
+  'primary': 'text-primary',
+  'secondary': 'text-secondary',
+  'muted': 'text-muted-foreground',
+  'accent': 'text-accent',
+  'success': 'text-green-500',
+  'warning': 'text-amber-500',
+  'danger': 'text-red-500',
+  'info': 'text-blue-500',
   'gold': 'text-royal-gold',
   'silver': 'text-gray-300',
   'crimson': 'text-royal-crimson',
   'emerald': 'text-emerald-500',
-  'royal': 'text-royal-purple'
+  'royal': 'text-royal-gold',
+  'red': 'text-red-500',
+  'blue': 'text-blue-500',
+  'green': 'text-green-500',
+  'purple': 'text-purple-500'
 };
