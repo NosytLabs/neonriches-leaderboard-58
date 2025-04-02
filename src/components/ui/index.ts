@@ -3,7 +3,7 @@
 
 export * from './accordion';
 export * from './alert';
-export * from './badge'; // Changed from './badge' to './Badge'
+export * from './Badge'; // Keep consistent with the file name 
 export * from './button';
 export * from './card';
 export * from './checkbox';
@@ -34,3 +34,4 @@ export * from './toast';
 export * from './toggle';
 export * from './tooltip';
 export * from './Shell'; // Export Shell instead of importing from local file to fix case sensitivity
+export * from './avatar'; // Export avatar for components that need it

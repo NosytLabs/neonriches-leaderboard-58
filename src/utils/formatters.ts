@@ -1,65 +1,85 @@
 
 /**
- * Utility functions for formatting values
+ * Utility functions for formatting data consistently across the application
  */
 
 /**
- * Format a number as currency
+ * Format a number as a dollar amount
  */
-export const formatCurrency = (value: number, options?: Intl.NumberFormatOptions): string => {
-  const defaultOptions: Intl.NumberFormatOptions = {
+export const formatDollarAmount = (amount: number | string): string => {
+  const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+  
+  if (isNaN(numericAmount)) {
+    return '$0.00';
+  }
+
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  };
-
-  const mergedOptions = { ...defaultOptions, ...options };
-  
-  return new Intl.NumberFormat('en-US', mergedOptions).format(value);
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(numericAmount);
 };
 
 /**
- * Format a date string to a localized date string
+ * Format a timestamp as relative time (e.g., "2 hours ago")
  */
-export const formatDate = (dateString: string, options?: Intl.DateTimeFormatOptions): string => {
-  if (!dateString) return '';
-  
-  const defaultOptions: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  };
-  
-  const mergedOptions = { ...defaultOptions, ...options };
-  const date = new Date(dateString);
-  
-  return date.toLocaleDateString('en-US', mergedOptions);
+export const formatTimeAgo = (timestamp: string | Date): string => {
+  const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
+  const now = new Date();
+  const secondsAgo = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (secondsAgo < 60) {
+    return 'just now';
+  }
+
+  const minutesAgo = Math.floor(secondsAgo / 60);
+  if (minutesAgo < 60) {
+    return `${minutesAgo} ${minutesAgo === 1 ? 'minute' : 'minutes'} ago`;
+  }
+
+  const hoursAgo = Math.floor(minutesAgo / 60);
+  if (hoursAgo < 24) {
+    return `${hoursAgo} ${hoursAgo === 1 ? 'hour' : 'hours'} ago`;
+  }
+
+  const daysAgo = Math.floor(hoursAgo / 24);
+  if (daysAgo < 30) {
+    return `${daysAgo} ${daysAgo === 1 ? 'day' : 'days'} ago`;
+  }
+
+  const monthsAgo = Math.floor(daysAgo / 30);
+  if (monthsAgo < 12) {
+    return `${monthsAgo} ${monthsAgo === 1 ? 'month' : 'months'} ago`;
+  }
+
+  const yearsAgo = Math.floor(monthsAgo / 12);
+  return `${yearsAgo} ${yearsAgo === 1 ? 'year' : 'years'} ago`;
 };
 
 /**
- * Format a number with a specific precision
+ * Truncate an address (e.g., wallet address) for display
  */
-export const formatNumber = (value: number, precision: number = 0): string => {
-  return value.toFixed(precision);
+export const truncateAddress = (address: string, start: number = 6, end: number = 4): string => {
+  if (!address) return '';
+  if (address.length <= start + end) return address;
+  
+  return `${address.slice(0, start)}...${address.slice(-end)}`;
 };
 
 /**
- * Format a number as a percentage
+ * Format a number with commas as thousands separators
  */
-export const formatPercentage = (value: number, precision: number = 0): string => {
-  return `${(value * 100).toFixed(precision)}%`;
+export const formatNumber = (num: number): string => {
+  return new Intl.NumberFormat('en-US').format(num);
 };
 
 /**
- * Format a file size in bytes to a human-readable string
+ * Format a currency value without the currency symbol
  */
-export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
-  
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
 };

@@ -7,11 +7,10 @@ import {
   MockeryAction,
   MockeryTier,
   TeamColor,
-  TeamData,
   LeaderboardUser,
   LeaderboardFilter,
   MockeryEvent,
-  MockedUser,
+  MockeryUser,
   UserTier,
   Gender
 } from './mockery-types';
@@ -21,11 +20,10 @@ export type {
   MockeryAction,
   MockeryTier,
   TeamColor,
-  TeamData,
   LeaderboardUser,
   LeaderboardFilter,
   MockeryEvent,
-  MockedUser,
+  MockeryUser,
   UserTier,
   Gender
 };
@@ -59,7 +57,7 @@ export type {
   CertificateType, 
   CertificateStyle, 
   CertificateTeam 
-} from './certificates';
+} from './certificate';
 
 export type { 
   CosmeticType, 

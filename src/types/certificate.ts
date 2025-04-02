@@ -8,7 +8,8 @@ export type CertificateType =
   | 'team' 
   | 'special'
   | 'nobility'
-  | 'custom';
+  | 'custom'
+  | 'founder'; // Add 'founder' type to resolve incompatibility
 
 export type CertificateStyle = 
   | 'standard' 
@@ -61,11 +62,12 @@ export interface Certificate {
   isMinted?: boolean;
   issuedAt?: string;
   expiresAt?: string;
+  previewUrl?: string; // Add this to fix Certificate.tsx errors
 }
 
 export interface CertificateTemplate {
   id: string;
-  title: string;
+  title: string; // Make this required
   description: string;
   imageUrl: string;
   type: CertificateType;
@@ -82,6 +84,7 @@ export interface CertificateTemplate {
   requiresFounder?: boolean;
 }
 
+// Export this interface to ensure compatability
 export interface UseCertificateResult {
   certificates: Certificate[];
   templates: CertificateTemplate[];

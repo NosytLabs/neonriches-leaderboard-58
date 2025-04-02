@@ -17,7 +17,16 @@ export type MockeryAction =
   | 'courtJester'
   | 'smokeBomb'
   | 'protection'
-  | 'thumbsDown';
+  | 'thumbsDown'
+  | 'laugh'
+  | 'fish'
+  | 'trumpet'
+  | 'confetti'
+  | 'rotten_egg'
+  | 'flame'
+  | 'thumbs_down'
+  | 'heart'
+  | 'skull';
 
 // Legacy alias support
 export type LegacyMockeryAction = 
@@ -73,4 +82,30 @@ export interface MockeryStats {
 }
 
 // Export TeamColor so it's available when importing from this file
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze' | 'crimson';
+
+// Add missing MockeryUser and MockeryEvent interfaces
+export interface MockeryUser {
+  id: string;
+  username: string;
+  displayName: string;
+  profileImage: string;
+  rank: number;
+  tier: string;
+  team: TeamColor;
+  userId?: string; // Add this to fix use-mockery.tsx errors
+}
+
+export interface MockeryEvent {
+  id: string;
+  actionType: MockeryAction;
+  senderId: string;
+  senderName: string;
+  targetId: string;
+  targetName: string;
+  timestamp: string;
+  message?: string;
+  tier: MockeryTier;
+  cost?: number;
+  type?: string; // Add this to fix use-mockery.tsx errors
+}
