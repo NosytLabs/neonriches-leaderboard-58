@@ -1,18 +1,13 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Shell } from '@/components/ui/Shell'; // Fixed casing
+import { useParams } from 'react-router-dom';
+import { Shell } from '@/components/ui/Shell';
 import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/Badge'; // Fixed casing
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import MockeryComponent from '@/components/mockery/MockeryComponent';
-import { getMockeryActionName } from '@/utils/mockeryActionUtils';
-import { getMockeryDescription } from '@/utils/mockeryUtils';
+import MockeryCard from '@/components/mockery/MockeryCard';
 import { MockeryAction } from '@/types/mockery-types';
 
 const MockeryPage = () => {
-  const navigate = useNavigate();
+  const { action: routeAction } = useParams();
   
   const mockeryActions: MockeryAction[] = [
     'tomato',
@@ -46,32 +41,7 @@ const MockeryPage = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {mockeryActions.map(action => (
-            <Card key={action} className="overflow-hidden">
-              <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <MockeryComponent action={action} size={20} />
-                    {getMockeryActionName(action)}
-                  </CardTitle>
-                  <Badge variant="outline" className="font-normal">
-                    5-100 coins
-                  </Badge>
-                </div>
-                <CardDescription>
-                  {getMockeryDescription(action)}
-                </CardDescription>
-              </CardHeader>
-              
-              <CardFooter className="pt-4">
-                <Button 
-                  variant="outline" 
-                  className="w-full" 
-                  onClick={() => navigate(`/mockery/${action}`)}
-                >
-                  Select
-                </Button>
-              </CardFooter>
-            </Card>
+            <MockeryCard key={action} action={action} />
           ))}
         </div>
       </div>
