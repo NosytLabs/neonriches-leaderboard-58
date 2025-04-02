@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/Icon';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/contexts/auth';
+import useAuth from '@/hooks/useAuth';
 import SpendThroneLogo from '@/components/brand/SpendThroneLogo';
 import { motion, AnimatePresence } from 'framer-motion';
 import { generateAbsurdCTA } from '@/utils/absurdityGenerator';

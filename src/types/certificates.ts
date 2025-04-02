@@ -1,21 +1,21 @@
 
 export type CertificateType = 
-  | 'spending'
-  | 'rank'
   | 'achievement'
-  | 'membership'
-  | 'founder'
-  | 'vip'
-  | 'team';
+  | 'rank'
+  | 'team'
+  | 'spending'
+  | 'special'
+  | 'event'
+  | 'royal'
+  | 'noble';
 
 export type CertificateStyle = 
+  | 'classic'
+  | 'modern'
+  | 'medieval'
   | 'royal'
-  | 'gold'
-  | 'silver'
-  | 'bronze'
-  | 'simple'
-  | 'ornate'
-  | 'modern';
+  | 'gothic'
+  | 'minimalist';
 
 export type CertificateTeam = 
   | 'red'
@@ -27,35 +27,43 @@ export type CertificateTeam =
 
 export interface Certificate {
   id: string;
-  type: CertificateType;
-  style: CertificateStyle;
   title: string;
   description: string;
-  recipientId: string;
-  recipientName: string;
-  issuerId: string;
-  issuerName: string;
+  type: CertificateType;
+  style: CertificateStyle;
+  imageUrl: string;
   dateIssued: string;
-  imageUrl?: string;
-  data?: Record<string, any>;
-  team?: CertificateTeam;
+  issuedAt?: string; // Alternative date format
+  issuerName: string;
+  recipientName: string;
+  recipientId: string;
   mintAddress?: string;
-  mintDate?: string;
+  isMinted?: boolean;
+  status?: 'pending' | 'minted' | 'failed';
+  team?: CertificateTeam;
+  signature?: string;
+  achievements?: string[];
+  metadata?: Record<string, any>;
 }
 
 export interface CertificateTemplate {
   id: string;
   type: CertificateType;
   style: CertificateStyle;
-  title: string;
-  description: string;
-  imageUrl?: string;
-  team?: CertificateTeam;
+  imageUrl: string;
+  name?: string;
+  previewUrl?: string;
+  description?: string;
+  available: boolean;
+  requiredTier?: string;
+  price?: number;
 }
 
 export interface CertificateRepository {
-  getCertificate: (id: string) => Promise<Certificate | null>;
-  getUserCertificates: (userId: string) => Promise<Certificate[]>;
-  createCertificate: (certificateData: Omit<Certificate, 'id'>) => Promise<Certificate>;
-  verifyCertificate: (id: string) => Promise<boolean>;
+  getCertificateById(id: string): Promise<Certificate | null>;
+  getCertificatesByUserId(userId: string): Promise<Certificate[]>;
+  getUserCertificates(userId: string): Promise<Certificate[]>;
+  mintCertificate(certificate: Certificate): Promise<Certificate>;
+  createCertificate(certificate: Partial<Certificate>): Promise<Certificate>;
+  verifyCertificate(id: string): Promise<boolean>;
 }

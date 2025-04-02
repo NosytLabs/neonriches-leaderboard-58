@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { X, Menu, ChevronDown, ChevronUp, Crown, Users, Shield, Sparkles } from 'lucide-react';
-import { useAuth } from '@/contexts/auth';
+import useAuth from '@/hooks/useAuth';
 
 export interface MobileMenuProps {
   transparent?: boolean;

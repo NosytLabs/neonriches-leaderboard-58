@@ -1,36 +1,38 @@
 
 export type BoostEffectType = 
+  | 'rank' 
+  | 'profile' 
   | 'visibility'
-  | 'rank'
-  | 'profile'
-  | 'cosmetic'
-  | 'special'
-  | 'monetary';
+  | 'badge'
+  | 'appearance'
+  | 'animation'
+  | 'effect';
 
 export interface BoostEffect {
   type: BoostEffectType;
-  strength: number;
   description: string;
+  multiplier: number;
+  duration: number;
+  id?: string;
+  name?: string;
+  tier?: string;
+  price?: number;
+  durationDays?: number;
+  effectId?: string;
 }
 
 export interface ProfileBoost {
   id: string;
-  type: string;
+  type: BoostEffectType;
   startDate: string;
   endDate: string;
   level: number;
-  isActive: boolean;
-  strength: number;
-  appliedBy: string;
-  name?: string;
-  description?: string;
-  duration?: number;
-  price?: number;
-  icon?: string;
+  active: boolean;
+  effectId?: string;
 }
 
 export interface BoostService {
-  applyBoost: (userId: string, boostType: string, level: number, days: number) => Promise<boolean>;
-  getActiveBoosts: (userId: string) => Promise<ProfileBoost[]>;
-  calculateBoostEffect: (boost: ProfileBoost) => BoostEffect;
+  applyBoost(userId: string, boostType: BoostEffectType, days: number, level?: number): Promise<boolean>;
+  getActiveBoosts(userId: string): Promise<ProfileBoost[]>;
+  cancelBoost(userId: string, boostId: string): Promise<boolean>;
 }

@@ -1,27 +1,27 @@
 
+// Define all possible sound types
 export type SoundType = 
-  | 'success'
-  | 'error'
-  | 'notification'
-  | 'achievement'
-  | 'click'
-  | 'hover'
-  | 'purchase'
-  | 'spend'
-  | 'boost'
-  | 'level-up'
-  | 'level_up'
-  | 'royal'
-  | 'coin'
-  | 'coinDrop'
-  | 'fanfare'
-  | 'alert'
+  | 'coin' 
+  | 'success' 
+  | 'error' 
+  | 'click' 
+  | 'notification' 
+  | 'achievement' 
+  | 'purchase' 
+  | 'deposit' 
+  | 'mockery' 
+  | 'fanfare' 
+  | 'levelUp' 
+  | 'level_up' 
+  | 'shame' 
+  | 'royal' 
+  | 'boost' 
   | 'message'
-  | 'deposit'
-  | 'withdrawal'
+  | 'swordClash'
+  | 'noblesLaugh'
   | 'withdraw'
-  | 'mockery'
-  | 'shame'
+  | 'withdrawal'
+  | 'coinDrop'
   | 'protection'
   | 'sparkle'
   | 'reward'
@@ -32,56 +32,66 @@ export type SoundType =
   | 'medallion'
   | 'royalAnnouncement'
   | 'seal'
-  | 'swordClash'
-  | 'noblesLaugh'
   | 'transfer'
   | 'unlock'
-  | 'wish'
-  | 'chime'
-  | 'badge'
-  | 'toggle'
-  | 'upgrade'
-  | 'down'
-  | 'up'
   | 'parchmentUnfurl'
   | 'pageChange'
+  | 'wish'
   | 'inkScribble'
+  | 'hover'
   | 'advertisement'
-  | 'effect'
-  | 'taunt'
-  | 'joust'
-  | 'duel'
-  | 'tomatoes'
-  | 'eggs'
-  | 'putridEggs'
-  | 'stocks'
-  | 'crown'
-  | 'jester'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'silence'
-  | 'throne';
+  | 'chime';
 
+// Sound options for playback
 export interface SoundOptions {
   volume?: number;
   loop?: boolean;
-  rate?: number;
   playbackRate?: number;
-  detune?: number;
-  delay?: number;
-  seek?: number;
-  interrupt?: boolean;
   onEnd?: () => void;
+  interrupt?: boolean;
+  delay?: number;
 }
 
+// Define the sound configuration type
 export interface SoundConfig {
   enabled: boolean;
-  volume: number;
   muted: boolean;
-  effects: Record<SoundType, boolean>;
-  music: boolean;
-  ambience: boolean;
+  volume: number;
+  effects?: Record<string, boolean>;
+  music?: Record<string, boolean>;
+  ambience?: Record<string, boolean>;
 }
+
+// Define the hook interface for sound system
+export interface UseSoundHook {
+  playSound: (type: SoundType, options?: SoundOptions) => void;
+  stopSound: (type?: SoundType) => void;
+  pauseSound: (type?: SoundType) => void;
+  resumeSound: (type?: SoundType) => void;
+  isPlaying: (type: SoundType) => boolean;
+  play: (type: SoundType, options?: SoundOptions) => void;
+  isSoundEnabled: boolean;
+  currentVolume: number;
+  toggleSounds?: () => void;
+  toggleMuted?: () => void;
+  setVolume?: (volume: number) => void;
+  soundConfig?: SoundConfig;
+}
+
+// NotificationSoundOptions is an alias for SoundOptions
+export type NotificationSoundOptions = SoundOptions;
+
+// Audio related types
+export type AudioLoaderReturn = {
+  audio: Record<SoundType, HTMLAudioElement>;
+  volume: number;
+  setVolume: (volume: number) => void;
+  isEnabled: boolean;
+  setEnabled: (enabled: boolean) => void;
+  isPremium: boolean;
+  setPremium: (premium: boolean) => void;
+  isLoaded: boolean;
+};
 
 export interface PremiumSoundPackDetails {
   id?: string;
@@ -91,21 +101,3 @@ export interface PremiumSoundPackDetails {
   sounds: SoundType[];
   previewSound?: SoundType;
 }
-
-export interface UseSoundHook {
-  playSound: (type: SoundType, options?: SoundOptions) => void;
-  play: (type: SoundType, options?: SoundOptions) => void;
-  stopSound: (type?: SoundType) => void;
-  pauseSound?: (type?: SoundType) => void;
-  resumeSound?: (type?: SoundType) => void;
-  isPlaying?: (type: SoundType) => boolean;
-  isSoundEnabled: boolean;
-  toggleSounds?: () => boolean;
-  toggleMuted: () => boolean;
-  setVolume?: (volume: number) => void;
-  currentVolume: number;
-  soundConfig?: SoundConfig;
-  currentSound?: SoundType | null;
-}
-
-export type SoundFunction = (type: SoundType, options?: SoundOptions) => void;

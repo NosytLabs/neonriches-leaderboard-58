@@ -1,16 +1,16 @@
 
-export type CosmeticType = 
+export type CosmeticType = 'avatar' | 'badge' | 'banner' | 'emote' | 'frame' | 'title' | 'nameplate';
+
+export type CosmeticCategory = 
   | 'border'
   | 'color'
   | 'font'
   | 'emoji'
   | 'title'
-  | 'badge'
   | 'background'
   | 'effect'
+  | 'badge'
   | 'theme';
-
-export type CosmeticCategory = CosmeticType;
 
 export type CosmeticRarity = 
   | 'common'
@@ -19,66 +19,61 @@ export type CosmeticRarity =
   | 'epic'
   | 'legendary'
   | 'royal'
-  | 'exclusive'
-  | 'limited'
-  | 'standard'
-  | 'premium';
+  | 'mythic'
+  | 'unique';
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
   category: CosmeticCategory;
+  cssClass: string;
   rarity: CosmeticRarity;
+  type: CosmeticType | string;
+  enabled: boolean;
   cost: number;
-  type: string;
-  imageSrc?: string;
-  cssClass?: string;
+  price?: number; // Add price property to fix RoyalBoutique component
+  previewUrl?: string;
+  image?: string;
+}
+
+export interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+  icon: string;
+  enabled: boolean;
 }
 
 export interface UserCosmetics {
-  border: string[];
-  color: string[];
-  font: string[];
-  emoji: string[];
-  title: string[];
-  background: string[];
-  effect: string[];
-  badge: string[];
-  theme: string[];
-  [key: string]: string[] | string | undefined;
-  activeTitle?: string;
-  activeBorder?: string;
-  activeBackground?: string;
-  activeEffect?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeEmoji?: string;
-  activeBadge?: string;
-  activeTheme?: string;
+  border?: string[];
+  color?: string[];
+  font?: string[];
+  emoji?: string[];
+  title?: string[];
+  background?: string[];
+  effect?: string[];
+  badge?: string[];
+  theme?: string[];
+  [key: string]: string[] | undefined;
 }
 
 export interface UserCosmeticState {
-  owned: UserCosmetics;
-  active: {
-    border?: string;
-    color?: string;
-    font?: string;
-    emoji?: string;
-    title?: string;
-    background?: string;
-    effect?: string;
-    badge?: string;
-    theme?: string;
-  };
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string;
+  activeTitle?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  activeBadge?: string;
+  activeTheme?: string;
+  [key: string]: string | undefined;
 }
 
 export interface CosmeticStoreSection {
-  id: string;
   title: string;
-  description: string;
   items: CosmeticItem[];
-  category: CosmeticCategory;
 }
 
 export interface CosmeticPurchaseResult {
@@ -86,19 +81,4 @@ export interface CosmeticPurchaseResult {
   message: string;
   item?: CosmeticItem;
   newBalance?: number;
-}
-
-export interface SocialLink {
-  id?: string;
-  platform: string;
-  url: string;
-  title?: string;
-  verified?: boolean;
-  username?: string;
-  label?: string;
-  icon?: string;
-  clicks?: number;
-  display?: string;
-  primary?: boolean;
-  type?: string;
 }

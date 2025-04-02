@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { IconProps } from '@/types/ui/icon-types';
 import MedievalIcon from '@/components/ui/medieval-icon';
@@ -6,7 +7,7 @@ import { Icon as IconComponent } from '@/components/ui/icon';
 const Icon = React.forwardRef<SVGSVGElement, IconProps>(
   ({ icon, name, size = 'md', color = 'default', className, animated = false, style = 'default', ...props }, ref) => {
     // Ensure either icon or name is provided
-    const iconName = icon || name;
+    const iconName = icon || name || '';
     
     if (!iconName) {
       console.warn('Icon component must have either icon or name prop');

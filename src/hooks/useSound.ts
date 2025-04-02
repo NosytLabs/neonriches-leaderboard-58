@@ -1,55 +1,12 @@
 
 import { useCallback } from 'react';
-import { useSound as useBaseSound } from './sounds/use-sound';
+import useBaseSound from './sounds/use-sound';
+import { SoundType, SoundOptions } from '@/types/sound-types';
 
-export type SoundType = 
-  | 'coin' 
-  | 'success' 
-  | 'error' 
-  | 'click' 
-  | 'notification' 
-  | 'achievement' 
-  | 'purchase' 
-  | 'deposit' 
-  | 'mockery' 
-  | 'fanfare' 
-  | 'levelUp' 
-  | 'level_up' 
-  | 'shame' 
-  | 'royal' 
-  | 'boost' 
-  | 'message'
-  | 'swordClash'
-  | 'noblesLaugh'
-  | 'withdraw'
-  | 'withdrawal'
-  | 'coinDrop'
-  | 'protection'
-  | 'sparkle'
-  | 'reward'
-  | 'rank_up'
-  | 'team'
-  | 'trumpet'
-  | 'warning'
-  | 'medallion'
-  | 'royalAnnouncement'
-  | 'seal';
-
-export interface SoundOptions {
-  volume?: number;
-  loop?: boolean;
-  playbackRate?: number;
-  onEnd?: () => void;
-}
-
-// Create a function that will be returned by the hook
-export type SoundFunction = (type: SoundType, options?: SoundOptions) => void;
-
-// The main hook interface
 export interface SoundHook {
-  playSound: SoundFunction;
+  playSound: (type: SoundType, options?: SoundOptions) => void;
   stopSound: (type?: SoundType) => void;
-  play: SoundFunction;
+  play: (type: SoundType, options?: SoundOptions) => void;
   isSoundEnabled: boolean;
   currentVolume: number;
 }

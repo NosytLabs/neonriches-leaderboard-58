@@ -6,7 +6,7 @@ import useAuth from '@/hooks/useAuth';
 import { LeaderboardUser } from '@/types/leaderboard';
 import { MockeryAction, TeamColor } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
-import { useSound } from '@/hooks/use-sound';
+import { useSound } from '@/hooks/useSound';
 import { toTeamColor } from '@/utils/typeConverters';
 import LeaderboardHeader from '@/components/LeaderboardHeader';
 import LeaderboardFilters from '@/components/LeaderboardFilters';

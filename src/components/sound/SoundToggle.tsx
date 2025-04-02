@@ -10,7 +10,8 @@ interface SoundToggleProps {
 }
 
 export const SoundToggle: React.FC<SoundToggleProps> = ({ className }) => {
-  const { soundConfig, toggleMuted, playSound } = useSound();
+  const sound = useSound();
+  const { soundConfig, toggleMuted, playSound } = sound;
   const [isMuted, setIsMuted] = useState(soundConfig?.muted || false);
   
   useEffect(() => {
@@ -18,14 +19,16 @@ export const SoundToggle: React.FC<SoundToggleProps> = ({ className }) => {
   }, [soundConfig?.muted]);
   
   const handleToggle = () => {
-    toggleMuted();
-    const newMutedState = !isMuted;
-    setIsMuted(newMutedState);
-    
-    if (!newMutedState) {
-      setTimeout(() => {
-        playSound('click', { volume: 0.5 });
-      }, 50);
+    if (toggleMuted) {
+      toggleMuted();
+      const newMutedState = !isMuted;
+      setIsMuted(newMutedState);
+      
+      if (!newMutedState) {
+        setTimeout(() => {
+          playSound('click', { volume: 0.5 });
+        }, 50);
+      }
     }
   };
   

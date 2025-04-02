@@ -1,7 +1,22 @@
 
 import { useCallback } from 'react';
-import { SoundType, SoundOptions, UseSoundHook } from '@/types/sound-types';
+import { SoundType, SoundOptions } from '@/types/sound-types';
 import { useSoundsConfig } from './use-sounds-config';
+
+export interface UseSoundHook {
+  playSound: (type: SoundType, options?: SoundOptions) => void;
+  stopSound: (type?: SoundType) => void;
+  pauseSound: (type?: SoundType) => void;
+  resumeSound: (type?: SoundType) => void;
+  isPlaying: (type: SoundType) => boolean;
+  play: (type: SoundType, options?: SoundOptions) => void;
+  isSoundEnabled: boolean;
+  currentVolume: number;
+  toggleSounds?: () => void;
+  toggleMuted?: () => void;
+  setVolume?: (volume: number) => void;
+  soundConfig?: any;
+}
 
 export const useSound = (): UseSoundHook => {
   const { soundConfig, toggleSounds, toggleMuted, setVolume } = useSoundsConfig();

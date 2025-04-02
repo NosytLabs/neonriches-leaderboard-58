@@ -13,7 +13,7 @@ interface UseNotificationSoundsReturn {
 /**
  * Hook for playing notification sounds
  */
-const useNotificationSounds = (): UseNotificationSoundsReturn => {
+export const useNotificationSounds = (): UseNotificationSoundsReturn => {
   const { playSound: playSoundFn, toggleMuted, soundConfig } = useSound();
   
   const playSound = useCallback((type: SoundType, options: SoundOptions = {}) => {
@@ -27,13 +27,13 @@ const useNotificationSounds = (): UseNotificationSoundsReturn => {
   }, [playSoundFn]);
   
   const mute = useCallback(() => {
-    if (soundConfig?.muted === false) {
+    if (soundConfig?.muted === false && toggleMuted) {
       toggleMuted();
     }
   }, [toggleMuted, soundConfig?.muted]);
   
   const unmute = useCallback(() => {
-    if (soundConfig?.muted === true) {
+    if (soundConfig?.muted === true && toggleMuted) {
       toggleMuted();
     }
   }, [toggleMuted, soundConfig?.muted]);

@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import RoyalDivider from '@/components/ui/royal-divider';
-import { useAuth } from '@/contexts/auth';
+import useAuth from '@/hooks/useAuth';
 import { useToastContext } from '@/contexts/ToastContext';
 import { Crown, Gem, Shield, ArrowRight, Users, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
