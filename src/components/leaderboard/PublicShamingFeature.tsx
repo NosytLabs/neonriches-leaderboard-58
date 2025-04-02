@@ -5,10 +5,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Eye, Target, TrendingUp, Trophy, User } from 'lucide-react';
-import { LeaderboardUser } from '@/types/mockery-types';
+import { LeaderboardUser, MockeryAction } from '@/types/mockery-types';
 import { formatCurrency } from '@/utils/formatters';
 import { useToast } from '@/hooks/use-toast';
-import { MockeryAction, VALID_MOCKERY_ACTIONS } from '@/utils/mockeryActionUtils';
+import { VALID_MOCKERY_ACTIONS, normalizeMockeryAction } from '@/utils/mockeryActionUtils';
 
 interface PublicShamingFeatureProps {
   users: LeaderboardUser[];
@@ -27,7 +27,7 @@ const PublicShamingFeature: React.FC<PublicShamingFeatureProps> = ({
   const [loading, setLoading] = useState<boolean>(false);
 
   // Define the mockery action costs
-  const actionCosts: Partial<Record<MockeryAction, number>> = {
+  const actionCosts: Record<string, number> = {
     'tomato': 10,
     'egg': 25,
     'putridEgg': 50,
@@ -38,7 +38,7 @@ const PublicShamingFeature: React.FC<PublicShamingFeatureProps> = ({
   };
 
   // Define more consistent mockery action costs for the user interface
-  const displayActionCosts: Partial<Record<MockeryAction, number>> = {
+  const displayActionCosts: Record<string, number> = {
     'tomato': 10,
     'egg': 25,
     'putridEgg': 50,

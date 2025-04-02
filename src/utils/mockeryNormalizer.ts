@@ -2,56 +2,77 @@
 import { MockeryAction } from '@/types/mockery-types';
 
 /**
- * Map legacy mockery action strings to the standardized format
- */
-const LEGACY_TO_STANDARD_MAPPING: Record<string, MockeryAction> = {
-  'tomatoes': 'tomato',
-  'eggs': 'egg',
-  'putridEggs': 'putridEgg'
-};
-
-/**
- * Map standard mockery actions to their legacy format
- */
-const STANDARD_TO_LEGACY_MAPPING: Record<MockeryAction, string> = {
-  'tomato': 'tomatoes',
-  'egg': 'eggs',
-  'putridEgg': 'putridEggs',
-  'taunt': 'taunt',
-  'shame': 'shame',
-  'jester': 'jester',
-  'mock': 'mock',
-  'challenge': 'challenge',
-  'joust': 'joust',
-  'duel': 'duel',
-  'crown': 'crown',
-  'stocks': 'stocks',
-  'silence': 'silence',
-  'courtJester': 'courtJester',
-  'smokeBomb': 'smokeBomb',
-  'protection': 'protection',
-  'thumbsDown': 'thumbsDown'
-};
-
-/**
- * Normalize legacy mockery actions to the new format
+ * Normalizes legacy action strings to their standardized counterparts
  */
 export function normalizeMockeryAction(action: string): MockeryAction {
-  return LEGACY_TO_STANDARD_MAPPING[action] || action as MockeryAction;
+  const legacyToStandard: Record<string, MockeryAction> = {
+    'tomatoes': 'tomato',
+    'eggs': 'egg',
+    'putridEggs': 'putridEgg',
+    'carrot': 'laugh'
+  };
+  
+  if (action in legacyToStandard) {
+    return legacyToStandard[action];
+  }
+  
+  return action as MockeryAction;
 }
 
 /**
- * Check if the action is a legacy action
+ * Get a friendly display name for a mockery action
  */
-export function isLegacyMockeryAction(action: string): boolean {
-  return Object.keys(LEGACY_TO_STANDARD_MAPPING).includes(action);
-}
+export const getMockeryActionDisplayName = (action: MockeryAction): string => {
+  const displayNames: Record<MockeryAction, string> = {
+    tomato: 'Tomato',
+    egg: 'Egg',
+    thumbsDown: 'Thumbs Down',
+    shame: 'Shame',
+    jester: 'Jester',
+    mock: 'Mock',
+    challenge: 'Challenge',
+    joust: 'Joust',
+    duel: 'Duel',
+    crown: 'Crown',
+    stocks: 'Stocks',
+    putridEgg: 'Putrid Egg',
+    silence: 'Silence',
+    courtJester: 'Court Jester',
+    smokeBomb: 'Smoke Bomb',
+    protection: 'Protection',
+    laugh: 'Laugh',
+    fish: 'Fish',
+    taunt: 'Taunt'
+  };
+  
+  return displayNames[action] || 'Unknown Action';
+};
 
 /**
- * Get the legacy action from the new format if needed
+ * Check if an action is valid
  */
-export function getLegacyMockeryAction(action: MockeryAction): string {
-  return STANDARD_TO_LEGACY_MAPPING[action] || action;
-}
-
-export default normalizeMockeryAction;
+export const isValidMockeryAction = (action: string): boolean => {
+  const validActions: MockeryAction[] = [
+    'tomato',
+    'egg',
+    'thumbsDown',
+    'shame',
+    'jester',
+    'mock',
+    'challenge',
+    'joust',
+    'duel',
+    'crown',
+    'stocks',
+    'putridEgg',
+    'silence',
+    'courtJester',
+    'smokeBomb',
+    'protection',
+    'laugh',
+    'fish',
+    'taunt'
+  ];
+  
+  return validActions.includes(action as MockeryAction) || ['tomatoes', 'eggs', 'putridEggs', 'carrot'].includes(action);
+};

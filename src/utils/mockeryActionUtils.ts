@@ -36,6 +36,9 @@ export const VALID_MOCKERY_ACTIONS: MockeryAction[] = [
   'taunt'
 ];
 
+// Re-export MockeryAction type for components that import from this file
+export type { MockeryAction } from '@/types/mockery-types';
+
 /**
  * Normalize a string to a valid MockeryAction
  */

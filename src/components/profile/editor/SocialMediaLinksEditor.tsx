@@ -1,156 +1,115 @@
 
 import React, { useState } from 'react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { SocialLink } from '@/types/user-consolidated'; // Import from user-consolidated.ts
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Trash, Plus } from 'lucide-react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { SocialLink } from '@/types/user-consolidated';
+import { PlusCircle, X } from 'lucide-react';
 
 interface SocialMediaLinksEditorProps {
-  links: SocialLink[];
-  onChange: (links: SocialLink[]) => void;
-  maxLinks?: number;
+  socialLinks: SocialLink[];
+  onAddLink: (link: SocialLink) => void;
+  onRemoveLink: (id: string) => void;
+  onUpdateLink: (id: string, link: Partial<SocialLink>) => void;
+}
+
+// Extended SocialLink that includes icon property
+interface ExtendedSocialLink extends SocialLink {
+  icon?: string;
 }
 
 const SocialMediaLinksEditor: React.FC<SocialMediaLinksEditorProps> = ({
-  links,
-  onChange,
-  maxLinks = 5,
+  socialLinks,
+  onAddLink,
+  onRemoveLink,
+  onUpdateLink
 }) => {
-  const [editing, setEditing] = useState(false);
-  
+  const [newLink, setNewLink] = useState<ExtendedSocialLink>({
+    id: '',
+    platform: '',
+    url: '',
+    username: '',
+    verified: false,
+    icon: ''
+  });
+
   const handleAddLink = () => {
-    if (links.length >= maxLinks) {
-      return; // Don't add more than maxLinks
-    }
+    if (!newLink.platform || !newLink.url) return;
     
-    const newLink: SocialLink = {
-      id: `link-${Date.now()}`, // Generate a string ID
-      platform: '',
-      url: '',
-      title: '', // Using title property
-      icon: 'link', // Add default icon
-      enabled: true, // Add required enabled property
+    const linkToAdd: SocialLink = {
+      id: `social-${Date.now()}`,
+      platform: newLink.platform,
+      url: newLink.url.startsWith('http') ? newLink.url : `https://${newLink.url}`,
+      username: newLink.username || '',
+      verified: false,
+      title: newLink.platform
     };
     
-    onChange([...links, newLink]);
+    onAddLink(linkToAdd);
+    setNewLink({ id: '', platform: '', url: '', username: '', verified: false, icon: '' });
   };
-  
-  const handleRemoveLink = (index: number) => {
-    const newLinks = [...links];
-    newLinks.splice(index, 1);
-    onChange(newLinks);
-  };
-  
-  const handleLinkChange = (index: number, field: keyof SocialLink, value: string) => {
-    const newLinks = [...links];
-    newLinks[index] = {
-      ...newLinks[index],
-      [field]: value,
-    };
-    onChange(newLinks);
-  };
-  
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex justify-between items-center">
-          <span>Social Media Links</span>
-          {links.length < maxLinks && (
-            <Button 
-              onClick={handleAddLink}
-              size="sm"
-              variant="outline"
-            >
-              <Plus className="h-4 w-4 mr-1" />
-              Add Link
-            </Button>
-          )}
-        </CardTitle>
+        <CardTitle>Social Media Links</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {links.length === 0 ? (
-            <div className="text-center py-4 text-muted-foreground">
-              <p>No social links added yet.</p>
-              <Button 
-                onClick={handleAddLink} 
-                className="mt-2"
-                variant="outline"
-                size="sm"
-              >
-                Add Your First Link
-              </Button>
+      <CardContent className="space-y-4">
+        {socialLinks.map((link) => (
+          <div key={link.id} className="flex items-center justify-between border p-2 rounded">
+            <div>
+              <p className="font-medium">{link.platform}</p>
+              <p className="text-sm text-muted-foreground truncate">{link.url}</p>
             </div>
-          ) : (
-            links.map((link, index) => (
-              <div key={String(link.id)} className="space-y-2 border p-3 rounded-md">
-                <div className="flex justify-between items-center">
-                  <Label>Link {index + 1}</Label>
-                  <Button 
-                    onClick={() => handleRemoveLink(index)}
-                    size="sm"
-                    variant="ghost"
-                    className="h-8 w-8 p-0 text-destructive hover:text-destructive"
-                  >
-                    <Trash className="h-4 w-4" />
-                  </Button>
-                </div>
-                
-                <div className="grid gap-2">
-                  <Label htmlFor={`platform-${index}`}>Platform</Label>
-                  <Input
-                    id={`platform-${index}`}
-                    value={link.platform || ''}
-                    onChange={(e) => handleLinkChange(index, 'platform', e.target.value)}
-                    placeholder="e.g. Twitter, Instagram, etc."
-                  />
-                </div>
-                
-                <div className="grid gap-2">
-                  <Label htmlFor={`title-${index}`}>Title</Label>
-                  <Input
-                    id={`title-${index}`}
-                    value={link.title || ''}
-                    onChange={(e) => handleLinkChange(index, 'title', e.target.value)}
-                    placeholder="e.g. Follow me on Twitter"
-                  />
-                </div>
-                
-                <div className="grid gap-2">
-                  <Label htmlFor={`url-${index}`}>URL</Label>
-                  <Input
-                    id={`url-${index}`}
-                    value={link.url}
-                    onChange={(e) => handleLinkChange(index, 'url', e.target.value)}
-                    placeholder="https://..."
-                  />
-                </div>
-              </div>
-            ))
-          )}
-          
-          {links.length > 0 && links.length < maxLinks && (
             <Button 
-              onClick={handleAddLink}
-              variant="outline"
-              className="w-full"
+              variant="ghost" 
+              size="sm"
+              onClick={() => onRemoveLink(link.id)}
             >
-              <Plus className="h-4 w-4 mr-1" />
-              Add Another Link
+              <X className="h-4 w-4" />
             </Button>
-          )}
-          
-          {links.length >= maxLinks && (
-            <p className="text-sm text-muted-foreground text-center">
-              You've reached the maximum number of links ({maxLinks}).
-              <br />
-              Upgrade your account to add more links.
-            </p>
-          )}
+          </div>
+        ))}
+
+        <div className="space-y-4 pt-4 border-t">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="platform">Platform</Label>
+              <Input
+                id="platform"
+                placeholder="Twitter"
+                value={newLink.platform}
+                onChange={(e) => setNewLink({...newLink, platform: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                placeholder="@username"
+                value={newLink.username}
+                onChange={(e) => setNewLink({...newLink, username: e.target.value})}
+              />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="url">URL</Label>
+            <Input
+              id="url"
+              placeholder="https://twitter.com/username"
+              value={newLink.url}
+              onChange={(e) => setNewLink({...newLink, url: e.target.value})}
+            />
+          </div>
         </div>
       </CardContent>
+      <CardFooter>
+        <Button onClick={handleAddLink} className="w-full">
+          <PlusCircle className="mr-2 h-4 w-4" /> 
+          Add Social Link
+        </Button>
+      </CardFooter>
     </Card>
   );
 };

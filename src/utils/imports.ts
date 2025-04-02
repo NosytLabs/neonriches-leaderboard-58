@@ -11,11 +11,11 @@ export { Badge } from '@/components/ui/badge';
 export { default as Shell } from '@/components/Shell';
 export { default as UIShell } from '@/components/ui/Shell';
 
-// Import teamService and re-export it
+// Import teamService and re-export it with proper casing
 import teamService from '@/services/teamService';
 export { teamService };
 
 // Utility function to safely get required exports from teamService to handle missing exports
-export const getTeams = teamService.getAllTeams || (() => []);
-export const getTeamById = (id: string) => teamService.getTeamById?.(id) || null;
-export const getTeamByColor = (color: string) => teamService.getTeamByColor?.(color) || null;
+export const getTeams = () => teamService.getAllTeams ? teamService.getAllTeams() : [];
+export const getTeamById = (id: string) => teamService.getTeamById ? teamService.getTeamById(id) : null;
+export const getTeamByColor = (color: string) => teamService.getTeamByColor ? teamService.getTeamByColor(color) : null;

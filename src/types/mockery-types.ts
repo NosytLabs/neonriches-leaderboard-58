@@ -107,7 +107,6 @@ export interface LeaderboardUser {
   spendChange?: number;
   isProtected?: boolean;
   amountSpent?: number;
-  spentAmount?: number; // For compatibility
 }
 
 export interface LeaderboardFilter {

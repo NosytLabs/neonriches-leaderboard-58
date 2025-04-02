@@ -35,7 +35,7 @@ export interface UserSettings {
 export interface UserSubscription {
   id: string;
   tier: string;
-  status: 'active' | 'cancelled' | 'expired' | 'pending';
+  status: 'active' | 'cancelled' | 'expired' | 'pending' | 'paused';
   startDate: string;
   endDate?: string;
   autoRenew?: boolean;
@@ -53,6 +53,8 @@ export interface SocialLink {
   enabled?: boolean;
   title?: string;
   clicks?: number;
+  icon?: string;
+  label?: string;
 }
 
 // Consolidated UserProfile type that's compatible across different files

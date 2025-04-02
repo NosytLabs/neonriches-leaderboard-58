@@ -14,7 +14,25 @@ import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
 import { UserProfile as UserProfileType } from '@/types/user';
-import { toTeamColor } from '@/utils/typeConverters';
+import { TeamColor } from '@/types/mockery-types';
+
+/**
+ * Helper function to convert any string to a valid TeamColor or use a default
+ */
+function toTeamColor(team?: string | null): TeamColor {
+  if (!team) return 'none';
+  
+  const validTeamColors: TeamColor[] = [
+    'red', 'blue', 'green', 'gold', 'purple', 'none', 
+    'neutral', 'silver', 'bronze', 'crimson'
+  ];
+  
+  if (validTeamColors.includes(team as TeamColor)) {
+    return team as TeamColor;
+  }
+  
+  return 'none';
+}
 
 /**
  * Converts a consolidated user profile to a format compatible with components

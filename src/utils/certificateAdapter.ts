@@ -1,5 +1,5 @@
 
-import { Certificate, CertificateType, CertificateTemplate } from '@/types/certificates';
+import { Certificate, CertificateType, CertificateTemplate, CertificateStyle } from '@/types/certificates';
 
 /**
  * Adapter function to ensure a certificate has all required properties
@@ -8,7 +8,7 @@ export function adaptCertificate(partialCertificate: Partial<Certificate>): Cert
   // Extract values or set defaults
   const issuerName = partialCertificate.issuerName || 'Royal Court';
   const recipientName = partialCertificate.recipientName || 'Royal Subject';
-  const style = partialCertificate.style || 'standard';
+  const style = partialCertificate.style || 'standard' as CertificateStyle;
   const recipientId = partialCertificate.recipientId || partialCertificate.userId || '';
   const userId = partialCertificate.userId || partialCertificate.recipientId || '';
   
@@ -23,7 +23,7 @@ export function adaptCertificate(partialCertificate: Partial<Certificate>): Cert
     status: partialCertificate.status || 'pending',
     type: partialCertificate.type || 'achievement',
     tier: partialCertificate.tier || 'silver',
-    style: style as any, // Force cast to avoid type issues
+    style, 
     issuerName,
     recipientName,
     recipientId,
@@ -35,7 +35,7 @@ export function adaptCertificate(partialCertificate: Partial<Certificate>): Cert
  * Adapter function to ensure a certificate template has all required properties
  */
 export function adaptCertificateTemplate(partialTemplate: Partial<CertificateTemplate>): CertificateTemplate {
-  const style = partialTemplate.style || 'standard';
+  const style = partialTemplate.style || 'standard' as CertificateStyle;
   
   return {
     id: partialTemplate.id || `template-${Date.now()}`,
@@ -45,7 +45,7 @@ export function adaptCertificateTemplate(partialTemplate: Partial<CertificateTem
     imageUrl: partialTemplate.imageUrl || '/images/certificates/template.png',
     type: partialTemplate.type || 'achievement',
     team: partialTemplate.team || 'neutral',
-    style: style as any, // Force cast to avoid type issues
+    style,
     available: partialTemplate.available !== false
   };
 }
