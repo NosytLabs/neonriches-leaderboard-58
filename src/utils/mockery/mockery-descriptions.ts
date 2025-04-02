@@ -2,56 +2,66 @@
 import { MockeryAction } from '@/types/mockery-types';
 
 /**
- * Short descriptions of mockery actions
+ * Short descriptions for mockery actions
  */
 export const mockeryShortDescriptions: Record<MockeryAction, string> = {
-  tomato: 'Show disapproval with a juicy tomato.',
-  egg: 'A classic sign of dissatisfaction.',
-  putridEgg: 'The ultimate insult - rotten to the core.',
-  taunt: 'Verbally provoke someone.',
-  shame: 'Make someone publicly face their mistakes.',
-  jester: 'Turn someone into your personal fool.',
-  mock: 'Make fun of someone in a lighthearted way.',
-  challenge: 'Call someone out to prove their worth.',
-  joust: 'Challenge to a medieval contest of skill.',
-  duel: 'Challenge to a formal combat of honor.',
-  crown: 'Ironically crown someone as royalty.',
-  stocks: 'Lock someone in public restraints.',
-  silence: 'Remove someone\'s ability to speak.',
-  courtJester: 'Appoint someone as the official entertainer.',
-  smokeBomb: 'Temporarily obscure someone from view.',
-  protection: 'Shield someone from mockery.',
-  thumbsDown: 'Express disapproval.',
-  laugh: 'Laugh at someone\'s misfortune.',
-  fish: 'Slap someone with a wet fish.'
+  tomato: "Throw a rotten tomato",
+  egg: "Throw an egg",
+  putridEgg: "Throw a putrid egg",
+  rotten_egg: "Throw a rotten egg",
+  flame: "Send flames",
+  heart: "Send hearts",
+  thumbs_down: "Give thumbs down",
+  laugh: "Laugh at them",
+  skull: "Send a skull",
+  crown: "Crown them",
+  stocks: "Put them in the stocks",
+  jester: "Make them the jester",
+  shame: "Shame them publicly",
+  silence: "Silence them",
+  courtJester: "Make them the court jester",
+  smokeBomb: "Throw a smoke bomb",
+  protection: "Offer protection",
+  taunt: "Taunt them",
+  mock: "Mock them",
+  challenge: "Challenge them",
+  joust: "Challenge to a joust",
+  duel: "Challenge to a duel",
+  fish: "Slap with a fish",
+  thumbsDown: "Give thumbs down"
 };
 
 /**
- * Long descriptions of mockery actions
+ * Full descriptions for mockery actions
  */
-export const mockeryLongDescriptions: Record<MockeryAction, string> = {
-  tomato: 'A time-honored tradition of expressing disapproval. Splat someone with a juicy tomato that will leave a stain on their profile and dignity.',
-  egg: 'Classic and effective, an egg will crack on their profile and leave them with egg on their face for all to see.',
-  putridEgg: 'The nuclear option. This rotten egg not only stains but creates a virtual stench that follows the user, causing others to turn away.',
-  taunt: 'Sometimes words hurt more than physical objects. Taunt someone with a personalized message that will appear on their profile.',
-  shame: 'Put someone in the spotlight for their actions. Their shame will be announced in the royal court and displayed on the public shame board.',
-  jester: 'Appoint someone as your personal jester. They\'ll be forced to wear the jester\'s hat on their profile for a period of time.',
-  mock: 'A gentler form of ridicule. Mock someone with a custom message that will appear when others view their profile.',
-  challenge: 'Put someone\'s honor to the test. They must respond or face public ridicule for backing down.',
-  joust: 'Challenge someone to a mock joust where the outcome is determined by your respective ranks and spending.',
-  duel: 'The most serious challenge. Initiate a duel where the loser faces severe penalties.',
-  crown: 'Place a mocking crown on someone\'s head, ironically proclaiming them as royalty for some foolish action.',
-  stocks: 'Place someone in the virtual stocks where other users can throw items at them for additional mockery.',
-  silence: 'Temporarily remove someone\'s ability to respond to mockery or post in public forums.',
-  courtJester: 'The highest form of mockery. Appoint someone as the official Court Jester, visible to all users of the Royal Court.',
-  smokeBomb: 'Throw a smoke bomb that temporarily obscures someone\'s profile and activities from public view.',
-  protection: 'Show mercy by granting someone protection from mockery for a limited time.',
-  thumbsDown: 'A simple gesture that speaks volumes. Show your disapproval with a giant thumbs down on their profile.',
-  laugh: 'Sometimes the simplest response is the most effective. Just laugh at someone\'s misfortune.',
-  fish: 'A surprise attack straight out of Monty Python. Slap someone with a wet fish, leaving scales all over their profile.'
+export const mockeryFullDescriptions: Record<MockeryAction, string> = {
+  tomato: "Show your disapproval by pelting them with a juicy, rotten tomato that will leave a mark!",
+  egg: "Hurl an egg at their profile and watch it crack on impact. Messy but effective!",
+  putridEgg: "Launch a particularly putrid egg that's been aging for maximum stench!",
+  rotten_egg: "Throw a rotten egg that will leave them with a stench that lasts for days!",
+  flame: "Burn them with your fiery criticism and leave them feeling the heat!",
+  heart: "Shower them with love and affection to counteract the mockery.",
+  thumbs_down: "Express your disapproval with a simple but effective gesture.",
+  laugh: "Laugh loudly at their expense, drawing attention to their follies.",
+  skull: "Send them a grim reminder of their failures with a menacing skull.",
+  crown: "Sarcastically crown them as the ruler of whatever mistake they've made.",
+  stocks: "Lock them in the medieval stocks for public ridicule and humiliation.",
+  jester: "Assign them the role of jester, highlighting their foolishness for all to see.",
+  shame: "Ring the shame bell and parade them through the streets of the digital kingdom.",
+  silence: "Enforce a moment of silence to reflect on their poor decisions.",
+  courtJester: "Elevate them to the distinguished position of Court Jester for exceptional folly.",
+  smokeBomb: "Deploy a smoke bomb to create confusion and distraction.",
+  protection: "Offer your protection against the mockery of others. A noble gesture!",
+  taunt: "Provoke them with taunting words designed to get under their skin.",
+  mock: "Simply mock them with words, the classic approach to mockery.",
+  challenge: "Issue a formal challenge to settle matters properly.",
+  joust: "Challenge them to a joust, the traditional way to settle disputes among nobles.",
+  duel: "Challenge them to a duel at dawn for the ultimate resolution.",
+  fish: "Deliver the traditional slap with a fish, a timeless insult of the highest order.",
+  thumbsDown: "Express your disapproval with a simple but effective gesture."
 };
 
 export default {
   mockeryShortDescriptions,
-  mockeryLongDescriptions
+  mockeryFullDescriptions
 };

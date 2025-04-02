@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { useSolanaContext } from '@/contexts/SolanaContext';
+import { useSolana } from '@/contexts/SolanaContext';
 import { truncateAddress } from '@/utils/formatters';
 
 interface SolanaWalletButtonProps {
@@ -13,8 +13,8 @@ const SolanaWalletButton: React.FC<SolanaWalletButtonProps> = ({
   variant = 'default',
   size = 'default'
 }) => {
-  const { connect, disconnect, connected, wallet } = useSolanaContext();
-  const publicKey = wallet?.publicKey?.toString() || '';
+  const { connect, disconnect, connected, publicKey } = useSolana();
+  const walletAddress = publicKey?.toString() || '';
   
   const handleClick = () => {
     if (connected) {
@@ -30,7 +30,7 @@ const SolanaWalletButton: React.FC<SolanaWalletButtonProps> = ({
       size={size} 
       onClick={handleClick}
     >
-      {connected ? truncateAddress(publicKey) : 'Connect Wallet'}
+      {connected ? truncateAddress(walletAddress) : 'Connect Wallet'}
     </Button>
   );
 };

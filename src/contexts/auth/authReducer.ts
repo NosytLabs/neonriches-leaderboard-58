@@ -1,7 +1,7 @@
 
-import { AuthState, AuthAction } from './types';
+import { AuthState, AuthAction } from '@/types/auth-context';
 
-export const initialState: AuthState = {
+export const initialAuthState: AuthState = {
   user: null,
   isAuthenticated: false,
   isLoading: false,
@@ -10,19 +10,19 @@ export const initialState: AuthState = {
 
 export const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
+    case 'AUTH_START':
     case 'LOGIN_START':
     case 'REGISTER_START':
-    case 'AUTH_START':
     case 'REFRESH_USER_START':
       return {
         ...state,
         isLoading: true,
         error: null
       };
-
+      
+    case 'AUTH_SUCCESS':
     case 'LOGIN_SUCCESS':
     case 'REGISTER_SUCCESS':
-    case 'AUTH_SUCCESS':
     case 'REFRESH_USER_SUCCESS':
       return {
         ...state,
@@ -31,46 +31,39 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
         isLoading: false,
         error: null
       };
-
+      
+    case 'AUTH_FAIL':
     case 'LOGIN_FAILURE':
     case 'REGISTER_FAILURE':
-    case 'AUTH_FAIL':
     case 'REFRESH_USER_FAILURE':
       return {
         ...state,
-        user: null,
-        isAuthenticated: false,
         isLoading: false,
-        error: action.payload || null
+        error: action.payload || 'Authentication failed'
       };
-
-    case 'LOGOUT':
-    case 'AUTH_LOGOUT':
-      return {
-        ...state,
-        user: null,
-        isAuthenticated: false,
-        isLoading: false,
-        error: null
-      };
-
+      
     case 'UPDATE_USER':
     case 'UPDATE_PROFILE_SUCCESS':
       return {
         ...state,
-        user: action.payload,
+        user: action.payload
       };
-
+      
+    case 'LOGOUT':
+    case 'AUTH_LOGOUT':
+      return {
+        ...initialAuthState
+      };
+      
     case 'CLEAR_ERROR':
       return {
         ...state,
         error: null
       };
-
+      
     default:
       return state;
   }
 };
 
-// Add default export for backward compatibility
 export default authReducer;

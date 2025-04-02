@@ -1,14 +1,15 @@
 
 import React, { createContext, useReducer, useEffect } from 'react';
-import { AuthContextType, UserProfile } from '@/types/auth-context';
-import authReducer, { initialState } from './authReducer';
+import { AuthContextType } from '@/types/auth-context';
+import { UserProfile } from '@/types/user-consolidated';
+import { authReducer, initialAuthState } from './authReducer';
 import { loginUser, registerUser, updateUserProfile } from '@/services/authService';
 import { toTeamColor } from '@/utils/typeConverters';
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer, initialState);
+  const [state, dispatch] = useReducer(authReducer, initialAuthState);
   
   // Check for saved auth token on mount
   useEffect(() => {
@@ -28,7 +29,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             profileImage: '/assets/profile-image.png',
             bio: 'Loyal member of the Royal Court',
             joinedDate: new Date().toISOString(),
-            isVerified: false,
             team: 'gold',
             tier: 'royal',
             rank: 42,
@@ -50,7 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               showTeam: true,
               showSpending: true
             },
-            profileBoosts: [], // Add the required profileBoosts property
+            profileBoosts: [],
             cosmetics: {
               border: [],
               color: [],
@@ -158,9 +158,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       
       // In a real app, this would call an API
-      const success = await updateUserProfile(updatedUser);
+      const response = await updateUserProfile(updatedUser);
       
-      if (success) {
+      if (response.success) {
         dispatch({ type: 'UPDATE_USER', payload: updatedUser });
         return true;
       }

@@ -1,131 +1,186 @@
 
+/**
+ * Utilities for mockery system
+ */
 import { MockeryAction } from '@/types/mockery-types';
-import { Egg, Tomato, Flame, Heart, ThumbsDown, Laugh, Skull, Crown } from 'lucide-react';
+import { Egg, Flame, Heart, ThumbsDown, Laugh, Skull, Crown } from 'lucide-react';
 
-// Export the mockery name getter function
+/**
+ * Get the display name for a mockery action
+ */
 export const getMockeryName = (action: MockeryAction): string => {
-  switch (action) {
-    case 'tomato':
-      return 'Throw Tomato';
-    case 'egg':
-      return 'Throw Egg';
-    case 'rotten_egg':
-      return 'Throw Rotten Egg';
-    case 'flame':
-      return 'Roast Publicly';
-    case 'heart':
-      return 'Love Bombing';
-    case 'thumbs_down':
-      return 'Disapproval';
-    case 'laugh':
-      return 'Public Ridicule';
-    case 'skull':
-      return 'Death Stare';
-    case 'crown':
-      return 'Royal Mockery';
-    default:
-      return 'Unknown Action';
-  }
+  const nameMap: Record<string, string> = {
+    tomato: 'Rotten Tomato',
+    egg: 'Egg',
+    putridEgg: 'Putrid Egg',
+    rotten_egg: 'Rotten Egg',
+    flame: 'Flame',
+    heart: 'Heart',
+    thumbs_down: 'Thumbs Down',
+    laugh: 'Laugh',
+    skull: 'Skull',
+    crown: 'Crown',
+    stocks: 'Stocks',
+    jester: 'Jester',
+    shame: 'Shame Bell',
+    silence: 'Silence',
+    courtJester: 'Court Jester',
+    smokeBomb: 'Smoke Bomb',
+    protection: 'Protection',
+    taunt: 'Taunt',
+    mock: 'Mock',
+    challenge: 'Challenge',
+    joust: 'Joust',
+    duel: 'Duel',
+    fish: 'Fish Slap',
+    thumbsDown: 'Thumbs Down'
+  };
+  
+  return nameMap[action] || 'Unknown';
 };
 
-// Export the mockery description getter function
+/**
+ * Get a description for a mockery action
+ */
 export const getMockeryDescription = (action: MockeryAction): string => {
-  switch (action) {
-    case 'tomato':
-      return 'Throw a ripe tomato at this user. Messy but harmless.';
-    case 'egg':
-      return 'Throw an egg at this user. A classic mockery move.';
-    case 'rotten_egg':
-      return 'Throw a rotten egg. The smell will linger for days.';
-    case 'flame':
-      return 'Publicly roast this user with a scathing critique.';
-    case 'heart':
-      return 'Overwhelm with fake affection to create confusion.';
-    case 'thumbs_down':
-      return 'Show your strong disapproval for this user.';
-    case 'laugh':
-      return 'Subject this user to public ridicule.';
-    case 'skull':
-      return 'Give this user the death stare. Intimidating.';
-    case 'crown':
-      return 'The ultimate royal mockery. Reserved for the most deserving.';
-    default:
-      return 'No description available for this action.';
-  }
+  const descriptionMap: Record<string, string> = {
+    tomato: 'Throw a rotten tomato at the target',
+    egg: 'Throw an egg at the target',
+    putridEgg: 'Throw a particularly smelly egg',
+    rotten_egg: 'Throw a rotten egg that will really stink',
+    flame: 'Set their reputation on fire',
+    heart: 'Show some love instead of mockery',
+    thumbs_down: 'Express your disapproval',
+    laugh: 'Laugh at their misfortune',
+    skull: 'Send a deadly reminder',
+    crown: 'Crown them sarcastically',
+    stocks: 'Place them in public stocks for ridicule',
+    jester: 'Make them look like a fool',
+    shame: 'Ring the shame bell',
+    silence: 'Silence them temporarily',
+    courtJester: 'Elevate them to royal jester status',
+    smokeBomb: 'Create confusion with a smoke bomb',
+    protection: 'Protect them from mockery',
+    taunt: 'Taunt them mercilessly',
+    mock: 'Mock them with words',
+    challenge: 'Issue a formal challenge',
+    joust: 'Challenge them to a joust',
+    duel: 'Challenge them to a duel',
+    fish: 'Slap them with a fish',
+    thumbsDown: 'Show your disapproval'
+  };
+  
+  return descriptionMap[action] || 'Unknown action';
 };
 
-// Export mockery icon getter function
-export const getMockeryActionIcon = (action: MockeryAction) => {
-  switch (action) {
-    case 'tomato':
-      return Tomato;
-    case 'egg':
-      return Egg;
-    case 'rotten_egg':
-      return Egg;
-    case 'flame':
-      return Flame;
-    case 'heart':
-      return Heart;
-    case 'thumbs_down':
-      return ThumbsDown;
-    case 'laugh':
-      return Laugh;
-    case 'skull':
-      return Skull;
-    case 'crown':
-      return Crown;
-    default:
-      return Laugh;
-  }
-};
-
-// Export mockery tier getter function
-export const getMockeryTier = (action: MockeryAction): string => {
-  switch (action) {
-    case 'crown':
-      return 'legendary';
-    case 'skull':
-      return 'epic';
-    case 'flame':
-    case 'rotten_egg':
-      return 'rare';
-    case 'laugh':
-    case 'thumbs_down':
-    case 'heart':
-      return 'uncommon';
-    case 'tomato':
-    case 'egg':
-    default:
-      return 'common';
-  }
-};
-
-// Export mockery cost function
-export const getMockeryCost = (action: MockeryAction): number => {
-  switch (action) {
-    case 'crown':
-      return 500;
-    case 'skull':
-      return 250;
-    case 'flame':
-    case 'rotten_egg':
-      return 100;
-    case 'laugh':
-    case 'thumbs_down':
-    case 'heart':
-      return 50;
-    case 'tomato':
-    case 'egg':
-    default:
-      return 10;
-  }
+/**
+ * Get the icon component for a mockery action
+ */
+export const getMockeryIcon = (action: MockeryAction) => {
+  const iconMap: Record<string, any> = {
+    tomato: {
+      icon: '🍅',
+      component: null
+    },
+    egg: {
+      icon: '🥚',
+      component: Egg
+    },
+    putridEgg: {
+      icon: '🥚',
+      component: Egg
+    },
+    rotten_egg: {
+      icon: '🥚',
+      component: Egg
+    },
+    flame: {
+      icon: '🔥',
+      component: Flame
+    },
+    heart: {
+      icon: '❤️',
+      component: Heart
+    },
+    thumbs_down: {
+      icon: '👎',
+      component: ThumbsDown
+    },
+    laugh: {
+      icon: '😂',
+      component: Laugh
+    },
+    skull: {
+      icon: '💀',
+      component: Skull
+    },
+    crown: {
+      icon: '👑',
+      component: Crown
+    },
+    stocks: {
+      icon: '🔒',
+      component: null
+    },
+    jester: {
+      icon: '🃏',
+      component: null
+    },
+    shame: {
+      icon: '🔔',
+      component: null
+    },
+    silence: {
+      icon: '🤐',
+      component: null
+    },
+    courtJester: {
+      icon: '👑🃏',
+      component: null
+    },
+    smokeBomb: {
+      icon: '💨',
+      component: null
+    },
+    protection: {
+      icon: '🛡️',
+      component: null
+    },
+    taunt: {
+      icon: '🤪',
+      component: null
+    },
+    mock: {
+      icon: '😜',
+      component: null
+    },
+    challenge: {
+      icon: '⚔️',
+      component: null
+    },
+    joust: {
+      icon: '🏇',
+      component: null
+    },
+    duel: {
+      icon: '🔫',
+      component: null
+    },
+    fish: {
+      icon: '🐟',
+      component: null
+    },
+    thumbsDown: {
+      icon: '👎',
+      component: ThumbsDown
+    }
+  };
+  
+  return iconMap[action] || { icon: '❓', component: null };
 };
 
 export default {
   getMockeryName,
   getMockeryDescription,
-  getMockeryActionIcon,
-  getMockeryTier,
-  getMockeryCost
+  getMockeryIcon
 };

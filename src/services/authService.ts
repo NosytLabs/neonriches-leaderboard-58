@@ -1,174 +1,159 @@
 
-// Mock authentication service for development
+// Add the missing exports and implementations
 import { UserProfile } from '@/types/user-consolidated';
 
-// Mock supabase client
-const supabase = {
-  auth: {
-    signInWithPassword: async ({ email, password }: { email: string, password: string }) => {
-      console.log("Sign in with password", { email, password });
-      // Mock successful login
-      return {
-        data: {
-          session: {
-            user: {
-              id: "mock-user-id",
-              email
-            }
-          }
-        },
-        error: null
-      };
+export interface RegisterResponse {
+  success: boolean;
+  user?: UserProfile;
+  error?: string;
+  token?: string;
+  message?: string;
+}
+
+export interface LoginResponse {
+  success: boolean;
+  user?: UserProfile;
+  token?: string;
+  error?: string;
+  message?: string;
+}
+
+export interface UpdateProfileResponse {
+  success: boolean;
+  user?: UserProfile;
+  error?: string;
+}
+
+// Mock function for user registration
+export async function registerUser(username: string, email: string, password: string): Promise<RegisterResponse> {
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // In a real app, this would call an API endpoint
+  return {
+    success: true,
+    user: {
+      id: 'user-' + Math.random().toString(36).substring(2, 9),
+      username,
+      displayName: username,
+      email,
+      profileImage: '/assets/default-avatar.png',
+      bio: '',
+      joinedDate: new Date().toISOString(),
+      team: 'none',
+      tier: 'basic',
+      rank: 0,
+      previousRank: 0,
+      totalSpent: 0,
+      amountSpent: 0,
+      walletBalance: 0,
+      settings: {
+        profileVisibility: 'public',
+        allowProfileLinks: true,
+        theme: 'dark',
+        notifications: true,
+        emailNotifications: false,
+        marketingEmails: false,
+        showRank: true,
+        darkMode: true,
+        soundEffects: true,
+        showBadges: true,
+        showTeam: true,
+        showSpending: true
+      },
+      profileBoosts: [],
+      cosmetics: {
+        border: [],
+        color: [],
+        font: [],
+        emoji: [],
+        title: [],
+        background: [],
+        effect: [],
+        badge: [],
+        theme: []
+      },
+      spendStreak: 0
     },
-    signOut: async () => {
-      console.log("Sign out");
-      return { error: null };
+    token: 'mock-token-' + Math.random().toString(36).substring(2, 15),
+    message: 'Registration successful!'
+  };
+}
+
+// Mock function for user login
+export async function loginUser(email: string, password: string): Promise<LoginResponse> {
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  // In a real app, this would call an API endpoint
+  return {
+    success: true,
+    user: {
+      id: 'user-' + Math.random().toString(36).substring(2, 9),
+      username: email.split('@')[0],
+      displayName: email.split('@')[0],
+      email,
+      profileImage: '/assets/default-avatar.png',
+      bio: 'Royal Court Member',
+      joinedDate: new Date().toISOString(),
+      team: 'gold',
+      tier: 'basic',
+      rank: Math.floor(Math.random() * 100),
+      previousRank: Math.floor(Math.random() * 100),
+      totalSpent: Math.floor(Math.random() * 1000),
+      amountSpent: Math.floor(Math.random() * 1000),
+      walletBalance: Math.floor(Math.random() * 500),
+      settings: {
+        profileVisibility: 'public',
+        allowProfileLinks: true,
+        theme: 'dark',
+        notifications: true,
+        emailNotifications: false,
+        marketingEmails: false,
+        showRank: true,
+        darkMode: true,
+        soundEffects: true,
+        showBadges: true,
+        showTeam: true,
+        showSpending: true
+      },
+      profileBoosts: [],
+      cosmetics: {
+        border: [],
+        color: [],
+        font: [],
+        emoji: [],
+        title: [],
+        background: [],
+        effect: [],
+        badge: [],
+        theme: []
+      },
+      spendStreak: 0
     },
-    getSession: async () => {
-      // Return a mock session
-      return {
-        data: {
-          session: {
-            user: {
-              id: "mock-user-id",
-              email: "user@example.com"
-            }
-          }
-        }
-      };
+    token: 'mock-token-' + Math.random().toString(36).substring(2, 15),
+    message: 'Login successful!'
+  };
+}
+
+// Mock function for updating user profile
+export async function updateUserProfile(user: UserProfile): Promise<UpdateProfileResponse> {
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  // In a real app, this would call an API endpoint
+  return {
+    success: true,
+    user: {
+      ...user,
+      // Add any server-side updates here
     }
-  },
-  // Add other needed methods
-  from: (table: string) => ({
-    select: () => ({
-      eq: (field: string, value: any) => ({
-        single: () => ({
-          data: getMockUser(),
-          error: null
-        })
-      })
-    }),
-    update: () => ({
-      eq: () => ({
-        single: () => ({
-          data: getMockUser(),
-          error: null
-        })
-      })
-    }),
-    insert: () => ({
-      single: () => ({
-        data: getMockUser(),
-        error: null
-      })
-    })
-  })
-};
+  };
+}
 
-// Mock user data
-const getMockUser = (): UserProfile => ({
-  id: "mock-user-id",
-  username: "royaluser",
-  displayName: "Royal User",
-  email: "user@example.com",
-  profileImage: "/images/avatars/default.jpg",
-  bio: "Mock user for development",
-  walletBalance: 1000,
-  totalSpent: 2500,
-  rank: 42,
-  team: "blue",
-  tier: "premium",
-  joinDate: new Date().toISOString()
-});
-
-/**
- * Sign in with email and password
- */
-export const signInWithPassword = async (email: string, password: string) => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  // Return session data
-  return data;
-};
-
-/**
- * Sign out the current user
- */
-export const signOut = async () => {
-  const { error } = await supabase.auth.signOut();
-  
-  if (error) {
-    throw new Error(error.message);
-  }
-  
-  return true;
-};
-
-/**
- * Get the current user profile
- */
-export const getCurrentUser = async () => {
-  // Get session
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  if (!session) {
-    return null;
-  }
-  
-  // Get user profile from profiles table
-  const { data, error } = await supabase
-    .from('profiles')
-    .select()
-    .eq('id', session.user.id)
-    .single();
-  
-  if (error) {
-    console.error('Error fetching user profile:', error);
-    return null;
-  }
-  
-  return data as UserProfile;
-};
-
-/**
- * Sign in with magic link via email
- */
-export const signInWithEmail = async (email: string) => {
-  // Mock implementation
-  console.log("Sending magic link to:", email);
-  return { success: true };
-};
-
-/**
- * Verify MFA code
- */
-export const verifyMfaCode = async (code: string) => {
-  // Mock implementation
-  console.log("Verifying MFA code:", code);
-  return { success: true };
-};
-
-/**
- * Sign in with Google OAuth
- */
-export const signInWithGoogle = async () => {
-  // Mock implementation
-  console.log("Signing in with Google");
-  return { success: true };
-};
-
-/**
- * Reset password
- */
-export const resetPassword = async (email: string) => {
-  // Mock implementation
-  console.log("Resetting password for:", email);
-  return { success: true };
+// Export default for compatibility
+export default {
+  registerUser,
+  loginUser,
+  updateUserProfile
 };

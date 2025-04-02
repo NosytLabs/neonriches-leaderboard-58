@@ -1,147 +1,164 @@
-import React from 'react';
-import { Container } from '@/components/ui/container';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Check, Crown, Sparkles, Gem, AlertCircle } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { SUBSCRIPTION_TIERS } from '@/config/subscriptions';
-import RoyalDivider from '@/components/ui/royal-divider';
+// Update the subscription plan interface to include "recommended" property
+import { useEffect, useState } from 'react';
+import { SubscriptionPlanCard } from '@/components/subscription/SubscriptionPlanCard';
+import { useAuth } from '@/hooks/useAuth';
+import { UserProfile } from '@/types/user-consolidated';
 
-const Subscription = ({ pricingFilter }) => {
-  const getTierIcon = (tierId: string) => {
-    switch (tierId) {
-      case 'standard':
-        return <Gem className="h-5 w-5 text-royal-gold" />;
-      case 'premium':
-        return <Sparkles className="h-5 w-5 text-royal-purple" />;
-      case 'royal':
-        return <Crown className="h-5 w-5 text-royal-gold" />;
-      default:
-        return null;
-    }
-  };
+interface SubscriptionPlan {
+  id: string;
+  name: string;
+  price: number;
+  interval: string;
+  description: string;
+  features: string[];
+  color: string;
+  maxLinks: number;
+  maxProfiles: number;
+  analyticsAccess: boolean;
+  customization: boolean;
+  protectionDuration: number;
+  priceMonthly: number;
+  priceYearly: number;
+  recommended?: boolean;
+}
 
-  const getCardClass = (tierId: string) => {
-    switch (tierId) {
-      case 'standard':
-        return 'border-royal-gold/30';
-      case 'premium':
-        return 'border-royal-purple/40 ring-2 ring-royal-purple/20';
-      case 'royal':
-        return 'border-royal-gold/50 ring-2 ring-royal-gold/30';
-      default:
-        return 'border-white/10';
-    }
-  };
-
-  const filteredTiers = Object.values(SUBSCRIPTION_TIERS)
-    .filter(tier => !pricingFilter || tier.id === pricingFilter);
-
+export default function Subscription() {
+  const { user } = useAuth();
+  const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
+  const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
+  
+  useEffect(() => {
+    // In a real app, these would be fetched from an API
+    const subscriptionPlans: SubscriptionPlan[] = [
+      {
+        id: 'basic',
+        name: 'Basic',
+        price: 9.99,
+        interval: 'month',
+        description: 'For casual users looking to enhance their visibility',
+        features: [
+          'Basic profile customization',
+          'Up to 3 social links',
+          'Limited access to exclusive events',
+          'Basic analytics',
+          'Standard customer support'
+        ],
+        color: 'bg-gray-500',
+        maxLinks: 3,
+        maxProfiles: 1,
+        analyticsAccess: false,
+        customization: false,
+        protectionDuration: 0,
+        priceMonthly: 9.99,
+        priceYearly: 99.99
+      },
+      {
+        id: 'premium',
+        name: 'Premium',
+        price: 19.99,
+        interval: 'month',
+        description: 'For serious users who want to boost their presence',
+        features: [
+          'Advanced profile customization',
+          'Up to 7 social links',
+          'Priority in leaderboards',
+          'Advanced analytics',
+          'Priority customer support',
+          '3-day mockery protection'
+        ],
+        color: 'bg-royal-gold',
+        maxLinks: 7,
+        maxProfiles: 2,
+        analyticsAccess: true,
+        customization: true,
+        protectionDuration: 3,
+        priceMonthly: 19.99,
+        priceYearly: 199.99,
+        recommended: true
+      },
+      {
+        id: 'royal',
+        name: 'Royal',
+        price: 49.99,
+        interval: 'month',
+        description: 'For the elite who demand the ultimate experience',
+        features: [
+          'Full profile customization',
+          'Unlimited social links',
+          'Guaranteed top 10% visibility',
+          'Comprehensive analytics',
+          '24/7 VIP customer support',
+          '7-day mockery protection',
+          'Exclusive Royal badge',
+          'Access to all exclusive events'
+        ],
+        color: 'bg-purple-700',
+        maxLinks: Infinity,
+        maxProfiles: 5,
+        analyticsAccess: true,
+        customization: true,
+        protectionDuration: 7,
+        priceMonthly: 49.99,
+        priceYearly: 499.99
+      },
+      {
+        id: 'founder',
+        name: 'Founder',
+        price: 199.99,
+        interval: 'month',
+        description: 'For the true royalty of our platform',
+        features: [
+          'Everything in Royal tier',
+          'Founder badge',
+          'Team leader capabilities',
+          'Create custom events',
+          'Personal concierge',
+          'Permanent mockery immunity',
+          'Input on platform features',
+          'Revenue sharing'
+        ],
+        color: 'bg-black',
+        maxLinks: Infinity,
+        maxProfiles: Infinity,
+        analyticsAccess: true,
+        customization: true,
+        protectionDuration: 30,
+        priceMonthly: 199.99,
+        priceYearly: 1999.99
+      }
+    ];
+    
+    setPlans(subscriptionPlans);
+  }, []);
+  
   return (
-    <Container className="py-10">
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold mb-4 royal-gradient">Choose Your Royal Status</h1>
-        <p className="text-lg opacity-80 max-w-2xl mx-auto">
-          Upgrade your standing in the royal court and unlock premium features with our exclusive subscription plans.
-        </p>
+    <div className="container mx-auto px-4 py-12">
+      <h1 className="text-3xl font-bold mb-8">Subscription Plans</h1>
+      
+      <div className="flex justify-center mb-8">
+        <button
+          className={`px-4 py-2 rounded-l-md ${billingInterval === 'monthly' ? 'bg-royal-gold text-black' : 'bg-gray-700 text-white'}`}
+          onClick={() => setBillingInterval('monthly')}
+        >
+          Monthly
+        </button>
+        <button
+          className={`px-4 py-2 rounded-r-md ${billingInterval === 'yearly' ? 'bg-royal-gold text-black' : 'bg-gray-700 text-white'}`}
+          onClick={() => setBillingInterval('yearly')}
+        >
+          Yearly
+        </button>
       </div>
-
-      <div className="glass-morphism border-royal-gold/20 p-6 rounded-lg mb-8 max-w-3xl mx-auto">
-        <div className="flex items-start gap-4">
-          <div className="p-3 rounded-full bg-amber-500/20 flex-shrink-0">
-            <AlertCircle className="h-6 w-6 text-amber-400" />
-          </div>
-          <div>
-            <h3 className="text-xl font-bold mb-2">Important: Subscriptions vs. Leaderboard Rank</h3>
-            <p className="text-white/80 mb-4">
-              Subscribing to SpendThrone will <span className="font-bold text-royal-gold">not</span> affect your position on the leaderboard. 
-              Your leaderboard rank is determined solely by direct deposits ($1 = 1 rank point).
-            </p>
-            <p className="text-white/70">
-              Subscriptions provide cosmetic enhancements and profile features, while deposits increase your standing in the royal hierarchy.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid md:grid-cols-3 gap-6">
-        {filteredTiers.map((tier) => (
-          <Card key={tier.id} className={`relative overflow-hidden glass-morphism ${getCardClass(tier.id)}`}>
-            {tier.recommended && (
-              <div className="absolute top-0 right-0 bg-royal-purple text-white text-xs font-medium px-2 py-0.5 rounded-bl">
-                RECOMMENDED
-              </div>
-            )}
-            <CardHeader>
-              <div className="flex items-center gap-3 mb-2">
-                <div className={`p-2 rounded-full ${
-                  tier.id === 'standard' ? 'bg-royal-gold/20' : 
-                  tier.id === 'premium' ? 'bg-royal-purple/20' : 'bg-royal-gold/30'
-                }`}>
-                  {getTierIcon(tier.id)}
-                </div>
-                <div>
-                  <CardTitle className={tier.id === 'royal' ? 'royal-gradient' : ''}>{tier.name}</CardTitle>
-                  <CardDescription>{tier.description}</CardDescription>
-                </div>
-              </div>
-              <div className="mt-4 text-center">
-                <span className="text-3xl font-bold">
-                  ${tier.priceMonthly}
-                </span>
-                <span className="text-white/60">
-                  /month
-                </span>
-                <div className="mt-1">
-                  <Badge variant="outline" className="bg-royal-gold/10 text-royal-gold border-0">
-                    Save 10% with annual billing
-                  </Badge>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2">
-                {tier.features.map((feature, i) => (
-                  <li key={i} className="flex items-start">
-                    <Check className="h-5 w-5 mr-2 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-white/80">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <Button 
-                className={`w-full ${
-                  tier.id === 'standard' ? 'bg-gradient-to-r from-slate-600 to-slate-700' : 
-                  tier.id === 'premium' ? 'bg-gradient-to-r from-purple-700 to-purple-800' : 
-                  'bg-gradient-to-r from-amber-500 to-yellow-600 text-black'
-                } hover:opacity-90`}
-              >
-                Subscribe Now
-              </Button>
-            </CardFooter>
-          </Card>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {plans.map((plan) => (
+          <SubscriptionPlanCard
+            key={plan.id}
+            plan={plan}
+            billingInterval={billingInterval}
+          />
         ))}
       </div>
-
-      <RoyalDivider variant="fancy" className="my-8" />
-
-      <div className="text-center mt-12 max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold mb-4">Why Choose SpendThrone?</h2>
-        <p className="text-white/70 mb-6">
-          Our subscriptions offer unparalleled visibility in our digital kingdom. Enhance your profile with royal flair while maintaining your budget for leaderboard contributions.
-        </p>
-        <div className="glass-morphism border-royal-gold/20 p-6 rounded-lg">
-          <p className="italic text-white/60">
-            "All subscriptions are purely cosmetic - your rank is determined solely by your deposits. The more gold coins you contribute to the royal treasury, the higher you climb in the court. It's a simple yet effective demonstration of digital nobility."
-          </p>
-          <p className="mt-4 text-sm text-white/50">
-            "Think of it as the medieval blockchain - permanently recording your wealth for all to see, but without all those pesky gas fees." — Court Historian
-          </p>
-        </div>
-      </div>
-    </Container>
+    </div>
   );
-};
-
-export default Subscription;
+}

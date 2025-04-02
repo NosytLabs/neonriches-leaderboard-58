@@ -1,12 +1,15 @@
 
-// MockeryAction enum
+/**
+ * Type definitions for mockery feature
+ */
+
 export type MockeryAction = 
   | 'tomato'
   | 'egg'
   | 'rotten_egg'
   | 'flame'
   | 'heart'
-  | 'thumbs_down'
+  | 'thumbs_down' 
   | 'laugh'
   | 'skull'
   | 'crown'
@@ -26,7 +29,6 @@ export type MockeryAction =
   | 'fish'
   | 'thumbsDown';
 
-// MockeryTier enum
 export type MockeryTier = 
   | 'common'
   | 'uncommon'
@@ -35,20 +37,44 @@ export type MockeryTier =
   | 'legendary'
   | 'royal';
 
-// TeamColor enum
+export interface MockeryEventBase {
+  id: string;
+  action: MockeryAction;
+  fromUserId: string;
+  toUserId: string;
+  timestamp: string;
+  tier?: MockeryTier;
+  message?: string;
+  isAnonymous?: boolean;
+}
+
+export interface MockeryEvent extends MockeryEventBase {
+  fromUser?: MockedUser;
+  toUser?: MockedUser;
+}
+
+export interface MockedUser {
+  id: string;
+  username: string;
+  displayName: string;
+  profileImage: string;
+  team: TeamColor;
+  tier: UserTier;
+  rank?: number;
+}
+
 export type TeamColor = 
-  | 'red' 
-  | 'blue' 
-  | 'green' 
-  | 'gold' 
-  | 'purple' 
-  | 'none' 
-  | 'neutral' 
-  | 'silver' 
-  | 'bronze' 
+  | 'red'
+  | 'blue'
+  | 'green'
+  | 'gold'
+  | 'purple'
+  | 'none'
+  | 'neutral'
+  | 'silver'
+  | 'bronze'
   | 'crimson';
 
-// UserTier enum
 export type UserTier = 
   | 'free'
   | 'basic'
@@ -70,108 +96,34 @@ export type UserTier =
   | 'elite'
   | 'legendary';
 
-// Gender enum
 export type Gender = 
-  | 'male' 
-  | 'female' 
-  | 'non-binary' 
-  | 'other' 
-  | 'prefer-not-to-say' 
-  | 'king' 
-  | 'queen' 
-  | 'jester' 
+  | 'male'
+  | 'female'
+  | 'non-binary'
+  | 'other'
+  | 'prefer-not-to-say'
+  | 'king'
+  | 'queen'
+  | 'jester'
   | 'noble';
 
-// TeamData interface
-export interface TeamData {
-  id: string;
-  name: string;
-  color: TeamColor;
-  description: string;
-  memberCount: number;
-  totalSpent: number;
-  rank: number;
-  leaderUsername?: string;
-  leaderAvatar?: string;
-  totalContribution?: number;
-  members?: any[];
-  previousRank?: number;
-  logoUrl?: string;
-}
-
-// LeaderboardUser interface
-export interface LeaderboardUser {
-  id: string;
-  userId: string;
-  username: string;
-  displayName?: string;
-  profileImage: string;
-  avatarUrl?: string;
-  totalSpent: number;
-  amountSpent?: number;
-  rank: number;
-  previousRank: number;
-  team: TeamColor;
-  tier: string;
-  spendStreak: number;
-  walletBalance?: number;
-  isVerified?: boolean;
-  isProtected?: boolean;
-  spendChange?: number;
-  rankChange?: number;
-  joinDate?: string;
-}
-
-// LeaderboardFilter interface
+// Define the leaderboard filter interface
 export interface LeaderboardFilter {
-  team: TeamColor | 'all' | undefined;
-  tier: UserTier | 'all' | undefined;
-  timeframe: string;
+  team: TeamColor | 'all';
+  tier: UserTier | 'all';
+  timeframe: 'year' | 'month' | 'week' | 'all-time' | 'today';
   search: string;
   sortBy: string;
   sortDirection: 'asc' | 'desc';
   limit: number;
 }
 
-// MockeryEvent interface
-export interface MockeryEvent {
-  id: string;
-  action: MockeryAction;
-  fromUserId: string;
-  toUserId: string;
-  timestamp: string;
-  cost: number;
-  tier: MockeryTier;
-  fromUsername?: string;
-  toUsername?: string;
-  fromAvatar?: string;
-  toAvatar?: string;
-  targetId?: string;
-  fromId?: string;
-  isAnonymous?: boolean;
-  message?: string;
-  appliedBy?: string;
-  seen?: boolean;
-}
-
-// MockedUser interface
-export interface MockedUser {
-  userId: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  mockeryCount: number;
-  lastMockedAt: string;
-  recentActions: MockeryAction[];
-  id?: string;
-  tier?: string;
-  team?: string | TeamColor;
-  action?: MockeryAction;
-  appliedBy?: string;
-  appliedAt?: string;
-  expiresAt?: string;
-  reason?: string;
-  totalSpent?: number;
-  rank?: number;
-  spendStreak?: number;
+// Define mock results interface
+export interface MockeryResult {
+  success: boolean;
+  event?: MockeryEvent;
+  error?: string;
+  mockeryText?: string;
+  victim?: MockedUser;
+  mocker?: MockedUser;
 }

@@ -1,10 +1,9 @@
 
 import { useState, useEffect } from 'react';
 
-export function useLocalStorage<T>(key: string, initialValue: T) {
+export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((val: T) => T)) => void] {
   // State to store our value
   const [storedValue, setStoredValue] = useState<T>(() => {
-    // Check if running in browser environment
     if (typeof window === 'undefined') {
       return initialValue;
     }
@@ -15,12 +14,12 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       // Parse stored json or if none return initialValue
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      // If error, return initialValue
+      // If error also return initialValue
       console.error(`Error reading localStorage key "${key}":`, error);
       return initialValue;
     }
   });
-  
+
   // Return a wrapped version of useState's setter function that
   // persists the new value to localStorage.
   const setValue = (value: T | ((val: T) => T)) => {
@@ -37,27 +36,34 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
       }
     } catch (error) {
+      // A more advanced implementation would handle the error case
       console.error(`Error setting localStorage key "${key}":`, error);
     }
   };
-  
-  // Update stored value if localStorage changes in another tab
+
   useEffect(() => {
-    function handleStorageChange(event: StorageEvent) {
-      if (event.key === key && event.newValue) {
+    // This function ensures that our stored value stays in sync
+    // if localStorage changes in another tab
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === key && e.newValue) {
         try {
-          setStoredValue(JSON.parse(event.newValue));
-        } catch (e) {
-          console.error(`Error parsing localStorage value:`, e);
+          setStoredValue(JSON.parse(e.newValue));
+        } catch (error) {
+          console.error(`Error parsing localStorage value for key "${key}":`, error);
         }
       }
-    }
+    };
+
+    // Listen for changes to localStorage
+    window.addEventListener('storage', handleStorageChange);
     
-    if (typeof window !== 'undefined') {
-      window.addEventListener('storage', handleStorageChange);
-      return () => window.removeEventListener('storage', handleStorageChange);
-    }
+    // Remove event listener on cleanup
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, [key]);
-  
-  return [storedValue, setValue] as const;
+
+  return [storedValue, setValue];
 }
+
+export default useLocalStorage;

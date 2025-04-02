@@ -1,189 +1,233 @@
 
-import React, { createContext, useState, useEffect, useCallback } from 'react';
-import { SoundConfig, SoundHook, SoundOptions, SoundType } from '../sound-types';
-import useLocalStorage from '@/hooks/useLocalStorage';
+import React, { createContext, useState, useEffect, useRef } from 'react';
+import { useLocalStorage } from '@/hooks/use-local-storage';
+import { SoundType, SoundOptions, SoundConfig, SoundHook } from '../sound-types';
 
-// Define the sound context
-export const SoundContext = createContext<SoundHook | null>(null);
+// Create context with default values
+export const SoundContext = createContext<SoundHook>({
+  playSound: () => {},
+  stopSound: () => {},
+  pauseSound: () => {},
+  resumeSound: () => {},
+  toggleMute: () => {},
+  isMuted: false,
+  setVolume: () => {},
+  getVolume: () => 0,
+  isEnabled: true,
+  toggleEnabled: () => {},
+  toggleMuted: () => {},
+  mute: () => {},
+  unmute: () => {},
+  currentVolume: 0,
+  soundConfig: { enabled: true, volume: 0.5, muted: false }
+});
 
-// Default sound configuration
-const DEFAULT_SOUND_CONFIG: SoundConfig = {
-  enabled: true,
-  volume: 0.5,
-  muted: false
-};
-
-// Map of sound files
-const SOUND_FILES: Record<string, string> = {
-  click: '/sounds/click.mp3',
-  success: '/sounds/success.mp3',
-  error: '/sounds/error.mp3',
-  notification: '/sounds/notification.mp3',
-  achievement: '/sounds/achievement.mp3',
-  purchase: '/sounds/purchase.mp3',
-  coin: '/sounds/coin.mp3',
-  level_up: '/sounds/level_up.mp3',
-  boost: '/sounds/boost.mp3',
-  royal: '/sounds/royal.mp3',
-  coinDrop: '/sounds/coin_drop.mp3'
-};
-
-// Active sound elements
-const activeSounds: Record<string, HTMLAudioElement> = {};
-
-interface SoundProviderProps {
-  children: React.ReactNode;
-}
-
-export const SoundProvider: React.FC<SoundProviderProps> = ({ children }) => {
-  const [config, setConfig] = useLocalStorage<SoundConfig>('sound-config', DEFAULT_SOUND_CONFIG);
-  
-  const playSound = useCallback(
-    (sound: SoundType, options?: SoundOptions) => {
-      if (!config.enabled || config.muted) return;
-      
-      try {
-        // Get sound file path
-        const soundPath = SOUND_FILES[sound] || sound;
-        if (!soundPath) return;
-        
-        // Create or reuse audio element
-        let audio = activeSounds[sound];
-        if (!audio) {
-          audio = new Audio(soundPath);
-          activeSounds[sound] = audio;
-        }
-        
-        // Apply options
-        audio.volume = (options?.volume !== undefined ? options.volume : config.volume);
-        audio.loop = options?.loop || false;
-        
-        // Handle onEnd callback
-        if (options?.onEnd) {
-          audio.onended = options.onEnd;
-        }
-        
-        // Play sound
-        audio.currentTime = 0;
-        audio.play().catch(err => {
-          console.error(`Error playing sound ${sound}:`, err);
-        });
-      } catch (err) {
-        console.error(`Error with sound ${sound}:`, err);
-      }
-    },
-    [config.enabled, config.muted, config.volume]
+// Sound Provider Component
+export const SoundProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Sound configuration stored in localStorage
+  const [soundConfig, setSoundConfig] = useLocalStorage<SoundConfig>(
+    'sound-config',
+    { enabled: true, volume: 0.5, muted: false }
   );
   
-  const stopSound = useCallback((sound?: SoundType) => {
-    if (sound) {
-      // Stop specific sound
-      const audio = activeSounds[sound];
-      if (audio) {
-        audio.pause();
-        audio.currentTime = 0;
-      }
-    } else {
-      // Stop all sounds
-      Object.values(activeSounds).forEach(audio => {
-        audio.pause();
-        audio.currentTime = 0;
-      });
-    }
-  }, []);
+  // Refs to hold audio elements
+  const audioRefs = useRef<Record<string, HTMLAudioElement>>({});
+  const activeSound = useRef<SoundType | null>(null);
   
-  const pauseSound = useCallback((sound: SoundType) => {
-    const audio = activeSounds[sound];
-    if (audio) {
-      audio.pause();
-    }
-  }, []);
-  
-  const resumeSound = useCallback((sound: SoundType) => {
-    const audio = activeSounds[sound];
-    if (audio && config.enabled && !config.muted) {
-      audio.play().catch(err => {
-        console.error(`Error resuming sound ${sound}:`, err);
-      });
-    }
-  }, [config.enabled, config.muted]);
-  
-  const toggleMute = useCallback(() => {
-    setConfig({
-      ...config,
-      muted: !config.muted
-    });
-    
-    // Pause all playing sounds if muting
-    if (!config.muted) {
-      Object.values(activeSounds).forEach(audio => {
-        audio.pause();
-      });
-    }
-  }, [config, setConfig]);
-  
-  const setVolume = useCallback(
-    (volume: number) => {
-      // Ensure volume is between 0 and 1
-      const normalizedVolume = Math.max(0, Math.min(1, volume));
-      
-      setConfig({
-        ...config,
-        volume: normalizedVolume
-      });
-      
-      // Update volume for all active sounds
-      Object.values(activeSounds).forEach(audio => {
-        audio.volume = normalizedVolume;
-      });
-    },
-    [config, setConfig]
-  );
-  
-  const getVolume = useCallback(() => config.volume, [config.volume]);
-  
-  const toggleEnabled = useCallback(() => {
-    const newEnabled = !config.enabled;
-    
-    setConfig({
-      ...config,
-      enabled: newEnabled
-    });
-    
-    // Stop all sounds if disabling
-    if (!newEnabled) {
-      Object.values(activeSounds).forEach(audio => {
-        audio.pause();
-        audio.currentTime = 0;
-      });
-    }
-  }, [config, setConfig]);
-  
-  // Clean up audio elements when component unmounts
+  // Preload common sounds
   useEffect(() => {
+    const commonSounds: SoundType[] = ['click', 'success', 'error', 'notification'];
+    
+    commonSounds.forEach(sound => {
+      const audio = new Audio(`/sounds/${sound}.mp3`);
+      audio.preload = 'auto';
+      audioRefs.current[sound] = audio;
+    });
+    
     return () => {
-      Object.values(activeSounds).forEach(audio => {
+      // Cleanup audio elements
+      Object.values(audioRefs.current).forEach(audio => {
         audio.pause();
-        audio.onended = null;
+        audio.src = '';
       });
+      audioRefs.current = {};
     };
   }, []);
   
-  const soundContextValue: SoundHook = {
-    playSound,
-    stopSound,
-    pauseSound,
-    resumeSound,
-    toggleMute,
-    isMuted: config.muted,
-    setVolume,
-    getVolume,
-    isEnabled: config.enabled,
-    toggleEnabled
+  // Play a sound
+  const playSound = (sound: SoundType, options: SoundOptions = {}) => {
+    if (!soundConfig.enabled || soundConfig.muted) return;
+    
+    // Get or create audio element
+    let audio = audioRefs.current[sound];
+    if (!audio) {
+      audio = new Audio(`/sounds/${sound}.mp3`);
+      audioRefs.current[sound] = audio;
+    }
+    
+    // Reset and configure audio
+    audio.pause();
+    audio.currentTime = 0;
+    audio.volume = options.volume !== undefined ? options.volume : soundConfig.volume;
+    audio.loop = options.loop || false;
+    audio.playbackRate = options.playbackRate || 1;
+    
+    // Handle end event if provided
+    if (options.onEnd) {
+      const handleEnded = () => {
+        options.onEnd?.();
+        audio.removeEventListener('ended', handleEnded);
+      };
+      audio.addEventListener('ended', handleEnded);
+    }
+    
+    // Play with delay if specified
+    if (options.delay) {
+      setTimeout(() => {
+        audio.play().catch(err => console.error(`Error playing sound ${sound}:`, err));
+      }, options.delay);
+    } else {
+      audio.play().catch(err => console.error(`Error playing sound ${sound}:`, err));
+    }
+    
+    activeSound.current = sound;
+  };
+  
+  // Stop current sound
+  const stopSound = (fade: boolean = false) => {
+    if (!activeSound.current) return;
+    
+    const audio = audioRefs.current[activeSound.current];
+    if (!audio) return;
+    
+    if (fade) {
+      // Implement fade out
+      const fadeInterval = setInterval(() => {
+        if (audio.volume > 0.05) {
+          audio.volume -= 0.05;
+        } else {
+          clearInterval(fadeInterval);
+          audio.pause();
+          audio.currentTime = 0;
+          audio.volume = soundConfig.volume; // Reset volume
+        }
+      }, 50);
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+    
+    activeSound.current = null;
+  };
+  
+  // Pause current sound
+  const pauseSound = () => {
+    if (!activeSound.current) return;
+    
+    const audio = audioRefs.current[activeSound.current];
+    if (audio) {
+      audio.pause();
+    }
+  };
+  
+  // Resume current sound
+  const resumeSound = () => {
+    if (!activeSound.current) return;
+    
+    const audio = audioRefs.current[activeSound.current];
+    if (audio) {
+      audio.play().catch(err => console.error('Error resuming sound:', err));
+    }
+  };
+  
+  // Toggle mute state
+  const toggleMute = () => {
+    setSoundConfig(prev => ({
+      ...prev,
+      muted: !prev.muted
+    }));
+    
+    // Mute or unmute active sound
+    if (activeSound.current) {
+      const audio = audioRefs.current[activeSound.current];
+      if (audio) {
+        audio.muted = !soundConfig.muted;
+      }
+    }
+    
+    return !soundConfig.muted;
+  };
+  
+  // Set volume
+  const setVolume = (volume: number) => {
+    if (volume < 0 || volume > 1) return;
+    
+    setSoundConfig(prev => ({
+      ...prev,
+      volume
+    }));
+    
+    // Update volume of active sound
+    if (activeSound.current) {
+      const audio = audioRefs.current[activeSound.current];
+      if (audio) {
+        audio.volume = volume;
+      }
+    }
+  };
+  
+  // Get current volume
+  const getVolume = () => soundConfig.volume;
+  
+  // Toggle enabled state
+  const toggleEnabled = () => {
+    setSoundConfig(prev => ({
+      ...prev,
+      enabled: !prev.enabled
+    }));
+    
+    // Stop active sound if disabling
+    if (soundConfig.enabled && activeSound.current) {
+      stopSound();
+    }
+    
+    return !soundConfig.enabled;
+  };
+  
+  // Alias methods for backward compatibility
+  const mute = () => {
+    if (!soundConfig.muted) {
+      toggleMute();
+    }
+  };
+  
+  const unmute = () => {
+    if (soundConfig.muted) {
+      toggleMute();
+    }
   };
   
   return (
-    <SoundContext.Provider value={soundContextValue}>
+    <SoundContext.Provider
+      value={{
+        playSound,
+        stopSound,
+        pauseSound,
+        resumeSound,
+        toggleMute,
+        isMuted: soundConfig.muted,
+        setVolume,
+        getVolume,
+        isEnabled: soundConfig.enabled,
+        toggleEnabled,
+        // Compatibility properties
+        toggleMuted: toggleMute,
+        soundConfig,
+        mute,
+        unmute,
+        currentVolume: soundConfig.volume
+      }}
+    >
       {children}
     </SoundContext.Provider>
   );

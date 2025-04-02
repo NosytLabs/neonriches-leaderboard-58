@@ -16,13 +16,38 @@ export type SoundType =
   | 'message'
   | 'ui'
   | 'transition'
-  | 'hover';
+  | 'hover'
+  | 'shame'
+  | 'royal'
+  | 'coin'
+  | 'coinDrop'
+  | 'team'
+  | 'badge'
+  | 'alert'
+  | 'chime'
+  | 'reward'
+  | 'toggle'
+  | 'upgrade'
+  | 'down'
+  | 'up'
+  | 'withdraw'
+  | 'royalAnnouncement'
+  | 'fanfare'
+  | 'trumpet'
+  | 'medallion';
 
 export interface SoundOptions {
   volume?: number;
   loop?: boolean;
   delay?: number;
   playbackRate?: number;
+  onEnd?: () => void;
+}
+
+export interface SoundConfig {
+  enabled: boolean;
+  volume: number;
+  muted: boolean;
 }
 
 export interface SoundHook {
@@ -39,7 +64,7 @@ export interface SoundHook {
   
   // Additional properties for compatibility
   toggleMuted?: () => void;
-  soundConfig?: any;
+  soundConfig?: SoundConfig;
   mute?: () => void;
   unmute?: () => void;
   currentVolume?: number;

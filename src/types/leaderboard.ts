@@ -1,61 +1,54 @@
 
 import { TeamColor } from './mockery-types';
+import { UserTier } from './user';
 
 export interface LeaderboardUser {
   id: string;
-  userId: string;  // Make this required to match mockery-types version
+  userId: string;
   username: string;
-  displayName?: string;
+  displayName: string;
   profileImage: string;
-  avatarUrl?: string; // Add avatarUrl as an optional property for backwards compatibility
-  totalSpent: number;
+  avatarUrl?: string;
   rank: number;
-  team: TeamColor;
-  tier: string;
-  spendStreak: number;
-  walletBalance?: number;
   previousRank: number;
-  joinDate?: string;
+  team: TeamColor;
+  tier: UserTier | string;
+  totalSpent: number;
+  amountSpent: number;
+  walletBalance: number;
+  spendStreak: number;
   isVerified?: boolean;
-  amountSpent?: number; // Add spentAmount as an alias
-  spendAmount?: number; // Add another variant for compatibility
-  spentAmount?: number; // Add another variant for compatibility 
-  spendChange?: number;
-  rankChange?: number;
   isProtected?: boolean;
+  joinDate?: string;
+  bio?: string;
 }
 
 export interface LeaderboardFilter {
   team: TeamColor | 'all';
-  tier: string;
-  timeframe: string;
+  tier: UserTier | 'all';
+  timeframe: 'year' | 'month' | 'week' | 'all-time' | 'today';
   search: string;
   sortBy: string;
   sortDirection: 'asc' | 'desc';
-  limit: number;  // Make this required
+  limit: number;
 }
 
-export interface LeaderboardConfig {
-  showRank: boolean;
-  showTeam: boolean;
-  showSpending: boolean;
-  showChange: boolean;
-  interactive: boolean;
-  refreshInterval?: number;
-  maxItems?: number;
-  title?: string;
-  showHeader?: boolean;
-  showFooter?: boolean;
-  emptyMessage?: string;
+export interface LeaderboardResponse {
+  items: LeaderboardUser[];
+  total: number;
+  page: number;
+  limit: number;
+  hasMore: boolean;
 }
 
-export interface LeaderboardProps {
-  users?: LeaderboardUser[];
-  loading?: boolean;
-  filter?: LeaderboardFilter;
-  config?: LeaderboardConfig;
-  onUserClick?: (user: LeaderboardUser) => void;
-  onFilterChange?: (filter: LeaderboardFilter) => void;
-  emptyComponent?: React.ReactNode;
-  className?: string;
+export interface UseLeaderboardResult {
+  loading: boolean;
+  error: string | null;
+  data: LeaderboardUser[];
+  total: number;
+  fetchLeaderboard: (filter: LeaderboardFilter) => Promise<void>;
+  refetch: () => Promise<void>;
+  page: number;
+  setPage: (page: number) => void;
+  hasMore: boolean;
 }

@@ -1,203 +1,243 @@
 
-import { useState, useEffect } from 'react';
-import { Certificate, CertificateTemplate, CertificateType } from '@/types/certificates';
-import { UserProfile } from '@/types/user-consolidated';
-import certificateService from '@/services/certificateService';
+import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { UserProfile } from '@/types/user-consolidated';
 
-interface UseCertificateProps {
-  user: UserProfile;
-  certificateId?: string;
+interface MintResult {
+  success: boolean;
+  transactionHash?: string;
+  message?: string;
+  mintAddress?: string;
 }
 
-export const useCertificate = ({ user, certificateId }: UseCertificateProps) => {
-  const [certificate, setCertificate] = useState<Certificate | null>(null);
-  const [templates, setTemplates] = useState<CertificateTemplate[]>([]);
-  const [userCertificates, setUserCertificates] = useState<Certificate[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [isMinting, setIsMinting] = useState<boolean>(false);
+interface UseCertificateReturn {
+  hasCertificate: boolean;
+  isLoading: boolean;
+  error: string | null;
+  mintCertificate: () => Promise<MintResult>;
+  viewCertificate: (userId: string) => Promise<boolean>;
+  downloadCertificate: (userId: string) => Promise<boolean>;
+  transferCertificate: (receiverId: string) => Promise<boolean>;
+  certificateDetails: {
+    mintAddress?: string;
+    mintDate?: string;
+    ownerAddress?: string;
+    issuerAddress?: string;
+  } | null;
+}
+
+/**
+ * Hook to manage NFT certificates
+ */
+export const useCertificate = (): UseCertificateReturn => {
+  const { user, updateUserProfile } = useAuth();
   const { toast } = useToast();
-
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      
-      try {
-        // If certificateId is provided, load that specific certificate
-        if (certificateId) {
-          const cert = await certificateService.getCertificateById(certificateId);
-          if (cert) {
-            setCertificate(cert);
-          }
-        }
-        
-        // Load available templates and user certificates
-        const [availableTemplates, userCerts] = await Promise.all([
-          certificateService.getAvailableCertificateTemplates(user),
-          certificateService.getUserCertificates(user.id)
-        ]);
-        
-        setTemplates(availableTemplates);
-        setUserCertificates(userCerts);
-      } catch (error) {
-        console.error('Error loading certificate data:', error);
-        toast({
-          title: 'Error Loading Certificate Data',
-          description: 'Could not load certificate information. Please try again.',
-          variant: 'destructive'
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    if (user?.id) {
-      loadData();
-    }
-  }, [user, certificateId, toast]);
-
-  const mintCertificate = async (certificateToMint: Certificate): Promise<boolean> => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [certificateDetails, setCertificateDetails] = useState<any>(null);
+  
+  const hasCertificate = Boolean(user?.certificateNFT?.mintAddress);
+  
+  /**
+   * Mint an NFT certificate for the current user
+   */
+  const mintCertificate = async (): Promise<MintResult> => {
     if (!user) {
       toast({
-        title: 'Authentication Required',
-        description: 'You must be logged in to mint a certificate.',
-        variant: 'destructive'
+        title: "Authentication Required",
+        description: "You must be logged in to mint a certificate.",
+        variant: "destructive"
       });
-      return false;
+      return { success: false, message: "Authentication required" };
     }
     
-    setIsMinting(true);
+    setIsLoading(true);
+    setError(null);
     
     try {
-      const result = await certificateService.mintCertificateAsNFT(certificateToMint, user);
+      // Simulate minting delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      if (result.success) {
-        // Update the certificate if we're viewing it
-        if (certificate && certificate.id === certificateToMint.id) {
-          setCertificate({
-            ...certificate,
-            isMinted: true,
-            mintAddress: result.mintAddress,
-            status: 'minted' as const
-          });
-        }
-        
-        // Update the user certificates list
-        setUserCertificates(userCertificates.map(cert => 
-          cert.id === certificateToMint.id 
-            ? { 
-                ...cert, 
-                isMinted: true, 
-                mintAddress: result.mintAddress,
-                status: 'minted' as const
-              }
-            : cert
-        ));
-        
-        toast({
-          title: 'Certificate Minted',
-          description: 'Your certificate has been successfully minted as an NFT.',
+      // Mock successful mint
+      const mintResult: MintResult = {
+        success: true,
+        transactionHash: `tx-${Math.random().toString(36).substr(2, 9)}`,
+        message: "Certificate minted successfully!",
+        mintAddress: `cert-${Math.random().toString(36).substr(2, 9)}`
+      };
+      
+      if (mintResult.success && mintResult.mintAddress) {
+        // Update user profile with certificate info
+        await updateUserProfile({
+          certificateNFT: {
+            mintAddress: mintResult.mintAddress,
+            mintDate: new Date().toISOString()
+          }
         });
         
-        return true;
-      } else {
         toast({
-          title: 'Minting Failed',
-          description: 'There was an error minting your certificate as an NFT.',
-          variant: 'destructive'
+          title: "Certificate Minted",
+          description: "Your Royal Certificate has been minted successfully!",
+          variant: "success"
         });
         
-        return false;
+        setCertificateDetails({
+          mintAddress: mintResult.mintAddress,
+          mintDate: new Date().toISOString(),
+          ownerAddress: user.id,
+          issuerAddress: "royal-court"
+        });
       }
+      
+      return mintResult;
     } catch (error) {
-      console.error('Error minting certificate:', error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to mint certificate";
+      setError(errorMessage);
+      
       toast({
-        title: 'Minting Failed',
-        description: 'There was an unexpected error during the minting process.',
-        variant: 'destructive'
+        title: "Minting Failed",
+        description: errorMessage,
+        variant: "destructive"
+      });
+      
+      return { success: false, message: errorMessage };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  /**
+   * View a user's certificate
+   */
+  const viewCertificate = async (userId: string): Promise<boolean> => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // In a real app, we would fetch certificate data from an API
+      const mockCertDetails = {
+        mintAddress: `cert-${Math.random().toString(36).substr(2, 9)}`,
+        mintDate: new Date().toISOString(),
+        ownerAddress: userId,
+        issuerAddress: "royal-court"
+      };
+      
+      setCertificateDetails(mockCertDetails);
+      return true;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to view certificate";
+      setError(errorMessage);
+      
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive"
       });
       
       return false;
     } finally {
-      setIsMinting(false);
+      setIsLoading(false);
     }
   };
-
-  const claimCertificate = async (type: CertificateType = 'nobility'): Promise<boolean> => {
-    if (!user) {
+  
+  /**
+   * Download a user's certificate as an image
+   */
+  const downloadCertificate = async (userId: string): Promise<boolean> => {
+    if (!certificateDetails && !user?.certificateNFT) {
+      // Try to load certificate details first
+      await viewCertificate(userId);
+    }
+    
+    try {
+      // In a real app, we would generate and download a certificate image
       toast({
-        title: 'Authentication Required',
-        description: 'You must be logged in to claim a certificate.',
-        variant: 'destructive'
+        title: "Download Started",
+        description: "Your certificate is being downloaded.",
+        variant: "success"
+      });
+      
+      // Simulate download delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      return true;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to download certificate";
+      setError(errorMessage);
+      
+      toast({
+        title: "Download Failed",
+        description: errorMessage,
+        variant: "destructive"
+      });
+      
+      return false;
+    }
+  };
+  
+  /**
+   * Transfer certificate to another user
+   */
+  const transferCertificate = async (receiverId: string): Promise<boolean> => {
+    if (!user || !user.certificateNFT?.mintAddress) {
+      toast({
+        title: "No Certificate",
+        description: "You don't have a certificate to transfer.",
+        variant: "destructive"
       });
       return false;
     }
     
+    setIsLoading(true);
+    setError(null);
+    
     try {
-      const success = await certificateService.claimCertificate(user, type);
+      // Simulate transfer delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      if (success) {
-        // Refresh certificates after claiming
-        const updatedCerts = await certificateService.getUserCertificates(user.id);
-        setUserCertificates(updatedCerts);
-        
-        toast({
-          title: 'Certificate Claimed',
-          description: 'Your certificate has been successfully claimed.',
-        });
-        
-        return true;
-      } else {
-        toast({
-          title: 'Claim Failed',
-          description: 'There was an error claiming your certificate.',
-          variant: 'destructive'
-        });
-        
-        return false;
-      }
-    } catch (error) {
-      console.error('Error claiming certificate:', error);
+      // In a real app, we would call an API to transfer the certificate
       toast({
-        title: 'Claim Failed',
-        description: 'There was an unexpected error during the claiming process.',
-        variant: 'destructive'
+        title: "Transfer Complete",
+        description: `Certificate transferred to user ID: ${receiverId}`,
+        variant: "success"
+      });
+      
+      // Update local user data to reflect transfer
+      await updateUserProfile({
+        certificateNFT: undefined
+      });
+      
+      setCertificateDetails(null);
+      return true;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to transfer certificate";
+      setError(errorMessage);
+      
+      toast({
+        title: "Transfer Failed",
+        description: errorMessage,
+        variant: "destructive"
       });
       
       return false;
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  const generateShareableImage = async (certificateToShare: Certificate): Promise<string> => {
-    try {
-      const imageUrl = await certificateService.generateShareableImage(certificateToShare, user);
-      
-      toast({
-        title: 'Image Generated',
-        description: 'Shareable image has been generated successfully.'
-      });
-      return imageUrl;
-    } catch (error) {
-      console.error('Error generating shareable image:', error);
-      toast({
-        title: 'Image Generation Failed',
-        description: 'Could not generate a shareable image for your certificate.',
-        variant: 'destructive'
-      });
-      // Return a fallback URL in case of error
-      return certificateToShare.imageUrl || '/images/certificates/default.png';
-    }
-  };
-
+  
   return {
-    certificate,
-    templates,
-    userCertificates,
-    loading,
-    isMinting,
+    hasCertificate,
+    isLoading,
+    error,
     mintCertificate,
-    claimCertificate,
-    generateShareableImage
+    viewCertificate,
+    downloadCertificate,
+    transferCertificate,
+    certificateDetails
   };
 };
 
