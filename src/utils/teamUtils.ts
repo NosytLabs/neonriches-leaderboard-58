@@ -1,13 +1,13 @@
 
-import { TeamColor, TeamType } from '@/types/mockery-types';
+import { TeamColor, TeamType } from '@/types/team';
+import { TeamData } from '@/types/team';
 
-/**
- * Convert any string to a valid TeamColor
- */
+// Convert string to TeamColor safely
 export const toTeamColor = (team?: string | null): TeamColor => {
   if (!team) return 'none';
   
-  const normalizedTeam = team.toLowerCase();
+  const normalizedTeam = String(team).toLowerCase();
+  
   switch (normalizedTeam) {
     case 'red': return 'red';
     case 'blue': return 'blue';
@@ -18,133 +18,121 @@ export const toTeamColor = (team?: string | null): TeamColor => {
     case 'bronze': return 'bronze';
     case 'crimson': return 'crimson';
     case 'neutral': return 'neutral';
+    case 'none': return 'none';
     default: return 'none';
   }
 };
 
-/**
- * Alias for backward compatibility with components using asTeamColor
- */
+// Alias for toTeamColor for backward compatibility
 export const asTeamColor = toTeamColor;
 
-/**
- * Get the display name for a team
- */
+// Get team name from TeamColor
 export const getTeamName = (team: TeamColor | string): string => {
-  const teamColor = toTeamColor(team as string);
+  const teamColor = toTeamColor(team);
   
   const teamNames: Record<TeamColor, string> = {
-    'red': 'Red Team',
-    'blue': 'Blue Team',
-    'green': 'Green Team',
-    'gold': 'Gold Team',
-    'purple': 'Purple Team',
-    'silver': 'Silver Team',
-    'bronze': 'Bronze Team',
-    'crimson': 'Crimson Team',
-    'neutral': 'Neutral',
-    'none': 'No Team'
+    red: 'Red Crown',
+    blue: 'Blue Legion',
+    green: 'Green Order',
+    gold: 'Gold Dynasty',
+    purple: 'Purple Realm',
+    silver: 'Silver Alliance',
+    bronze: 'Bronze Brigade',
+    crimson: 'Crimson Court',
+    neutral: 'Neutral Party',
+    none: 'No Team'
   };
   
   return teamNames[teamColor] || 'Unknown Team';
 };
 
-/**
- * Get the CSS color class for a team
- */
+// Get CSS color class for a team
 export const getTeamColor = (team: TeamColor | string): string => {
-  const teamColor = toTeamColor(team as string);
+  const teamColor = toTeamColor(team);
   
-  const colorClasses: Record<TeamColor, string> = {
-    'red': 'text-red-500',
-    'blue': 'text-blue-500',
-    'green': 'text-green-500',
-    'gold': 'text-yellow-500',
-    'purple': 'text-purple-500',
-    'silver': 'text-gray-400',
-    'bronze': 'text-amber-700',
-    'crimson': 'text-red-700',
-    'neutral': 'text-gray-300',
-    'none': 'text-gray-500'
+  const colorMap: Record<TeamColor, string> = {
+    red: 'text-red-500',
+    blue: 'text-blue-500',
+    green: 'text-green-500',
+    gold: 'text-yellow-500',
+    purple: 'text-purple-500',
+    silver: 'text-gray-300',
+    bronze: 'text-amber-600',
+    crimson: 'text-rose-600',
+    neutral: 'text-gray-400',
+    none: 'text-gray-400'
   };
   
-  return colorClasses[teamColor] || 'text-gray-500';
+  return colorMap[teamColor] || 'text-gray-400';
 };
 
-/**
- * Get the CSS background color class for a team
- */
-export const getTeamTailwindColor = (team: TeamColor | string): string => {
-  const teamColor = toTeamColor(team as string);
-  
-  const bgClasses: Record<TeamColor, string> = {
-    'red': 'bg-red-500/20 text-red-500',
-    'blue': 'bg-blue-500/20 text-blue-500',
-    'green': 'bg-green-500/20 text-green-500',
-    'gold': 'bg-yellow-500/20 text-yellow-500',
-    'purple': 'bg-purple-500/20 text-purple-500',
-    'silver': 'bg-gray-400/20 text-gray-400',
-    'bronze': 'bg-amber-700/20 text-amber-700',
-    'crimson': 'bg-red-700/20 text-red-700',
-    'neutral': 'bg-gray-300/20 text-gray-300',
-    'none': 'bg-gray-500/20 text-gray-500'
-  };
-  
-  return bgClasses[teamColor] || 'bg-gray-500/20 text-gray-500';
-};
-
-/**
- * Get the CSS background color class for a team
- */
+// Get CSS background color class for a team
 export const getTeamTailwindBgColor = (team: TeamColor | string): string => {
-  const teamColor = toTeamColor(team as string);
+  const teamColor = toTeamColor(team);
   
-  const bgClasses: Record<TeamColor, string> = {
-    'red': 'bg-red-500/20',
-    'blue': 'bg-blue-500/20',
-    'green': 'bg-green-500/20',
-    'gold': 'bg-yellow-500/20',
-    'purple': 'bg-purple-500/20',
-    'silver': 'bg-gray-400/20',
-    'bronze': 'bg-amber-700/20',
-    'crimson': 'bg-red-700/20',
-    'neutral': 'bg-gray-300/20',
-    'none': 'bg-gray-500/20'
+  const bgColorMap: Record<TeamColor, string> = {
+    red: 'border-red-500',
+    blue: 'border-blue-500',
+    green: 'border-green-500',
+    gold: 'border-yellow-500',
+    purple: 'border-purple-500',
+    silver: 'border-gray-300',
+    bronze: 'border-amber-600',
+    crimson: 'border-rose-600',
+    neutral: 'border-gray-400',
+    none: 'border-gray-400'
   };
   
-  return bgClasses[teamColor] || 'bg-gray-500/20';
+  return bgColorMap[teamColor] || 'border-gray-400';
 };
 
-/**
- * Create a default team data object
- */
-export const createTeamData = (color: TeamColor | string) => {
-  const teamColor = toTeamColor(color as string);
+// Get tailwind color class for a team
+export const getTeamTailwindColor = (team: TeamColor | string): string => {
+  const teamColor = toTeamColor(team);
+  
+  const colorMap: Record<TeamColor, string> = {
+    red: 'text-red-500',
+    blue: 'text-blue-500',
+    green: 'text-green-500',
+    gold: 'text-yellow-500',
+    purple: 'text-purple-500',
+    silver: 'text-gray-300',
+    bronze: 'text-amber-600',
+    crimson: 'text-rose-600',
+    neutral: 'text-gray-400',
+    none: 'text-gray-400'
+  };
+  
+  return colorMap[teamColor] || 'text-gray-400';
+};
+
+// Create a mock team data object
+export const createTeamData = (color: TeamColor | string): TeamData => {
+  const teamColor = toTeamColor(color);
+  const teamName = getTeamName(teamColor);
   
   return {
-    id: `team-${teamColor}`,
-    name: getTeamName(teamColor),
+    id: teamColor,
+    name: teamName,
+    description: `The ${teamName} is a prestigious faction in the royal court.`,
     color: teamColor,
-    ranking: Math.floor(Math.random() * 100) + 1,
-    memberCount: Math.floor(Math.random() * 1000) + 100,
-    icon: teamColor,
-    motto: `${getTeamName(teamColor)} Motto`,
-    description: `Description for ${getTeamName(teamColor)}`,
-    benefits: [
-      `${getTeamName(teamColor)} Benefit 1`,
-      `${getTeamName(teamColor)} Benefit 2`,
-      `${getTeamName(teamColor)} Benefit 3`
-    ]
+    memberCount: Math.floor(Math.random() * 1000) + 500,
+    totalContribution: Math.floor(Math.random() * 1000000) + 500000,
+    rank: Math.floor(Math.random() * 5) + 1,
+    motto: `Glory to the ${teamName}!`,
+    icon: teamColor.toLowerCase()
   };
 };
 
-/**
- * Add an ID to a team data object if it doesn't have one
- */
-export const addTeamId = (team: any) => {
-  if (team.id) return team;
+// Add ID to team if missing
+export const addTeamId = (team: TeamData): TeamData & { id: string } => {
   return {
     ...team,
-    id: `team-${team.color || 'unknown'}`
+    id: team.id || team.color
   };
+};
+
+// Export a safety method for validation
+export const isValidTeamColor = (color: string): boolean => {
+  return ['red', 'blue', 'green', 'gold', 'purple', 'silver', 'bronze', 'crimson', 'neutral', 'none'].includes(color.toLowerCase());
 };

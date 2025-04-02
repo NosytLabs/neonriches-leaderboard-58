@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   Shell, 
@@ -23,17 +22,16 @@ const TeamsPage: React.FC = () => {
   const [userTeam, setUserTeam] = useState<TeamColor>('none');
   const [teamDetails, setTeamDetails] = useState<TeamData | null>(null);
   
-  // Simulate fetching team data
   useEffect(() => {
     const teamData = createTeamData(selectedTeam);
     setTeamDetails(teamData);
   }, [selectedTeam]);
   
-  const handleTeamSelect = async (team: TeamColor | string): Promise<void> => {
+  const handleTeamSelect = async (team: TeamColor | string): Promise<boolean> => {
     const validTeam = toTeamColor(team);
     setUserTeam(validTeam);
     setSelectedTeam(validTeam);
-    return Promise.resolve();
+    return Promise.resolve(true);
   };
   
   const handleTeamView = (team: TeamColor | string): Promise<boolean> => {
@@ -80,7 +78,40 @@ const TeamsPage: React.FC = () => {
           
           <TabsContent value="overview">
             <TeamOverview 
-              userTeam={userTeam} 
+              user={{ 
+                id: '1', 
+                username: 'user1', 
+                displayName: 'User 1', 
+                profileImage: '/assets/avatars/default.png', 
+                joinedDate: new Date().toISOString(),
+                team: userTeam,
+                tier: 'basic',
+                rank: 0,
+                previousRank: 0,
+                totalSpent: 0,
+                amountSpent: 0,
+                walletBalance: 0,
+                spendStreak: 0,
+                settings: {
+                  profileVisibility: 'public',
+                  allowProfileLinks: true,
+                  theme: 'royal',
+                  notifications: true,
+                  emailNotifications: false,
+                  marketingEmails: false,
+                  showRank: true,
+                  darkMode: true,
+                  soundEffects: true,
+                  showBadges: true,
+                  showTeam: true,
+                  showSpending: true
+                },
+                profileBoosts: []
+              }}
+              onUpdateTeam={async (team) => { 
+                await handleTeamSelect(team);
+                return;
+              }}
               onJoinTeam={() => setActiveTab('selection')}
             />
           </TabsContent>

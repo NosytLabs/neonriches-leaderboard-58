@@ -9,7 +9,8 @@ import { AlertCircle } from 'lucide-react';
 
 export interface LeaderboardListProps {
   users: LeaderboardUser[];
-  loading?: boolean; // Changed from isLoading to match the expected prop name
+  loading?: boolean;
+  error?: Error | null;
   showTeams?: boolean;
   showTiers?: boolean;
   showRankChange?: boolean;
@@ -20,6 +21,7 @@ export interface LeaderboardListProps {
 const LeaderboardList: React.FC<LeaderboardListProps> = ({
   users,
   loading = false,
+  error = null,
   showTeams = true,
   showTiers = true,
   showRankChange = true,
@@ -47,6 +49,15 @@ const LeaderboardList: React.FC<LeaderboardListProps> = ({
           </div>
         </CardContent>
       </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert>
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>Error loading leaderboard: {error.message}</AlertDescription>
+      </Alert>
     );
   }
 

@@ -12,10 +12,20 @@ import { getInitials } from '@/utils/stringUtils';
 interface TeamOverviewProps {
   user: UserProfile;
   onUpdateTeam: (team: TeamColor) => Promise<void>;
+  userTeam?: TeamColor;
+  onJoinTeam?: () => void;
 }
 
-const TeamOverview: React.FC<TeamOverviewProps> = ({ user, onUpdateTeam }) => {
+const TeamOverview: React.FC<TeamOverviewProps> = ({ 
+  user, 
+  onUpdateTeam,
+  userTeam,
+  onJoinTeam
+}) => {
   const [showTeamModal, setShowTeamModal] = React.useState(false);
+  
+  // Use either passed userTeam or get from user object
+  const currentTeam = userTeam || (user.team as TeamColor);
   
   // Team color mapping
   const getTeamColor = (team?: string): string => {
@@ -52,6 +62,14 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user, onUpdateTeam }) => {
     setShowTeamModal(false);
   };
   
+  const handleJoinTeamClick = () => {
+    if (onJoinTeam) {
+      onJoinTeam();
+    } else {
+      setShowTeamModal(true);
+    }
+  };
+  
   return (
     <>
       <Card className="glass-morphism">
@@ -61,20 +79,20 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user, onUpdateTeam }) => {
         </CardHeader>
         <CardContent>
           <div className="flex items-center space-x-4">
-            <Avatar className={`h-12 w-12 ring-2 ${user.team ? `ring-${user.team}-500/50` : 'ring-gray-500/50'} bg-black/20`}>
+            <Avatar className={`h-12 w-12 ring-2 ${currentTeam ? `ring-${currentTeam}-500/50` : 'ring-gray-500/50'} bg-black/20`}>
               <AvatarImage src={user.profileImage} />
               <AvatarFallback>{getInitials(user.displayName || user.username)}</AvatarFallback>
             </Avatar>
             <div>
-              <h3 className={`font-bold ${getTeamColor(user.team as string)}`}>
-                {getTeamName(user.team as string)}
+              <h3 className={`font-bold ${getTeamColor(currentTeam as string)}`}>
+                {getTeamName(currentTeam as string)}
               </h3>
               <p className="text-sm text-muted-foreground">
-                {getTeamAbbreviation(user.team as string)} Member
+                {getTeamAbbreviation(currentTeam as string)} Member
               </p>
             </div>
             <Badge variant="outline" className="ml-auto">
-              {user.team ? `${(user.team as string).charAt(0).toUpperCase()}${(user.team as string).slice(1)}` : 'None'}
+              {currentTeam ? `${(currentTeam as string).charAt(0).toUpperCase()}${(currentTeam as string).slice(1)}` : 'None'}
             </Badge>
           </div>
         </CardContent>
@@ -82,7 +100,7 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user, onUpdateTeam }) => {
           <Button 
             variant="outline" 
             className="w-full"
-            onClick={() => setShowTeamModal(true)}
+            onClick={handleJoinTeamClick}
           >
             Change Team
           </Button>
@@ -94,7 +112,7 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({ user, onUpdateTeam }) => {
           open={showTeamModal} 
           onClose={() => setShowTeamModal(false)}
           onSelect={handleUpdateTeam}
-          currentTeam={user.team as TeamColor}
+          currentTeam={currentTeam as TeamColor}
           userProfile={user}
         />
       )}

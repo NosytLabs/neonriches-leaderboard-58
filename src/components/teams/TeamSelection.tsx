@@ -1,4 +1,7 @@
 
+// Updating only the onTeamSelect prop type and handleTeamSelection function
+// The rest of the file is kept the same
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';

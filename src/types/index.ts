@@ -1,13 +1,12 @@
 
-// This file serves as a central export for all types
-// It helps avoid circular dependencies and makes importing types easier
+// Central export for all types to avoid import issues
 
 // Export mockery-related types
 export type { 
   MockeryAction, 
   MockeryTier, 
-  MockeryResult, 
-  MockeryEffect,
+  MockeryResult,
+  MockeryEvent, // Fix MockeryEffect to MockeryEvent
   TeamColor,
   UserTier,
   Gender
@@ -19,64 +18,43 @@ export type {
   UserSettings,
   ProfileBoost,
   User,
-  SocialLink,
   ProfileImage,
   ProfileLink
 } from './user';
 
+// Re-export SocialLink if needed
+export type { SocialLink } from './user-consolidated';
+
 // Export consolidated user types
 export type {
-  UserProfile as ConsolidatedUserProfile,
-  UserSettings as ConsolidatedUserSettings,
   UserSubscription,
-  SocialLink as ConsolidatedSocialLink,
   TeamType
 } from './user-consolidated';
 
-// Export team-related types
+// Export team types
 export type {
   TeamData,
-  TeamMember,
-  TeamRole,
+  TeamTheme,
   TeamStats,
   TeamBenefits,
   TeamInvite
 } from './team';
 
-// Export certificate-related types
-export type {
-  Certificate,
-  CertificateType,
-  CertificateStyle,
-  CertificateTeam,
-  CertificateStatus,
-  CertificateRepository,
-  CertificateTemplate
-} from './certificates';
-
-// Export leaderboard-related types
+// Export leaderboard types
 export type {
   LeaderboardUser,
   LeaderboardFilter,
-  LeaderboardProps,
-  LeaderboardResponse,
-  LeaderboardConfig,
-  UseLeaderboardResult
+  LeaderboardResponse
 } from './leaderboard';
 
-// Export auth-related types
+// Export certificate types
 export type {
-  AuthContextType,
-  AuthProviderProps,
-  LoginData,
-  RegisterData,
-  LoginResponse
-} from './auth/types';
+  Certificate,
+  CertificateStyle,
+  CertificateTeam
+} from './certificates';
 
-// Export cosmetics-related types
+// Export cosmetics
 export type {
-  Cosmetic,
-  CosmeticCategory,
-  CosmeticRarity,
   UserCosmetics
 } from './cosmetics';

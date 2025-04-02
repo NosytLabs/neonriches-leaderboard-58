@@ -7,65 +7,29 @@ export interface LeaderboardUser {
   username: string;
   displayName: string;
   profileImage: string;
+  rank: number;
+  previousRank?: number;
+  tier: string;
+  team: TeamColor | string;
   totalSpent: number;
   amountSpent: number;
-  rank: number;
-  previousRank: number;
-  team: TeamColor | string;
-  tier: string;
-  spendStreak: number;
   walletBalance: number;
-  rankChange?: number;
-  spendChange?: number;
-  isProtected?: boolean;
-  isVerified?: boolean;
-  avatarUrl?: string;
+  spendStreak: number;
 }
 
 export interface LeaderboardFilter {
-  timeframe: 'all' | 'week' | 'month' | 'year' | 'today' | 'all-time';
-  team: string;
-  tier: string;
-  sortDirection: 'asc' | 'desc';
-  sortBy: string;
   limit: number;
-  page: number;
-  sort?: string;
+  page?: number;
+  team?: string;
+  tier?: string;
+  timeframe?: 'all' | 'week' | 'month' | 'year' | 'today' | 'all-time';
   search?: string;
-  period?: string;
-}
-
-export interface LeaderboardProps {
-  users: LeaderboardUser[];
-  isLoading?: boolean;
-  showTeams?: boolean;
-  showTiers?: boolean;
-  showRankChange?: boolean;
-  onUserClick?: (userId: string) => void;
-  onShameClick?: (userId: string) => void;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
 }
 
 export interface LeaderboardResponse {
   users: LeaderboardUser[];
-  totalUsers: number;
-  currentPage: number;
-  totalPages: number;
-}
-
-export interface LeaderboardConfig {
-  limit: number;
-  showTeams: boolean;
-  showTiers: boolean;
-  showRankChange: boolean;
-}
-
-export interface UseLeaderboardResult {
-  users: LeaderboardUser[];
-  isLoading: boolean;
-  error: Error | null;
-  filter: LeaderboardFilter;
-  setFilter: (filter: Partial<LeaderboardFilter>) => void;
-  refetch: () => void;
   totalUsers: number;
   currentPage: number;
   totalPages: number;

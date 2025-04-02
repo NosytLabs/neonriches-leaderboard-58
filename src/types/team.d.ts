@@ -29,6 +29,9 @@ export interface TeamData {
   nftJoke?: string;
   cryptoRoast?: string;
   benefits?: string[];
+  icon?: string;
+  motto?: string;
+  ranking?: number;
 }
 
 export interface TeamTheme {
