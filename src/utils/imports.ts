@@ -2,7 +2,7 @@
 // This file is used to re-export components with consistent casing to avoid errors
 
 // UI Components with proper casing
-// Fixed import with correct casing
+// Use correct casing for Badge import
 export { Badge } from "@/components/ui/Badge";
 export { Button } from "@/components/ui/button";
 export { Input } from "@/components/ui/input";
@@ -20,8 +20,8 @@ export { Separator } from "@/components/ui/separator";
 // Hooks
 export { useToast, useToastContext } from "@/hooks/use-toast";
 export { useAuth } from "@/hooks/useAuth";
-export { useSound } from "@/hooks/sounds/use-sound";
-export { useLeaderboard } from "@/hooks/useLeaderboard";
+export { default as useSound } from "@/hooks/useSound";
+export { default as useLeaderboard } from "@/hooks/useLeaderboard";
 
 // Utils
 export { cn } from "@/lib/utils";
@@ -33,3 +33,4 @@ export { getMockeryName, getMockeryDescription, getMockeryActionIcon, getMockery
 export type { TeamColor, UserTier, MockeryAction, MockeryTier } from "@/types/mockery-types";
 export type { LeaderboardUser, LeaderboardFilter } from "@/types/leaderboard";
 export type { UserProfile } from "@/types/user-consolidated";
+

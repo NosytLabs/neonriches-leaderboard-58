@@ -39,7 +39,7 @@ export type {
   CertificateStyle,
   CertificateTeam,
   CertificateTemplate,
-  CertificateRepository  // Add this to fix the missing export
+  CertificateRepository
 } from './certificates';
 
 export type {
@@ -74,12 +74,14 @@ export type {
   LeaderboardUser,
   LeaderboardFilter,
   LeaderboardConfig,
-  LeaderboardProps
+  LeaderboardProps,
+  LeaderboardResponse,
+  UseLeaderboardResult
 } from './leaderboard';
 
 // UI types
 export type { IconProps, IconSize, IconColor, IconStyle } from './ui/icon-types';
-export type { SoundType, SoundOptions, SoundConfig, UseSoundHook } from './sound-types';
+export type { SoundType, SoundOptions, SoundConfig, SoundHook } from './sound-types';
 
 // For backwards compatibility
 import { UserProfile } from './user-consolidated';

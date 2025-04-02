@@ -17,15 +17,22 @@ export interface LeaderboardUser {
   isVerified?: boolean;
   spendStreak?: number;
   joinDate?: string;
+  // Add missing properties that are being used in components
+  avatarUrl?: string;
+  isProtected?: boolean;
+  rankChange?: number;
+  spendChange?: number;
 }
 
 export interface LeaderboardFilter {
-  timeframe: 'day' | 'week' | 'month' | 'year' | 'all-time' | 'today';
+  timeframe: 'day' | 'week' | 'month' | 'year' | 'all-time' | 'today' | 'all';
   team: string;
   tier?: string;
   search?: string;
-  sortBy?: 'rank' | 'amountSpent' | 'username' | 'spendStreak';
+  sortBy?: 'rank' | 'amountSpent' | 'username' | 'spendStreak' | 'spent';
   sortDirection?: 'asc' | 'desc';
+  limit?: number;
+  page?: number;
 }
 
 export interface LeaderboardConfig {
@@ -54,6 +61,7 @@ export interface LeaderboardResponse {
   page: number;
   pageSize: number;
   hasMore: boolean;
+  items?: LeaderboardUser[]; // Add for compatibility
 }
 
 export interface UseLeaderboardResult {

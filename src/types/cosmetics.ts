@@ -1,6 +1,7 @@
+
 // Fix export type conflicts
 export interface SocialLinkInterface {
-  id?: string | number;
+  id?: string; // Change to string only
   platform: string;
   url: string;
   username?: string;
@@ -26,7 +27,8 @@ export interface ProfileLinkInterface {
 export type SocialLink = SocialLinkInterface;
 export type ProfileLink = ProfileLinkInterface;
 
-export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme';
+export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme' |
+  'premium' | 'standard' | 'exclusive'; // Added for backward compatibility
 
 export type CosmeticCategory = 
   | 'border' 
@@ -37,7 +39,10 @@ export type CosmeticCategory =
   | 'background' 
   | 'effect' 
   | 'badge' 
-  | 'theme';
+  | 'theme'
+  | 'appearance' // Added for compatibility
+  | 'profile'
+  | 'interaction';
 
 export type CosmeticRarity = 
   | 'common' 
@@ -47,7 +52,9 @@ export type CosmeticRarity =
   | 'legendary' 
   | 'royal' 
   | 'exclusive' 
-  | 'limited';
+  | 'limited'
+  | 'mythic'  // Added for compatibility
+  | 'unique';
 
 export interface CosmeticItem {
   id: string;
@@ -58,7 +65,8 @@ export interface CosmeticItem {
   imageUrl?: string;
   previewUrl?: string;
   price: number;
-  currency: 'coins' | 'cash' | 'free';
+  cost?: number; // Added for backward compatibility
+  currency?: 'coins' | 'cash' | 'free';
   isOwned?: boolean;
   isActive?: boolean;
   isAvailable?: boolean;
@@ -66,6 +74,9 @@ export interface CosmeticItem {
   endsAt?: string;
   cssClass?: string;
   attributes?: Record<string, string | number | boolean>;
+  type?: CosmeticType; // Added for backward compatibility
+  imageSrc?: string; // Added for backward compatibility
+  image?: string; // Added for backward compatibility
 }
 
 export interface UserCosmetics {

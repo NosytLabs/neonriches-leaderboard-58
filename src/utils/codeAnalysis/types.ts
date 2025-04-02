@@ -1,4 +1,3 @@
-
 export interface CodeMetrics {
   loc: number;
   sloc: number;
@@ -20,7 +19,15 @@ export interface ProjectMetricsData {
   leastMaintainableFiles: { path: string; maintainability: number }[];
 }
 
-// Using a different name to avoid conflicts
+// Rename ProjectMetricsInterface to avoid conflicts while maintaining the export
+export type ProjectMetrics = ProjectMetricsData & {
+  timestamp: string;
+  repository?: string;
+  branch?: string;
+  commit?: string;
+};
+
+// Keeping the old name with alias for backward compatibility
 export interface ProjectMetricsInterface extends ProjectMetricsData {
   timestamp: string;
   repository?: string;

@@ -87,3 +87,12 @@ export interface SoundHook {
   isPlaying: boolean;
   isSoundEnabled: boolean;
 }
+
+// Alias for backward compatibility
+export type UseSoundHook = SoundHook;
+
+// Add missing types for notification sounds
+export interface UseNotificationSoundsReturn {
+  playSoundForNotification: (type: string) => void;
+  playNewNotificationSound: () => void;
+}

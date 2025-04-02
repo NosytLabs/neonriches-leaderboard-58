@@ -1,156 +1,106 @@
 
-import { TeamColor } from '@/types/team';
+import { TeamData, TeamColor } from '@/types/mockery-types';
 
-/**
- * Get team details by ID
- */
-export const getTeamDetails = (teamId: TeamColor) => {
-  const teams = {
-    red: {
-      name: 'Red Team',
-      description: 'The most competitive and aggressive team.',
-      color: 'red',
-      icon: 'fire',
-      memberCount: 1245,
-      totalSpent: 2345000
-    },
-    blue: {
-      name: 'Blue Team',
-      description: 'The most strategic and loyal team.',
-      color: 'blue',
-      icon: 'shield',
-      memberCount: 1568,
-      totalSpent: 1987000
-    },
-    green: {
-      name: 'Green Team',
-      description: 'The most resourceful and collaborative team.',
-      color: 'green',
-      icon: 'leaf',
-      memberCount: 987,
-      totalSpent: 1456000
-    },
-    gold: {
-      name: 'Gold Team',
-      description: 'The most elite and exclusive team.',
-      color: 'gold',
-      icon: 'crown',
-      memberCount: 345,
-      totalSpent: 3678000
-    },
-    purple: {
-      name: 'Purple Team',
-      description: 'The most creative and innovative team.',
-      color: 'purple',
-      icon: 'star',
-      memberCount: 567,
-      totalSpent: 980000
-    },
-    silver: {
-      name: 'Silver Team',
-      description: 'The most balanced and steady team.',
-      color: 'silver',
-      icon: 'moon',
-      memberCount: 789,
-      totalSpent: 1230000
-    },
-    bronze: {
-      name: 'Bronze Team',
-      description: 'The most determined and resilient team.',
-      color: 'bronze',
-      icon: 'hammer',
-      memberCount: 1002,
-      totalSpent: 890000
-    },
-    neutral: {
-      name: 'Neutral',
-      description: 'No team affiliation.',
-      color: 'gray',
-      icon: 'user',
-      memberCount: 3456,
-      totalSpent: 560000
-    },
-    none: {
-      name: 'No Team',
-      description: 'No team affiliation.',
-      color: 'gray',
-      icon: 'user',
-      memberCount: 450,
-      totalSpent: 120000
-    },
-    crimson: {
-      name: 'Crimson Team',
-      description: 'The most ruthless and unforgiving team.',
-      color: 'crimson',
-      icon: 'skull',
-      memberCount: 666,
-      totalSpent: 1500000
-    }
-  };
-  
-  return teams[teamId] || teams.none;
+// Mock team data
+const teamData: TeamData[] = [
+  {
+    id: "red-team",
+    name: "Red Team",
+    color: "red",
+    description: "The fierce and passionate Red Team, known for their boldness.",
+    logoUrl: "/images/teams/red-logo.png",
+    benefits: [
+      "10% bonus on all contributions",
+      "Special red team cosmetics",
+      "Access to exclusive Red Team events"
+    ],
+    members: 1250,
+    totalContribution: 580000,
+    totalSpent: 580000,
+    rank: 1,
+    previousRank: 2
+  },
+  {
+    id: "blue-team",
+    name: "Blue Team",
+    color: "blue",
+    description: "The strategic and calm Blue Team, masters of planning.",
+    logoUrl: "/images/teams/blue-logo.png",
+    benefits: [
+      "5% discount on profile boosts",
+      "Special blue team profile effects",
+      "Priority access to new features"
+    ],
+    members: 980,
+    totalContribution: 520000,
+    totalSpent: 520000,
+    rank: 2,
+    previousRank: 1
+  },
+  {
+    id: "green-team",
+    name: "Green Team",
+    color: "green",
+    description: "The growth-focused Green Team, always supporting each other.",
+    logoUrl: "/images/teams/green-logo.png",
+    benefits: [
+      "7% extra rewards from group challenges",
+      "Special green team banners",
+      "Weekly team bonus rewards"
+    ],
+    members: 730,
+    totalContribution: 450000,
+    totalSpent: 450000,
+    rank: 3,
+    previousRank: 3
+  },
+  {
+    id: "gold-team",
+    name: "Gold Team",
+    color: "gold",
+    description: "The elite Gold Team, known for their extravagant spending.",
+    logoUrl: "/images/teams/gold-logo.png",
+    benefits: [
+      "15% prestige bonus on profile",
+      "Special gold team cosmetics and effects",
+      "VIP access to all team events"
+    ],
+    members: 480,
+    totalContribution: 620000,
+    totalSpent: 620000,
+    rank: 4,
+    previousRank: 4
+  },
+  {
+    id: "purple-team",
+    name: "Purple Team",
+    color: "purple",
+    description: "The mysterious Purple Team, masters of strategy and surprise.",
+    logoUrl: "/images/teams/purple-logo.png",
+    benefits: [
+      "Random bonus rewards after spending",
+      "Special surprise mechanics",
+      "Unique purple team abilities"
+    ],
+    members: 620,
+    totalContribution: 320000,
+    totalSpent: 320000,
+    rank: 5,
+    previousRank: 5
+  }
+];
+
+// Export the functions needed by tests
+export const getTeams = async (): Promise<TeamData[]> => {
+  return teamData;
 };
 
-/**
- * Get the current team rankings
- */
-export const getTeamRankings = () => {
-  return [
-    { team: 'gold', rank: 1, totalSpent: 3678000, memberCount: 345 },
-    { team: 'red', rank: 2, totalSpent: 2345000, memberCount: 1245 },
-    { team: 'blue', rank: 3, totalSpent: 1987000, memberCount: 1568 },
-    { team: 'green', rank: 4, totalSpent: 1456000, memberCount: 987 },
-    { team: 'silver', rank: 5, totalSpent: 1230000, memberCount: 789 },
-    { team: 'purple', rank: 6, totalSpent: 980000, memberCount: 567 },
-    { team: 'bronze', rank: 7, totalSpent: 890000, memberCount: 1002 },
-    { team: 'neutral', rank: 8, totalSpent: 560000, memberCount: 3456 },
-    { team: 'none', rank: 9, totalSpent: 120000, memberCount: 450 }
-  ];
+export const getTeamByColor = async (color: TeamColor): Promise<TeamData | null> => {
+  const team = teamData.find(t => t.color === color);
+  return team || null;
 };
 
-/**
- * Switch a user's team
- */
-export const switchTeam = async (userId: string, team: TeamColor) => {
-  console.log(`Switching user ${userId} to team ${team}`);
-  // Mock implementation
-  return {
-    success: true,
-    team
-  };
-};
-
-// Add missing functions required by imports.ts
-export const getAllTeams = (): TeamColor[] => {
-  return ['red', 'blue', 'green', 'gold', 'purple', 'silver', 'bronze', 'crimson', 'neutral', 'none'];
-};
-
-export const getTeamById = (id: string) => {
-  // Mock implementation
-  const teams = [
-    { id: 'team-1', color: 'red', name: 'Red Team' },
-    { id: 'team-2', color: 'blue', name: 'Blue Team' },
-    { id: 'team-3', color: 'green', name: 'Green Team' }
-  ];
-  return teams.find(team => team.id === id) || null;
-};
-
-export const getTeamByColor = (color: string) => {
-  // Mock implementation
-  const teams = [
-    { id: 'team-1', color: 'red', name: 'Red Team' },
-    { id: 'team-2', color: 'blue', name: 'Blue Team' },
-    { id: 'team-3', color: 'green', name: 'Green Team' }
-  ];
-  return teams.find(team => team.color === color) || null;
-};
-
-// Default export for compatibility with tests
 export default {
-  getTeamDetails,
-  getTeamRankings,
-  switchTeam,
-  getAllTeams,
-  getTeamById,
+  getTeams,
   getTeamByColor
 };

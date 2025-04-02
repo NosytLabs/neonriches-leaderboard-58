@@ -8,7 +8,8 @@ export type CertificateType =
   | 'special' 
   | 'founder' 
   | 'nobility'
-  | 'custom';
+  | 'custom'
+  | 'membership'; // Added for compatibility
 
 export type CertificateStyle = 
   | 'classic' 
@@ -25,7 +26,8 @@ export type CertificateTeam =
   | 'gold' 
   | 'purple' 
   | 'none'
-  | 'all';
+  | 'all'
+  | 'neutral'; // Added for compatibility
 
 export interface Certificate {
   id: string;
@@ -38,7 +40,7 @@ export interface Certificate {
   expiresAt?: string;
   userId: string;
   team?: CertificateTeam;
-  status: 'draft' | 'issued' | 'expired' | 'revoked' | 'minted';
+  status: 'draft' | 'issued' | 'expired' | 'revoked' | 'minted' | 'pending';
   mintAddress?: string;
   isMinted?: boolean;
   issuedAt?: string;
@@ -50,6 +52,7 @@ export interface Certificate {
   rarity?: string;
   name?: string;
   previewUrl?: string;
+  mintDate?: string; // Added for compatibility
 }
 
 export interface CertificateTemplate {

@@ -85,6 +85,8 @@ export interface LeaderboardUser {
   isProtected?: boolean;
   rankChange?: number;
   spendChange?: number;
+  avatarUrl?: string; // Added for compatibility
+  joinDate?: string; // Added for compatibility
 }
 
 export interface LeaderboardFilter {
