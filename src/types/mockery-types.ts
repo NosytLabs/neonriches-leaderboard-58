@@ -1,121 +1,64 @@
 
-import { Lucide } from "@/types/icons";
+import { UserProfile } from './user';
 
-/**
- * Different mockery action types available in the application
- */
-export type MockeryAction = 
-  | 'tomatoes'
-  | 'eggs'
-  | 'putridEggs'
-  | 'crown'
-  | 'stocks'
-  | 'jester'
-  | 'courtJester'
-  | 'shame'
-  | 'silence'
-  | 'smokeBomb'
-  | 'protection'
-  | 'taunt'
-  | 'mock'
-  | 'challenge'
-  | 'joust'
-  | 'duel'
-  | 'fish'
-  | 'thumbsDown'
-  | 'gift'
-  | 'carrot';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal';
 
-/**
- * Mockery tiers define rarity and price levels
- */
-export type MockeryTier = 
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'epic'
-  | 'legendary'
-  | 'royal'
-  | 'basic'
-  | 'premium'
-  | 'silver'
-  | 'bronze';
-
-/**
- * Team colors available in the application
- */
-export type TeamColor = 
-  | 'red'
-  | 'blue'
-  | 'green'
-  | 'gold'
-  | 'purple'
-  | 'none'
-  | 'neutral'
-  | 'silver'
-  | 'bronze';
-
-/**
- * Shortened type for team color
- */
-export type TeamType = 
-  | 'red'
-  | 'blue'
-  | 'green'
-  | 'gold'
-  | 'purple';
-
-/**
- * Interface for mockery event data
- */
-export interface MockeryEvent {
+export interface MockeryItem {
   id: string;
-  action: MockeryAction;
-  appliedAt: string;
-  fromId: string; 
-  isAnonymous: boolean;
-  timestamp: string;
-  expiresAt: string;
-  visible?: boolean;
-  appliedBy?: string;
-  isActive?: boolean;
-  active?: boolean;
-  targetId?: string;
+  content: string;
+  tier: MockeryTier;
+  cost: number;
+  author?: string;
+  createdAt?: string;
+  approvedAt?: string;
+  approvedBy?: string;
+  isApproved: boolean;
+  usageCount: number;
+  category: string;
+  tags: string[];
 }
 
-/**
- * Interface for a mocked user
- */
-export interface MockedUser {
+export interface MockeryEffect {
   id: string;
-  username: string;
-  profileImage?: string;
-  action: MockeryAction;
-  appliedAt: string;
-  expiresAt: string;
-  appliedBy: string;
-  reason?: string;
-  tier?: string;
-  team?: string;
-  displayName?: string;
+  name: string;
+  description: string;
+  tier: MockeryTier;
+  duration: number; // in days
+  cost: number;
+  effectStrength: number;
+  appliesTo: 'profile' | 'rank' | 'visibility' | 'all';
+  visualEffect?: string;
+  soundEffect?: string;
 }
 
-/**
- * Interface for mockery history
- */
-export interface MockeryHistory {
-  userId: string;
-  actions: Record<MockeryAction, number>;
-  received: Record<MockeryAction, number>;
-  totalApplied: number;
-  totalReceived: number;
+export interface MockeryConfig {
+  enabled: boolean;
+  costMultiplier: number;
+  tierUnlockLevel: Record<MockeryTier, number>;
+  maxMockeryPerDay: number;
+  protectionCost: Record<MockeryTier, number>;
+  cooldownPeriod: number; // hours
 }
 
-/**
- * Interface for mockery stats
- */
-export interface MockeryStats {
-  received: Record<MockeryAction, number>;
-  deployed: Record<MockeryAction, number>;
-  [key: string]: any;
+export interface UserMockeryStats {
+  mockeryUsed: number;
+  mockeryReceived: number;
+  protectionPurchased: number;
+  totalSpent: number;
+  mockeryHistory: {
+    date: string;
+    targetUser: string;
+    mockeryId: string;
+    cost: number;
+  }[];
+  favorites: string[];
+}
+
+export interface MockeryProps {
+  targetUser: UserProfile;
+  currentUser: UserProfile;
+  onMockeryUsed?: (mockery: MockeryItem, targetUser: UserProfile) => void;
+  availableMockery: MockeryItem[];
+  userStats?: UserMockeryStats;
+  config?: MockeryConfig;
 }

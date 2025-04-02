@@ -2,15 +2,14 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
-import MainLayout from '@/layouts/MainLayout';
-import Chat from '@/pages/Chat';
+import { HelmetProvider } from 'react-helmet-async';
+import Index from '@/pages/Index';
 import Login from '@/pages/Login';
 import Signup from '@/pages/SignUp';
 import Settings from '@/pages/Settings';
-import SoundProvider from '@/hooks/sounds/SoundProvider';
+import Chat from '@/pages/Chat';
 import { AuthProvider } from '@/contexts/auth';
-import { HelmetProvider } from 'react-helmet-async';
-import Index from '@/pages/Index';
+import SoundProvider from '@/hooks/sounds/SoundProvider';
 
 const App: React.FC = () => {
   // Create a context object for react-helmet-async
@@ -21,11 +20,11 @@ const App: React.FC = () => {
       <AuthProvider>
         <SoundProvider>
           <Routes>
-            <Route path="/" element={<MainLayout><Index /></MainLayout>} />
-            <Route path="/chat" element={<MainLayout><Chat /></MainLayout>} />
-            <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
-            <Route path="/signup" element={<MainLayout><Signup /></MainLayout>} />
-            <Route path="/settings" element={<MainLayout><Settings /></MainLayout>} />
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/chat" element={<Chat />} />
           </Routes>
           <Toaster />
         </SoundProvider>

@@ -1,7 +1,7 @@
 
 import React, { forwardRef } from 'react';
 import { IconProps } from '@/types/ui/icon-types';
-import * as Icons from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 
 // Map of icon sizes to Tailwind classes
 const sizeClasses = {
@@ -28,8 +28,8 @@ const colorClasses = {
 export const Icon = forwardRef<SVGSVGElement, IconProps>(
   ({ icon, size = 'md', color = 'default', className = '', animated = false, style = 'default', ...props }, ref) => {
     // Determine the icon component to use
-    const iconName = icon as keyof typeof Icons;
-    const IconComponent = Icons[iconName];
+    const iconName = icon as keyof typeof LucideIcons;
+    const IconComponent = LucideIcons[iconName];
 
     if (!IconComponent) {
       console.warn(`Icon "${icon}" not found`);

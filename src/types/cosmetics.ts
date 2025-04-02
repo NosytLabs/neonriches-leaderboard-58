@@ -1,39 +1,49 @@
 
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-export type CosmeticType = 'standard' | 'premium' | 'exclusive' | 'founder';
+export type CosmeticCategory = 'appearance' | 'profile' | 'interaction';
+export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique' | 'royal';
+export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'badge' | 'title' | 'background' | 'effect' | 'theme';
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
-  price: number;
+  cost: number;
   category: CosmeticCategory;
-  cssClass: string;
-  rarity: CosmeticRarity;
   type: CosmeticType;
-  enabled: boolean;
-  previewUrl?: string;
+  rarity: CosmeticRarity;
+  image?: string;
+  value?: string;
+  unlockCondition?: string;
+  dateAdded?: string;
+  isLimited?: boolean;
 }
-
-export type CosmeticCategory = 
-  | 'title'
-  | 'border'
-  | 'color'
-  | 'font'
-  | 'emoji'
-  | 'background'
-  | 'effect'
-  | 'badge'
-  | 'theme';
 
 export interface UserCosmetics {
-  title?: string[] | string;
-  border?: string[] | string;
-  color?: string[] | string;
-  font?: string[] | string;
-  emoji?: string[] | string;
-  background?: string[] | string;
-  effect?: string[] | string;
-  badge?: string[] | string;
-  theme?: string[] | string;
+  border: string[];
+  color: string[];
+  font: string[];
+  emoji: string[];
+  title: string[];
+  background: string[];
+  effect: string[];
+  badge: string[];
+  theme: string[];
 }
+
+export interface SocialLink {
+  id?: string;
+  platform: string;
+  url: string;
+  title?: string;
+  verified?: boolean;
+  username?: string;
+}
+
+export interface CosmeticState {
+  selectedCategory: CosmeticCategory | null;
+  selectedType: CosmeticType | null;
+  ownedCosmetics: CosmeticItem[];
+  availableCosmetics: CosmeticItem[];
+}
+
+export type UserCosmeticState = CosmeticState;

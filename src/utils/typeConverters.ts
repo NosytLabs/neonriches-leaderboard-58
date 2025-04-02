@@ -13,7 +13,8 @@ export const ensureStringId = (id: string | number): string => {
  * @param team - The team color string to convert
  * @returns The validated TeamColor
  */
-export const toTeamColor = (team: string): any => {
+export const toTeamColor = (team: string | null): any => {
+  if (!team) return null;
   const validColors = ['red', 'blue', 'green', 'gold', 'purple', 'silver', 'bronze', 'neutral', 'none'];
   return validColors.includes(team) ? team : 'none';
 };

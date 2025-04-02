@@ -1,12 +1,10 @@
 
 import React, { createContext, ReactNode, useState, useEffect } from 'react';
 import { UserProfile } from '@/types/user-consolidated';
-import { TeamColor } from '@/types/team';
+import { TeamColor } from '@/types/user';
 import { toTeamColor } from '@/utils/typeConverters';
 import { AuthContextType } from '@/types/auth-context';
-
-// Create a context for auth state
-export const AuthContext = createContext<AuthContextType | null>(null);
+import AuthContext from './index';
 
 // Default user data
 const defaultUser: UserProfile = {
@@ -47,6 +45,7 @@ interface AuthProviderProps {
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
     // Check for existing auth token in localStorage
@@ -71,6 +70,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             amountSpent: 1250,
             walletBalance: 500,
           });
+          setIsAuthenticated(true);
         }
       } catch (error) {
         console.error('Auth check failed:', error);
@@ -110,6 +110,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           walletBalance: 500,
         });
         
+        setIsAuthenticated(true);
         setIsLoading(false);
         return true;
       }
@@ -151,6 +152,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           walletBalance: 100, // Starter balance
         });
         
+        setIsAuthenticated(true);
         setIsLoading(false);
         return true;
       }
@@ -171,6 +173,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Clear auth token
       localStorage.removeItem('authToken');
       setUser(null);
+      setIsAuthenticated(false);
     } catch (error) {
       console.error('Logout failed:', error);
     } finally {
@@ -203,49 +206,44 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // Award a cosmetic item to the user
+  // Add cosmetic to user
   const awardCosmetic = async (category: string, itemId: string, notify: boolean = true): Promise<boolean> => {
     try {
-      if (!user) return false;
+      if (!user || !user.cosmetics) return false;
       
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 300));
       
-      // Update user cosmetics
-      setUser(prevUser => {
-        if (!prevUser) return null;
-        
-        const updatedCosmetics = { ...(prevUser.cosmetics || {}) };
-        
-        // Initialize the category array if it doesn't exist
-        if (!updatedCosmetics[category]) {
-          updatedCosmetics[category] = [];
-        }
-        
-        // Add the item to the category if it doesn't already exist
-        if (Array.isArray(updatedCosmetics[category]) && !updatedCosmetics[category].includes(itemId)) {
-          updatedCosmetics[category] = [...updatedCosmetics[category], itemId];
-        }
-        
-        return {
-          ...prevUser,
-          cosmetics: updatedCosmetics,
-          // Reduce wallet balance to simulate purchase
-          walletBalance: prevUser.walletBalance ? prevUser.walletBalance - 50 : 0
-        };
-      });
+      // Make a copy of user cosmetics
+      const updatedCosmetics = { ...user.cosmetics };
       
-      return true;
+      // Add the item to the appropriate category
+      if (category in updatedCosmetics) {
+        const categoryItems = [...(updatedCosmetics[category as keyof typeof updatedCosmetics] || [])];
+        if (!categoryItems.includes(itemId)) {
+          categoryItems.push(itemId);
+          updatedCosmetics[category as keyof typeof updatedCosmetics] = categoryItems;
+          
+          setUser(prevUser => {
+            if (!prevUser) return null;
+            return { ...prevUser, cosmetics: updatedCosmetics };
+          });
+          
+          return true;
+        }
+      }
+      
+      return false;
     } catch (error) {
       console.error('Award cosmetic failed:', error);
       return false;
     }
   };
 
-  // Provide auth context value
-  const contextValue: AuthContextType = {
+  // Create the context value
+  const value = {
     user,
-    isAuthenticated: !!user,
+    isAuthenticated,
     isLoading,
     login,
     signIn: login, // Alias for login
@@ -254,11 +252,11 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signOut: logout, // Alias for logout
     updateUser,
     updateUserProfile: updateUser, // Alias for updateUser
-    awardCosmetic,
+    awardCosmetic
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

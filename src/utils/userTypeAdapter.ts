@@ -19,29 +19,24 @@ export const ensureTotalSpent = (user: UserProfile): UserProfile & { totalSpent:
  * by ensuring profile boosts have required properties
  */
 export const adaptToStandardUserProfile = (user: UserProfile & { totalSpent: number; amountSpent: number }): UserProfile => {
-  // Ensure profileBoosts is an array and each boost has required properties
-  const adaptedProfileBoosts = Array.isArray(user.profileBoosts) 
-    ? user.profileBoosts.map(boost => ({
-        ...boost,
-        level: boost.level || 1, // Ensure level is always provided
-        isActive: boost.isActive ?? true,
-        strength: boost.strength || 1, // Ensure strength is always provided
-        appliedBy: boost.appliedBy || 'system' // Ensure appliedBy is always provided
-      }))
-    : [];
-
-  return {
+  // Adding joinedDate from joinDate for backward compatibility
+  const joinedDate = user.joinedDate || user.joinDate;
+  
+  // Ensure all required properties are present
+  const adaptedUser: UserProfile = {
     ...user,
     // Ensure all required properties are present
     tier: user.tier || 'basic',
     team: user.team || 'none',
-    profileBoosts: adaptedProfileBoosts,
     // Use joinedDate as the standard field for when user joined
-    joinedDate: user.joinedDate || new Date().toISOString(), // Removed references to joinDate, joinedAt, createdAt
+    joinedDate: joinedDate || new Date().toISOString(),
+    joinDate: user.joinDate || joinedDate,
     // Ensure totalSpent and amountSpent are set
     totalSpent: user.totalSpent,
     amountSpent: user.amountSpent
   };
+
+  return adaptedUser;
 };
 
 /**

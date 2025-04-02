@@ -1,37 +1,65 @@
 
-/**
- * Utility functions for type conversions and safety
- */
+import { TeamColor, UserTier } from '@/types/user';
 
 /**
- * Safely converts a string to number, returning a default value if invalid
+ * Type guard to check if a value is a valid TeamColor
+ * @param value - Value to check
+ * @returns boolean indicating if the value is a valid TeamColor
  */
-export function safeNumberConversion(value: string | number, defaultValue: number = 0): number {
-  if (typeof value === 'number') return value;
-  const parsed = parseFloat(value);
-  return isNaN(parsed) ? defaultValue : parsed;
+export function isTeamColor(value: any): value is TeamColor {
+  if (value === null) return true;
+  return [
+    'red', 
+    'blue', 
+    'green', 
+    'gold', 
+    'purple', 
+    'silver', 
+    'bronze', 
+    'neutral', 
+    'none'
+  ].includes(value);
 }
 
 /**
- * Safely converts a value to string
+ * Type guard to check if a value is a valid UserTier
+ * @param value - Value to check
+ * @returns boolean indicating if the value is a valid UserTier
  */
-export function safeStringConversion(value: any): string {
-  if (value === null || value === undefined) return '';
-  return String(value);
+export function isUserTier(value: any): value is UserTier {
+  return [
+    'free',
+    'basic',
+    'premium',
+    'royal',
+    'gold',
+    'silver',
+    'bronze',
+    'elite',
+    'pro'
+  ].includes(value);
 }
 
 /**
- * Converts a value to a valid team type
+ * Validates and formats a value as a TeamColor
+ * @param value - Value to validate
+ * @returns A valid TeamColor or null if invalid
  */
-export function toTeamType(value: string): string {
-  const validTypes = ['red', 'blue', 'green', 'gold'];
-  return validTypes.includes(value) ? value : 'red';
+export function validateTeamColor(value: any): TeamColor | null {
+  if (isTeamColor(value)) {
+    return value;
+  }
+  return null;
 }
 
 /**
- * Converts a value to a valid user tier
+ * Validates and formats a value as a UserTier
+ * @param value - Value to validate
+ * @returns A valid UserTier or 'basic' if invalid
  */
-export function toUserTier(value: string): string {
-  const validTiers = ['free', 'basic', 'premium', 'royal', 'founder'];
-  return validTiers.includes(value) ? value : 'free';
+export function validateUserTier(value: any): UserTier {
+  if (isUserTier(value)) {
+    return value;
+  }
+  return 'basic';
 }

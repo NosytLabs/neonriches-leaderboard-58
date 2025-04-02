@@ -3,63 +3,49 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 interface SEOProps {
-  title: string;
+  title?: string;
   description?: string;
   canonical?: string;
-  ogType?: 'website' | 'article' | 'profile';
-  ogImage?: string;
+  image?: string;
+  type?: string;
   keywords?: string[];
-  children?: React.ReactNode;
 }
 
-/**
- * SEO component to handle meta tags consistently across the app
- */
-export const SEO: React.FC<SEOProps> = ({
-  title,
-  description,
+const SEO: React.FC<SEOProps> = ({
+  title = 'SpendThrone | The Ultimate Pay-to-Win Social Experiment',
+  description = 'Join SpendThrone, the satirical social platform where your rank is determined by your spending. A unique pay-to-win experiment that parodies digital status.',
   canonical,
-  ogType = 'website',
-  ogImage = '/og-image.jpg',
-  keywords = [],
-  children,
+  image = '/og-image.jpg',
+  type = 'website',
+  keywords = ['pay to win', 'social experiment', 'digital nobility', 'online status', 'spending competition']
 }) => {
-  const siteName = 'SpendThrone';
-  const defaultDescription = 'Join SpendThrone, the satirical social platform where your rank is determined by how much you spend. A unique pay-to-win experiment that parodies digital status.';
-  const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
+  const siteUrl = 'https://spendthrone.com';
+  const siteTitle = 'SpendThrone';
   
   return (
     <Helmet>
-      {/* Basic meta tags */}
-      <title>{fullTitle}</title>
-      <meta name="description" content={description || defaultDescription} />
-      {keywords.length > 0 && (
-        <meta name="keywords" content={keywords.join(', ')} />
-      )}
-      
-      {/* Canonical URL */}
-      {canonical && (
-        <link rel="canonical" href={canonical} />
-      )}
+      {/* Primary Meta Tags */}
+      <title>{title}</title>
+      <meta name="title" content={title} />
+      <meta name="description" content={description} />
+      <meta name="keywords" content={keywords.join(', ')} />
       
       {/* Open Graph / Facebook */}
-      <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={description || defaultDescription} />
-      <meta property="og:type" content={ogType} />
-      {canonical && (
-        <meta property="og:url" content={canonical} />
-      )}
-      <meta property="og:image" content={ogImage} />
-      <meta property="og:site_name" content={siteName} />
+      <meta property="og:type" content={type} />
+      <meta property="og:url" content={canonical || siteUrl} />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:image" content={`${siteUrl}${image}`} />
       
-      {/* Twitter Card */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={description || defaultDescription} />
-      <meta name="twitter:image" content={ogImage} />
+      {/* Twitter */}
+      <meta property="twitter:card" content="summary_large_image" />
+      <meta property="twitter:url" content={canonical || siteUrl} />
+      <meta property="twitter:title" content={title} />
+      <meta property="twitter:description" content={description} />
+      <meta property="twitter:image" content={`${siteUrl}${image}`} />
       
-      {/* Additional meta tags */}
-      {children}
+      {/* Canonical */}
+      {canonical && <link rel="canonical" href={canonical} />}
     </Helmet>
   );
 };

@@ -1,5 +1,5 @@
 
-import React, { ReactNode } from 'react';
+import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -9,7 +9,7 @@ interface ShellProps {
   className?: string;
 }
 
-const Shell: React.FC<ShellProps> = ({ children, transparent = false, className = '' }) => {
+export const Shell: React.FC<ShellProps> = ({ children, transparent = false, className = '' }) => {
   return (
     <div className={`flex flex-col min-h-screen ${className}`}>
       <Header transparent={transparent} />
@@ -21,5 +21,4 @@ const Shell: React.FC<ShellProps> = ({ children, transparent = false, className 
   );
 };
 
-export { Shell };
 export default Shell;

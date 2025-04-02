@@ -1,5 +1,18 @@
 
-export type SoundType = 'click' | 'success' | 'error' | 'notification' | 'achievement' | 'purchase' | 'rank-up' | 'deposit';
+export type SoundType = 
+  | 'click' 
+  | 'success' 
+  | 'error' 
+  | 'notification' 
+  | 'achievement' 
+  | 'purchase' 
+  | 'rank-up' 
+  | 'deposit'
+  | 'message'
+  | 'reward'
+  | 'mockery'
+  | 'royal'
+  | 'coin';
 
 export interface SoundOptions {
   volume?: number;

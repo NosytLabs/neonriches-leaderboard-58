@@ -1,46 +1,100 @@
 
-import { TeamColor } from './team';
-import { UserTier } from './tier';
-
-export interface LeaderboardFilter {
-  timeframe?: 'day' | 'week' | 'month' | 'all';
-  team?: TeamColor | string;
-  tier?: UserTier | string;
-  limit?: number;
-}
+import { TeamColor, UserTier } from '@/types/user';
 
 export interface LeaderboardUser {
-  id: string;
   userId: string;
+  id: string;
   username: string;
-  displayName: string;
+  displayName?: string;
   profileImage: string;
-  totalSpent: number;
-  amountSpent?: number;
-  rank: number;
-  previousRank: number;
   team: TeamColor;
   tier: UserTier;
-  spendStreak: number;
-  walletBalance: number;
-  isVerified: boolean;
-  isProtected?: boolean;
-  joinDate?: string;
-  joinedDate?: string;
-}
-
-export interface LeaderboardEntry extends LeaderboardUser {
-  spendChange?: number;
-  rankChange?: number;
-}
-
-export interface TeamLeaderboardData {
-  teamId: string;
-  teamColor: TeamColor;
-  teamName: string;
-  totalSpent: number;
-  memberCount: number;
-  averageSpent: number;
   rank: number;
-  previousRank: number;
+  previousRank?: number;
+  totalSpent: number;
+  amountSpent?: number;
+  walletBalance?: number;
+  isVerified?: boolean;
+  isProtected?: boolean;
+  spendStreak?: number;
+  rankChange?: number;
+  spendChange?: number;
+  avatarUrl?: string;
 }
+
+export type LeaderboardFilter = 'all' | 'daily' | 'weekly' | 'monthly' | 'team';
+export type TypedLeaderboardFilter = LeaderboardFilter;
+
+export interface LeaderboardEntry {
+  userId: string;
+  rank: number;
+  username: string;
+  displayName: string;
+  totalSpent: number;
+  team: TeamColor;
+  timestamp: string;
+}
+
+export interface TeamData {
+  id: string;
+  name: string;
+  color: TeamColor;
+  logo: string;
+  totalSpent: number;
+  totalContribution: number;
+  contributionPercentage: number;
+  memberCount: number;
+  members: LeaderboardUser[];
+  description?: string;
+}
+
+export interface SolanaTransaction {
+  id: string;
+  signature: string;
+  timestamp: string;
+  amount: number;
+  sender: string;
+  receiver: string;
+  status: 'pending' | 'confirmed' | 'failed';
+  type: 'deposit' | 'withdrawal' | 'transfer';
+}
+
+export interface OnChainLeaderboardEntry extends LeaderboardEntry {
+  txSignature: string;
+  blockHeight: number;
+}
+
+export interface PerformanceIssue {
+  id: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  description: string;
+  component: string;
+  file?: string;
+  lineNumber?: number;
+  recommendation?: string;
+  impact: string;
+}
+
+export interface ProjectMetrics {
+  fileCount: number;
+  componentCount: number;
+  totalSize: number;
+  dependencies: number;
+  beforeCleanup?: {
+    fileCount: number;
+    componentCount: number;
+    totalSize: number;
+    dependencies: number;
+  };
+  afterCleanup?: {
+    fileCount: number;
+    componentCount: number;
+    totalSize: number;
+    dependencies: number;
+  };
+  sizeSavings?: number;
+  fileSavings?: number;
+  dependencySavings?: number;
+  sizePercentage?: number;
+}
+
