@@ -4,7 +4,6 @@ export * from './formatters';
 export { formatDollarAmount, getInitials } from './formatters/stringFormatters';
 
 // Comment out non-existent modules to prevent errors
-// export * from './dates';
 // export * from './validation';
 // export * from './numbers';
 // export * from './hooks';

@@ -71,8 +71,20 @@ export const useProfileData = (userId: string, userContext?: UserProfile | null)
             },
             socialLinks: [],
             bio: '',
-            createdAt: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
-            profileBoosts: []
+            profileBoosts: [],
+            previousRank: 0,
+            settings: {
+              profileVisibility: 'public',
+              allowProfileLinks: true,
+              theme: 'dark',
+              notifications: true,
+              emailNotifications: false,
+              marketingEmails: false,
+              showRank: true,
+              darkMode: true,
+              soundEffects: true,
+              showBadges: true
+            }
           };
 
           setProfileData(mockUserProfile);

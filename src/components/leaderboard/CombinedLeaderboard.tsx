@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMockLeaderboard } from '@/hooks/useMockLeaderboard';
 import { useAuth } from '@/hooks/useAuth';
 import { LeaderboardUser } from '@/types/leaderboard';
-import { MockeryAction } from '@/types/mockery-types';
+import { MockeryAction, TeamColor } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
 import { useSound } from '@/hooks/use-sound';
 import { toTeamColor } from '@/utils/typeConverters';
@@ -17,7 +17,7 @@ import ShameModal from '@/components/dashboard/leaderboard/ShameModal';
 
 // Define an updated LeaderboardFilter that includes sortDirection
 interface CombinedLeaderboardFilter {
-  team: string;
+  team: TeamColor | 'all';  // Updated to match LeaderboardFilter
   tier: string;
   timeframe: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all';
   search: string;
@@ -130,8 +130,8 @@ const CombinedLeaderboard: React.FC = () => {
       
       <div className="mt-6">
         <LeaderboardFilters 
-          filter={filter} 
-          onFilterChange={handleFilterChange} 
+          filter={filter as any} 
+          onFilterChange={handleFilterChange as any} 
         />
       </div>
       

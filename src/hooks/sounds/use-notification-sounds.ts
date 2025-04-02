@@ -1,20 +1,6 @@
 
 import { useSound } from './use-sound';
-import { SoundOptions } from '@/types/sound-types';
-
-// Define a local SoundType to avoid import conflicts
-type HookSoundType = 
-  | 'click'
-  | 'success'
-  | 'error'
-  | 'notification'
-  | 'achievement'
-  | 'message'
-  | 'reward'
-  | 'chime'
-  | 'levelUp'
-  | 'fanfare'
-  | 'rank_up';
+import { SoundOptions, SoundType } from '@/types/sound-types';
 
 export const useNotificationSounds = () => {
   const sound = useSound();
@@ -28,36 +14,36 @@ export const useNotificationSounds = () => {
     // Convert string type to SoundType and play appropriate sound
     switch (type) {
       case 'achievement':
-        sound.playSound('achievement' as HookSoundType, soundOptions);
+        sound.playSound('achievement', soundOptions);
         break;
       case 'message':
-        sound.playSound('notification' as HookSoundType, soundOptions);
+        sound.playSound('notification', soundOptions);
         break;
       case 'alert':
-        sound.playSound('notification' as HookSoundType, soundOptions);
+        sound.playSound('notification', soundOptions);
         break;
       case 'success':
-        sound.playSound('success' as HookSoundType, soundOptions);
+        sound.playSound('success', soundOptions);
         break;
       case 'error':
-        sound.playSound('error' as HookSoundType, soundOptions);
+        sound.playSound('error', soundOptions);
         break;
       case 'reward':
-        sound.playSound('notification' as HookSoundType, soundOptions);
+        sound.playSound('notification', soundOptions);
         break;
       default:
-        sound.playSound('notification' as HookSoundType, soundOptions);
+        sound.playSound('notification', soundOptions);
         break;
     }
   };
 
   // Fixed direct call to sound.playSound
-  const playSound = (type: HookSoundType, options?: SoundOptions) => {
+  const playSound = (type: SoundType, options?: SoundOptions) => {
     sound.playSound(type, options);
   };
 
   const playClick = () => {
-    sound.playSound('click' as HookSoundType, { volume: 0.4 });
+    sound.playSound('click', { volume: 0.4 });
   };
 
   return { 

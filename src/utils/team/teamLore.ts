@@ -1,28 +1,30 @@
 
-import { TeamColor } from '@/types/team';
+import { TeamColor } from '@/types/mockery-types';
 
-// Team Lore - Rich storytelling for each team
-export const teamLore: Record<TeamColor, string> = {
-  red: 'The Red Team, known as the Crimson Court, forged their legacy in the fires of competition. Their members are known for aggressive spending and a take-no-prisoners approach to status.',
-  blue: 'The Blue Team, the Azure Alliance, believes in the power of strategic investment. United by a shared vision, they navigate the tides of fortune with calculated precision.',
-  green: 'The Green Team, the Emerald Enclave, focuses on sustainable spending and long-term growth. Rooted in prosperity, they cultivate success through patience and wise investments.',
-  gold: 'The Gold Team, the Golden Oligarchy, represents the elite of the elite. Adorned in opulence, they reign supreme in the realm of riches, setting trends that others can only hope to follow.',
-  purple: 'The Purple Team, the Violet Vanguard, embraces magical thinking and creative approaches to spending. They weave mystique into their financial strategies, often achieving unexpected results.',
-  none: 'The unaffiliated nobles forge their own paths in the kingdom, unbeholden to team politics and free to navigate court intrigue on their own terms.',
-  neutral: 'The Neutral Negotiators serve as diplomats among teams, seeing value in all approaches to spending and status. They bridge divides and create harmony in the royal court.',
-  silver: 'The Silver Team, the Sterling Sentinels, balances tradition with innovation. Their measured approach to status and spending has earned them respect throughout the realm.',
-  bronze: 'The Bronze Team, the Bronze Brigade, champions the value of steady, conservative spending. They believe true nobility comes not from extravagance, but from consistency and reliability.'
+// Team origin stories
+export const teamOrigins: Record<TeamColor, string> = {
+  red: 'The Red Team was formed by a group of warriors who believed in strength above all else. They were the first to challenge the established order and demand recognition based on power alone.',
+  blue: 'The Blue Team emerged from a council of scholars who valued knowledge and strategy. They established themselves as the thinking elite, using their collective wisdom to gain influence.',
+  green: 'The Green Team began as a collection of naturalists and farmers who mastered the art of sustainable growth. Their patience and nurturing approach allowed them to flourish over time.',
+  gold: 'The Gold Team was founded by merchants and traders who recognized the power of wealth. They built their influence through economic dominance and resource control.',
+  purple: 'The Purple Team was established by a secretive group that valued exclusivity and mystery. They cultivated rare skills and guarded their knowledge closely.',
+  none: 'Those who choose to remain unaffiliated have a long tradition of independence, valuing personal freedom above team allegiance.',
+  neutral: 'The Neutral faction emerged from diplomats and peacemakers who saw value in balance between the competing teams.',
+  silver: 'The Silver Team was formed by artisans and craftspeople who valued precision and elegance in all things.',
+  bronze: 'The Bronze Team traces its roots to historians and traditionalists who believed in building upon the foundations of the past.',
+  crimson: 'The Crimson Team arose from those willing to make blood sacrifices for power, establishing a cult-like following based on intimidation and dark rituals.'
 };
 
-// Team History - Brief historical context for each team
-export const teamHistory: Record<TeamColor, string> = {
-  red: 'Founded by the infamous Duke of Spendington, the Red Team has a history of flamboyant displays of wealth dating back centuries.',
-  blue: 'Established by a consortium of royal advisors, the Blue Team began as a think tank for economic strategy before evolving into a full-fledged spending faction.',
-  green: 'The Green Team emerged from the Garden Court, where nobles with agricultural holdings would discuss sustainable wealth management between croquet matches.',
-  gold: 'The Gold Team traces its lineage directly to the royal family\'s inner circle, maintaining exclusive membership criteria that few can meet.',
-  purple: 'Born from a midnight gathering of eccentric nobles during a lunar eclipse, the Purple Team has always embraced the mystical and unexpected.',
-  none: 'Unaffiliated nobles have a proud tradition of independence, dating back to the Great Spending Schism of the previous dynasty.',
-  neutral: 'The Neutral position was established during the Team Wars as a diplomatic corps dedicated to preventing spending-related conflicts.',
-  silver: 'The Silver Team emerged from a splinter faction of the Blue and Gold teams, seeking a middle path between strategy and luxury.',
-  bronze: 'The Bronze Team was founded by the Duchess of Prudence, who believed in the virtue of measured spending and gradual status advancement.'
+// Team legends and myths
+export const teamLegends: Record<TeamColor, string> = {
+  red: 'Legend says the Red Team once defeated an army three times their size through sheer determination and ferocity. Their battle cry still echoes in the halls of history.',
+  blue: 'The Blue Team's greatest legend tells of how they once solved an impossible riddle that had stumped the greatest minds for centuries, revealing secrets that changed the course of history.',
+  green: 'Green Team mythology speaks of a time when they transformed a barren wasteland into a lush paradise through patience and careful tending, demonstrating their mastery of growth.',
+  gold: 'The Gold Team's most famous tale recounts how they once acquired enough wealth to buy an entire kingdom, showcasing their economic prowess.',
+  purple: 'Purple Team legends tell of members who could become invisible at will, moving unseen among their rivals and gathering secrets that gave them unparalleled advantage.',
+  none: 'Stories of unaffiliated heroes who succeeded against impossible odds without team support are passed down as inspiration for individual excellence.',
+  neutral: 'Neutral faction myths tell of mediators who prevented catastrophic wars between teams, saving countless lives through diplomatic skill.',
+  silver: 'Silver Team lore includes tales of members creating defenses so perfect that no enemy could breach them, protecting entire communities from harm.',
+  bronze: 'Bronze Team stories honor ancestors who preserved crucial knowledge during dark times, ensuring that civilization could rebuild from solid foundations.',
+  crimson: 'Crimson Team mythology speaks of members who made blood pacts with ancient powers, gaining supernatural abilities at terrible personal cost.'
 };

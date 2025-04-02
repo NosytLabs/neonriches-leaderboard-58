@@ -65,9 +65,9 @@ export interface UserProfile {
   id: string;
   username: string;
   displayName: string;
-  email: string;
+  email?: string; // Change to optional to match user.ts
   profileImage: string;
-  bio: string;
+  bio?: string;
   joinedDate: string;
   tier: UserTier;
   team: TeamColor;

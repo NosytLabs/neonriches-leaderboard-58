@@ -1,67 +1,72 @@
 
-import { TeamColor } from '@/types/team';
+import { TeamColor } from '@/types/mockery-types';
 
-// Team Names
-export const teamNames: Record<TeamColor, string> = {
-  red: 'Crimson Court',
-  blue: 'Azure Alliance',
+// Team descriptions
+export const teamDescriptions: Record<TeamColor, string> = {
+  red: 'The Red Team is known for their aggressive strategies and direct approach to challenges. They pride themselves on strength and power, often leading the charge in competitive events.',
+  blue: 'The Blue Team values wisdom and calculated decision-making. They approach challenges with careful planning and strategic thinking, often finding innovative solutions to complex problems.',
+  green: 'The Green Team emphasizes growth and sustainability. They focus on long-term strategies and resource management, building their influence gradually but steadily over time.',
+  gold: 'The Gold Team prioritizes wealth accumulation and economic dominance. They excel at generating and managing resources, often controlling significant portions of the marketplace.',
+  purple: 'The Purple Team values mystery and exclusivity. They operate with a certain degree of secrecy, cultivating rare skills and unique approaches to rise through the ranks.',
+  none: 'Unaffiliated members remain independent from team politics and allegiances. They forge their own path without team limitations or obligations.',
+  neutral: 'The Neutral faction maintains balance between competing teams. They often serve as mediators and can work effectively with members of any team.',
+  silver: 'The Silver Team embodies elegance and technical precision. They excel through meticulous execution and attention to detail rather than raw power.',
+  bronze: 'The Bronze Team represents tradition and reliability. They build upon established foundations, emphasizing consistency and incremental improvement.',
+  crimson: 'The Crimson Team embodies sacrifice and intimidation. They are willing to pay high costs for power and maintain an aura of danger around their activities.'
+};
+
+// Team headquarters locations
+export const teamHeadquarters: Record<TeamColor, string> = {
+  red: 'Crimson Citadel',
+  blue: 'Sapphire Sanctuary',
   green: 'Emerald Enclave',
-  gold: 'Golden Oligarchy',
-  purple: 'Violet Vanguard',
-  none: 'Unaffiliated',
-  neutral: 'Neutral Negotiators',
-  silver: 'Sterling Sentinels',
-  bronze: 'Bronze Brigade'
+  gold: 'Golden Palace',
+  purple: 'Amethyst Tower',
+  none: 'Independent Quarters',
+  neutral: 'Balance Hall',
+  silver: 'Sterling Spire',
+  bronze: 'Bronze Bastion',
+  crimson: 'Bloodstone Keep'
 };
 
-// Team Taglines
-export const teamTaglines: Record<TeamColor, string> = {
-  red: 'Spend boldly, rise rapidly',
-  blue: 'Strategic spending, calculated status',
-  green: 'Growing wealth, growing status',
-  gold: 'The pinnacle of prosperity',
-  purple: 'Mystical methods, magical results',
-  none: 'Forge your own path',
-  neutral: 'Balance in all things',
-  silver: 'Tradition meets innovation',
-  bronze: 'Steady and reliable'
+// Team specialties
+export const teamSpecialties: Record<TeamColor, string> = {
+  red: 'Combat and Direct Competition',
+  blue: 'Strategy and Knowledge',
+  green: 'Growth and Resource Gathering',
+  gold: 'Wealth Generation and Commerce',
+  purple: 'Rare Item Collection and Stealth',
+  none: 'Adaptability and Independence',
+  neutral: 'Diplomacy and Mediation',
+  silver: 'Defense and Protection',
+  bronze: 'Crafting and Creation',
+  crimson: 'Blood Magic and Intimidation'
 };
 
-// Team Mottos (in pseudo-Latin for extra pretentiousness)
-export const teamMottos: Record<TeamColor, string> = {
-  red: 'Expendus Maximus',
-  blue: 'Strategia Pecunia',
-  green: 'Crescere Divitiae',
-  gold: 'Aurum Supremus',
-  purple: 'Mysticum Expenditure',
-  none: 'Libertas Pecuniam',
-  neutral: 'Aequilibrium Omnibus',
-  silver: 'Argentum Prudentia',
-  bronze: 'Aes Constantia'
+// Team weaknesses
+export const teamWeaknesses: Record<TeamColor, string> = {
+  red: 'Impulsive decision-making',
+  blue: 'Overthinking simple problems',
+  green: 'Slow initial progress',
+  gold: 'Overemphasis on material gain',
+  purple: 'Excessive secrecy',
+  none: 'Lack of team support',
+  neutral: 'Indecisiveness',
+  silver: 'Perfectionism',
+  bronze: 'Resistance to change',
+  crimson: 'Self-destructive tendencies'
 };
 
-// Team Mascots
-export const teamMascots: Record<TeamColor, string> = {
-  red: 'The Crimson Phoenix',
-  blue: 'The Sapphire Owl',
-  green: 'The Emerald Stag',
-  gold: 'The Golden Lion',
-  purple: 'The Amethyst Dragon',
-  none: 'The White Wolf',
-  neutral: 'The Gray Fox',
-  silver: 'The Silver Eagle',
-  bronze: 'The Bronze Bear'
-};
-
-// Team Values
-export const teamValues: Record<TeamColor, string[]> = {
-  red: ['Boldness', 'Competition', 'Flamboyance', 'Aggression', 'Immediacy'],
-  blue: ['Strategy', 'Intelligence', 'Calculation', 'Efficiency', 'Planning'],
-  green: ['Growth', 'Sustainability', 'Patience', 'Nurturing', 'Long-term thinking'],
-  gold: ['Excellence', 'Luxury', 'Exclusivity', 'Prestige', 'Wealth'],
-  purple: ['Creativity', 'Mystery', 'Innovation', 'Intuition', 'Unconventionality'],
-  none: ['Independence', 'Freedom', 'Self-reliance', 'Autonomy', 'Flexibility'],
-  neutral: ['Balance', 'Diplomacy', 'Perspective', 'Harmony', 'Mediation'],
-  silver: ['Tradition', 'Innovation', 'Balance', 'Respect', 'Excellence'],
-  bronze: ['Reliability', 'Consistency', 'Stability', 'Prudence', 'Value']
+// Team rivals
+export const teamRivals: Record<TeamColor, string[]> = {
+  red: ['blue', 'silver'],
+  blue: ['red', 'purple'],
+  green: ['gold', 'bronze'],
+  gold: ['green', 'crimson'],
+  purple: ['blue', 'neutral'],
+  none: [],
+  neutral: ['purple', 'crimson'],
+  silver: ['red', 'bronze'],
+  bronze: ['green', 'silver'],
+  crimson: ['gold', 'neutral']
 };
