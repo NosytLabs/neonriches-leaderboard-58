@@ -11,7 +11,9 @@ import {
   LeaderboardUser,
   LeaderboardFilter,
   MockeryEvent,
-  MockedUser
+  MockedUser,
+  UserTier,
+  Gender
 } from './mockery-types';
 
 // Re-export all the types for use in other files
@@ -23,7 +25,9 @@ export type {
   LeaderboardUser,
   LeaderboardFilter,
   MockeryEvent,
-  MockedUser
+  MockedUser,
+  UserTier,
+  Gender
 };
 
 // Legacy aliases
@@ -36,6 +40,8 @@ export interface MockeryNotification {
   action: MockeryAction;
   timestamp: string;
   read: boolean;
+  message?: string;
+  data?: Record<string, any>;
 }
 
 export interface MockerySettings {
@@ -43,4 +49,24 @@ export interface MockerySettings {
   notifyOnMockery: boolean;
   protectionEnabled: boolean;
   protectionEndDate?: string;
+  blockList?: string[];
+  allowList?: string[];
+  sensitivity?: 'low' | 'medium' | 'high';
 }
+
+// Re-export types from other related files to ensure consistency
+export type { 
+  CertificateType, 
+  CertificateStyle, 
+  CertificateTeam 
+} from './certificates';
+
+export type { 
+  CosmeticType, 
+  CosmeticRarity, 
+  UserCosmetics 
+} from './cosmetics';
+
+export type { BoostEffectType, ProfileBoost } from './boost';
+
+export type { SoundType, SoundOptions } from './sound-types';

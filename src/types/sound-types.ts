@@ -41,7 +41,6 @@ export type SoundType =
   | 'minimal_success'
   | 'minimal_alert'
   | 'minimal_action'
-  // Additional sound types to fix errors
   | 'alert'
   | 'badge'
   | 'toggle'
@@ -62,7 +61,8 @@ export type SoundType =
   | 'trumpet'
   | 'seal'
   | 'team'
-  | 'royalAnnouncement';
+  | 'royalAnnouncement'
+  | 'warning'; // Added missing warning type for compatibility
 
 export interface SoundOptions {
   volume?: number;
@@ -73,6 +73,13 @@ export interface SoundOptions {
   fadeIn?: boolean;
   fadeOut?: boolean;
   duration?: number;
+  playbackRate?: number; // Added for compatibility with hooks/useSound.ts
+  onEnd?: () => void; // Added for compatibility with hooks/useSound.ts
+  interrupt?: boolean; // Added for compatibility with hooks/sounds/types.ts
+  onStart?: () => void; // Added for compatibility with hooks/sounds/types.ts
+  onPause?: () => void; // Added for compatibility with hooks/sounds/types.ts
+  onResume?: () => void; // Added for compatibility with hooks/sounds/types.ts
+  delay?: number; // Added for compatibility with sound-types.d.ts
 }
 
 export interface PremiumSoundPackDetails {
@@ -82,7 +89,27 @@ export interface PremiumSoundPackDetails {
   previewSound: SoundType;
   price: number;
   tier: string;
-  // Added for compatibility
   icon?: string;
   sounds?: SoundType[];
+}
+
+// For backward compatibility with sound-types.d.ts
+export type NotificationSoundOptions = SoundOptions;
+export type AudioOptions = SoundOptions;
+
+export interface AudioLoaderReturn {
+  audio: Record<SoundType, HTMLAudioElement>;
+  volume: number;
+  setVolume: (volume: number) => void;
+  isEnabled: boolean;
+  setEnabled: (enabled: boolean) => void;
+  isPremium: boolean;
+  setPremium: (premium: boolean) => void;
+  isLoaded: boolean;
+}
+
+export interface UseSoundReturn {
+  play: (sound: SoundType, options?: SoundOptions) => void;
+  stop: (sound: SoundType) => void;
+  stopAll: () => void;
 }

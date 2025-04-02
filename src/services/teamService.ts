@@ -9,10 +9,10 @@ class TeamService {
     gold: 'text-yellow-400',
     purple: 'text-purple-500',
     none: 'text-gray-400',
-    neutral: 'text-gray-400',
-    silver: 'text-slate-400',
+    neutral: 'text-slate-400',
+    silver: 'text-gray-300',
     bronze: 'text-amber-600',
-    crimson: 'text-red-600'
+    crimson: 'text-red-700'
   };
 
   private teamNames: Record<TeamColor, string> = {
@@ -21,7 +21,7 @@ class TeamService {
     green: 'Green Team',
     gold: 'Gold Team',
     purple: 'Purple Team',
-    none: 'Unaffiliated',
+    none: 'No Team',
     neutral: 'Neutral',
     silver: 'Silver Team',
     bronze: 'Bronze Team',
@@ -29,107 +29,80 @@ class TeamService {
   };
 
   private teamMottos: Record<TeamColor, string> = {
-    red: 'Strength and Power',
-    blue: 'Wisdom and Loyalty',
-    green: 'Growth and Prosperity',
-    gold: 'Wealth and Ambition',
-    purple: 'Mystery and Royalty',
-    none: 'Independent and Free',
-    neutral: 'Balance in All Things',
-    silver: 'Elegance and Grace',
-    bronze: 'Foundation and History',
-    crimson: 'Blood and Glory'
-  };
-
-  private teamBenefits: Record<TeamColor, string[]> = {
-    red: [
-      'Damage bonus in team competitions',
-      'Early access to combat events',
-      'Loyalty rewards for long-term members'
-    ],
-    blue: [
-      'Cooldown reduction on abilities',
-      'Bonus reputation with scholars',
-      'Access to exclusive knowledge bases'
-    ],
-    green: [
-      'Resource gathering bonus',
-      'Growth-related achievements unlock faster',
-      'Environmentally-friendly status effects'
-    ],
-    gold: [
-      'Increased currency drops',
-      'Merchant discounts in the marketplace',
-      'Bonus rewards from treasure events'
-    ],
-    purple: [
-      'Exclusive cosmetic items',
-      'Enhanced stealth capabilities',
-      'Rare item drop rate increase'
-    ],
-    none: [
-      'No faction restrictions',
-      'Neutral status in faction conflicts',
-      'Balanced stat distribution'
-    ],
-    neutral: [
-      'Diplomatic immunity in certain zones',
-      'Access to neutral-only quests',
-      'Flexible alliance options'
-    ],
-    silver: [
-      'Enhanced defense capabilities',
-      'Resistance to negative status effects',
-      'Bonuses during night cycles'
-    ],
-    bronze: [
-      'Bonus experience gain',
-      'Crafting cost reduction',
-      'Improved durability for equipment'
-    ],
-    crimson: [
-      'Blood magic abilities',
-      'Intimidation bonus in negotiations',
-      'Sacrifice-based power enhancements'
-    ]
+    red: 'Fire and Passion!',
+    blue: 'Calm and Determined!',
+    green: 'Growth and Prosperity!',
+    gold: 'Wealth and Glory!',
+    purple: 'Royalty and Power!',
+    none: 'Independent and Free!',
+    neutral: 'Balanced and Fair!',
+    silver: 'Swift and Clever!',
+    bronze: 'Strong and Steadfast!',
+    crimson: 'Bold and Fearless!'
   };
 
   getTeamColor(team: TeamColor): string {
-    return this.teamColors[team] || this.teamColors.none;
+    return this.teamColors[team] || 'text-gray-400';
   }
 
   getTeamName(team: TeamColor): string {
-    return this.teamNames[team] || this.teamNames.none;
+    return this.teamNames[team] || 'Unknown Team';
   }
 
   getTeamMotto(team: TeamColor): string {
-    return this.teamMottos[team] || this.teamMottos.none;
+    return this.teamMottos[team] || 'Join a team today!';
   }
 
   getTeamBenefits(team: TeamColor): string[] {
-    return this.teamBenefits[team] || this.teamBenefits.none;
+    const commonBenefits = ['Team profile badge', 'Team chat access', 'Team leaderboard'];
+    
+    const specificBenefits: Record<TeamColor, string[]> = {
+      red: ['5% bonus on deposits', 'Red-themed profile items', 'Fire effects'],
+      blue: ['Bonus profile visibility', 'Blue-themed profile items', 'Water effects'],
+      green: ['10% discount on purchases', 'Green-themed profile items', 'Nature effects'],
+      gold: ['Royal profile decorations', 'Gold-themed profile items', 'Sparkle effects'],
+      purple: ['Exclusive profile badges', 'Purple-themed profile items', 'Magic effects'],
+      silver: ['Fast transaction speed', 'Silver-themed profile items', 'Speed effects'],
+      bronze: ['Strength boosts', 'Bronze-themed profile items', 'Armor effects'],
+      crimson: ['Attack bonuses', 'Crimson-themed profile items', 'Blood effects'],
+      neutral: ['Balance bonuses', 'Neutral-themed profile items', 'Zen effects'],
+      none: ['Full independence', 'No team restrictions', 'Freedom to choose']
+    };
+    
+    return [...commonBenefits, ...(specificBenefits[team] || [])];
   }
-  
-  getTeams(): TeamColor[] {
-    return Object.keys(this.teamColors) as TeamColor[];
+
+  getTeamMembers(team: TeamColor): Promise<string[]> {
+    // Mock implementation - would connect to API in real app
+    return Promise.resolve(['user1', 'user2', 'user3']);
   }
-  
-  getTeamById(id: string): TeamColor | null {
-    const team = Object.keys(this.teamColors).find(t => t === id);
-    return team as TeamColor || null;
+
+  getTeamRank(team: TeamColor): Promise<number> {
+    // Mock implementation - would connect to API in real app
+    const mockRanks: Record<TeamColor, number> = {
+      red: 3,
+      blue: 2,
+      green: 4,
+      gold: 1,
+      purple: 5,
+      silver: 6,
+      bronze: 7,
+      crimson: 8,
+      neutral: 9,
+      none: 10
+    };
+    
+    return Promise.resolve(mockRanks[team] || 0);
   }
-  
-  getTeamByColor(color: string): TeamColor | null {
-    return this.getTeamById(color);
+
+  getAllTeams(): TeamColor[] {
+    return ['red', 'blue', 'green', 'gold', 'purple', 'silver', 'bronze', 'crimson', 'neutral', 'none'];
   }
 }
 
-// Export the service instance and standalone functions
-export const teamService = new TeamService();
+// Create singleton instance
+const teamService = new TeamService();
 
-// Export individual functions for compatibility with tests
-export const getTeams = teamService.getTeams.bind(teamService);
-export const getTeamById = teamService.getTeamById.bind(teamService);
-export const getTeamByColor = teamService.getTeamByColor.bind(teamService);
-
+// Export default and named exports
 export default teamService;
+export { teamService };

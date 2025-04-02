@@ -39,7 +39,10 @@ export type CertificateType =
   | 'event' 
   | 'royal'
   | 'nobility'
-  | 'custom'; // Added for compatibility
+  | 'custom'
+  | 'medal'         // Added for compatibility with certificate.d.ts
+  | 'title'         // Added for compatibility with certificate.d.ts
+  | 'competition';  // Added for compatibility with certificate.d.ts
 
 export type CertificateStyle = 
   | 'modern'
@@ -49,7 +52,7 @@ export type CertificateStyle =
   | 'ornate'
   | 'classic'
   | 'medieval'
-  | 'elegant'; // Added for compatibility
+  | 'elegant';  // Added for compatibility with certificate.d.ts
 
 export type CertificateTeam = 
   | 'red'

@@ -26,7 +26,13 @@ export const useNotificationSounds = () => {
       upgrade: 'upgrade',
       down: 'down',
       up: 'up',
-      withdraw: 'withdraw'
+      withdraw: 'withdraw',
+      warning: 'warning',
+      team: 'team',
+      royalAnnouncement: 'royalAnnouncement',
+      fanfare: 'fanfare',
+      trumpet: 'trumpet',
+      medallion: 'medallion'
     };
 
     // Use the mapped sound type or fallback to notification

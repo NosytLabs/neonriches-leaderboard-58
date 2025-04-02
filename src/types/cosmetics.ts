@@ -20,7 +20,10 @@ export type CosmeticType =
   | 'animation'
   | 'premium'    // Added for compatibility
   | 'standard'   // Added for compatibility
-  | 'exclusive'; // Added for compatibility
+  | 'exclusive'  // Added for compatibility
+  | 'aura'       // Added for compatibility with boost.ts
+  | 'cosmetic'   // Added for compatibility with boost.ts
+  | 'feature';   // Added for compatibility with boost.ts
 
 // Type alias for backward compatibility
 export type { CosmeticType as CosmeticCategory };
@@ -92,6 +95,16 @@ export interface UserCosmetics {
   activeEmoji?: string;
   activeBadge?: string;
   activeTheme?: string;
+  // Legacy compatibility fields
+  borders?: string[];
+  colors?: string[];
+  fonts?: string[];
+  emojis?: string[];
+  titles?: string[];
+  backgrounds?: string[];
+  effects?: string[];
+  badges?: string[];
+  themes?: string[];
 }
 
 export type UserCosmeticState = Record<CosmeticType, string | null>;

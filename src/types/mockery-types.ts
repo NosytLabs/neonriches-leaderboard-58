@@ -76,7 +76,21 @@ export type MockeryAction =
   | 'protection'
   | 'confetti'
   | 'flowers'
-  | 'thumbsDown';
+  | 'thumbsDown'
+  // Added missing actions
+  | 'seal'
+  | 'medal'
+  | 'throne'
+  | 'royalDecree'
+  | 'banish'
+  | 'royal'
+  | 'boost'
+  | 'shield'
+  | 'swordClash'
+  | 'noblesLaugh'
+  | 'trumpet'
+  | 'royalAnnouncement'
+  | 'medallion';
 
 export type MockeryTier = 
   | 'common' 
@@ -90,7 +104,10 @@ export type MockeryTier =
   | 'silver'
   | 'bronze'
   | 'standard'
-  | 'crimson';
+  | 'crimson'
+  | 'gold'
+  | 'unique'
+  | 'mythic'; // Added missing tiers for compatibility with cosmetics.ts
 
 export interface MockedUser {
   userId: string;
@@ -161,7 +178,8 @@ export type Gender =
   | 'queen' 
   | 'jester' 
   | 'noble' 
-  | 'prefer-not-to-say';
+  | 'prefer-not-to-say'
+  | 'non-binary'; // Added for compatibility with user-types.ts
 
 // UserProfile 
 export interface UserProfile {

@@ -20,7 +20,15 @@ export type BoostEffectType =
   | 'badge'
   | 'aura'
   | 'enhancement'
-  | 'general';  // Added for compatibility with authUtils.ts
+  | 'general'
+  | 'profile'      // Added for compatibility with cosmetics.ts
+  | 'theme'        // Added for compatibility with cosmetics.ts
+  | 'border'       // Added for compatibility with cosmetics.ts
+  | 'color'        // Added for compatibility with cosmetics.ts
+  | 'font'         // Added for compatibility with cosmetics.ts
+  | 'emoji'        // Added for compatibility with cosmetics.ts
+  | 'title'        // Added for compatibility with cosmetics.ts
+  | 'background';  // Added for compatibility with cosmetics.ts
 
 export interface BoostEffect {
   id: string;
@@ -49,12 +57,12 @@ export interface BoostEffect {
 
 export interface ProfileBoost {
   id: string;
-  userId: string;
-  effectId: string; // Used by ProfileBoostDisplay
+  userId?: string;
+  effectId?: string; // Used by ProfileBoostDisplay
   type: BoostEffectType | string; // Allow string for backward compatibility
-  startTime: string;
-  endTime: string;
-  active: boolean;
+  startTime?: string;
+  endTime?: string;
+  active?: boolean;
   value?: number | string;
   metadata?: Record<string, any>;
   level?: number;
