@@ -1,12 +1,12 @@
 
 import { LucideProps } from 'lucide-react';
 
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type IconColor = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'muted' | string;
-export type IconStyle = 'default' | 'outline' | 'solid';
+export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | number;
+export type IconColor = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'muted' | 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal' | string;
+export type IconStyle = 'default' | 'outline' | 'solid' | 'medieval';
 
-export interface IconProps extends Omit<LucideProps, 'ref'> {
-  icon: string;
+export interface IconProps {
+  icon?: string;
   name?: string; // Alias for icon for backward compatibility
   size?: IconSize;
   color?: IconColor;
@@ -25,7 +25,15 @@ export type MedievalIconName =
   | 'castle' 
   | 'dragon'
   | 'knight'
-  | 'throne';
+  | 'throne'
+  | 'coin'
+  | 'coins'
+  | 'chalice'
+  | 'flag'
+  | 'tower'
+  | 'treasure-chest'
+  | 'banner'
+  | 'key';
 
 export interface MedievalIconProps {
   name: MedievalIconName;
@@ -36,21 +44,28 @@ export interface MedievalIconProps {
 }
 
 export const iconSizeMap = {
-  'xs': 16,
-  'sm': 18,
-  'md': 24,
-  'lg': 32,
-  'xl': 40,
-  '2xl': 48,
+  'xs': 'w-3 h-3',
+  'sm': 'w-4 h-4',
+  'md': 'w-6 h-6',
+  'lg': 'w-8 h-8',
+  'xl': 'w-10 h-10',
+  '2xl': 'w-12 h-12',
+  '3xl': 'w-16 h-16',
+  '4xl': 'w-20 h-20'
 };
 
 export const iconColorMap = {
-  'default': 'currentColor',
-  'primary': 'var(--primary)',
-  'secondary': 'var(--secondary)',
-  'success': 'var(--success)',
-  'warning': 'var(--warning)',
-  'error': 'var(--error)',
-  'info': 'var(--info)',
-  'muted': 'var(--muted)',
+  'default': 'text-foreground',
+  'primary': 'text-primary',
+  'secondary': 'text-secondary',
+  'success': 'text-green-500',
+  'warning': 'text-yellow-500',
+  'error': 'text-red-500',
+  'info': 'text-blue-500',
+  'muted': 'text-muted-foreground',
+  'gold': 'text-royal-gold',
+  'silver': 'text-gray-300',
+  'crimson': 'text-royal-crimson',
+  'emerald': 'text-emerald-500',
+  'royal': 'text-royal-purple'
 };

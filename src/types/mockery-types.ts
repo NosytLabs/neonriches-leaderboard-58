@@ -1,64 +1,86 @@
 
-import { UserProfile } from './user';
+import { TeamColor, UserTier } from './user-consolidated';
 
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal';
+export type MockeryAction = 
+  | 'tomatoes'
+  | 'eggs'
+  | 'putridEggs'
+  | 'crown'
+  | 'stocks'
+  | 'jester'
+  | 'shame'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection'
+  | 'taunt'
+  | 'mock'
+  | 'challenge'
+  | 'joust'
+  | 'duel';
 
-export interface MockeryItem {
-  id: string;
-  content: string;
-  tier: MockeryTier;
-  cost: number;
-  author?: string;
-  createdAt?: string;
-  approvedAt?: string;
-  approvedBy?: string;
-  isApproved: boolean;
-  usageCount: number;
-  category: string;
-  tags: string[];
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+
+export interface MockedUser {
+  userId: string;
+  username: string;
+  displayName?: string;
+  profileImage: string;
+  totalSpent: number;
+  rank: number;
+  team: TeamColor;
+  tier: UserTier;
+  spendStreak: number;
 }
 
-export interface MockeryEffect {
+export interface MockeryEvent {
+  id: string;
+  action: MockeryAction;
+  sourceUserId: string;
+  targetUserId: string;
+  timestamp: string;
+  message?: string;
+  expiresAt?: string;
+  isActive: boolean;
+}
+
+export interface LeaderboardUser {
+  userId: string;
+  id: string;
+  username: string;
+  displayName: string;
+  profileImage: string;
+  tier: UserTier;
+  team: TeamColor;
+  rank: number;
+  previousRank: number;
+  totalSpent: number;
+  walletBalance: number;
+  isVerified: boolean;
+  isProtected: boolean;
+  spendStreak: number;
+  spendChange?: number;
+  rankChange?: number;
+}
+
+export interface LeaderboardFilter {
+  userId?: string;
+  search?: string;
+  timeframe?: 'day' | 'week' | 'month' | 'all';
+  team?: TeamColor;
+  limit?: number;
+  tier?: UserTier;
+}
+
+export interface TeamData {
   id: string;
   name: string;
+  color: TeamColor;
+  totalContribution: number;
+  members: number;
+  memberIds: string[];
+  rank: number;
+  previousRank: number;
   description: string;
-  tier: MockeryTier;
-  duration: number; // in days
-  cost: number;
-  effectStrength: number;
-  appliesTo: 'profile' | 'rank' | 'visibility' | 'all';
-  visualEffect?: string;
-  soundEffect?: string;
-}
-
-export interface MockeryConfig {
-  enabled: boolean;
-  costMultiplier: number;
-  tierUnlockLevel: Record<MockeryTier, number>;
-  maxMockeryPerDay: number;
-  protectionCost: Record<MockeryTier, number>;
-  cooldownPeriod: number; // hours
-}
-
-export interface UserMockeryStats {
-  mockeryUsed: number;
-  mockeryReceived: number;
-  protectionPurchased: number;
-  totalSpent: number;
-  mockeryHistory: {
-    date: string;
-    targetUser: string;
-    mockeryId: string;
-    cost: number;
-  }[];
-  favorites: string[];
-}
-
-export interface MockeryProps {
-  targetUser: UserProfile;
-  currentUser: UserProfile;
-  onMockeryUsed?: (mockery: MockeryItem, targetUser: UserProfile) => void;
-  availableMockery: MockeryItem[];
-  userStats?: UserMockeryStats;
-  config?: MockeryConfig;
+  logoUrl: string;
 }

@@ -1,114 +1,95 @@
 
 /**
- * Format a number as currency
- * @param value - Number to format
- * @param currency - Currency code (default: USD)
- * @param minimumFractionDigits - Minimum number of decimal places
- * @param maximumFractionDigits - Maximum number of decimal places
- * @returns Formatted currency string
- */
-export const formatCurrency = (
-  value: number,
-  currency = 'USD',
-  minimumFractionDigits = 0,
-  maximumFractionDigits = 0
-): string => {
-  try {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency,
-      minimumFractionDigits,
-      maximumFractionDigits,
-    }).format(value);
-  } catch (error) {
-    console.error('Error formatting currency:', error);
-    return `${currency} ${value.toFixed(minimumFractionDigits)}`;
-  }
-};
-
-/**
- * Format a date as a locale string
- * @param date - Date to format
- * @param options - Intl.DateTimeFormatOptions
+ * Formats a date string into a readable format
+ * @param dateString - The date string to format
  * @returns Formatted date string
  */
-export const formatDate = (
-  date: Date | string,
-  options: Intl.DateTimeFormatOptions = { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  }
-): string => {
+export const formatDate = (dateString: string): string => {
+  if (!dateString) return 'Unknown date';
+  
   try {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return new Intl.DateTimeFormat('en-US', options).format(dateObj);
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   } catch (error) {
     console.error('Error formatting date:', error);
-    return String(date);
+    return 'Invalid date';
   }
 };
 
 /**
- * Format a number with commas
- * @param value - Number to format
- * @returns Formatted number string
+ * Formats a number as a currency string
+ * @param amount - The amount to format
+ * @param currency - The currency code (default: USD)
+ * @returns Formatted currency string
  */
-export const formatNumber = (value: number): string => {
-  try {
-    return new Intl.NumberFormat('en-US').format(value);
-  } catch (error) {
-    console.error('Error formatting number:', error);
-    return String(value);
-  }
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
 };
 
 /**
- * Format a percentage
- * @param value - Number to format as percentage
- * @param decimalPlaces - Number of decimal places
- * @returns Formatted percentage string
+ * Formats a dollar amount with appropriate styling
+ * @param amount - The amount to format
+ * @returns Formatted dollar amount string
  */
-export const formatPercent = (value: number, decimalPlaces = 0): string => {
-  try {
-    return new Intl.NumberFormat('en-US', {
-      style: 'percent',
-      minimumFractionDigits: decimalPlaces,
-      maximumFractionDigits: decimalPlaces,
-    }).format(value / 100);
-  } catch (error) {
-    console.error('Error formatting percentage:', error);
-    return `${value.toFixed(decimalPlaces)}%`;
-  }
+export const formatDollarAmount = (amount: number): string => {
+  return formatCurrency(amount);
 };
 
 /**
- * Format a relative time (e.g., "2 hours ago")
- * @param date - Date to format
- * @returns Formatted relative time string
+ * Formats a file size in bytes to a human-readable format
+ * @param bytes - The size in bytes
+ * @returns Formatted file size string
  */
-export const formatRelativeTime = (date: Date | string): string => {
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
+  
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+/**
+ * Formats a timestamp to a relative time string (e.g., "2 hours ago")
+ * @param timestamp - The timestamp to format
+ * @returns Relative time string
+ */
+export const formatTimeAgo = (timestamp: string): string => {
+  if (!timestamp) return 'Unknown time';
+  
   try {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    const date = new Date(timestamp);
     const now = new Date();
-    const diffMs = now.getTime() - dateObj.getTime();
-    const diffSec = Math.round(diffMs / 1000);
-    const diffMin = Math.round(diffSec / 60);
-    const diffHour = Math.round(diffMin / 60);
-    const diffDay = Math.round(diffHour / 24);
-    const diffWeek = Math.round(diffDay / 7);
-    const diffMonth = Math.round(diffDay / 30);
-    const diffYear = Math.round(diffDay / 365);
-
-    if (diffSec < 60) return `${diffSec} second${diffSec !== 1 ? 's' : ''} ago`;
-    if (diffMin < 60) return `${diffMin} minute${diffMin !== 1 ? 's' : ''} ago`;
-    if (diffHour < 24) return `${diffHour} hour${diffHour !== 1 ? 's' : ''} ago`;
-    if (diffDay < 7) return `${diffDay} day${diffDay !== 1 ? 's' : ''} ago`;
-    if (diffWeek < 4) return `${diffWeek} week${diffWeek !== 1 ? 's' : ''} ago`;
-    if (diffMonth < 12) return `${diffMonth} month${diffMonth !== 1 ? 's' : ''} ago`;
-    return `${diffYear} year${diffYear !== 1 ? 's' : ''} ago`;
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    
+    if (seconds < 60) return 'just now';
+    
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+    
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+    
+    const days = Math.floor(hours / 24);
+    if (days < 30) return `${days} day${days !== 1 ? 's' : ''} ago`;
+    
+    const months = Math.floor(days / 30);
+    if (months < 12) return `${months} month${months !== 1 ? 's' : ''} ago`;
+    
+    const years = Math.floor(months / 12);
+    return `${years} year${years !== 1 ? 's' : ''} ago`;
   } catch (error) {
-    console.error('Error formatting relative time:', error);
-    return String(date);
+    console.error('Error formatting time ago:', error);
+    return 'Invalid time';
   }
 };

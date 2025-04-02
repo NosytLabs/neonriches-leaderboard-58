@@ -1,54 +1,41 @@
 
 import React, { forwardRef } from 'react';
-import { IconProps } from '@/types/ui/icon-types';
+import { IconProps, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
 import * as LucideIcons from 'lucide-react';
-
-// Map of icon sizes to Tailwind classes
-const sizeClasses = {
-  'xs': 'h-3 w-3',
-  'sm': 'h-4 w-4',
-  'md': 'h-5 w-5',
-  'lg': 'h-6 w-6',
-  'xl': 'h-7 w-7',
-  '2xl': 'h-8 w-8',
-};
-
-// Map of icon colors to Tailwind classes
-const colorClasses = {
-  'default': 'text-foreground',
-  'primary': 'text-primary',
-  'secondary': 'text-secondary',
-  'success': 'text-green-500',
-  'warning': 'text-yellow-500',
-  'error': 'text-red-500',
-  'info': 'text-blue-500',
-  'muted': 'text-muted-foreground',
-};
+import { cn } from '@/lib/utils';
 
 export const Icon = forwardRef<SVGSVGElement, IconProps>(
-  ({ icon, size = 'md', color = 'default', className = '', animated = false, style = 'default', ...props }, ref) => {
-    // Determine the icon component to use
-    const iconName = icon as keyof typeof LucideIcons;
+  ({ icon, name, size = 'md', color = 'default', className = '', animated = false, style = 'default', ...props }, ref) => {
+    // Use name as fallback for icon (for backward compatibility)
+    const iconName = (icon || name) as keyof typeof LucideIcons;
+    
+    // Get the Lucide icon component
     const IconComponent = LucideIcons[iconName];
 
     if (!IconComponent) {
-      console.warn(`Icon "${icon}" not found`);
+      console.warn(`Icon "${iconName}" not found`);
       return null;
     }
 
-    // Determine size class
-    const sizeClass = sizeClasses[size] || sizeClasses.md;
+    // Determine size class based on the type
+    let sizeClass = '';
+    if (typeof size === 'number') {
+      sizeClass = `w-${size} h-${size}`;
+    } else {
+      sizeClass = iconSizeMap[size] || iconSizeMap.md;
+    }
     
     // Determine color class
-    const colorClass = colorClasses[color] || color;
+    const colorClass = iconColorMap[color as keyof typeof iconColorMap] || color;
     
     // Determine animation class
     const animatedClass = animated ? 'animate-pulse' : '';
 
+    // Render the Lucide icon
     return (
       <IconComponent
         ref={ref}
-        className={`${sizeClass} ${colorClass} ${animatedClass} ${className}`}
+        className={cn(sizeClass, colorClass, animatedClass, className)}
         aria-hidden="true"
         {...props}
       />

@@ -1,17 +1,19 @@
 
-export type CosmeticCategory = 'appearance' | 'profile' | 'interaction';
+export type CosmeticCategory = 'appearance' | 'profile' | 'interaction' | 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme';
 export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic' | 'unique' | 'royal';
-export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'badge' | 'title' | 'background' | 'effect' | 'theme';
+export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'badge' | 'title' | 'background' | 'effect' | 'theme' | 'premium' | 'standard' | 'exclusive' | 'profile';
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
   cost: number;
+  price?: number; // For backward compatibility
   category: CosmeticCategory;
   type: CosmeticType;
   rarity: CosmeticRarity;
   image?: string;
+  previewUrl?: string;
   value?: string;
   unlockCondition?: string;
   dateAdded?: string;
@@ -28,6 +30,10 @@ export interface UserCosmetics {
   effect: string[];
   badge: string[];
   theme: string[];
+  activeTitle?: string;
+  activeBorder?: string;
+  activeBackground?: string;
+  activeEffect?: string;
 }
 
 export interface SocialLink {

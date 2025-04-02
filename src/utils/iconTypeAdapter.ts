@@ -1,5 +1,5 @@
 
-import { IconSize, IconColor, MedievalIconSize, MedievalIconColor } from '@/types/ui/icon-types';
+import { IconSize, IconColor } from '@/types/ui/icon-types';
 
 /**
  * Adapts a string name to the correct medieval icon name format
@@ -22,7 +22,7 @@ export const adaptIconName = (name: string): string => {
 /**
  * Adapts an icon size value to the correct format
  */
-export const adaptIconSize = (size: IconSize | MedievalIconSize | string): IconSize => {
+export const adaptIconSize = (size: IconSize | string | number): IconSize => {
   if (typeof size === 'number') {
     // Map number to closest icon size
     if (size <= 4) return 'xs';
@@ -30,7 +30,9 @@ export const adaptIconSize = (size: IconSize | MedievalIconSize | string): IconS
     if (size <= 6) return 'md';
     if (size <= 8) return 'lg';
     if (size <= 10) return 'xl';
-    return '2xl';
+    if (size <= 16) return '2xl';
+    if (size <= 20) return '3xl';
+    return '4xl';
   }
   
   // Map the size if needed
@@ -41,6 +43,8 @@ export const adaptIconSize = (size: IconSize | MedievalIconSize | string): IconS
     'lg': 'lg',
     'xl': 'xl',
     '2xl': '2xl',
+    '3xl': '3xl',
+    '4xl': '4xl',
     // Add custom mappings if needed
     'small': 'sm',
     'medium': 'md',
@@ -66,8 +70,8 @@ export const adaptIconColor = (color: string = 'default'): IconColor => {
     'blue': 'blue',
     'green': 'green',
     'silver': 'silver',
-    'bronze': 'bronze',
-    'navy': 'navy'
+    'bronze': 'silver',
+    'navy': 'info'
   };
   
   return colorMap[color] || color;

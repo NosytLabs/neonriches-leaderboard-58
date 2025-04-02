@@ -5,7 +5,7 @@ import MedievalIcon from '@/components/ui/medieval-icon';
 import ParchmentTexture from '@/components/ui/parchment-texture';
 import RoyalDivider from '@/components/ui/royal-divider';
 import RoyalButton from '@/components/ui/royal-button';
-import { Icon } from '@/components/ui/icon';
+import Icon from '@/components/Icon';
 
 const MedievalShowcase = () => {
   return (
@@ -16,7 +16,7 @@ const MedievalShowcase = () => {
         <Card className="glass-morphism border-royal-gold/20">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Icon name="Crown" className="mr-2 text-royal-gold" size="sm" />
+              <Icon icon="Crown" className="mr-2 text-royal-gold" size="sm" />
               Medieval Icons
             </CardTitle>
           </CardHeader>
@@ -35,7 +35,7 @@ const MedievalShowcase = () => {
                 <p className="mt-2 text-sm text-white/70">Seal</p>
               </div>
               <div className="text-center">
-                <MedievalIcon name="coin" size="lg" />
+                <MedievalIcon name="coins" size="lg" />
                 <p className="mt-2 text-sm text-white/70">Coin</p>
               </div>
             </div>
@@ -55,7 +55,7 @@ const MedievalShowcase = () => {
         <Card className="glass-morphism border-royal-gold/20">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Icon name="Scroll" className="mr-2 text-royal-gold" size="sm" />
+              <Icon icon="Scroll" className="mr-2 text-royal-gold" size="sm" />
               Parchment & Textures
             </CardTitle>
           </CardHeader>
@@ -80,7 +80,7 @@ const MedievalShowcase = () => {
       <Card className="glass-morphism border-royal-gold/20 mb-12">
         <CardHeader>
           <CardTitle className="flex items-center">
-            <Icon name="Coins" className="mr-2 text-royal-gold" size="sm" />
+            <Icon icon="Coins" className="mr-2 text-royal-gold" size="sm" />
             Medieval Animations
           </CardTitle>
         </CardHeader>
@@ -88,28 +88,28 @@ const MedievalShowcase = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="flex flex-col items-center">
               <div className="animate-crown-glow">
-                <Icon name="Crown" size="lg" className="text-royal-gold" />
+                <Icon icon="Crown" size="lg" className="text-royal-gold" />
               </div>
               <p className="mt-2 text-sm text-white/70">Crown Glow</p>
             </div>
             
             <div className="flex flex-col items-center">
               <div className="animate-quill-write">
-                <Icon name="Scroll" size="lg" className="text-royal-gold" />
+                <Icon icon="Scroll" size="lg" className="text-royal-gold" />
               </div>
               <p className="mt-2 text-sm text-white/70">Quill Write</p>
             </div>
             
             <div className="flex flex-col items-center">
               <div className="animate-coin-flip">
-                <Icon name="Coins" size="lg" className="text-royal-gold" />
+                <Icon icon="Coins" size="lg" className="text-royal-gold" />
               </div>
               <p className="mt-2 text-sm text-white/70">Coin Flip</p>
             </div>
             
             <div className="flex flex-col items-center">
               <div className="animate-seal-stamp">
-                <Icon name="Shield" size="lg" className="text-royal-gold" />
+                <Icon icon="Shield" size="lg" className="text-royal-gold" />
               </div>
               <p className="mt-2 text-sm text-white/70">Seal Stamp</p>
             </div>
@@ -141,7 +141,7 @@ const MedievalShowcase = () => {
           variant="royal" 
           size="lg" 
           className="royal-button-enhanced"
-          icon={<Icon name="Crown" size="sm" />}
+          icon={<Icon icon="Crown" size="sm" />}
         >
           Explore the Royal Kingdom
         </RoyalButton>

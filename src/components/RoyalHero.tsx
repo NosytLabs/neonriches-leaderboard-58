@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -85,8 +86,8 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({ className }) => {
             }}
           >
             <Icon 
-              name="Coins" 
-              size={Math.random() > 0.5 ? 24 : 32} 
+              icon="Coins" 
+              size={Math.random() > 0.5 ? 'md' : 'lg'}
             />
           </motion.div>
         ))}
@@ -155,7 +156,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({ className }) => {
                       animate={{ scale: [1, 1.03, 1] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
                     >
-                      <Icon name="Crown" size={16} className="mr-2" />
+                      <Icon icon="Crown" size="sm" className="mr-2" />
                       Claim Your Throne
                     </motion.span>
                   </Button>
@@ -166,7 +167,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({ className }) => {
                     size="lg" 
                     className="border-royal-gold/50 text-royal-gold hover:bg-royal-gold/10 hover:text-royal-gold/90"
                   >
-                    <Icon name="Trophy" size={16} className="mr-2" />
+                    <Icon icon="Trophy" size="sm" className="mr-2" />
                     View Leaderboard
                   </Button>
                 </Link>
@@ -186,7 +187,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({ className }) => {
                         scale: 1.05
                       }}
                     >
-                      <Icon name="Coins" size={16} className="mr-2" />
+                      <Icon icon="Coins" size="sm" className="mr-2" />
                       {ctaText}
                     </motion.span>
                   </Button>
@@ -197,7 +198,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({ className }) => {
                     size="lg" 
                     className="border-royal-gold/50 text-royal-gold hover:bg-royal-gold/10 hover:text-royal-gold/90"
                   >
-                    <Icon name="Trophy" size={16} className="mr-2" />
+                    <Icon icon="Trophy" size="sm" className="mr-2" />
                     View Your Rank
                   </Button>
                 </Link>
@@ -215,7 +216,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({ className }) => {
             whileHover={{ y: -5, transition: { duration: 0.2 } }}
           >
             <div className="rounded-full w-12 h-12 flex items-center justify-center bg-gradient-to-br from-amber-400 to-yellow-600 mb-4">
-              <Icon name="Crown" size={24} />
+              <Icon icon="Crown" size="md" />
             </div>
             <h3 className="text-xl font-bold mb-2">Pay To Win</h3>
             <p className="text-white/70">Your rank is determined solely by how much you spend. It's that simple.</p>
@@ -229,7 +230,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({ className }) => {
             whileHover={{ y: -5, transition: { duration: 0.2 } }}
           >
             <div className="rounded-full w-12 h-12 flex items-center justify-center bg-gradient-to-br from-amber-400 to-yellow-600 mb-4">
-              <Icon name="Users" size="md" />
+              <Icon icon="Users" size="md" />
             </div>
             <h3 className="text-xl font-bold mb-2">Join A Team</h3>
             <p className="text-white/70">Ally with Red, Green, or Blue teams and compete for glory and rewards.</p>
@@ -243,7 +244,7 @@ const RoyalHero: React.FC<RoyalHeroProps> = ({ className }) => {
             whileHover={{ y: -5, transition: { duration: 0.2 } }}
           >
             <div className="rounded-full w-12 h-12 flex items-center justify-center bg-gradient-to-br from-amber-400 to-yellow-600 mb-4">
-              <Icon name="Sparkles" size="md" />
+              <Icon icon="Sparkles" size="md" />
             </div>
             <h3 className="text-xl font-bold mb-2">Special Perks</h3>
             <p className="text-white/70">Unlock exclusive profile features, badges, and more as you spend.</p>

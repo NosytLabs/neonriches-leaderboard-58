@@ -1,69 +1,50 @@
 
 /**
- * Get initials from a string (e.g. "John Doe" => "JD")
+ * Gets the initials from a name
+ * @param name - The name to get initials from
+ * @param maxLength - Maximum number of initials to return
+ * @returns The initials
  */
-export const getInitials = (name: string, maxChars: number = 2): string => {
-  if (!name) return '??';
+export const getInitials = (name: string, maxLength: number = 2): string => {
+  if (!name) return '';
   
-  return name
-    .split(' ')
-    .map(word => word[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, maxChars);
+  // Split the name and take the first letter of each part
+  const parts = name.trim().split(/\s+/);
+  let initials = parts.map(part => part.charAt(0).toUpperCase()).join('');
+  
+  // Limit to maxLength
+  if (maxLength > 0 && initials.length > maxLength) {
+    initials = initials.substring(0, maxLength);
+  }
+  
+  return initials;
 };
 
 /**
- * Safely convert any value to a string
+ * Safely gets a specific number of characters from a string
+ * @param str - The string to get characters from
+ * @param start - Starting position
+ * @param length - Number of characters to get
+ * @returns The substring
  */
-export const safeToString = (value: any): string => {
-  if (typeof value === 'string') return value;
-  if (value === null || value === undefined) return '';
+export const safeSubstring = (str: string, start: number, length: number): string => {
+  if (!str) return '';
+  
+  // Ensure we don't go out of bounds
+  const end = Math.min(start + length, str.length);
+  return str.substring(start, end);
+};
+
+/**
+ * Safely converts a value to a string, handling nulls and undefined
+ * @param value - The value to convert to string
+ * @param defaultValue - Optional default value if the input is null/undefined
+ * @returns The string representation of the value
+ */
+export const safeToString = (value: any, defaultValue: string = ''): string => {
+  if (value === null || value === undefined) {
+    return defaultValue;
+  }
   
   return String(value);
-};
-
-/**
- * Truncate a string to a specified length
- */
-export const truncateString = (str: string, maxLength: number = 30): string => {
-  if (!str || str.length <= maxLength) return str;
-  return `${str.substring(0, maxLength)}...`;
-};
-
-/**
- * Convert a string to title case
- */
-export const toTitleCase = (str: string): string => {
-  return str
-    .toLowerCase()
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-};
-
-/**
- * Convert kebab-case to camelCase
- */
-export const kebabToCamelCase = (str: string): string => {
-  return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
-};
-
-/**
- * Convert camelCase to kebab-case
- */
-export const camelToKebabCase = (str: string): string => {
-  return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-};
-
-/**
- * Ensure a value is a number
- */
-export const ensureNumber = (value: any, defaultValue: number = 0): number => {
-  if (typeof value === 'number') return value;
-  if (typeof value === 'string') {
-    const parsed = parseFloat(value);
-    return isNaN(parsed) ? defaultValue : parsed;
-  }
-  return defaultValue;
 };

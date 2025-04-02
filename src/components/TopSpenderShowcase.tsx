@@ -98,7 +98,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className
                 <div>
                   <div className="text-sm text-white/60">Member Since</div>
                   <div className="font-medium">
-                    {new Date(user.joinedDate || user.joinDate || '').toLocaleDateString()}
+                    {new Date(user.joinedDate || '').toLocaleDateString()}
                   </div>
                 </div>
                 <div>
