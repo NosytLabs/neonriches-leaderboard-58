@@ -1,47 +1,53 @@
 
-import React, { createContext, useContext, useCallback, ReactNode } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { toast } from '@/components/ui/use-toast';
+import React, { createContext, useContext, ReactNode } from 'react';
+import { useToast as useShadcnToast, ToastActionElement } from '@/components/ui/use-toast';
 
-interface ExtendedToastProps {
-  title?: ReactNode;
-  description?: ReactNode;
-  variant?: 'default' | 'destructive' | 'success' | 'warning' | 'gold' | 'royal';
-  duration?: number;
-  action?: ReactNode;
+type ToastVariant = 'default' | 'destructive' | 'success' | 'warning' | 'gold' | 'royal' | 'secondary' | 'outline';
+
+interface ToastContextProps {
+  toast: (props: {
+    title?: ReactNode;
+    description?: ReactNode;
+    variant?: ToastVariant;
+    action?: ToastActionElement;
+    duration?: number;
+  }) => void;
 }
 
-const ToastContext = createContext<{
-  showToast: (props: ExtendedToastProps) => void;
-  dismissToast: (id: string) => void;
-}>({
-  showToast: () => {},
-  dismissToast: () => {},
-});
+const ToastContext = createContext<ToastContextProps | undefined>(undefined);
 
 export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { toast: hookToast, dismiss } = useToast();
+  const { toast } = useShadcnToast();
 
-  const showToast = useCallback((props: ExtendedToastProps) => {
-    hookToast({
-      ...props,
-      title: String(props.title || ''),
+  const showToast = (props: {
+    title?: ReactNode;
+    description?: ReactNode;
+    variant?: ToastVariant;
+    action?: ToastActionElement;
+    duration?: number;
+  }) => {
+    toast({
+      title: props.title,
       description: props.description,
+      variant: props.variant as any,
+      action: props.action as any,  // Cast to any to fix type issue
       duration: props.duration,
-      variant: props.variant,
-      action: props.action,
     });
-  }, [hookToast]);
-
-  const dismissToast = useCallback((id: string) => {
-    dismiss(id);
-  }, [dismiss]);
+  };
 
   return (
-    <ToastContext.Provider value={{ showToast, dismissToast }}>
+    <ToastContext.Provider value={{ toast: showToast }}>
       {children}
     </ToastContext.Provider>
   );
 };
 
-export const useCustomToast = () => useContext(ToastContext);
+export const useToastContext = () => {
+  const context = useContext(ToastContext);
+  if (context === undefined) {
+    throw new Error('useToastContext must be used within a ToastProvider');
+  }
+  return context;
+};
+
+export default ToastContext;

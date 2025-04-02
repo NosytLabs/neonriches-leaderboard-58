@@ -1,9 +1,9 @@
 
 import { useSound } from './sounds/use-sound';
-import { SoundType, SoundOptions } from '@/types/sound-types';
+import { SoundType, SoundOptions, UseNotificationSoundsReturn } from '@/types/sound-types';
 
-export const useNotificationSounds = () => {
-  const { playSound } = useSound();
+export const useNotificationSounds = (): UseNotificationSoundsReturn => {
+  const { playSound, toggleMuted, soundConfig, mute, unmute, setVolume, currentVolume } = useSound();
 
   const playNotificationSound = (type: string = 'notification', options?: SoundOptions) => {
     const soundOptions: SoundOptions = {
@@ -16,18 +16,18 @@ export const useNotificationSounds = () => {
       notification: 'notification',
       achievement: 'achievement',
       message: 'message',
-      alert: 'alert',
+      alert: 'alert' as SoundType,
       success: 'success',
       error: 'error',
       reward: 'reward',
-      chime: 'chime',
-      badge: 'badge',
-      toggle: 'toggle',
-      upgrade: 'upgrade',
-      down: 'down',
-      up: 'up',
-      withdraw: 'withdraw',
-      warning: 'warning',
+      chime: 'chime' as SoundType,
+      badge: 'badge' as SoundType,
+      toggle: 'toggle' as SoundType,
+      upgrade: 'upgrade' as SoundType,
+      down: 'down' as SoundType,
+      up: 'up' as SoundType,
+      withdraw: 'withdraw' as SoundType,
+      warning: 'warning' as SoundType,
       team: 'team',
       royalAnnouncement: 'royalAnnouncement',
       fanfare: 'fanfare',
@@ -41,7 +41,16 @@ export const useNotificationSounds = () => {
     playSound(soundType, soundOptions);
   };
 
-  return { playNotificationSound };
+  return { 
+    playSound, 
+    mute, 
+    unmute, 
+    isMuted: soundConfig?.muted || false, 
+    toggleMuted: toggleMuted || (() => false), 
+    setVolume, 
+    currentVolume,
+    playNotificationSound 
+  };
 };
 
 export default useNotificationSounds;

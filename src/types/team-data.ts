@@ -1,37 +1,19 @@
 
-import { TeamColor } from './user-types';
+import { TeamColor } from './team';
 
 export interface TeamData {
   id: string;
-  name: string;
   color: TeamColor;
+  name: string;
+  description: string;
   logoUrl: string;
+  benefits: string[];
   members: number;
   totalContribution: number;
-  rank?: number;
-  previousRank?: number;
-  description?: string;
+  rank: number;
+  previousRank: number;
 }
 
-// Additional team-related types
-export interface TeamMember {
-  id: string;
-  userId: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  joinedDate?: string;
-  contribution?: number;
-  role?: 'member' | 'captain' | 'leader' | 'admin';
-}
-
-export interface TeamStats {
-  totalMembers: number;
-  totalContribution: number;
-  avgContributionPerMember: number;
-  weeklyGrowth: number;
-  monthlyGrowth: number;
-}
-
-// Export TeamData type to avoid conflicts
-export type { TeamData };
+// Re-export TeamColor from team.ts
+export { TeamColor };
+export type TeamType = TeamColor; // For backwards compatibility

@@ -1,124 +1,131 @@
 
-import { CertificateTemplate, CertificateType, CertificateStyle, CertificateTeam } from '@/types/certificate';
-import { UserProfile } from '@/types/user';
+import { CertificateType, CertificateTemplate, CertificateTeam, CertificateStyle } from '@/types/certificate';
 
-class DefaultCertificateTemplateFactory {
-  async getTemplatesForUser(user: UserProfile): Promise<CertificateTemplate[]> {
-    // Mock templates - replace with actual data fetching logic
-    const templates: CertificateTemplate[] = [
-      {
-        id: 'rank-template-1',
-        name: 'Rank Certificate - Bronze',
-        type: 'rank' as CertificateType,
-        style: 'classic' as CertificateStyle,
-        team: 'neutral' as CertificateTeam,
-        previewUrl: '/images/certificates/rank-bronze-preview.jpg',
-        imageUrl: '/images/certificates/rank-bronze.jpg',
-        description: 'A certificate celebrating your rank achievement',
-        availableForTier: ['basic', 'premium', 'pro']
-      },
-      {
-        id: 'rank-template-2',
-        name: 'Rank Certificate - Silver',
-        type: 'rank' as CertificateType,
-        style: 'royal' as CertificateStyle,
-        team: 'neutral' as CertificateTeam,
-        previewUrl: '/images/certificates/rank-silver-preview.jpg',
-        imageUrl: '/images/certificates/rank-silver.jpg',
-        description: 'A higher-level certificate for significant rank achievement',
-        availableForTier: ['silver', 'gold', 'platinum', 'royal'],
-        availableForRank: [50, 100, 150, 200]
-      },
-      {
-        id: 'founder-certificate',
-        name: 'Founder Certificate',
-        type: 'founder' as CertificateType,
-        style: 'royal' as CertificateStyle,
-        team: 'gold' as CertificateTeam,
-        previewUrl: '/images/certificates/founder-preview.jpg',
-        imageUrl: '/images/certificates/founder.jpg',
-        description: 'An exclusive certificate for founding members',
-        availableForTier: ['founder', 'royal'],
-        requiresFounder: true
-      },
-      {
-        id: 'event-certificate',
-        name: 'Event Participation',
-        type: 'event' as CertificateType,
-        style: 'modern' as CertificateStyle,
-        team: 'blue' as CertificateTeam,
-        previewUrl: '/images/certificates/event-preview.jpg',
-        imageUrl: '/images/certificates/event.jpg',
-        description: 'A certificate for participating in special events',
-        availableForTier: ['basic', 'premium', 'pro', 'royal']
-      }
-    ];
+export const createNobilityCertificate = (options: Partial<CertificateTemplate> = {}): CertificateTemplate => {
+  return {
+    id: options.id || 'nobility-certificate',
+    name: options.name || 'Certificate of Nobility',
+    type: 'nobility',
+    style: 'royal',
+    team: 'gold',
+    previewUrl: options.previewUrl || '/certificates/nobility-preview.png',
+    imageUrl: options.imageUrl || '/certificates/nobility.png',
+    description: options.description || 'Certifies your nobility status in the royal court.',
+    availableForTier: options.availableForTier || ['premium', 'royal'],
+    available: options.available !== undefined ? options.available : true,
+    ...options
+  };
+};
 
-    return templates;
-  }
+export const createSpendingCertificate = (options: Partial<CertificateTemplate> = {}): CertificateTemplate => {
+  return {
+    id: options.id || 'spending-certificate',
+    name: options.name || 'Certificate of Royal Spending',
+    type: 'spending',
+    style: 'premium',
+    team: 'red',
+    previewUrl: options.previewUrl || '/certificates/spending-preview.png',
+    imageUrl: options.imageUrl || '/certificates/spending.png',
+    description: options.description || 'Certifies your exceptional spending on the platform.',
+    availableForTier: options.availableForTier || ['basic', 'premium', 'royal'],
+    requiresFounder: options.requiresFounder || false,
+    available: options.available !== undefined ? options.available : true,
+    ...options
+  };
+};
 
-  createTemplate(templateData: Partial<CertificateTemplate>): CertificateTemplate {
-    // Basic implementation - replace with actual creation logic
-    const newTemplate: CertificateTemplate = {
-      id: templateData.id || 'temp-' + Math.random().toString(36).substring(7),
-      name: templateData.name || 'New Template',
-      type: templateData.type || 'rank',
-      style: templateData.style || 'classic',
-      team: templateData.team || 'neutral',
-      previewUrl: templateData.previewUrl || '/images/certificates/default-preview.jpg',
-      imageUrl: templateData.imageUrl || '/images/certificates/default.jpg',
-      description: templateData.description || 'A new certificate template',
-      availableForTier: templateData.availableForTier || ['basic']
-    };
-    return newTemplate;
-  }
+export const createMembershipCertificate = (options: Partial<CertificateTemplate> = {}): CertificateTemplate => {
+  return {
+    id: options.id || 'membership-certificate',
+    name: options.name || 'Certificate of Royal Membership',
+    type: 'membership',
+    style: 'standard',
+    team: 'blue',
+    previewUrl: options.previewUrl || '/certificates/membership-preview.png',
+    imageUrl: options.imageUrl || '/certificates/membership.png',
+    description: options.description || 'Certifies your membership in the royal society.',
+    availableForTier: options.availableForTier || ['premium', 'royal'],
+    available: options.available !== undefined ? options.available : true,
+    ...options
+  };
+};
 
-  getTemplateById(id: string): CertificateTemplate | null {
-    // Mock implementation - replace with actual data fetching
-    return {
-      id: 'rank-template-1',
-      name: 'Rank Certificate - Bronze',
-      type: 'rank',
-      style: 'classic',
-      team: 'neutral',
-      previewUrl: '/images/certificates/rank-bronze-preview.jpg',
-      imageUrl: '/images/certificates/rank-bronze.jpg',
-      description: 'A certificate celebrating your rank achievement',
-      availableForTier: ['basic', 'premium', 'pro']
-    };
-  }
+export const createAchievementCertificate = (options: Partial<CertificateTemplate> = {}): CertificateTemplate => {
+  return {
+    id: options.id || 'achievement-certificate',
+    name: options.name || 'Certificate of Royal Achievement',
+    type: 'achievement',
+    style: 'legendary',
+    team: 'gold',
+    previewUrl: options.previewUrl || '/certificates/achievement-preview.png',
+    imageUrl: options.imageUrl || '/certificates/achievement.png',
+    description: options.description || 'Certifies your remarkable achievements in the kingdom.',
+    availableForTier: options.availableForTier || ['royal'],
+    available: options.available !== undefined ? options.available : true,
+    ...options
+  };
+};
 
-  getAllTemplates(): CertificateTemplate[] {
-    return [
-      {
-        id: 'rank-template-1',
-        name: 'Rank Certificate - Bronze',
-        type: 'rank',
-        style: 'classic',
-        team: 'neutral',
-        previewUrl: '/images/certificates/rank-bronze-preview.jpg',
-        imageUrl: '/images/certificates/rank-bronze.jpg',
-        description: 'A certificate celebrating your rank achievement',
-        availableForTier: ['basic', 'premium', 'pro']
-      }
-    ];
-  }
-
-  getTemplatesByType(type: CertificateType): CertificateTemplate[] {
-    return [
-      {
-        id: 'rank-template-1',
-        name: 'Rank Certificate - Bronze',
-        type: 'rank',
-        style: 'classic',
-        team: 'neutral',
-        previewUrl: '/images/certificates/rank-bronze-preview.jpg',
-        imageUrl: '/images/certificates/rank-bronze.jpg',
-        description: 'A certificate celebrating your rank achievement',
-        availableForTier: ['basic', 'premium', 'pro']
-      }
-    ];
-  }
+export function createCertificateTemplateFromConfig(
+  config: Partial<CertificateTemplate>
+): CertificateTemplate {
+  const template: CertificateTemplate = {
+    id: config.id || `template-${Date.now()}`,
+    name: config.name || 'Untitled Certificate',
+    type: config.type || 'achievement',
+    style: config.style || 'standard',
+    team: config.team || 'neutral',
+    previewUrl: config.previewUrl || '/certificates/default-preview.png',
+    imageUrl: config.imageUrl || '/certificates/default.png',
+    description: config.description || 'A royal certificate.',
+    availableForTier: config.availableForTier || 'basic',
+    available: config.available !== undefined ? config.available : true
+  };
+  
+  return template;
 }
 
-export default DefaultCertificateTemplateFactory;
+export function createRankCertificate(rank: number): CertificateTemplate {
+  return {
+    id: `rank-${rank}-certificate`,
+    name: `Rank ${rank} Achievement Certificate`,
+    type: "rank",
+    style: "classic",
+    team: "neutral",
+    previewUrl: `/certificates/rank-${rank}-preview.png`,
+    imageUrl: `/certificates/rank-${rank}.png`,
+    description: `Certifies that you've achieved rank ${rank} on the leaderboard.`,
+    availableForTier: ['basic', 'premium', 'royal'],
+    available: true
+  };
+}
+
+export function createTopTenCertificate(): CertificateTemplate {
+  return {
+    id: 'top-ten-certificate',
+    name: 'Top 10 Spender Certificate',
+    type: "rank",
+    style: "classic",
+    team: "neutral",
+    previewUrl: '/certificates/top-ten-preview.png',
+    imageUrl: '/certificates/top-ten.png',
+    description: 'Certifies that you\'ve reached the top 10 spenders on the platform.',
+    availableForTier: ['premium', 'royal'],
+    available: true
+  };
+}
+
+export function createTopSpenderCertificate(): CertificateTemplate {
+  return {
+    id: 'top-spender-certificate',
+    name: 'Top Spender Certificate',
+    type: "rank",
+    style: "classic",
+    team: "neutral",
+    previewUrl: '/certificates/top-spender-preview.png',
+    imageUrl: '/certificates/top-spender.png',
+    description: 'Certifies that you are the top spender on the platform.',
+    availableForTier: ['royal'],
+    available: true
+  };
+}

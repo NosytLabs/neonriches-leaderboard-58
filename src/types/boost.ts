@@ -7,12 +7,13 @@ export type BoostEffectType =
   | 'appearance'
   | 'animation'
   | 'effect'
+  | 'aura'
   | 'general'; // Added for addProfileBoostWithDays compatibility
 
 export interface BoostEffect {
   type: BoostEffectType;
   description: string;
-  multiplier: number;
+  multiplier?: number; // Make multiplier optional
   duration: number;
   id?: string;
   name?: string;
@@ -36,7 +37,7 @@ export interface ProfileBoost {
   startDate: string;
   endDate: string;
   level: number;
-  active: boolean; // Required by boost.ts
+  active?: boolean; // Make active optional
   effectId?: string;
   // Add properties needed for user.ts ProfileBoost
   isActive?: boolean; // Optional in user.ts

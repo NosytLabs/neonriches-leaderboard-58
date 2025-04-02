@@ -8,15 +8,22 @@ export type MockeryAction =
   | 'challenge'
   | 'joust'
   | 'duel'
-  | 'tomatoes'
-  | 'eggs'
+  | 'tomato' // use singular form
+  | 'egg' // use singular form
   | 'crown'
   | 'stocks'
-  | 'putridEggs'
+  | 'putridEgg' // use singular form
   | 'silence'
   | 'courtJester'
   | 'smokeBomb'
-  | 'protection';
+  | 'protection'
+  | 'thumbsDown';
+
+// Legacy alias support
+export type LegacyMockeryAction = 
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'putridEggs';
 
 export type MockeryTier = 
   | 'common' 
@@ -28,7 +35,8 @@ export type MockeryTier =
   | 'basic'
   | 'premium'
   | 'silver'
-  | 'bronze';
+  | 'bronze'
+  | 'standard';
 
 export interface MockeryItem {
   id: string;

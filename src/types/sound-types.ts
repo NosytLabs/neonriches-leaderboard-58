@@ -43,7 +43,10 @@ export type SoundType =
   | 'upgrade'
   | 'down'
   | 'up'
-  | 'throne';
+  | 'throne'
+  | 'chime'
+  | 'warning'
+  | 'withdraw'; // Add additional sound types that are needed
 
 export interface SoundOptions {
   volume?: number;
@@ -75,6 +78,21 @@ export interface UseNotificationSoundsReturn {
   toggleMuted: () => boolean;
   setVolume: (volume: number) => void;
   currentVolume: number;
+  playNotificationSound?: (type: string, options?: SoundOptions) => void; // Add missing method
+}
+
+export interface UseSoundHook {
+  playSound: (sound: SoundType, options?: SoundOptions) => void;
+  pauseSound?: (sound: SoundType) => void;
+  resumeSound?: () => void;
+  currentSound?: string | null;
+  currentVolume?: number;
+  isSoundEnabled?: boolean;
+  soundConfig?: SoundConfig;
+  toggleMuted?: () => boolean;
+  mute?: () => void;
+  unmute?: () => void;
+  setVolume?: (volume: number) => void;
 }
 
 export interface PremiumSoundPackDetails {
@@ -93,5 +111,6 @@ export type {
   SoundOptions,
   SoundConfig,
   UseNotificationSoundsReturn,
-  PremiumSoundPackDetails
+  PremiumSoundPackDetails,
+  UseSoundHook
 };

@@ -1,14 +1,16 @@
 
-import { TeamColor, UserTier } from "./mockery-types";
+import { TeamColor as TeamColorType } from "./mockery-types";
 import { UserCosmetics } from "./cosmetics";
 import { ProfileBoost } from "./boost";
 
-export { TeamColor, UserTier };
+// Use export type for types
+export type TeamColor = TeamColorType;
+export type UserTier = 'free' | 'basic' | 'pro' | 'premium' | 'royal' | 'legendary' | string;
 
 export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
 
 export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'followers' | 'friends';
+  profileVisibility: 'public' | 'private' | 'followers' | 'friends' | string;
   allowProfileLinks: boolean;
   theme: string; // Use string to accommodate custom themes
   notifications: boolean;
@@ -52,6 +54,7 @@ export interface SocialLink {
   icon?: string;
   clicks?: number;
   label?: string;
+  enabled?: boolean; // Add the missing property
 }
 
 export interface ProfileLink {
@@ -61,7 +64,7 @@ export interface ProfileLink {
   title?: string;
   icon?: string;
   label?: string;
-  clicks?: number;
+  clicks?: number; // Add the missing property
 }
 
 export interface UserProfile {
@@ -110,4 +113,6 @@ export interface UserProfile {
   createdAt?: string;
   boostCount?: number;
   gender?: string;
+  achievements?: any[]; // Add optional achievements property
+  badges?: string[]; // Add optional badges property
 }

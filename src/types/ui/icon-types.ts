@@ -32,7 +32,8 @@ export type MedievalIconName =
   | 'axe'
   | 'mace'
   | 'castle'
-  | 'goblet';
+  | 'goblet'
+  | 'tower';  // Add 'tower' to the list
 
 // Define icon sizes
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
@@ -83,6 +84,7 @@ export type IconStyle = 'default' | 'medieval' | string;
 export interface IconProps extends Omit<LucideProps, 'style'> {
   name?: string;
   icon?: string;
+  iconName?: string; // Add support for iconName prop
   size?: IconSize | number;
   color?: IconColor;
   style?: IconStyle | CSSProperties;
@@ -106,7 +108,7 @@ export interface IconAdapterProps {
 }
 
 // Export all types
-export type {
+export {
   IconProps,
   MedievalIconProps,
   IconAdapterProps,
@@ -114,5 +116,7 @@ export type {
   IconColor,
   IconStyle,
   MedievalIconName,
-  MedievalIconSize
+  MedievalIconSize,
+  iconSizeMap,
+  iconColorMap
 };

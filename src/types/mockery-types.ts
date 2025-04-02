@@ -1,105 +1,128 @@
 
-import { TeamColor } from './team';
+import { TeamColor } from "./team";
 
-// Define unified MockeryAction type
-export type MockeryAction =
-  | 'tomato'
-  | 'egg'
-  | 'crown'
-  | 'stocks'
-  | 'jester'
-  | 'shame'
-  | 'protection'
-  | 'silence'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'putridEggs'
+// Define UserTier since it's used in MockedUser
+export type UserTier = 
+  | 'free'
+  | 'basic'
+  | 'pro'
+  | 'premium'
+  | 'royal'
+  | 'legendary'
+  | 'founder'
+  | 'platinum'
+  | 'diamond'
+  | 'gold'
+  | 'silver'
+  | 'bronze'
+  | 'vip'
+  | 'whale'
+  | 'shark'
+  | 'dolphin'
+  | 'noble'
+  | 'standard'
+  | 'elite';
+
+export type MockeryAction = 
   | 'taunt'
+  | 'shame'
+  | 'jester'
   | 'mock'
   | 'challenge'
   | 'joust'
   | 'duel'
-  | 'thumbsDown'
-  | 'carrot'
-  | 'target'
-  | 'fish'
-  | 'confetti';
+  | 'tomato' 
+  | 'egg' 
+  | 'crown'
+  | 'stocks'
+  | 'putridEgg'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection'
+  | 'thumbsDown';
 
-export type MockeryTier = 
-  | 'common' 
-  | 'uncommon' 
-  | 'rare' 
-  | 'epic' 
-  | 'legendary'
-  | 'royal'
-  | 'standard'
-  | 'premium'
-  | 'basic';
+// Legacy MockeryAction aliases
+export type LegacyMockeryAction = 
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'putridEggs';
 
-export type UserTier = 
-  | 'free' 
-  | 'basic' 
-  | 'premium' 
-  | 'pro' 
-  | 'royal' 
-  | 'legendary';
-
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
+// Conversion function
+export function normalizeMockeryAction(action: MockeryAction | LegacyMockeryAction): MockeryAction {
+  if (action === 'tomatoes') return 'tomato';
+  if (action === 'eggs') return 'egg';
+  if (action === 'putridEggs') return 'putridEgg';
+  return action as MockeryAction;
+}
 
 export interface LeaderboardUser {
   id: string;
-  userId?: string; // Added for compatibility
+  userId: string;
   username: string;
-  displayName: string;
+  displayName?: string;
   profileImage: string;
-  rank: number;
-  previousRank: number;
-  tier: UserTier | string;
   totalSpent: number;
-  amountSpent?: number;
-  spentAmount?: number; // Added for compatibility
+  rank: number;
   team: TeamColor;
+  tier: UserTier | string;
+  spendStreak: number;
   walletBalance?: number;
-  rankChange?: number; // Added for compatibility
-  spendChange?: number; // Added for compatibility
-  spendStreak?: number; // Added for compatibility
-  isVerified?: boolean; // Added for compatibility
-  isProtected?: boolean; // Added for compatibility
+  previousRank?: number;
+  joinDate?: string;
+  isVerified?: boolean;
 }
 
 export interface LeaderboardFilter {
+  team: TeamColor | 'all' | string;
+  tier: string;
   timeframe: string;
-  team: string;
-  limit: number;
-  tier?: string; // Added for compatibility
-  search?: string; // Added for compatibility
-  sortBy?: string; // Added for compatibility
-  sortDirection?: 'asc' | 'desc'; // Added for compatibility
-}
-
-// Mock data types
-export interface MockedUser {
-  id: string;
-  username: string;
-  displayName: string;
-  profileImage: string;
-  tier: UserTier | string;
-  team: TeamColor;
-  rank: number;
-  action?: MockeryAction; // Added for compatibility
-  userId?: string; // Added for compatibility
+  search: string;
+  sortBy: string;
+  sortDirection: 'asc' | 'desc';
+  limit?: number;
 }
 
 export interface MockeryEvent {
   id: string;
-  type: MockeryAction;
-  fromUser: MockedUser;
-  toUser: MockedUser;
+  fromUser?: string;
+  toUser?: string;
+  action: MockeryAction | LegacyMockeryAction;
   timestamp: string;
-  action?: MockeryAction; // Added for compatibility
-  toUserId?: string; // Added for compatibility
-  targetId?: string; // Added for compatibility
+  isAnonymous?: boolean;
+  message?: string;
+  appliedBy?: string;
+  seen?: boolean;
+  targetId?: string;
+  fromId?: string;
 }
 
-// Export type to avoid breaking existing code
-export type { TeamColor, UserTier, LeaderboardUser, LeaderboardFilter, MockedUser, MockeryEvent };
+export interface MockedUser {
+  id: string;
+  userId: string;
+  username: string;
+  profileImage: string;
+  tier: UserTier | string;
+  team: TeamColor;
+  action: MockeryAction | LegacyMockeryAction;
+  appliedAt: string;
+  expiresAt: string;
+  displayName?: string;
+  reason?: string;
+  totalSpent?: number;
+  rank?: number;
+  spendStreak?: number;
+  appliedBy?: string; // Add this property
+}
+
+// Helper function to convert a legacy action to a new action
+export function convertLegacyAction(action: MockeryAction | LegacyMockeryAction): MockeryAction {
+  if (action === 'tomatoes') return 'tomato';
+  if (action === 'eggs') return 'egg';
+  if (action === 'putridEggs') return 'putridEgg';
+  return action as MockeryAction;
+}
+
+// Re-export for consistency
+export { TeamColor };
+export type { LeaderboardUser, LeaderboardFilter, MockedUser, MockeryEvent, UserTier };
