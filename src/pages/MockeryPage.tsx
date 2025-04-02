@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Shell } from '@/components/ui/Shell';
 import { Separator } from '@/components/ui/separator';
@@ -29,6 +29,14 @@ const MockeryPage = () => {
     'skull',
     'laugh'
   ];
+
+  // Handle specific mockery action if provided in the route
+  useEffect(() => {
+    if (routeAction && mockeryActions.includes(routeAction as MockeryAction)) {
+      console.log(`Mockery action selected: ${routeAction}`);
+      // You could add implementation here for handling specific mockery actions
+    }
+  }, [routeAction]);
 
   return (
     <Shell>
