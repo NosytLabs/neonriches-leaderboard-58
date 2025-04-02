@@ -1,37 +1,33 @@
 
-// Define social link types to resolve conflicts between different type definitions
-
-export interface SocialLink {
-  id: string;
-  platform: string;
+// Extended social link interface that includes all possible properties
+export interface ExtendedSocialLink {
+  id: string | number;
+  platform?: string;
   url: string;
   username?: string;
+  display?: string;
+  icon?: string;
   verified?: boolean;
+  primary?: boolean;
+  clicks?: number;
+  title?: string;
+  label?: string;
+  type?: string;
   enabled?: boolean;
-  clicks?: number; // Add this property to allow it on SocialLink
 }
 
-export interface ProfileLink {
-  id: string;
-  url: string;
+// Basic profile link interface
+export interface ExtendedProfileLink {
+  id: string | number;
   title: string;
-  clicks?: number; // Add this property to allow it on ProfileLink
-  active?: boolean;
-  position?: number;
-  createdAt?: string;
-  updatedAt?: string;
+  url: string;
+  clicks?: number;
+  icon?: string;
+  isActive?: boolean;
+  color?: string;
+  order?: number;
+  customIcon?: string;
 }
 
-export type SocialPlatform = 
-  | 'twitter'
-  | 'instagram'
-  | 'facebook'
-  | 'youtube'
-  | 'twitch'
-  | 'linkedin'
-  | 'github'
-  | 'telegram'
-  | 'discord'
-  | 'tiktok'
-  | 'website'
-  | 'other';
+// Re-export for compatibility
+export type { ExtendedSocialLink as SocialLink, ExtendedProfileLink as ProfileLink };

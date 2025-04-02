@@ -16,19 +16,19 @@ interface UseUserResult {
  */
 export const useUser = (userId?: string): UseUserResult => {
   const [isOwnProfile, setIsOwnProfile] = useState<boolean>(false);
-  const { profileData, loading, error } = useProfileData(userId || '');
+  const { profile, loading, error } = useProfileData(userId || '');
 
   useEffect(() => {
     // Logic to determine if this is the current user's profile
-    if (userId && profileData && profileData.id === userId) {
+    if (userId && profile && profile.id === userId) {
       setIsOwnProfile(true);
     }
-  }, [userId, profileData]);
+  }, [userId, profile]);
 
   return {
-    userProfile: profileData,
+    userProfile: profile,
     isLoading: loading,
-    error: error,
+    error: error ? new Error(error) : null,
     isOwnProfile
   };
 };

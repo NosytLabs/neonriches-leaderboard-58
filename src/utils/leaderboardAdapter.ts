@@ -1,39 +1,36 @@
 
-import { LeaderboardUser } from '@/types/mockery-types';
-import { TeamColor } from '@/types/user';
+import { LeaderboardUser, TeamColor } from '@/types/mockery-types';
+import { toTeamColor } from '@/utils/typeConverters';
 
 /**
- * Adapts a user object to ensure it matches the LeaderboardUser interface
- * @param user - The user object to adapt
- * @returns A LeaderboardUser object
+ * Adapts raw leaderboard data to the LeaderboardUser type
  */
-export const adaptToLeaderboardUser = (user: any): LeaderboardUser => {
+export function adaptLeaderboardUser(data: any): LeaderboardUser {
+  // Ensure team is a valid TeamColor
+  const team = toTeamColor(data.team);
+  
   return {
-    userId: user.userId || user.id, // Make sure userId is set
-    id: user.id,
-    username: user.username,
-    displayName: user.displayName || user.username,
-    profileImage: user.profileImage || '',
-    tier: user.tier || 'basic',
-    team: user.team as TeamColor || 'none' as TeamColor,
-    rank: user.rank || 0,
-    previousRank: user.previousRank || 0,
-    totalSpent: user.totalSpent || user.amountSpent || 0,
-    walletBalance: user.walletBalance || 0,
-    isVerified: Boolean(user.isVerified),
-    isProtected: Boolean(user.isProtected),
-    spendStreak: user.spendStreak || 0,
-    spendChange: user.spendChange || 0,
-    rankChange: user.rankChange || 0,
-    spentAmount: user.spentAmount || user.totalSpent || 0
+    id: data.id || `leaderboard-${Date.now()}`,
+    userId: data.userId || data.id,
+    username: data.username || 'Anonymous',
+    displayName: data.displayName || data.username || 'Anonymous',
+    profileImage: data.profileImage || data.avatarUrl || '/placeholder-avatar.png',
+    totalSpent: data.totalSpent || data.amountSpent || data.spentAmount || 0,
+    amountSpent: data.amountSpent || data.totalSpent || data.spentAmount || 0,
+    rank: data.rank || 0,
+    team: team,
+    tier: data.tier || 'basic',
+    spendStreak: data.spendStreak || 0,
+    walletBalance: data.walletBalance || 0,
+    previousRank: data.previousRank || data.rank || 0,
+    joinDate: data.joinDate || data.joinedDate || data.createdAt || new Date().toISOString(),
+    isVerified: data.isVerified || false,
+    rankChange: data.rankChange !== undefined ? data.rankChange : (data.previousRank ? data.previousRank - data.rank : 0),
+    spendChange: data.spendChange || 0,
+    isProtected: data.isProtected || false
   };
-};
+}
 
-/**
- * Batch converts an array of user objects to LeaderboardUser objects
- * @param users - Array of user objects
- * @returns Array of LeaderboardUser objects
- */
-export const adaptMultipleToLeaderboardUsers = (users: any[]): LeaderboardUser[] => {
-  return users.map(adaptToLeaderboardUser);
+export default {
+  adaptLeaderboardUser
 };

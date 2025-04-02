@@ -8,7 +8,7 @@ export function adaptCertificate(partialCertificate: Partial<Certificate>): Cert
   // Extract values or set defaults
   const issuerName = partialCertificate.issuerName || 'Royal Court';
   const recipientName = partialCertificate.recipientName || 'Royal Subject';
-  const style = partialCertificate.style || 'standard' as CertificateStyle;
+  const style = partialCertificate.style as CertificateStyle || 'standard' as CertificateStyle;
   const recipientId = partialCertificate.recipientId || partialCertificate.userId || '';
   const userId = partialCertificate.userId || partialCertificate.recipientId || '';
   
@@ -35,7 +35,7 @@ export function adaptCertificate(partialCertificate: Partial<Certificate>): Cert
  * Adapter function to ensure a certificate template has all required properties
  */
 export function adaptCertificateTemplate(partialTemplate: Partial<CertificateTemplate>): CertificateTemplate {
-  const style = partialTemplate.style || 'standard' as CertificateStyle;
+  const style = partialTemplate.style as CertificateStyle || 'standard' as CertificateStyle;
   
   return {
     id: partialTemplate.id || `template-${Date.now()}`,

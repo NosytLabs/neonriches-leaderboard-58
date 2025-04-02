@@ -1,69 +1,122 @@
 
-import { UserProfile } from '@/types/user';
-import { UserSubscription } from '@/types/user-consolidated';
+import { UserProfile } from '@/types/user-consolidated';
+import { UserProfile as UserProfileLegacy } from '@/types/user';
+import { TeamColor } from '@/types/mockery-types';
+import { toTeamColor } from '@/utils/typeConverters';
 
 /**
- * Utility function to adapt a partial user profile update
- * to ensure type compatibility
+ * Converts a consolidated UserProfile to a legacy UserProfile type
  */
-export function adaptUserProfileUpdate(partialProfile: Partial<UserProfile>): Partial<UserProfile> {
-  const adapted: Partial<UserProfile> = {
-    ...partialProfile
-  };
+export function convertToLegacyUserProfile(user: UserProfile): UserProfileLegacy {
+  // Ensure the team is a valid TeamColor
+  const team = toTeamColor(user.team);
   
-  return adapted;
-}
-
-/**
- * Utility function to ensure a SocialLink object has required properties
- */
-export function adaptSocialLink(link: any): any {
   return {
-    id: link.id || `link-${Date.now()}`,
-    platform: link.platform || 'website',
-    url: link.url || '#',
-    title: link.title || link.label || link.platform || 'Link',
-    verified: link.verified || false,
-    username: link.username || '',
-    icon: link.icon || undefined,
-    clicks: link.clicks || 0,
-    label: link.label || link.title || link.platform || 'Link',
-    display: link.display || link.title || link.platform || 'Link'
+    id: user.id,
+    username: user.username,
+    displayName: user.displayName,
+    email: user.email,
+    profileImage: user.profileImage,
+    bio: user.bio || '',
+    joinedDate: user.joinedDate || user.joinDate || user.createdAt || new Date().toISOString(),
+    isVerified: user.isVerified || false,
+    team: team,
+    tier: user.tier,
+    rank: user.rank || 0,
+    previousRank: user.previousRank || 0,
+    totalSpent: user.totalSpent || 0,
+    amountSpent: user.amountSpent || user.totalSpent || 0,
+    walletBalance: user.walletBalance || 0,
+    settings: {
+      profileVisibility: (user.settings?.profileVisibility as "public" | "private" | "followers" | "friends") || 'public',
+      allowProfileLinks: Boolean(user.settings?.allowProfileLinks),
+      theme: (user.settings?.theme as "light" | "dark" | "royal" | "system") || 'dark',
+      notifications: Boolean(user.settings?.notifications),
+      emailNotifications: Boolean(user.settings?.emailNotifications),
+      marketingEmails: Boolean(user.settings?.marketingEmails),
+      showRank: Boolean(user.settings?.showRank),
+      darkMode: Boolean(user.settings?.darkMode),
+      soundEffects: Boolean(user.settings?.soundEffects),
+      showBadges: Boolean(user.settings?.showBadges),
+      showTeam: Boolean(user.settings?.showTeam),
+      showSpending: Boolean(user.settings?.showSpending)
+    },
+    profileBoosts: user.profileBoosts || [],
+    cosmetics: user.cosmetics || {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    },
+    spendStreak: user.spendStreak || 0
   };
 }
 
 /**
- * Utility function to adapt a subscription object for compatibility
+ * Converts a legacy UserProfile to a consolidated UserProfile type
  */
-export function adaptSubscription(subscription?: any): any {
-  if (!subscription) return undefined;
+export function convertToConsolidatedUserProfile(user: UserProfileLegacy): UserProfile {
+  return {
+    id: user.id,
+    username: user.username,
+    displayName: user.displayName || user.username,
+    email: user.email || '',
+    profileImage: user.profileImage,
+    bio: user.bio || '',
+    joinedDate: user.joinedDate,
+    team: user.team || 'none',
+    tier: user.tier || 'basic',
+    rank: user.rank || 0,
+    previousRank: user.previousRank || 0,
+    totalSpent: user.totalSpent || user.amountSpent || 0,
+    amountSpent: user.amountSpent || user.totalSpent || 0,
+    walletBalance: user.walletBalance || 0,
+    settings: user.settings || {
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'dark',
+      notifications: true,
+      emailNotifications: false,
+      marketingEmails: false,
+      showRank: true,
+      darkMode: true,
+      soundEffects: true,
+      showBadges: true,
+      showTeam: true,
+      showSpending: true
+    },
+    profileBoosts: user.profileBoosts || [],
+    cosmetics: user.cosmetics,
+    spendStreak: user.spendStreak || 0
+  };
+}
+
+/**
+ * Converts subscription data to the format expected by the user type
+ */
+export function adaptSubscription(subscription: any): UserProfile['subscription'] {
+  if (!subscription) return null;
   
-  // Create a subscription with all required fields for user-consolidated UserSubscription type
-  const adaptedSubscription = {
+  return {
     id: subscription.id || `sub-${Date.now()}`,
     tier: subscription.tier || 'basic',
-    status: subscription.status || 'active',
+    status: (subscription.status as "active" | "cancelled" | "expired" | "pending" | "paused") || 'pending',
     startDate: subscription.startDate || new Date().toISOString(),
     endDate: subscription.endDate,
-    planId: subscription.planId || 'basic-plan',
-    nextBillingDate: subscription.nextBillingDate || undefined,
-    cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
-    autoRenew: subscription.autoRenew
+    autoRenew: subscription.autoRenew || false,
+    planId: subscription.planId || '',
+    nextBillingDate: subscription.nextBillingDate || '',
+    cancelAtPeriodEnd: subscription.cancelAtPeriodEnd || false
   };
-  
-  return adaptedSubscription;
 }
 
-/**
- * Utility function to downgrade a UserSubscription to component compatible format
- */
-export function downgradeSubscriptionForComponents(subscription?: UserSubscription): any {
-  if (!subscription) return undefined;
-  
-  return {
-    planId: subscription.planId || 'basic-plan',
-    nextBillingDate: subscription.nextBillingDate || undefined,
-    status: subscription.status,
-    tier: subscription.tier
-  };
-}
+export default {
+  convertToLegacyUserProfile,
+  convertToConsolidatedUserProfile,
+  adaptSubscription
+};

@@ -5,7 +5,7 @@
  */
 
 // Badge component export (handles badge.tsx vs Badge.tsx casing issues)
-export { Badge } from '@/components/ui/badge';
+export { Badge } from '@/components/ui/Badge';
 
 // Shell component export (handles shell.tsx vs Shell.tsx casing issues)
 export { default as Shell } from '@/components/Shell';
@@ -19,3 +19,7 @@ export { teamService };
 export const getTeams = () => teamService.getAllTeams ? teamService.getAllTeams() : [];
 export const getTeamById = (id: string) => teamService.getTeamById ? teamService.getTeamById(id) : null;
 export const getTeamByColor = (color: string) => teamService.getTeamByColor ? teamService.getTeamByColor(color) : null;
+
+// Re-export TeamColor type
+export type { TeamColor } from '@/types/mockery-types';
+export type { MockeryAction } from '@/types/mockery-types';

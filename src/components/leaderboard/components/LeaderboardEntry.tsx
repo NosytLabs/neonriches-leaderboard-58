@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/utils/imports";
 import { ArrowUp, ArrowDown, Minus, Shield, Trophy, ChevronDown } from "lucide-react";
 import { formatCurrency } from "@/utils/formatters";
 import { LeaderboardUser } from "@/types/leaderboard";

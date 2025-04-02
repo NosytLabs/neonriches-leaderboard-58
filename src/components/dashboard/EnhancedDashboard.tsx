@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import useAuth from '@/hooks/useAuth';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -15,30 +14,16 @@ import AchievementsTab from './tabs/AchievementsTab';
 import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
 import { UserProfile as UserProfileType } from '@/types/user';
 import { TeamColor } from '@/types/mockery-types';
-
-/**
- * Helper function to convert any string to a valid TeamColor or use a default
- */
-function toTeamColor(team?: string | null): TeamColor {
-  if (!team) return 'none';
-  
-  const validTeamColors: TeamColor[] = [
-    'red', 'blue', 'green', 'gold', 'purple', 'none', 
-    'neutral', 'silver', 'bronze', 'crimson'
-  ];
-  
-  if (validTeamColors.includes(team as TeamColor)) {
-    return team as TeamColor;
-  }
-  
-  return 'none';
-}
+import { toTeamColor } from '@/utils/typeConverters';
 
 /**
  * Converts a consolidated user profile to a format compatible with components
  * that expect the user.UserProfile type
  */
 function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfileType {
+  // Create a proper TeamColor from the string team value
+  const teamColor = toTeamColor(user.team);
+  
   return {
     id: user.id,
     username: user.username,
@@ -52,7 +37,7 @@ function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfi
     isVIP: user.isVIP,
     isFounder: user.isFounder,
     isAdmin: user.isAdmin,
-    team: toTeamColor(user.team),
+    team: teamColor,
     tier: user.tier,
     rank: user.rank,
     previousRank: user.previousRank,
@@ -60,9 +45,9 @@ function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfi
     amountSpent: user.amountSpent,
     walletBalance: user.walletBalance || 0,
     settings: {
-      profileVisibility: 'public', // Use a valid literal value from UserSettings
+      profileVisibility: (user.settings?.profileVisibility as "public" | "private" | "followers" | "friends") || 'public',
       allowProfileLinks: Boolean(user.settings?.allowProfileLinks),
-      theme: 'dark', // Use a valid literal value from UserSettings
+      theme: (user.settings?.theme as "light" | "dark" | "royal" | "system") || 'dark',
       notifications: Boolean(user.settings?.notifications),
       emailNotifications: Boolean(user.settings?.emailNotifications),
       marketingEmails: Boolean(user.settings?.marketingEmails),
