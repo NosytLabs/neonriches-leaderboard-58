@@ -1,111 +1,189 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { mockeryTierLabel } from '@/utils/mockeryActionUtils';
-import { getMockeryTierLabel } from './mockeryHelpers';
+import { ScrollText, Crown, Trophy, Users, Heart, AlertCircle } from 'lucide-react';
+import { mockeryTierLabels } from '@/utils/mockeryActionUtils';
 
-export const RoyalEncyclopedia: React.FC = () => {
+const RoyalEncyclopedia = () => {
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <CardTitle>Royal Encyclopedia</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="tiers">
-          <TabsList className="grid w-full grid-cols-3 mb-4">
-            <TabsTrigger value="tiers">Tiers</TabsTrigger>
-            <TabsTrigger value="mockery">Mockery</TabsTrigger>
-            <TabsTrigger value="teams">Teams</TabsTrigger>
+    <div className="container mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold mb-2 flex items-center">
+          <ScrollText className="h-6 w-6 mr-2 text-royal-gold" />
+          Royal Encyclopedia
+        </h1>
+        
+        <p className="text-white/70 mb-6">
+          The complete guide to all things Royal in the Cash Kingdom.
+        </p>
+        
+        <Tabs defaultValue="mockery" className="w-full">
+          <TabsList className="grid grid-cols-5 mb-6">
+            <TabsTrigger value="mockery" className="flex items-center">
+              <Crown className="h-4 w-4 mr-2" />
+              Mockery
+            </TabsTrigger>
+            <TabsTrigger value="ranks" className="flex items-center">
+              <Trophy className="h-4 w-4 mr-2" />
+              Ranks
+            </TabsTrigger>
+            <TabsTrigger value="teams" className="flex items-center">
+              <Users className="h-4 w-4 mr-2" />
+              Teams
+            </TabsTrigger>
+            <TabsTrigger value="titles" className="flex items-center">
+              <Heart className="h-4 w-4 mr-2" />
+              Titles
+            </TabsTrigger>
+            <TabsTrigger value="faq" className="flex items-center">
+              <AlertCircle className="h-4 w-4 mr-2" />
+              FAQ
+            </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="tiers">
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Royal Tiers</h3>
-              <p className="text-white/70">
-                Users in the kingdom are divided into tiers based on their spending and contributions.
-              </p>
-              <div className="space-y-2">
-                <div className="p-3 bg-black/20 rounded-lg">
-                  <h4 className="font-medium">Common Tier</h4>
-                  <p className="text-sm text-white/70">Basic privileges in the kingdom.</p>
+          <TabsContent value="mockery">
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-2xl font-bold mb-4">The Royal Mockery System</h2>
+                <p className="mb-4">
+                  The Royal Mockery System allows members of the Cash Kingdom to express their opinions of others through various forms of courtly ridicule. From simple tomato throwing to the elaborate Court Jester ceremony, each mockery type serves a specific purpose in the royal hierarchy.
+                </p>
+              </div>
+              
+              <div>
+                <h3 className="text-xl font-bold mb-3">Mockery Tiers</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {Object.entries(mockeryTierLabels).slice(0, 6).map(([tier, label]) => (
+                    <div key={tier} className="p-4 bg-black/20 rounded-lg border border-white/10">
+                      <h4 className="font-medium mb-1 capitalize">{label}</h4>
+                      <p className="text-sm text-white/70">
+                        {tier === 'common' && 'Available to all users, inexpensive and playful.'}
+                        {tier === 'uncommon' && 'Slightly more impactful mockeries with moderate cost.'}
+                        {tier === 'rare' && 'Powerful mockeries that leave a lasting impression.'}
+                        {tier === 'epic' && 'High-impact mockeries reserved for significant statements.'}
+                        {tier === 'legendary' && 'The most powerful mockeries in the kingdom.'}
+                        {tier === 'royal' && 'Reserved exclusively for Royal tier members.'}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-                <div className="p-3 bg-green-900/20 rounded-lg">
-                  <h4 className="font-medium text-green-400">Uncommon Tier</h4>
-                  <p className="text-sm text-white/70">Enhanced privileges with minor cosmetic bonuses.</p>
-                </div>
-                <div className="p-3 bg-blue-900/20 rounded-lg">
-                  <h4 className="font-medium text-blue-400">Rare Tier</h4>
-                  <p className="text-sm text-white/70">Special privileges with unique cosmetic options.</p>
-                </div>
-                <div className="p-3 bg-purple-900/20 rounded-lg">
-                  <h4 className="font-medium text-purple-400">Epic Tier</h4>
-                  <p className="text-sm text-white/70">Elite privileges with exclusive mockery options.</p>
-                </div>
-                <div className="p-3 bg-orange-900/20 rounded-lg">
-                  <h4 className="font-medium text-orange-400">Legendary Tier</h4>
-                  <p className="text-sm text-white/70">Highest privileges with all features unlocked.</p>
+              </div>
+              
+              <div>
+                <h3 className="text-xl font-bold mb-3">Mockery Types</h3>
+                <div className="space-y-4">
+                  <div className="p-4 bg-black/20 rounded-lg border border-white/10">
+                    <h4 className="font-medium mb-1">Tomato Throwing</h4>
+                    <p className="text-sm text-white/70">
+                      The classic expression of disapproval. Tomato throwing is a common mockery that leaves a temporary mark on the recipient's profile.
+                    </p>
+                    <div className="flex justify-between items-center mt-2">
+                      <span className="text-xs text-white/50">Cost: 5 coins</span>
+                      <span className="text-xs bg-white/10 px-2 py-1 rounded">Common</span>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-black/20 rounded-lg border border-white/10">
+                    <h4 className="font-medium mb-1">Crown Flipping</h4>
+                    <p className="text-sm text-white/70">
+                      A rare mockery that temporarily removes the crown from a Royal user's profile, causing momentary embarrassment in the court.
+                    </p>
+                    <div className="flex justify-between items-center mt-2">
+                      <span className="text-xs text-white/50">Cost: 100 coins</span>
+                      <span className="text-xs bg-white/10 px-2 py-1 rounded">Rare</span>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-black/20 rounded-lg border border-white/10">
+                    <h4 className="font-medium mb-1">Court Jester</h4>
+                    <p className="text-sm text-white/70">
+                      An epic mockery that designates someone as the Court Jester for 24 hours, adding a jester hat to their profile and announcements to their actions.
+                    </p>
+                    <div className="flex justify-between items-center mt-2">
+                      <span className="text-xs text-white/50">Cost: 30 coins</span>
+                      <span className="text-xs bg-white/10 px-2 py-1 rounded">Epic</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </TabsContent>
           
-          <TabsContent value="mockery">
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Royal Mockery</h3>
-              <p className="text-white/70">
-                Mockery is a playful feature allowing nobles to tease each other.
+          <TabsContent value="ranks">
+            <div>
+              <h2 className="text-2xl font-bold mb-4">Royal Rankings Explained</h2>
+              <p className="mb-6">
+                The Cash Kingdom operates on a strict hierarchy based on spending and contributions. Your rank determines your status, privileges, and respect within the royal court.
               </p>
-              <div className="space-y-2">
-                <div className="p-3 bg-black/20 rounded-lg">
-                  <h4 className="font-medium">Tomato Throw</h4>
-                  <p className="text-sm text-white/70">Throw a tomato at a user, marking them for 24 hours.</p>
+              
+              <div className="space-y-4">
+                <div className="p-4 bg-black/20 rounded-lg border border-white/10">
+                  <h4 className="font-medium mb-1">Ranking System</h4>
+                  <p className="text-sm text-white/70">
+                    Rankings are updated hourly based on total spending. The top spender holds the #1 position, with others ranked in descending order. Your ranking history is preserved for all to see.
+                  </p>
                 </div>
-                <div className="p-3 bg-black/20 rounded-lg">
-                  <h4 className="font-medium">Egg Throw</h4>
-                  <p className="text-sm text-white/70">Throw an egg at a user, marking them for 48 hours.</p>
+                
+                <div className="p-4 bg-black/20 rounded-lg border border-white/10">
+                  <h4 className="font-medium mb-1">Rank Benefits</h4>
+                  <ul className="text-sm text-white/70 list-disc list-inside space-y-1">
+                    <li>Top 10: Special crown icon and weekly bonus coins</li>
+                    <li>Top 50: Access to exclusive events and custom profile frames</li>
+                    <li>Top 100: Reduced costs for mockery actions</li>
+                    <li>Top 500: Name highlighted in leaderboards</li>
+                  </ul>
                 </div>
-                <div className="p-3 bg-black/20 rounded-lg">
-                  <h4 className="font-medium">Royal Taunt</h4>
-                  <p className="text-sm text-white/70">Send a royal taunt message to a user.</p>
+                
+                <div className="p-4 bg-black/20 rounded-lg border border-white/10">
+                  <h4 className="font-medium mb-1">Rank Protection</h4>
+                  <p className="text-sm text-white/70">
+                    Royal members can purchase Rank Protection to prevent dropping more than 5 positions in a 24-hour period, ensuring stability in the royal hierarchy.
+                  </p>
                 </div>
               </div>
             </div>
           </TabsContent>
           
           <TabsContent value="teams">
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Kingdom Teams</h3>
-              <p className="text-white/70">
-                Users can join teams to compete for collective glory.
+            <div>
+              <h2 className="text-2xl font-bold mb-4">Royal Teams</h2>
+              <p className="mb-6">
+                Teams represent different factions within the Cash Kingdom, each with their own philosophy, benefits, and culture.
               </p>
-              <div className="space-y-2">
-                <div className="p-3 bg-red-900/20 rounded-lg">
-                  <h4 className="font-medium text-red-400">Red Team</h4>
-                  <p className="text-sm text-white/70">The passionate and aggressive team.</p>
+              
+              <div className="space-y-4">
+                <div className="p-4 bg-red-900/20 rounded-lg border border-red-900/40">
+                  <h4 className="font-medium mb-1 text-red-400">Royal Order of Reckless Spending</h4>
+                  <p className="text-sm text-white/70">
+                    Founded on the principle that money exists to be spent lavishly and spectacularly. Members pride themselves on bold, impulsive purchases.
+                  </p>
+                  <div className="mt-2 text-xs text-white/50">Motto: "Spend First, Think Never"</div>
                 </div>
-                <div className="p-3 bg-blue-900/20 rounded-lg">
-                  <h4 className="font-medium text-blue-400">Blue Team</h4>
-                  <p className="text-sm text-white/70">The calm and strategic team.</p>
+                
+                <div className="p-4 bg-blue-900/20 rounded-lg border border-blue-900/40">
+                  <h4 className="font-medium mb-1 text-blue-400">Cobalt Credit Cartel</h4>
+                  <p className="text-sm text-white/70">
+                    Masters of leveraging credit to maintain appearances. Members excel at maintaining a high spending profile through strategic use of credit.
+                  </p>
+                  <div className="mt-2 text-xs text-white/50">Motto: "Today's Purchases, Tomorrow's Problems"</div>
                 </div>
-                <div className="p-3 bg-green-900/20 rounded-lg">
-                  <h4 className="font-medium text-green-400">Green Team</h4>
-                  <p className="text-sm text-white/70">The growth-focused and ambitious team.</p>
-                </div>
-                <div className="p-3 bg-yellow-900/20 rounded-lg">
-                  <h4 className="font-medium text-yellow-400">Gold Team</h4>
-                  <p className="text-sm text-white/70">The wealthy and prestigious team.</p>
-                </div>
-                <div className="p-3 bg-purple-900/20 rounded-lg">
-                  <h4 className="font-medium text-purple-400">Purple Team</h4>
-                  <p className="text-sm text-white/70">The creative and royal team.</p>
+                
+                <div className="p-4 bg-green-900/20 rounded-lg border border-green-900/40">
+                  <h4 className="font-medium mb-1 text-green-400">Emerald Exchequer Cabaret</h4>
+                  <p className="text-sm text-white/70">
+                    Combines flamboyant spending with theatrical flair. Members celebrate each purchase as a performance art piece.
+                  </p>
+                  <div className="mt-2 text-xs text-white/50">Motto: "All Wealth's a Stage"</div>
                 </div>
               </div>
             </div>
           </TabsContent>
+          
+          <TabsContent value="titles">Content for Titles</TabsContent>
+          <TabsContent value="faq">Content for FAQ</TabsContent>
         </Tabs>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

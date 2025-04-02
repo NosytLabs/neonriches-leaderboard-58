@@ -25,9 +25,10 @@ export const useLeaderboard = (initialFilter?: Partial<LeaderboardFilter>): UseL
     tier: 'all',
     sortDirection: 'desc',
     sortBy: 'totalSpent',
-    search: '',
     limit: 10,
-    page: 1
+    page: 1,
+    sort: 'totalSpent',
+    search: ''
   };
 
   const [filter, setFilter] = useState<LeaderboardFilter>({

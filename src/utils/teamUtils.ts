@@ -1,5 +1,6 @@
 
 import { TeamColor } from '@/types/mockery-types';
+import { TeamData } from '@/types/team';
 
 // Get the friendly team name from TeamColor
 export function getTeamName(team: TeamColor | string): string {
@@ -69,7 +70,19 @@ export function getTeamTailwindColor(team: TeamColor | string): string {
   return getTeamColor(team);
 }
 
-// Export other team utility functions for backward compatibility
+// Add an id field to TeamData objects if they don't have one
+export function addTeamId(team: TeamData): TeamData & { id: string } {
+  if (team.id) {
+    return team as TeamData & { id: string };
+  }
+  
+  return {
+    ...team,
+    id: team.color
+  };
+}
+
+// Export from team/teamColors if those exist
 export * from '@/utils/team/teamColors';
 export * from '@/utils/team/teamNames';
 export * from '@/utils/team/teamInfo';

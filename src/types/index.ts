@@ -62,6 +62,7 @@ export type {
   BoostService
 } from './boost';
 
+// Re-export team related types
 export type {
   TeamMember,
   TeamRole,
@@ -73,10 +74,7 @@ export type {
 export type {
   LeaderboardUser,
   LeaderboardFilter,
-  LeaderboardConfig,
   LeaderboardProps,
-  LeaderboardResponse,
-  UseLeaderboardResult
 } from './leaderboard';
 
 // UI types
@@ -92,3 +90,29 @@ export type {
   MockeryNotification,
   MockerySettings
 } from './mocktypes';
+
+// Define simplified interfaces for leaderboard usage
+export interface LeaderboardConfig {
+  timeframe: 'today' | 'week' | 'month' | 'year' | 'all-time';
+  team: string;
+  limit: number;
+}
+
+export interface LeaderboardResponse {
+  users: LeaderboardUser[];
+  totalUsers: number;
+  currentPage: number;
+  totalPages: number;
+}
+
+export interface UseLeaderboardResult {
+  users: LeaderboardUser[];
+  isLoading: boolean;
+  error: Error | null;
+  filter: LeaderboardFilter;
+  setFilter: (filter: Partial<LeaderboardFilter>) => void;
+  refetch: () => void;
+  totalUsers: number;
+  currentPage: number;
+  totalPages: number;
+}

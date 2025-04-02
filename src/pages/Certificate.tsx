@@ -1,68 +1,118 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Shell } from '@/components/ui/shell';
 import { Button } from '@/components/ui/button';
-import { Certificate } from '@/types/certificates';
-import { UserProfile } from '@/types/user-consolidated';
-import { useAuth } from '@/hooks/useAuth';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { toStandardUserProfile } from '@/utils/typeUnifier';
-import TeamCertificate from '@/components/certificates/TeamCertificate';
+import useAuth from '@/hooks/useAuth';
+import CertificateDisplay from '@/components/certificates/CertificateDisplay';
+import { Certificate, CertificateTeam, CertificateType, CertificateStyle } from '@/types/certificates';
+import { wrapCertificateMint, wrapCertificateShare, wrapCertificateDownload, adaptCertificate } from '@/utils/certificateAdapter';
 
-const CertificatePage: React.FC = () => {
+const CertificatePage = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isMinting, setIsMinting] = useState(false);
-  const [certificate, setCertificate] = useState<Certificate>({
-    id: 'cert-123',
-    title: 'Certificate of Digital Nobility',
-    description: 'This certifies your status in the SpendThrone digital hierarchy',
-    imageUrl: '/assets/certificates/nobility.png',
-    type: 'noble',
-    style: 'ornate',
-    team: user?.team || 'none',
+  
+  // Create a sample certificate for demonstration
+  const certificate: Certificate = adaptCertificate({
+    id: 'cert-123456',
+    title: 'Master Spender Certificate',
+    description: 'Awarded for exceptional spending prowess in the Royal Court',
+    imageUrl: '/assets/certificates/royal-spender.jpg',
     userId: user?.id || '',
-    username: user?.username || '',
-    issuedAt: new Date().toISOString(),
+    recipientName: user?.displayName || user?.username || '',
     dateIssued: new Date().toISOString(),
-    isMinted: false,
-    previewUrl: '/assets/certificates/nobility-preview.png',
+    type: 'supporter' as CertificateType,
+    style: 'royal' as CertificateStyle,
+    team: 'gold' as CertificateTeam,
     status: 'issued',
-    name: 'Digital Nobility'
+    rarity: 'legendary'
   });
   
-  // Create a standardized user profile
-  const standardUser: UserProfile = user ? toStandardUserProfile(user) : {} as UserProfile;
-  
-  const handleMintSuccess = (mintAddress: string) => {
-    setCertificate(prev => ({
-      ...prev,
-      isMinted: true,
-      mintAddress,
-      mintDate: new Date().toISOString()
-    }));
+  const handleMint = async (cert: Certificate) => {
+    setIsMinting(true);
     
-    toast({
-      title: "Certificate Minted",
-      description: "Your digital certificate has been minted as an NFT!",
-      variant: "default"
-    });
+    try {
+      const success = await wrapCertificateMint(cert);
+      
+      if (success) {
+        toast({
+          title: 'Certificate Minted!',
+          description: 'Your certificate has been successfully minted to the blockchain.',
+          variant: 'success'
+        });
+        return true;
+      } else {
+        throw new Error('Minting failed');
+      }
+    } catch (error) {
+      toast({
+        title: 'Minting Failed',
+        description: 'There was an error minting your certificate. Please try again.',
+        variant: 'destructive'
+      });
+      return false;
+    } finally {
+      setIsMinting(false);
+    }
   };
   
-  const handleShare = () => {
-    toast({
-      title: "Certificate Shared",
-      description: "A link to your certificate has been copied to your clipboard!",
-      variant: "default"
-    });
+  const handleShare = async (cert: Certificate) => {
+    try {
+      const shareUrl = await wrapCertificateShare(cert);
+      
+      toast({
+        title: 'Certificate Shared!',
+        description: `Your certificate sharing link: ${shareUrl}`,
+        variant: 'success'
+      });
+      
+      // In a real app, you'd copy to clipboard:
+      // navigator.clipboard.writeText(shareUrl);
+      
+      return shareUrl;
+    } catch (error) {
+      toast({
+        title: 'Sharing Failed',
+        description: 'There was an error sharing your certificate. Please try again.',
+        variant: 'destructive'
+      });
+      return '';
+    }
+  };
+  
+  const handleDownload = (cert: Certificate) => {
+    try {
+      wrapCertificateDownload(cert);
+      
+      toast({
+        title: 'Certificate Downloaded!',
+        description: 'Your certificate has been downloaded.',
+        variant: 'success'
+      });
+    } catch (error) {
+      toast({
+        title: 'Download Failed',
+        description: 'There was an error downloading your certificate. Please try again.',
+        variant: 'destructive'
+      });
+    }
   };
   
   if (!user) {
     return (
       <Shell>
-        <div className="container px-4 py-8">
-          <h1 className="text-2xl font-bold mb-4">Certificate</h1>
-          <p>Please log in to view your certificate.</p>
+        <div className="container mx-auto px-4 py-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Certificate Viewer</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>Please log in to view your certificates.</p>
+              <Button className="mt-4">Log In</Button>
+            </CardContent>
+          </Card>
         </div>
       </Shell>
     );
@@ -70,18 +120,41 @@ const CertificatePage: React.FC = () => {
   
   return (
     <Shell>
-      <div className="container px-4 py-8">
-        <h1 className="text-2xl font-bold mb-2">Your Royal Certificate</h1>
-        <p className="text-muted-foreground mb-6">
-          This certificate represents your standing in the SpendThrone hierarchy.
-        </p>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-6">Your Royal Certificates</h1>
         
-        <div className="grid grid-cols-1 gap-6">
-          <TeamCertificate 
-            user={standardUser}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <CertificateDisplay 
             certificate={certificate}
-            onMintSuccess={handleMintSuccess}
+            user={user}
+            onMint={handleMint}
             onShare={handleShare}
+            onDownload={handleDownload}
+            isMinting={isMinting}
+          />
+          
+          {/* Mock certificates for UI demonstration */}
+          <CertificateDisplay 
+            certificate={adaptCertificate({
+              id: 'cert-789012',
+              title: 'Royal Court Member',
+              description: 'Recognizes official membership in the Royal Court',
+              imageUrl: '/assets/certificates/royal-member.jpg',
+              userId: user.id,
+              recipientName: user.displayName || user.username,
+              dateIssued: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+              type: 'royal',
+              style: 'ornate',
+              team: 'gold',
+              status: 'issued',
+              mintAddress: '0x1234567890abcdef',
+              mintDate: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString(),
+              isMinted: true
+            })}
+            user={user}
+            onMint={handleMint}
+            onShare={handleShare}
+            onDownload={handleDownload}
           />
         </div>
       </div>

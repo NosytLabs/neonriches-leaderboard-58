@@ -3,12 +3,14 @@ import React from 'react';
 import { MockeryAction } from '@/types/mockery-types';
 import { ensureMockeryAction } from '@/utils/mockeryNormalizer';
 
-interface MockeryEffectProps {
+export interface MockeryEffectProps {
   action: MockeryAction;
   username: string;
+  isActive?: boolean; // Add this prop to match what's being passed
+  onComplete?: () => void; // Add this prop to match what's being passed
 }
 
-const MockeryEffect: React.FC<MockeryEffectProps> = ({ action, username }) => {
+const MockeryEffect: React.FC<MockeryEffectProps> = ({ action, username, isActive, onComplete }) => {
   // Ensure the action is a valid MockeryAction
   const safeAction = ensureMockeryAction(action);
   

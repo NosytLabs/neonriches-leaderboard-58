@@ -1,69 +1,59 @@
 
-import { Certificate, CertificateType, CertificateStyle, CertificateStatus, CertificateTeam } from '@/types/certificates';
+import { Certificate, CertificateTeam, CertificateType, CertificateStyle, CertificateStatus } from '@/types/certificates';
 
-// Convert any partial certificate data to a complete Certificate
-export function adaptCertificate(partialCert: Partial<Certificate>): Certificate {
-  const defaultCert: Certificate = {
-    id: partialCert.id || `cert-${Date.now()}`,
-    title: partialCert.title || 'Certificate of Recognition',
-    description: partialCert.description || 'A certificate of recognition for outstanding contributions',
-    imageUrl: partialCert.imageUrl || '/images/default-certificate.png',
-    type: (partialCert.type || 'achievement') as CertificateType,
-    style: (partialCert.style || 'classic') as CertificateStyle,
-    team: (partialCert.team || 'neutral') as CertificateTeam,
-    userId: partialCert.userId || 'unknown',
-    username: partialCert.username || 'Anonymous',
-    issuedAt: partialCert.issuedAt || new Date().toISOString(),
-    dateIssued: partialCert.dateIssued || partialCert.issuedAt || new Date().toISOString(),
-    isMinted: partialCert.isMinted || false,
-    previewUrl: partialCert.previewUrl || partialCert.imageUrl || '/images/default-certificate.png',
-    status: (partialCert.status || 'issued') as CertificateStatus,
-    name: partialCert.name || partialCert.title || 'Certificate',
-    // Optional fields
-    expiresAt: partialCert.expiresAt,
-    mintAddress: partialCert.mintAddress,
-    mintDate: partialCert.mintDate,
-    metadataUrl: partialCert.metadataUrl,
-    achievementId: partialCert.achievementId,
-    achievement: partialCert.achievement,
-    mintTransaction: partialCert.mintTransaction,
-    background: partialCert.background,
-    border: partialCert.border
+// Adapt a certificate to ensure it has all required fields
+export function adaptCertificate(cert: Partial<Certificate>): Certificate {
+  return {
+    id: cert.id || `cert_${Math.random().toString(36).substring(2, 9)}`,
+    title: cert.title || cert.name || 'Certificate',
+    description: cert.description || '',
+    imageUrl: cert.imageUrl || '/assets/certificates/default.png',
+    userId: cert.userId || cert.recipientId || '',
+    dateIssued: cert.dateIssued || cert.issuedAt || new Date().toISOString(),
+    mintAddress: cert.mintAddress || '',
+    mintDate: cert.mintDate || '',
+    type: cert.type || 'achievement',
+    style: (cert.style || 'standard') as CertificateStyle,
+    team: (cert.team || 'none') as CertificateTeam,
+    status: (cert.status || 'issued') as CertificateStatus,
+    recipientName: cert.recipientName || '',
+    issuerName: cert.issuerName || 'Royal System',
+    recipientId: cert.recipientId || cert.userId || '',
+    tier: cert.tier || '',
+    name: cert.name || cert.title || '',
+    isMinted: cert.isMinted || false,
+    issuedAt: cert.issuedAt || cert.dateIssued || new Date().toISOString(),
+    expiresAt: cert.expiresAt || '',
+    previewUrl: cert.previewUrl || cert.imageUrl || '',
+    rarity: cert.rarity || 'common'
   };
-
-  return defaultCert;
 }
 
-// Wraps mint certificate function for proper error handling
+// Wrapper for certificate mint function
 export async function wrapCertificateMint(cert: Certificate): Promise<boolean> {
-  try {
-    console.log(`Minting certificate ${cert.id}`);
-    // This would make an API call in a real implementation
-    return true;
-  } catch (error) {
-    console.error('Error minting certificate:', error);
-    return false;
-  }
+  console.log(`Minting certificate: ${cert.id}`);
+  // In a real implementation, this would call a blockchain service
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, 1500);
+  });
 }
 
-// Wraps share certificate function for proper error handling
+// Wrapper for certificate share function
 export async function wrapCertificateShare(cert: Certificate): Promise<string> {
-  try {
-    console.log(`Sharing certificate ${cert.id}`);
-    // This would make an API call in a real implementation
-    return `https://example.com/certificates/${cert.id}`;
-  } catch (error) {
-    console.error('Error sharing certificate:', error);
-    return '';
-  }
+  console.log(`Sharing certificate: ${cert.id}`);
+  // In a real implementation, this would generate a sharing link
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(`https://example.com/certificates/${cert.id}`);
+    }, 500);
+  });
 }
 
-// Wraps download certificate function
+// Wrapper for certificate download function
 export function wrapCertificateDownload(cert: Certificate): void {
-  try {
-    console.log(`Downloading certificate ${cert.id}`);
-    // This would trigger a download in a real implementation
-  } catch (error) {
-    console.error('Error downloading certificate:', error);
-  }
+  console.log(`Downloading certificate: ${cert.id}`);
+  // In a real implementation, this would trigger a file download
+  alert(`Certificate ${cert.title} would be downloaded here.`);
 }

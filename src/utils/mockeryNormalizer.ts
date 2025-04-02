@@ -17,6 +17,11 @@ export function ensureMockeryAction(action: string): MockeryAction {
     : 'mock';
 }
 
+// Normalize a mockery action string to ensure it's valid
+export function normalizeMockeryAction(action: string): MockeryAction {
+  return ensureMockeryAction(action);
+}
+
 // List of all valid team colors
 const validTeamColors: TeamColor[] = [
   'red', 'blue', 'green', 'gold', 'purple', 

@@ -1,79 +1,45 @@
 
-import { TeamColor, UserTier } from './mockery-types';
+import { TeamColor } from './mockery-types';
 
 export interface LeaderboardUser {
   id: string;
-  userId?: string;
+  userId: string;
   username: string;
   displayName: string;
   profileImage: string;
-  avatarUrl?: string;
   totalSpent: number;
   amountSpent: number;
   rank: number;
   previousRank: number;
   team: TeamColor | string;
-  tier: UserTier | string;
-  spendStreak?: number;
-  walletBalance?: number;
+  tier: string;
+  spendStreak: number;
+  walletBalance: number;
   rankChange?: number;
   spendChange?: number;
   isProtected?: boolean;
   isVerified?: boolean;
+  avatarUrl?: string;
 }
 
 export interface LeaderboardFilter {
-  timeframe: 'all' | 'week' | 'month' | 'year' | 'today' | 'all-time';
-  team: TeamColor | 'all' | string;
+  timeframe: 'all' | 'week' | 'month' | 'year';
+  team: string;
   tier: string;
   sortDirection: 'asc' | 'desc';
-  sortBy: 'totalSpent' | 'joinDate' | 'username' | 'rank' | 'spendStreak';
-  limit?: number;
-  page?: number;
-  sort?: string;  // Added for compatibility with leaderboardService
-  period?: string; // Added for compatibility with Leaderboard page
-  search?: string; // Added for compatibility with useLeaderboard
-}
-
-export interface LeaderboardConfig {
-  title: string;
-  description?: string;
-  showRank?: boolean;
-  showAvatar?: boolean;
-  showTeam?: boolean;
-  showSpending?: boolean;
-  showChange?: boolean;
-  compact?: boolean;
-  limit?: number;
-  animated?: boolean;
-  filter?: LeaderboardFilter;
+  sortBy: string;
+  limit: number;
+  page: number;
+  sort?: string;
+  search?: string;
 }
 
 export interface LeaderboardProps {
   users: LeaderboardUser[];
-  filter: LeaderboardFilter;
-  onFilterChange: (filter: Partial<LeaderboardFilter>) => void;
-  onProfileClick?: (userId: string, username: string) => void;
-  onShameUser?: (user: LeaderboardUser) => void;
-  currentUserId?: string;
-}
-
-export interface LeaderboardResponse {
-  users: LeaderboardUser[];
-  totalUsers: number;
-  currentPage: number;
-  totalPages: number;
-  filter: LeaderboardFilter;
-}
-
-export interface UseLeaderboardResult {
-  users: LeaderboardUser[];
-  isLoading: boolean;
-  error: Error | null;
-  filter: LeaderboardFilter;
-  setFilter: (filter: Partial<LeaderboardFilter>) => void;
-  refetch: () => void;
-  totalUsers: number;
-  currentPage: number;
-  totalPages: number;
+  isLoading?: boolean;
+  showTeams?: boolean;
+  showTiers?: boolean;
+  showRankChange?: boolean;
+  onUserClick?: (userId: string) => void;
+  onShameClick?: (userId: string) => void;
 }

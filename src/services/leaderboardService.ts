@@ -1,203 +1,113 @@
 
-import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
-import { TeamColor } from '@/types/mockery-types';
+import { LeaderboardFilter, LeaderboardUser } from '@/types/mockery-types';
 
-// Filter and sort leaderboard users
-export const filterLeaderboardUsers = (
-  users: LeaderboardUser[],
-  filter: LeaderboardFilter
-): LeaderboardUser[] => {
-  let filteredUsers = [...users];
-  
-  // Filter by team if not 'all'
-  if (filter.team && filter.team !== 'all') {
-    filteredUsers = filteredUsers.filter(user => 
-      user.team === filter.team
-    );
-  }
-  
-  // Filter by tier if specified
-  if (filter.tier && filter.tier !== 'all') {
-    filteredUsers = filteredUsers.filter(user => 
-      user.tier === filter.tier
-    );
-  }
-  
-  // Filter by timeframe
-  switch (filter.timeframe) {
-    case 'week':
-      // Filter users who have been active in the last week
-      // This is a mock implementation
-      break;
-    case 'month':
-      // Filter users who have been active in the last month
-      // This is a mock implementation
-      break;
-    case 'year':
-      // Filter users who have been active in the last year
-      // This is a mock implementation
-      break;
-    case 'today':
-      // Filter users who have been active today
-      // This is a mock implementation
-      break;
-    case 'all-time':
-    case 'all':
-    default:
-      // No filtering by timeframe
-      break;
-  }
-  
-  // Sort users based on sort property and direction
-  const sortBy = filter.sortBy || 'totalSpent';
-  const sortDirection = filter.sortDirection || 'desc';
-  
-  filteredUsers.sort((a, b) => {
-    let comparison = 0;
-    
-    switch (sortBy) {
-      case 'totalSpent':
-        comparison = a.totalSpent - b.totalSpent;
-        break;
-      case 'joinDate':
-        // Mock implementation since we don't have joinDate in the type
-        comparison = 0;
-        break;
-      case 'username':
-        comparison = a.username.localeCompare(b.username);
-        break;
-      case 'rank':
-        comparison = a.rank - b.rank;
-        break;
-      case 'spendStreak':
-        comparison = (a.spendStreak || 0) - (b.spendStreak || 0);
-        break;
-      default:
-        comparison = a.totalSpent - b.totalSpent;
-    }
-    
-    return sortDirection === 'asc' ? comparison : -comparison;
+// Alias for backward compatibility
+export const getLeaderboard = fetchLeaderboard;
+
+interface LeaderboardResponse {
+  users: LeaderboardUser[];
+  totalUsers: number;
+  currentPage: number;
+  totalPages: number;
+}
+
+// Mock data for leaderboard
+const generateMockLeaderboardData = (count: number): LeaderboardUser[] => {
+  const mockTeams: string[] = ['red', 'blue', 'green', 'gold', 'purple', 'none'];
+  const mockTiers: string[] = ['basic', 'premium', 'royal', 'founder'];
+
+  return Array.from({ length: count }, (_, i) => {
+    const rank = i + 1;
+    const previousRank = Math.floor(Math.random() * 100) + 1;
+    const rankChange = previousRank - rank;
+    const totalSpent = 10000 - rank * 100 + Math.floor(Math.random() * 1000);
+    const spendChange = Math.floor(Math.random() * 500) - 250;
+
+    return {
+      id: `user-${i + 1}`,
+      userId: `user-${i + 1}`,
+      username: `whale${i + 1}`,
+      displayName: `Whale User ${i + 1}`,
+      profileImage: `/assets/avatars/avatar-${(i % 8) + 1}.jpg`,
+      rank: rank,
+      previousRank: previousRank,
+      rankChange: rankChange,
+      totalSpent: totalSpent,
+      amountSpent: totalSpent,
+      spendChange: spendChange,
+      spendStreak: Math.floor(Math.random() * 10),
+      team: mockTeams[i % mockTeams.length],
+      tier: mockTiers[i % mockTiers.length],
+      isVerified: Math.random() > 0.7,
+      isProtected: Math.random() > 0.9,
+      walletBalance: Math.floor(Math.random() * 5000),
+      avatarUrl: `/assets/avatars/avatar-${(i % 8) + 1}.jpg`
+    };
   });
-  
-  // Apply pagination if limit is set
-  if (filter.limit && filter.limit > 0) {
-    const page = filter.page || 1;
-    const start = (page - 1) * filter.limit;
-    const end = start + filter.limit;
-    
-    filteredUsers = filteredUsers.slice(start, end);
-  }
-  
-  return filteredUsers;
 };
 
-// Function to get leaderboard data
-export const getLeaderboardUsers = async (
-  filter: LeaderboardFilter = {
-    timeframe: 'all',
-    team: 'all',
-    tier: 'all',
-    sortDirection: 'desc',
-    sortBy: 'totalSpent',
-    limit: 10,
-    page: 1
+const mockLeaderboardData = generateMockLeaderboardData(100);
+
+// Fetch leaderboard data with filters
+export async function fetchLeaderboard(filter: LeaderboardFilter): Promise<LeaderboardResponse> {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  let filteredUsers = [...mockLeaderboardData];
+
+  // Apply team filter
+  if (filter.team && filter.team !== 'all') {
+    filteredUsers = filteredUsers.filter(user => user.team === filter.team);
   }
-): Promise<LeaderboardUser[]> => {
-  // This is a mock implementation
-  // In a real app, this would fetch data from an API
-  
-  const mockUsers: LeaderboardUser[] = [
-    {
-      id: '1',
-      username: 'royalspender',
-      displayName: 'Royal Spender',
-      profileImage: 'https://randomuser.me/api/portraits/men/1.jpg',
-      totalSpent: 10000,
-      amountSpent: 10000,
-      rank: 1,
-      previousRank: 2,
-      team: 'gold' as TeamColor,
-      tier: 'royal',
-      spendStreak: 15,
-      walletBalance: 5000,
-      rankChange: 1,
-      spendChange: 2000,
-      isProtected: true,
-      isVerified: true
-    },
-    {
-      id: '2',
-      username: 'nobleshopper',
-      displayName: 'Noble Shopper',
-      profileImage: 'https://randomuser.me/api/portraits/women/2.jpg',
-      totalSpent: 8500,
-      amountSpent: 8500,
-      rank: 2,
-      previousRank: 1,
-      team: 'red' as TeamColor,
-      tier: 'royal',
-      spendStreak: 10,
-      walletBalance: 2000,
-      rankChange: -1,
-      spendChange: 1000,
-      isProtected: false,
-      isVerified: true
-    },
-    {
-      id: '3',
-      username: 'elitecustomer',
-      displayName: 'Elite Customer',
-      profileImage: 'https://randomuser.me/api/portraits/men/3.jpg',
-      totalSpent: 7200,
-      amountSpent: 7200,
-      rank: 3,
-      previousRank: 4,
-      team: 'blue' as TeamColor,
-      tier: 'premium',
-      spendStreak: 8,
-      walletBalance: 1500,
-      rankChange: 1,
-      spendChange: 800,
-      isProtected: false,
-      isVerified: true
-    },
-    {
-      id: '4',
-      username: 'loyalbuyer',
-      displayName: 'Loyal Buyer',
-      profileImage: 'https://randomuser.me/api/portraits/women/4.jpg',
-      totalSpent: 6500,
-      amountSpent: 6500,
-      rank: 4,
-      previousRank: 3,
-      team: 'green' as TeamColor,
-      tier: 'premium',
-      spendStreak: 6,
-      walletBalance: 1000,
-      rankChange: -1,
-      spendChange: 500,
-      isProtected: false,
-      isVerified: false
-    },
-    {
-      id: '5',
-      username: 'regularpurchaser',
-      displayName: 'Regular Purchaser',
-      profileImage: 'https://randomuser.me/api/portraits/men/5.jpg',
-      totalSpent: 5000,
-      amountSpent: 5000,
-      rank: 5,
-      previousRank: 5,
-      team: 'purple' as TeamColor,
-      tier: 'basic',
-      spendStreak: 4,
-      walletBalance: 800,
-      rankChange: 0,
-      spendChange: 200,
-      isProtected: false,
-      isVerified: false
+
+  // Apply tier filter
+  if (filter.tier && filter.tier !== 'all') {
+    filteredUsers = filteredUsers.filter(user => user.tier === filter.tier);
+  }
+
+  // Apply timeframe filter
+  if (filter.timeframe && filter.timeframe !== 'all') {
+    // In a real implementation, this would filter based on date ranges
+    // For mock data, we'll just return a subset based on the timeframe
+    const timeframeMultiplier = {
+      'week': 0.3,
+      'month': 0.6,
+      'year': 0.9,
+      'all': 1,
+    };
+    const multiplier = timeframeMultiplier[filter.timeframe] || 1;
+    filteredUsers = filteredUsers.slice(0, Math.floor(filteredUsers.length * multiplier));
+  }
+
+  // Sort users
+  const sortBy = filter.sortBy || filter.sort || 'totalSpent';
+  const sortDirection = filter.sortDirection || 'desc';
+
+  filteredUsers.sort((a, b) => {
+    const valueA = a[sortBy as keyof LeaderboardUser] as number;
+    const valueB = b[sortBy as keyof LeaderboardUser] as number;
+    
+    if (sortDirection === 'asc') {
+      return valueA - valueB;
+    } else {
+      return valueB - valueA;
     }
-  ];
-  
-  return filterLeaderboardUsers(mockUsers, filter);
-};
+  });
+
+  // Apply pagination
+  const page = filter.page || 1;
+  const limit = filter.limit || 10;
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+
+  return {
+    users: paginatedUsers,
+    totalUsers: filteredUsers.length,
+    currentPage: page,
+    totalPages: Math.ceil(filteredUsers.length / limit)
+  };
+}
+
+// Re-exported for backward compatibility
+export { fetchLeaderboard };

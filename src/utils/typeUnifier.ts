@@ -3,7 +3,11 @@ import { TeamColor, UserTier } from '@/types/mockery-types';
 import { UserProfile as UserProfileSource } from '@/types/user';
 import { UserProfile as UserProfileTarget } from '@/types/user-consolidated';
 import { UserSubscription, UserSettings, SocialLink as SocialLinkInterface } from '@/types/user-consolidated';
-import { ensureTeamColor, ensureUserTier } from '@/utils/mockeryNormalizer';
+import { ensureTeamColor as ensureTeamColorFn, ensureUserTier as ensureUserTierFn } from '@/utils/mockeryNormalizer';
+
+// Export the ensureTeamColor and ensureUserTier functions
+export const ensureTeamColor = ensureTeamColorFn;
+export const ensureUserTier = ensureUserTierFn;
 
 // Ensure the user has all required properties with proper types
 export function ensureUserProfile(
@@ -23,8 +27,8 @@ export function ensureUserProfile(
     isVIP: userData.isVIP || false,
     isFounder: userData.isFounder || false,
     isAdmin: false, // Default value for isAdmin
-    team: ensureTeamColor(userData.team as string || 'none'),
-    tier: ensureUserTier(userData.tier as string || 'basic'),
+    team: ensureTeamColorFn(userData.team as string || 'none'),
+    tier: ensureUserTierFn(userData.tier as string || 'basic'),
     rank: userData.rank || 0,
     previousRank: userData.previousRank || 0,
     totalSpent: userData.totalSpent || userData.amountSpent || 0,
@@ -74,8 +78,8 @@ export function toUserProfile(userData: UserProfileTarget): UserProfileSource {
     profileImage: userData.profileImage,
     bio: userData.bio || '',
     joinedDate: userData.joinedDate,
-    tier: ensureUserTier(userData.tier as string),
-    team: ensureTeamColor(userData.team as string),
+    tier: ensureUserTierFn(userData.tier as string),
+    team: ensureTeamColorFn(userData.team as string) as TeamColor,
     rank: userData.rank,
     previousRank: userData.previousRank,
     totalSpent: userData.totalSpent,
@@ -97,10 +101,12 @@ export function toUserProfile(userData: UserProfileTarget): UserProfileSource {
     purchasedFeatures: userData.purchasedFeatures,
     // Handle subscription
     subscription: userData.subscription ? {
+      id: userData.subscription.id || `sub_${Math.random().toString(36).substring(2, 15)}`,
       planId: userData.subscription.planId || '',
       nextBillingDate: userData.subscription.nextBillingDate || '',
-      status: userData.subscription.status as any || 'active',
-      tier: userData.subscription.tier
+      status: (userData.subscription.status || 'active') as 'active' | 'cancelled' | 'paused',
+      tier: userData.subscription.tier || 'basic',
+      startDate: userData.subscription.startDate || new Date().toISOString(),
     } : undefined,
     // Passthrough other fields
     lastActive: userData.lastActive,

@@ -12,9 +12,8 @@ import { useSound } from '@/hooks/sounds/use-sound';
 import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
-import { UserProfile } from '@/types/user';
 import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
-import { toStandardUserProfile, toUserProfile } from '@/utils/typeUnifier';
+import { ensureUserProfile, toStandardUserProfile, toUserProfile } from '@/utils/typeUnifier';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -75,8 +74,13 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Ensure the user has all required properties for both user types
-  const standardUser = toStandardUserProfile(user);
+  // Convert the user to a standardized profile with all required fields
+  const standardUser: ConsolidatedUserProfile = ensureUserProfile({
+    ...user, 
+    displayName: user.displayName || user.username || 'Anonymous User'
+  });
+  
+  // Convert the standardized user to the UserProfile type expected by the components
   const userProfileForComponents = toUserProfile(standardUser);
 
   const handleSpend = () => {

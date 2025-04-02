@@ -1,52 +1,42 @@
 
 import { MockeryAction } from '@/types/mockery-types';
-import { UserTier } from '@/types/mockery-types';
-import { getMockeryCost } from '@/utils/mockeryUtils';
-import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
+import { ensureMockeryAction } from '@/utils/mockeryNormalizer';
 
-/**
- * Get shame action price based on mockery action
- */
-export const getShameActionPrice = (action: MockeryAction): number => {
-  // Normalize the action first to handle legacy names
-  const normalizedAction = normalizeMockeryAction(action as string);
-  return getMockeryCost(normalizedAction as MockeryAction);
-};
+// Get discounted price for a mockery action
+export function getDiscountedShamePrice(action: MockeryAction): number {
+  const normalizedAction = ensureMockeryAction(action);
+  const originalPrice = getMockeryCost(normalizedAction);
+  return Math.floor(originalPrice * 0.75); // 25% discount
+}
 
-/**
- * Get shame tier prices
- */
-export const getShameTierPrices = (tier: UserTier | string): number => {
-  const tierPrices: Record<string, number> = {
-    'free': 50,
-    'basic': 100,
-    'premium': 200,
-    'pro': 300,
-    'royal': 500,
-    'legendary': 1000
+// Get the cost for a mockery action
+export function getMockeryCost(action: MockeryAction): number {
+  const costs: Record<string, number> = {
+    'tomato': 5,
+    'egg': 10,
+    'putridEgg': 15,
+    'crown': 100,
+    'thumbsDown': 1,
+    'mock': 2,
+    'stocks': 25,
+    'jester': 20,
+    'courtJester': 30,
+    'silence': 15,
+    'taunt': 3,
+    'smokeBomb': 8,
+    'protection': 50,
+    'shame': 20,
+    'challenge': 15,
+    'joust': 30,
+    'duel': 50,
+    'royal_decree': 200,
+    'flame': 5,
+    'heart': 2,
+    'skull': 10,
+    'thumbs_down': 1,
+    'laugh': 2,
+    'rotten_egg': 12
   };
   
-  return tierPrices[tier as string] || 100;
-};
-
-/**
- * Get the discounted price for a shame action based on tier
- */
-export const getDiscountedShamePrice = (action: MockeryAction): number => {
-  // Normalize the action first to handle legacy names
-  const normalizedAction = normalizeMockeryAction(action as string);
-  const basePrice = getShameActionPrice(normalizedAction as MockeryAction);
-  return Math.floor(basePrice * 0.5); // 50% discount
-};
-
-// Check if there is a weekly discount
-export const hasWeeklyDiscount = (): boolean => {
-  // In a real application, this might be based on the current week/day or fetched from an API
-  return true;
-};
-
-// Get the weekly discounted action
-export const getWeeklyDiscountedAction = (): MockeryAction => {
-  // In a real application, this might rotate weekly or be fetched from an API
-  return 'tomato' as MockeryAction;
-};
+  return costs[action] || 5;
+}
