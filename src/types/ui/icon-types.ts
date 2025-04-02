@@ -43,15 +43,6 @@ export interface IconProps extends Omit<React.SVGProps<SVGSVGElement>, 'size' | 
   style?: IconStyle;
 }
 
-// Icon component props specifically for MedievalIcon
-export interface MedievalIconProps {
-  name: string;
-  size?: IconSize | string;
-  color?: IconColor | string;
-  className?: string;
-  animated?: boolean;
-}
-
 // Map of icon sizes to Tailwind classes for consistent sizing
 export const iconSizeMap = {
   'xs': 'h-3 w-3',

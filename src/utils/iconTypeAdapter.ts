@@ -15,7 +15,9 @@ export const adaptIconSize = (size: string | number | undefined): number => {
       'md': 24,
       'lg': 32,
       'xl': 40,
-      '2xl': 48
+      '2xl': 48,
+      '3xl': 56,
+      '4xl': 64
     };
     
     // Check if the size is a known string size
@@ -45,11 +47,12 @@ export const adaptIconColor = (color: string | undefined): string => {
     'danger': '#EF4444', // red-500
     'warning': '#F59E0B', // amber-500
     'info': '#3B82F6', // blue-500
-    'royal': '#FFD700', // gold
+    'royal': '#8B5CF6', // purple-500
+    'gold': '#F59E0B', // amber-500
     'team-red': '#EF4444',
     'team-blue': '#3B82F6',
     'team-green': '#10B981',
-    'team-gold': '#FFD700',
+    'team-gold': '#F59E0B',
     'team-purple': '#8B5CF6'
   };
   

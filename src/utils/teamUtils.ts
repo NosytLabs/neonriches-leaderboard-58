@@ -81,9 +81,30 @@ export const getTeamBorderColor = (team: TeamColor): string => {
   return borderColorMap[team] || 'border-gray-400';
 };
 
+/**
+ * Get the Tailwind background color class for a team color (with opacity)
+ */
+export const getTeamTailwindBgColor = (team: TeamColor): string => {
+  const bgColorMap: Record<TeamColor, string> = {
+    red: 'bg-red-500/10 border-red-500',
+    blue: 'bg-blue-500/10 border-blue-500',
+    green: 'bg-green-500/10 border-green-500',
+    gold: 'bg-yellow-400/10 border-yellow-400',
+    purple: 'bg-purple-500/10 border-purple-500',
+    none: 'bg-gray-400/10 border-gray-400',
+    neutral: 'bg-slate-400/10 border-slate-400',
+    silver: 'bg-gray-300/10 border-gray-300',
+    bronze: 'bg-amber-600/10 border-amber-600',
+    crimson: 'bg-red-700/10 border-red-700'
+  };
+  
+  return bgColorMap[team] || 'bg-gray-400/10 border-gray-400';
+};
+
 export default {
   getTeamColor,
   getTeamName,
   getTeamBgColor,
-  getTeamBorderColor
+  getTeamBorderColor,
+  getTeamTailwindBgColor
 };

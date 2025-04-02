@@ -12,7 +12,7 @@ export function asTeamColor(team: string | TeamColor | null | undefined): TeamCo
   if (!team) return 'none';
   
   // Check if the string is a valid TeamColor
-  const validTeamColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
+  const validTeamColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze', 'crimson'];
   if (validTeamColors.includes(team as TeamColor)) {
     return team as TeamColor;
   }
