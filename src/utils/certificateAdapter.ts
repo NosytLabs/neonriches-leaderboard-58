@@ -1,59 +1,57 @@
 
-import { Certificate, CertificateTeam, CertificateType, CertificateStyle, CertificateStatus } from '@/types/certificates';
+import { Certificate, CertificateStyle, CertificateTeam, CertificateType, CertificateStatus } from '@/types/certificates';
 
-// Adapt a certificate to ensure it has all required fields
-export function adaptCertificate(cert: Partial<Certificate>): Certificate {
+// This function adapts any certificate-like object to match the Certificate interface
+export const adaptCertificate = (partialCert: Partial<Certificate>): Certificate => {
   return {
-    id: cert.id || `cert_${Math.random().toString(36).substring(2, 9)}`,
-    title: cert.title || cert.name || 'Certificate',
-    description: cert.description || '',
-    imageUrl: cert.imageUrl || '/assets/certificates/default.png',
-    userId: cert.userId || cert.recipientId || '',
-    dateIssued: cert.dateIssued || cert.issuedAt || new Date().toISOString(),
-    mintAddress: cert.mintAddress || '',
-    mintDate: cert.mintDate || '',
-    type: cert.type || 'achievement',
-    style: (cert.style || 'standard') as CertificateStyle,
-    team: (cert.team || 'none') as CertificateTeam,
-    status: (cert.status || 'issued') as CertificateStatus,
-    recipientName: cert.recipientName || '',
-    issuerName: cert.issuerName || 'Royal System',
-    recipientId: cert.recipientId || cert.userId || '',
-    tier: cert.tier || '',
-    name: cert.name || cert.title || '',
-    isMinted: cert.isMinted || false,
-    issuedAt: cert.issuedAt || cert.dateIssued || new Date().toISOString(),
-    expiresAt: cert.expiresAt || '',
-    previewUrl: cert.previewUrl || cert.imageUrl || '',
-    rarity: cert.rarity || 'common'
+    id: partialCert.id || `cert-${Math.random().toString(36).substring(2, 9)}`,
+    title: partialCert.title || partialCert.name || 'Certificate of Nobility',
+    description: partialCert.description || 'A royal certificate of status and nobility',
+    userId: partialCert.userId || '',
+    username: partialCert.username || '',
+    recipientId: partialCert.recipientId || partialCert.userId || '',
+    dateIssued: partialCert.dateIssued || partialCert.issuedAt || new Date().toISOString(),
+    issuedAt: partialCert.issuedAt || partialCert.dateIssued || new Date().toISOString(),
+    imageUrl: partialCert.imageUrl || '/assets/certificates/default.png',
+    type: partialCert.type || 'achievement',
+    style: partialCert.style || 'standard',
+    team: partialCert.team || 'none',
+    status: partialCert.status || 'issued',
+    recipientName: partialCert.recipientName || partialCert.username || 'Royal User',
+    issuerName: partialCert.issuerName || 'Royal Court',
+    recipientId: partialCert.recipientId || partialCert.userId || '',
+    rank: partialCert.rank || 0,
+    name: partialCert.name || partialCert.title || 'Certificate',
+    tier: partialCert.tier || 'common',
+    displayName: partialCert.displayName || partialCert.recipientName || partialCert.username || '',
+    mintAddress: partialCert.mintAddress || '',
+    mintDate: partialCert.mintDate || '',
+    isMinted: !!partialCert.isMinted || !!partialCert.mintAddress,
+    expiresAt: partialCert.expiresAt || '',
+    previewUrl: partialCert.previewUrl || partialCert.imageUrl || '',
+    rarity: partialCert.rarity || 'common',
+    signature: partialCert.signature || '',
   };
-}
+};
 
-// Wrapper for certificate mint function
-export async function wrapCertificateMint(cert: Certificate): Promise<boolean> {
-  console.log(`Minting certificate: ${cert.id}`);
-  // In a real implementation, this would call a blockchain service
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, 1500);
-  });
-}
+// Helper function to mock certificate mint operation
+export const wrapCertificateMint = async (cert: Certificate): Promise<boolean> => {
+  console.log(`Minting certificate: ${cert.title}`);
+  // Simulate async operation
+  await new Promise(resolve => setTimeout(resolve, 1500));
+  return true;
+};
 
-// Wrapper for certificate share function
-export async function wrapCertificateShare(cert: Certificate): Promise<string> {
-  console.log(`Sharing certificate: ${cert.id}`);
-  // In a real implementation, this would generate a sharing link
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(`https://example.com/certificates/${cert.id}`);
-    }, 500);
-  });
-}
+// Helper function to mock certificate share operation
+export const wrapCertificateShare = async (cert: Certificate): Promise<string> => {
+  console.log(`Sharing certificate: ${cert.title}`);
+  // Simulate async operation
+  await new Promise(resolve => setTimeout(resolve, 800));
+  return `https://share.domain.com/certificates/${cert.id}`;
+};
 
-// Wrapper for certificate download function
-export function wrapCertificateDownload(cert: Certificate): void {
-  console.log(`Downloading certificate: ${cert.id}`);
-  // In a real implementation, this would trigger a file download
-  alert(`Certificate ${cert.title} would be downloaded here.`);
-}
+// Helper function to mock certificate download operation
+export const wrapCertificateDownload = (cert: Certificate): void => {
+  console.log(`Downloading certificate: ${cert.title}`);
+  // In a real app, this would trigger a download
+};

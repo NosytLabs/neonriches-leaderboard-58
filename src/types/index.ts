@@ -6,7 +6,7 @@ export type {
   MockeryAction, 
   MockeryTier, 
   MockeryResult,
-  MockeryEvent, // Fix MockeryEffect to MockeryEvent
+  MockeryEvent, // Correct export instead of MockeryEffect
   TeamColor,
   UserTier,
   Gender
@@ -19,25 +19,28 @@ export type {
   ProfileBoost,
   User,
   ProfileImage,
-  ProfileLink
+  ProfileLink,
+  SocialLink // Export SocialLink from user
 } from './user';
 
-// Re-export SocialLink if needed
-export type { SocialLink } from './user-consolidated';
+// Re-export SocialLink from user-consolidated also
+export type { SocialLink as SocialLinkInterface } from './user-consolidated';
 
 // Export consolidated user types
 export type {
   UserSubscription,
-  TeamType
+  TeamType,
+  UserProfile as ConsolidatedUserProfile
 } from './user-consolidated';
 
 // Export team types
 export type {
   TeamData,
-  TeamTheme,
+  TeamTheme, // Make sure this is exported from team.d.ts
   TeamStats,
   TeamBenefits,
-  TeamInvite
+  TeamInvite,
+  TeamColor as TeamColorType // Export TeamColor again with alias
 } from './team';
 
 // Export leaderboard types
@@ -51,10 +54,21 @@ export type {
 export type {
   Certificate,
   CertificateStyle,
-  CertificateTeam
+  CertificateTeam,
+  CertificateType, // Add this export
+  CertificateStatus // Add this export
 } from './certificates';
 
 // Export cosmetics
 export type {
   UserCosmetics
 } from './cosmetics';
+
+// Type to ensure cosmetics type is exported
+export interface Cosmetic {
+  id: string;
+  name: string;
+  type: string;
+  rarity: string;
+  price: number;
+}

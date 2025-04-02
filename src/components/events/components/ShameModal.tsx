@@ -1,131 +1,131 @@
 
-import React from 'react';
-import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { MockeryAction, TeamColor } from '@/types/mockery-types';
+import { Badge } from '@/components/ui/Badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Crown, ShieldCheck, Coins } from 'lucide-react';
-import { 
-  getMockeryName, 
-  mockeryDescriptions,
-  getMockeryCost
-} from '@/utils/mockeryUtils';
-import { getDiscountedShamePrice } from '@/utils/shameUtils';
-import { getInitials } from '@/utils/formatters/stringFormatters';
-import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
+import { Laugh, Skull, Target, AlertTriangle } from 'lucide-react';
+import { LeaderboardUser } from '@/types/leaderboard';
+import { MockeryAction } from '@/types/mockery-types';
+import { getMockeryName, getMockeryDescription, getMockeryTier, getMockeryCost } from '@/utils/mockeryUtils';
+import { mockeryTierBadgeColors } from '@/utils/mockeryActionUtils';
 
 interface ShameModalProps {
-  targetUser: {
-    userId: string;
-    username: string;
-    profileImage: string;
-    totalSpent: number;
-    rank: number;
-    team: TeamColor;
-    tier: string;
-    spendStreak: number;
-  };
-  shameType: MockeryAction;
-  onConfirm: () => void;
-  onCancel: () => void;
-  hasDiscount?: boolean;
+  isOpen: boolean;
+  onClose: () => void;
+  target: LeaderboardUser | null;
+  onMockery: (action: MockeryAction) => void;
 }
 
 const ShameModal: React.FC<ShameModalProps> = ({
-  targetUser,
-  shameType,
-  onConfirm,
-  onCancel,
-  hasDiscount = false
+  isOpen,
+  onClose,
+  target,
+  onMockery
 }) => {
-  const regularPrice = getMockeryCost(shameType);
-  const finalPrice = hasDiscount 
-    ? getDiscountedShamePrice(shameType) 
-    : regularPrice;
+  const [selectedAction, setSelectedAction] = useState<MockeryAction | null>(null);
   
-  const getActionTitle = () => {
-    const normalizedAction = normalizeMockeryAction(shameType);
-    switch (normalizedAction) {
-      case 'tomato': return 'Throw Tomatoes';
-      case 'egg': return 'Throw Rotten Eggs';
-      case 'stocks': return 'Place in Stocks';
-      case 'jester': return 'Make a Jester';
-      case 'crown': return 'Award Crown';
-      case 'shame': return 'Public Shaming';
-      case 'protection': return 'Royal Protection';
-      default: return 'Royal Mockery';
+  const mockeryActions: MockeryAction[] = [
+    'tomato',
+    'egg',
+    'crown',
+    'mock',
+    'laugh',
+    'shame',
+  ];
+  
+  const handleMockery = () => {
+    if (selectedAction && target) {
+      onMockery(selectedAction);
+      onClose();
     }
   };
   
-  const getActionDescription = () => {
-    const normalizedAction = normalizeMockeryAction(shameType);
-    return mockeryDescriptions[normalizedAction] || "Apply mockery to this user.";
-  };
-  
-  const getActionIcon = () => {
-    const normalizedAction = normalizeMockeryAction(shameType);
-    switch (normalizedAction) {
-      case 'crown':
-      case 'protection':
-        return <ShieldCheck className="h-5 w-5 text-royal-gold" />;
-      default:
-        return <Coins className="h-5 w-5 text-red-500" />;
-    }
-  };
+  if (!target) return null;
   
   return (
-    <DialogContent className="glass-morphism border-white/10">
-      <DialogHeader>
-        <DialogTitle className="flex items-center">
-          {getActionIcon()}
-          <span className="ml-2">{getActionTitle()}</span>
-        </DialogTitle>
-      </DialogHeader>
-      
-      <div className="flex items-center space-x-4 py-4">
-        <div className="h-12 w-12 rounded-full overflow-hidden bg-black/20">
-          <AvatarImage 
-            src={targetUser.profileImage || '/placeholder.svg'} 
-            alt={targetUser.username}
-            className="h-full w-full object-cover"
-          />
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Skull className="h-5 w-5 text-royal-crimson" />
+            Mock User
+          </DialogTitle>
+        </DialogHeader>
+        
+        <div className="flex items-center p-3 rounded-lg bg-black/20 border border-white/10 mb-4">
+          <Avatar className="h-10 w-10 mr-3 border border-white/20">
+            <AvatarImage src={target.profileImage} alt={target.username} />
+            <AvatarFallback>{target.displayName?.charAt(0) || target.username.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div className="flex-1">
+            <p className="font-medium">{target.displayName || target.username}</p>
+            <p className="text-xs text-white/60">Rank #{target.rank} • ${target.totalSpent.toLocaleString()}</p>
+          </div>
         </div>
         
-        <div>
-          <h3 className="font-medium">{targetUser.username}</h3>
-          <div className="text-sm text-white/60">
-            <span>Rank #{targetUser.rank}</span>
-            <span className="mx-2">•</span>
-            <span>${targetUser.totalSpent.toLocaleString()}</span>
+        <div className="space-y-2 mb-4">
+          <h3 className="font-medium mb-2 flex items-center">
+            <Target className="h-4 w-4 mr-2 text-royal-crimson" />
+            Select Mockery
+          </h3>
+          <div className="grid grid-cols-2 gap-2">
+            {mockeryActions.map((action) => {
+              const tier = getMockeryTier(action);
+              const tierColorClass = mockeryTierBadgeColors[tier];
+              
+              return (
+                <div 
+                  key={action}
+                  className={`p-3 rounded-md border cursor-pointer transition-colors ${
+                    selectedAction === action 
+                      ? 'bg-royal-crimson/20 border-royal-crimson/40' 
+                      : 'bg-black/20 border-white/10 hover:bg-royal-crimson/10 hover:border-royal-crimson/20'
+                  }`}
+                  onClick={() => setSelectedAction(action)}
+                >
+                  <div className="flex items-center mb-2">
+                    <Laugh className="h-4 w-4 mr-2" />
+                    <p className="font-medium text-sm">{getMockeryName(action)}</p>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <Badge variant="outline" className={tierColorClass}>
+                      {tier}
+                    </Badge>
+                    <span className="text-sm font-medium">${getMockeryCost(action)}</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
-      </div>
-      
-      <div className="bg-white/5 p-4 rounded-md">
-        <div className="flex justify-between items-center">
-          <span>{getActionTitle()} Cost:</span>
-          <span className="font-semibold">${finalPrice}</span>
-        </div>
-        {hasDiscount && (
-          <div className="text-xs text-green-400 mt-1 text-right">
-            25% Discount Applied
+        
+        {selectedAction && (
+          <div className="p-4 rounded-lg bg-black/20 border border-white/10 mb-4">
+            <h3 className="font-medium mb-2 flex items-center">
+              <AlertTriangle className="h-4 w-4 mr-2 text-yellow-500" />
+              Preview
+            </h3>
+            <p className="text-sm text-white/80">{getMockeryDescription(selectedAction)}</p>
+            <p className="text-xs text-white/60 mt-2">Cost: ${getMockeryCost(selectedAction)}</p>
           </div>
         )}
-      </div>
-      
-      <DialogFooter className="mt-4">
-        <Button variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button 
-          onClick={onConfirm} 
-          className="bg-royal-gold hover:bg-royal-gold/90 text-black"
-        >
-          <Crown className="h-4 w-4 mr-2" />
-          Confirm ({finalPrice} coins)
-        </Button>
-      </DialogFooter>
-    </DialogContent>
+        
+        <DialogFooter>
+          <Button variant="outline" className="flex-1" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button 
+            variant="default" 
+            className="flex-1 bg-royal-crimson hover:bg-royal-crimson/90"
+            onClick={handleMockery}
+            disabled={!selectedAction}
+          >
+            Deploy Mockery
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

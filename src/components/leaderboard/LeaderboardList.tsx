@@ -16,6 +16,7 @@ export interface LeaderboardListProps {
   showRankChange?: boolean;
   onUserClick?: (userId: string) => void;
   onShameClick?: (userId: string) => void;
+  isLoading?: boolean; // Alias for loading
 }
 
 const LeaderboardList: React.FC<LeaderboardListProps> = ({
@@ -26,9 +27,13 @@ const LeaderboardList: React.FC<LeaderboardListProps> = ({
   showTiers = true,
   showRankChange = true,
   onUserClick,
-  onShameClick
+  onShameClick,
+  isLoading, // Alias for loading
 }) => {
-  if (loading) {
+  // Use isLoading as fallback for loading
+  const isDataLoading = loading || isLoading;
+
+  if (isDataLoading) {
     return (
       <Card>
         <CardHeader>

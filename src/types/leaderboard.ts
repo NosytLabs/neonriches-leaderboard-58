@@ -15,6 +15,13 @@ export interface LeaderboardUser {
   amountSpent: number;
   walletBalance: number;
   spendStreak: number;
+  
+  // Add missing properties used in components
+  isVerified?: boolean;
+  isProtected?: boolean;
+  rankChange?: number;
+  spendChange?: number;
+  avatarUrl?: string;
 }
 
 export interface LeaderboardFilter {
@@ -26,6 +33,8 @@ export interface LeaderboardFilter {
   search?: string;
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
+  sort?: string; // Added for compatibility
+  period?: string; // Added for compatibility
 }
 
 export interface LeaderboardResponse {

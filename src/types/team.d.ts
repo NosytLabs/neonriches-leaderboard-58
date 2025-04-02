@@ -1,6 +1,6 @@
-
 import { TeamColor } from './mockery-types';
 
+// Re-export TeamColor to make it available from this module
 export { TeamColor };
 
 export interface TeamData {
@@ -19,7 +19,7 @@ export interface TeamData {
   slogan?: string;
   code?: string;
   rankBonusMultiplier?: number;
-  totalContribution: number;
+  totalContribution?: number;
   totalSpent?: number;
   rank?: number;
   previousRank?: number;
