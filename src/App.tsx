@@ -21,7 +21,7 @@ try {
   HelmetProvider = require('react-helmet-async').HelmetProvider;
 } catch (e) {
   // Use a fallback if react-helmet-async is not available
-  HelmetProvider = require('@/components/seo/HelmetProvider').default;
+  HelmetProvider = ({ children }) => <>{children}</>;
   console.warn('Using fallback HelmetProvider. Some SEO features may be limited.');
 }
 
@@ -37,7 +37,8 @@ const App: React.FC = () => {
             <Routes>
               <Route path="/" element={<Leaderboard />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/mockery/:username" element={<MockeryPage />} />
+              <Route path="/mockery" element={<MockeryPage />} />
+              <Route path="/mockery/:action" element={<MockeryPage />} />
               <Route path="/login" element={<Auth />} />
               <Route path="/register" element={<Auth />} />
               <Route path="/chat" element={<Chat />} />
