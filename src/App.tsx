@@ -2,7 +2,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
-import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '@/contexts/auth';
 import { SolanaProvider } from '@/contexts/SolanaContext';
 import { ToastProvider } from '@/components/ui/toast-provider';
@@ -12,6 +11,16 @@ import MockeryPage from '@/pages/MockeryPage';
 import Auth from '@/pages/Auth';
 import Dashboard from '@/pages/Dashboard';
 import Chat from '@/pages/Chat';
+
+// Use dynamic import for react-helmet-async to handle cases where it might not be available yet
+let HelmetProvider: React.ComponentType<{children: React.ReactNode, context?: object}>;
+try {
+  HelmetProvider = require('react-helmet-async').HelmetProvider;
+} catch (e) {
+  // Use a fallback if react-helmet-async is not available
+  HelmetProvider = require('@/components/seo/HelmetProvider').default;
+  console.warn('Using fallback HelmetProvider. Some SEO features may be limited.');
+}
 
 const App: React.FC = () => {
   // Create a context object for react-helmet-async

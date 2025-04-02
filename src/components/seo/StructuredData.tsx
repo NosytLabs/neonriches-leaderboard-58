@@ -1,6 +1,14 @@
 
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
+
+// Try to import from react-helmet-async, but fall back to our custom implementation
+let Helmet: React.ComponentType<any>;
+try {
+  Helmet = require('react-helmet-async').Helmet;
+} catch (e) {
+  Helmet = require('./Helmet').default;
+  console.warn('Using fallback Helmet component. Some SEO features may be limited.');
+}
 
 interface StructuredDataProps {
   data: object;
