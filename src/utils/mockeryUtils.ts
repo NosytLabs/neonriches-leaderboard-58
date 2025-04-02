@@ -43,7 +43,7 @@ export function getMockeryDescription(action: MockeryAction): string {
     mock: 'Publicly mock this user with a custom message.',
     jester: 'Turn this user into the royal jester for 24 hours.',
     praise: 'Send royal praise to this user, boosting their profile status.',
-    thumbsDown: 'Express royal disapproval of this user's actions.',
+    thumbsDown: 'Express royal disapproval of this user\'s actions.',
     putridEggs: 'Throw especially putrid eggs at this user, creating a lingering stench for 48 hours.',
     stocks: 'Place this user in the royal stocks for 24 hours, limiting their profile actions.',
     silence: 'Prevent this user from posting for 12 hours.',
