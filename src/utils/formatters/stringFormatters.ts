@@ -1,74 +1,63 @@
 
-// String formatting utility functions
+/**
+ * Get initials from a name or username
+ */
+export const getInitials = (name: string): string => {
+  if (!name) return '';
+  
+  // Split by space and get first letter of each part
+  const parts = name.split(' ');
+  if (parts.length > 1) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  
+  // If no space, return first and second letter
+  if (name.length > 1) {
+    return name.substring(0, 2).toUpperCase();
+  }
+  
+  // If only one letter, return it
+  return name[0].toUpperCase();
+};
 
 /**
- * Format username for display
+ * Truncate a string to a certain length with ellipsis
+ */
+export const truncateString = (str: string, maxLength: number = 20): string => {
+  if (!str) return '';
+  if (str.length <= maxLength) return str;
+  
+  return str.substring(0, maxLength) + '...';
+};
+
+/**
+ * Capitalize first letter of each word
+ */
+export const capitalizeWords = (str: string): string => {
+  if (!str) return '';
+  
+  return str
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};
+
+/**
+ * Format a username for display
  */
 export const formatUsername = (username: string): string => {
   if (!username) return '';
-  return username.startsWith('@') ? username : `@${username}`;
-};
-
-/**
- * Truncate string to specified length with ellipsis
- */
-export const truncateString = (str: string, maxLength: number = 30): string => {
-  if (!str || str.length <= maxLength) return str || '';
-  return `${str.substring(0, maxLength)}...`;
-};
-
-/**
- * Capitalize first letter of a string
- */
-export const capitalizeFirstLetter = (str: string): string => {
-  if (!str) return '';
-  return str.charAt(0).toUpperCase() + str.slice(1);
-};
-
-/**
- * Convert string to title case
- */
-export const toTitleCase = (str: string): string => {
-  if (!str) return '';
-  return str.replace(
-    /\w\S*/g,
-    (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
-  );
-};
-
-/**
- * Strip HTML tags from string
- */
-export const stripHtmlTags = (str: string): string => {
-  if (!str) return '';
-  return str.replace(/<[^>]*>?/gm, '');
-};
-
-/**
- * Get initials from a name (up to specified number of chars)
- */
-export const getInitials = (name: string, chars: number = 2): string => {
-  if (!name) return '';
   
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) {
-    return name.substring(0, chars).toUpperCase();
-  }
+  // Remove spaces and special characters
+  const sanitized = username.replace(/[^a-zA-Z0-9_]/g, '');
   
-  let initials = '';
-  for (let i = 0; i < Math.min(parts.length, chars); i++) {
-    initials += parts[i].charAt(0);
-  }
-  
-  return initials.toUpperCase();
+  // Ensure it starts with @
+  return sanitized.startsWith('@') ? sanitized : `@${sanitized}`;
 };
 
-// Format dollar amount
-export const formatDollarAmount = (amount: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(amount);
+export default {
+  getInitials,
+  truncateString,
+  capitalizeWords,
+  formatUsername
 };

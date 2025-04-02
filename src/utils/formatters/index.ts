@@ -1,102 +1,64 @@
 
-/**
- * Consolidated formatter utility functions
- */
+// Import all formatters
+import { getInitials, truncateString, capitalizeWords, formatUsername } from './stringFormatters';
+import { formatDate, formatTimeAgo, formatCurrency } from './dateFormatters';
 
-// Format a number as currency with dollar sign
-export const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(amount);
+// Re-export all formatters
+export {
+  getInitials,
+  truncateString,
+  capitalizeWords,
+  formatUsername,
+  formatDate,
+  formatTimeAgo,
+  formatCurrency
 };
 
-// Format a dollar amount without cents
-export const formatDollarAmount = (amount: number): string => {
+/**
+ * Format a number as currency
+ */
+export const formatMoney = (amount: number | string): string => {
+  const num = typeof amount === 'string' ? parseFloat(amount) : amount;
+  
+  if (isNaN(num)) return '$0';
+  
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
-  }).format(amount);
+  }).format(num);
 };
 
-// Format a number with commas
-export const formatNumber = (num: number): string => {
-  return new Intl.NumberFormat('en-US').format(num);
-};
-
-// Truncate an address (e.g. wallet address) for display
-export const truncateAddress = (address: string, start = 4, end = 4): string => {
-  if (!address) return '';
-  if (address.length <= start + end) return address;
-  return `${address.slice(0, start)}...${address.slice(-end)}`;
-};
-
-// Format a date in a standard format
-export const formatDate = (date: string | Date): string => {
-  const dateObj = date instanceof Date ? date : new Date(date);
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }).format(dateObj);
-};
-
-// Format a timestamp as a relative time (e.g. "2 hours ago")
-export const formatTimeAgo = (timestamp: string | Date): string => {
-  const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
-  const now = new Date();
-  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+/**
+ * Format a number with commas
+ */
+export const formatNumber = (num: number | string): string => {
+  const parsedNum = typeof num === 'string' ? parseFloat(num) : num;
   
-  let interval = Math.floor(seconds / 31536000);
-  if (interval >= 1) {
-    return interval === 1 ? '1 year ago' : `${interval} years ago`;
+  if (isNaN(parsedNum)) return '0';
+  
+  return new Intl.NumberFormat('en-US').format(parsedNum);
+};
+
+/**
+ * Format a rank number (1st, 2nd, 3rd, etc)
+ */
+export const formatRankNumber = (num: number): string => {
+  if (isNaN(num)) return '0th';
+  
+  const j = num % 10;
+  const k = num % 100;
+  
+  if (j === 1 && k !== 11) {
+    return num + 'st';
+  }
+  if (j === 2 && k !== 12) {
+    return num + 'nd';
+  }
+  if (j === 3 && k !== 13) {
+    return num + 'rd';
   }
   
-  interval = Math.floor(seconds / 2592000);
-  if (interval >= 1) {
-    return interval === 1 ? '1 month ago' : `${interval} months ago`;
-  }
-  
-  interval = Math.floor(seconds / 86400);
-  if (interval >= 1) {
-    return interval === 1 ? '1 day ago' : `${interval} days ago`;
-  }
-  
-  interval = Math.floor(seconds / 3600);
-  if (interval >= 1) {
-    return interval === 1 ? '1 hour ago' : `${interval} hours ago`;
-  }
-  
-  interval = Math.floor(seconds / 60);
-  if (interval >= 1) {
-    return interval === 1 ? '1 minute ago' : `${interval} minutes ago`;
-  }
-  
-  return seconds < 10 ? 'just now' : `${Math.floor(seconds)} seconds ago`;
-};
-
-// Format a file size in a human-readable format
-export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
-  
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-};
-
-// Export default for backwards compatibility
-export default {
-  formatCurrency,
-  formatDollarAmount,
-  formatNumber,
-  truncateAddress,
-  formatDate,
-  formatTimeAgo,
-  formatFileSize
+  return num + 'th';
 };

@@ -14,6 +14,7 @@ import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { adaptUserProfile } from '@/utils/userProfileAdapter';
 import { toThemeValue } from '@/utils/typeConverter';
+import { convertToUserProfile } from '@/utils/userProfileAdapter';
 import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
 
 const EnhancedDashboard = () => {
@@ -86,7 +87,12 @@ const EnhancedDashboard = () => {
   };
 
   // Adapt the user to ensure it has all required fields with valid values
-  const adaptedUser = adaptUserProfile(processedUser) as ConsolidatedUserProfile;
+  const adaptedUser = adaptUserProfile(processedUser);
+  // Create a copy for components requiring ConsolidatedUserProfile
+  const consolidatedUser = {
+    ...adaptedUser,
+    team: adaptedUser.team.toString()
+  } as ConsolidatedUserProfile;
 
   const handleSpend = () => {
     toast({
@@ -107,7 +113,7 @@ const EnhancedDashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <DashboardWelcome user={adaptedUser} />
+      <DashboardWelcome user={consolidatedUser} />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid grid-cols-5 w-full bg-black/20">
@@ -164,3 +170,4 @@ const EnhancedDashboard = () => {
 };
 
 export default EnhancedDashboard;
+

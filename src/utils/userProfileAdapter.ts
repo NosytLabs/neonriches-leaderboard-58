@@ -1,29 +1,52 @@
 
-import { UserProfile } from '@/types/user';
+import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
+import { UserProfile as UserProfileType } from '@/types/user';
 import { TeamColor } from '@/types/mockery-types';
-import { toTeamColor, toThemeValue, toUserTier } from './typeConverter';
+import { toTeamColor } from './typeConverter';
 
 /**
- * Adapts a subscription object to ensure compatibility
+ * Convert a consolidated user profile to ensure compatibility with components
+ * that expect a UserProfileType
  */
-export const adaptSubscription = (subscription: any) => {
-  if (!subscription) return null;
-  
+export const convertToUserProfile = (user: ConsolidatedUserProfile): UserProfileType => {
   return {
-    planId: subscription.planId || subscription.id || '',
-    nextBillingDate: subscription.nextBillingDate || subscription.endDate || '',
-    status: subscription.status || 'active',
-    tier: subscription.tier || 'basic'
+    id: user.id,
+    username: user.username,
+    displayName: user.displayName,
+    email: user.email || '',
+    profileImage: user.profileImage,
+    bio: user.bio || '',
+    joinedDate: user.joinedDate,
+    team: toTeamColor(user.team) as TeamColor,
+    tier: user.tier,
+    rank: user.rank,
+    previousRank: user.previousRank,
+    totalSpent: user.totalSpent,
+    amountSpent: user.amountSpent,
+    walletBalance: user.walletBalance,
+    isVerified: user.isVerified || false,
+    isProtected: user.isProtected || false,
+    isVIP: user.isVIP || false,
+    isFounder: user.isFounder || false,
+    settings: {
+      ...user.settings,
+      theme: user.settings.theme as "royal" | "dark" | "light" | "system",
+    },
+    cosmetics: user.cosmetics || {},
+    profileBoosts: user.profileBoosts || [],
+    spendStreak: user.spendStreak,
+    following: user.following || [],
+    followers: user.followers || []
   };
 };
 
 /**
- * Adapts user profile data to ensure compatibility across different parts of the app
+ * Adapts a user profile to ensure compatibility across different parts of the app
  */
-export const adaptUserProfile = (user: any): UserProfile => {
+export const adaptUserProfile = (user: any): UserProfileType => {
   if (!user) return null as any;
   
-  return {
+  const consolidatedUser: ConsolidatedUserProfile = {
     id: user.id || '',
     username: user.username || '',
     displayName: user.displayName || user.username || '',
@@ -31,8 +54,8 @@ export const adaptUserProfile = (user: any): UserProfile => {
     profileImage: user.profileImage || '/assets/default-avatar.png',
     bio: user.bio || '',
     joinedDate: user.joinedDate || user.joinDate || user.createdAt || new Date().toISOString(),
-    team: toTeamColor(user.team || 'none') as TeamColor,
-    tier: toUserTier(user.tier || 'basic'),
+    team: toTeamColor(user.team),
+    tier: user.tier || 'basic',
     rank: user.rank || 0,
     previousRank: user.previousRank || 0,
     totalSpent: user.totalSpent || user.amountSpent || 0,
@@ -43,11 +66,10 @@ export const adaptUserProfile = (user: any): UserProfile => {
     isProtected: !!user.isProtected,
     isVIP: !!user.isVIP,
     isFounder: !!user.isFounder,
-    isAdmin: !!user.isAdmin,
     settings: {
       profileVisibility: user.settings?.profileVisibility || 'public',
       allowProfileLinks: user.settings?.allowProfileLinks !== false,
-      theme: toThemeValue(user.settings?.theme || 'dark'),
+      theme: user.settings?.theme || 'dark',
       notifications: user.settings?.notifications !== false,
       emailNotifications: user.settings?.emailNotifications || false,
       marketingEmails: user.settings?.marketingEmails || false,
@@ -58,22 +80,13 @@ export const adaptUserProfile = (user: any): UserProfile => {
       showTeam: user.settings?.showTeam !== false,
       showSpending: user.settings?.showSpending !== false
     },
-    cosmetics: user.cosmetics || {
-      border: [],
-      color: [],
-      font: [],
-      emoji: [],
-      title: [],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    },
-    profileBoosts: user.profileBoosts || []
+    profileBoosts: user.profileBoosts || [],
+    cosmetics: user.cosmetics || {},
+    followers: user.followers || [],
+    following: user.following || []
   };
+  
+  return convertToUserProfile(consolidatedUser);
 };
 
-export default {
-  adaptSubscription,
-  adaptUserProfile
-};
+export default adaptUserProfile;

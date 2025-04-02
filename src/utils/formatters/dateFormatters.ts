@@ -1,12 +1,13 @@
 
 /**
- * Format a date to a human-readable string
+ * Format a date to a readable string
  */
 export const formatDate = (dateString: string): string => {
-  if (!dateString) return '';
-  
   const date = new Date(dateString);
-  if (isNaN(date.getTime())) return 'Invalid Date';
+  
+  if (isNaN(date.getTime())) {
+    return 'Invalid date';
+  }
   
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
@@ -16,63 +17,61 @@ export const formatDate = (dateString: string): string => {
 };
 
 /**
- * Format a timestamp as time ago (e.g., "5 minutes ago")
+ * Format a date as a relative time string (e.g. "3 days ago")
  */
 export const formatTimeAgo = (dateString: string): string => {
-  if (!dateString) return '';
-  
   const date = new Date(dateString);
-  if (isNaN(date.getTime())) return 'Invalid Date';
+  
+  if (isNaN(date.getTime())) {
+    return 'Invalid date';
+  }
   
   const now = new Date();
-  const secondsAgo = Math.floor((now.getTime() - date.getTime()) / 1000);
+  const diffMs = now.getTime() - date.getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHour / 24);
+  const diffMonth = Math.floor(diffDay / 30);
+  const diffYear = Math.floor(diffMonth / 12);
   
-  if (secondsAgo < 60) return `${secondsAgo} second${secondsAgo !== 1 ? 's' : ''} ago`;
+  if (diffYear > 0) {
+    return diffYear === 1 ? '1 year ago' : `${diffYear} years ago`;
+  }
+  if (diffMonth > 0) {
+    return diffMonth === 1 ? '1 month ago' : `${diffMonth} months ago`;
+  }
+  if (diffDay > 0) {
+    return diffDay === 1 ? '1 day ago' : `${diffDay} days ago`;
+  }
+  if (diffHour > 0) {
+    return diffHour === 1 ? '1 hour ago' : `${diffHour} hours ago`;
+  }
+  if (diffMin > 0) {
+    return diffMin === 1 ? '1 minute ago' : `${diffMin} minutes ago`;
+  }
   
-  const minutesAgo = Math.floor(secondsAgo / 60);
-  if (minutesAgo < 60) return `${minutesAgo} minute${minutesAgo !== 1 ? 's' : ''} ago`;
-  
-  const hoursAgo = Math.floor(minutesAgo / 60);
-  if (hoursAgo < 24) return `${hoursAgo} hour${hoursAgo !== 1 ? 's' : ''} ago`;
-  
-  const daysAgo = Math.floor(hoursAgo / 24);
-  if (daysAgo < 30) return `${daysAgo} day${daysAgo !== 1 ? 's' : ''} ago`;
-  
-  const monthsAgo = Math.floor(daysAgo / 30);
-  if (monthsAgo < 12) return `${monthsAgo} month${monthsAgo !== 1 ? 's' : ''} ago`;
-  
-  const yearsAgo = Math.floor(monthsAgo / 12);
-  return `${yearsAgo} year${yearsAgo !== 1 ? 's' : ''} ago`;
+  return 'just now';
 };
 
 /**
- * Format a date relative to now (today, yesterday, etc.)
+ * Format a number as currency
  */
-export const formatRelativeTime = (dateString: string): string => {
-  if (!dateString) return '';
+export const formatCurrency = (amount: number | string): string => {
+  const num = typeof amount === 'string' ? parseFloat(amount) : amount;
   
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return 'Invalid Date';
+  if (isNaN(num)) return '$0';
   
-  const now = new Date();
-  const yesterday = new Date(now);
-  yesterday.setDate(now.getDate() - 1);
-  
-  const isToday = 
-    date.getDate() === now.getDate() &&
-    date.getMonth() === now.getMonth() &&
-    date.getFullYear() === now.getFullYear();
-  
-  const isYesterday = 
-    date.getDate() === yesterday.getDate() &&
-    date.getMonth() === yesterday.getMonth() &&
-    date.getFullYear() === yesterday.getFullYear();
-  
-  if (isToday) {
-    return `Today at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-  } else if (isYesterday) {
-    return `Yesterday at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-  } else {
-    return formatDate(dateString);
-  }
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(num);
+};
+
+export default {
+  formatDate,
+  formatTimeAgo,
+  formatCurrency
 };

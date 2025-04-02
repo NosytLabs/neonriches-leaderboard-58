@@ -1,177 +1,336 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Check } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { formatDate } from '@/utils/formatters';
+import { Coins, Crown, ShieldCheck, Star, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
-import SubscriptionPlanCard, { SubscriptionPlan } from './SubscriptionPlanCard';
+import { UserProfile } from '@/types/user-consolidated';
+import SubscriptionPlanCard from './SubscriptionPlanCard';
 
-const subscriptionPlans: SubscriptionPlan[] = [
-  {
-    id: 'basic',
-    name: 'Basic',
-    description: 'Essential features for getting started.',
-    features: [
-      'Access to core features',
-      'Standard support',
-      'Limited customization'
-    ],
-    price: 9.99,
-    isPopular: false,
-    badge: 'Free'
-  },
-  {
-    id: 'premium',
-    name: 'Premium',
-    description: 'Enhanced features for serious users.',
-    features: [
-      'All Basic features',
-      'Priority support',
-      'Advanced customization',
-      'Exclusive content'
-    ],
-    price: {
-      monthly: 29.99,
-      yearly: 299.99
-    },
-    highlightedIndex: 2,
-    isPopular: true,
-    badge: 'Popular'
-  },
-  {
-    id: 'royal',
-    name: 'Royal',
-    description: 'The ultimate experience with top-tier features.',
-    features: [
-      'All Premium features',
-      '24/7 dedicated support',
-      'Unlimited customization',
-      'Early access to new features'
-    ],
-    price: {
-      monthly: 79.99,
-      yearly: 799.99
-    },
-    isPopular: false,
-    badge: 'Best Value'
-  }
-];
+interface SubscriptionPlan {
+  id: string;
+  name: string;
+  description: string;
+  features: string[];
+  price: {
+    monthly: number;
+    yearly: number;
+  };
+  tier: string;
+  badge: string;
+  popular?: boolean;
+}
 
-const SubscriptionManagement = () => {
-  const { user, updateUserProfile } = useAuth();
+interface SubscriptionManagementProps {
+  user: UserProfile;
+  onSubscribe?: (plan: string) => Promise<void>;
+  onCancel?: () => Promise<void>;
+}
+
+const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
+  user,
+  onSubscribe,
+  onCancel
+}) => {
   const { toast } = useToast();
-  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (user?.subscription?.planId) {
-      const initialPlan = subscriptionPlans.find(plan => plan.id === user.subscription?.planId);
-      setSelectedPlan(initialPlan || null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  
+  const subscriptionPlans: SubscriptionPlan[] = [
+    {
+      id: 'basic',
+      name: 'Basic',
+      description: 'The entry level tier for loyal subjects.',
+      features: [
+        'Bronze team access',
+        'Basic profile customization',
+        'Participate in public events',
+        'Standard mockery actions',
+      ],
+      price: {
+        monthly: 4.99,
+        yearly: 49.99
+      },
+      tier: 'basic',
+      badge: 'Bronze'
+    },
+    {
+      id: 'premium',
+      name: 'Premium',
+      description: 'Enhanced features for aspiring nobility.',
+      features: [
+        'Silver team access',
+        'Advanced profile customization',
+        'Exclusive mockery actions',
+        'Priority in leaderboards',
+        'Reduced fees on spending',
+      ],
+      price: {
+        monthly: 9.99,
+        yearly: 99.99
+      },
+      tier: 'premium',
+      badge: 'Silver',
+      popular: true
+    },
+    {
+      id: 'royal',
+      name: 'Royal',
+      description: 'The pinnacle of throne status with maximum privileges.',
+      features: [
+        'Gold team access',
+        'Complete profile customization',
+        'All mockery actions',
+        'Royal badges and titles',
+        'Exclusive royal events',
+        'No fees on spending',
+        'Personal royal certificate',
+      ],
+      price: {
+        monthly: 19.99,
+        yearly: 199.99
+      },
+      tier: 'royal',
+      badge: 'Gold'
     }
-  }, [user?.subscription?.planId]);
-
-  const handleSelectPlan = (planId: string) => {
-    const plan = subscriptionPlans.find(plan => plan.id === planId);
-    setSelectedPlan(plan || null);
-  };
-
-  const handleUpdateSubscription = async () => {
-    if (!selectedPlan) {
-      toast({
-        title: "No Plan Selected",
-        description: "Please select a subscription plan.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsLoading(true);
+  ];
+  
+  const handleSubscribe = async () => {
+    if (!selectedPlan) return;
+    
     try {
-      const success = await updateUserProfile({
-        subscription: {
-          planId: selectedPlan.id,
-          nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-          status: 'active',
-          tier: selectedPlan.id
-        }
-      });
-
-      if (success) {
-        toast({
-          title: "Subscription Updated",
-          description: `You have successfully subscribed to the ${selectedPlan.name} plan.`,
-        });
-      } else {
-        toast({
-          title: "Subscription Update Failed",
-          description: "Failed to update your subscription. Please try again.",
-          variant: "destructive"
-        });
+      setIsProcessing(true);
+      
+      // In a real app, we would call a payment processing API here
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Create a subscription object
+      const plan = subscriptionPlans.find(p => p.id === selectedPlan);
+      const subscription = {
+        planId: selectedPlan,
+        nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        status: 'active' as const,
+        tier: plan?.tier || 'basic'
+      };
+      
+      // Call the onSubscribe prop if provided
+      if (onSubscribe) {
+        await onSubscribe(selectedPlan);
       }
+      
+      toast({
+        title: 'Subscription activated',
+        description: `You now have ${plan?.name} privileges!`,
+        variant: 'success'
+      });
+      
+    } catch (error) {
+      console.error('Subscription error:', error);
+      toast({
+        title: 'Subscription failed',
+        description: 'There was an error processing your subscription.',
+        variant: 'destructive'
+      });
     } finally {
-      setIsLoading(false);
+      setIsProcessing(false);
     }
   };
-
+  
+  const handleCancel = async () => {
+    try {
+      setIsProcessing(true);
+      
+      // In a real app, we would call an API to cancel the subscription
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Call the onCancel prop if provided
+      if (onCancel) {
+        await onCancel();
+      }
+      
+      toast({
+        title: 'Subscription cancelled',
+        description: 'Your subscription has been cancelled.',
+        variant: 'default'
+      });
+      
+    } catch (error) {
+      console.error('Cancellation error:', error);
+      toast({
+        title: 'Cancellation failed',
+        description: 'There was an error cancelling your subscription.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+  
   return (
-    <Card className="w-full glass-morphism border-white/10">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold">Manage Your Subscription</CardTitle>
-        <CardDescription>Choose the plan that best fits your needs.</CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4 md:grid-cols-3">
-        {subscriptionPlans.map(plan => (
-          <SubscriptionPlanCard
-            key={plan.id}
-            plan={plan}
-            onSelect={handleSelectPlan}
-            selected={selectedPlan?.id === plan.id}
-            billingInterval={billingInterval}
-          />
-        ))}
-      </CardContent>
-      <CardContent>
-        <div className="flex items-center space-x-2">
-          <input
-            type="radio"
-            id="monthly"
-            name="billingInterval"
-            value="monthly"
-            className="h-4 w-4"
-            checked={billingInterval === 'monthly'}
-            onChange={() => setBillingInterval('monthly')}
-          />
-          <label htmlFor="monthly" className="text-sm font-medium leading-none">
-            Monthly
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input
-            type="radio"
-            id="yearly"
-            name="billingInterval"
-            value="yearly"
-            className="h-4 w-4"
-            checked={billingInterval === 'yearly'}
-            onChange={() => setBillingInterval('yearly')}
-          />
-          <label htmlFor="yearly" className="text-sm font-medium leading-none">
-            Yearly
-          </label>
-        </div>
-      </CardContent>
-      <CardContent>
-        <Button
-          className="w-full"
-          onClick={handleUpdateSubscription}
-          disabled={isLoading}
-        >
-          {isLoading ? 'Updating...' : 'Update Subscription'}
-        </Button>
-      </CardContent>
-    </Card>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Crown className="h-5 w-5 mr-2 text-royal-gold" />
+            Subscription Management
+          </CardTitle>
+          <CardDescription>
+            Manage your royal privileges and subscription status
+          </CardDescription>
+        </CardHeader>
+        
+        <CardContent>
+          <Tabs defaultValue="plans">
+            <TabsList className="grid grid-cols-2 mb-4">
+              <TabsTrigger value="plans">Available Plans</TabsTrigger>
+              <TabsTrigger value="current">Current Subscription</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="plans" className="space-y-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-medium">Select a Plan</h3>
+                <div className="flex items-center p-1 bg-secondary rounded-md">
+                  <Button
+                    variant={billingInterval === 'monthly' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setBillingInterval('monthly')}
+                    className="text-xs"
+                  >
+                    Monthly
+                  </Button>
+                  <Button
+                    variant={billingInterval === 'yearly' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setBillingInterval('yearly')}
+                    className="text-xs"
+                  >
+                    Yearly (10% off)
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="grid gap-4 md:grid-cols-3">
+                {subscriptionPlans.map((plan) => (
+                  <div key={plan.id} onClick={() => setSelectedPlan(plan.id)}>
+                    <SubscriptionPlanCard
+                      plan={plan}
+                      billingInterval={billingInterval}
+                      isSelected={selectedPlan === plan.id}
+                    />
+                  </div>
+                ))}
+              </div>
+              
+              {selectedPlan && (
+                <div className="mt-6">
+                  <Button 
+                    className="w-full bg-royal-gold hover:bg-royal-gold/90 text-black"
+                    onClick={handleSubscribe}
+                    disabled={isProcessing}
+                  >
+                    {isProcessing ? (
+                      <>
+                        <div className="h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck className="h-4 w-4 mr-2" />
+                        Subscribe Now
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
+            </TabsContent>
+            
+            <TabsContent value="current">
+              {user.subscription ? (
+                <div className="space-y-4">
+                  <div className="p-4 bg-black/20 rounded-md">
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="text-lg font-medium flex items-center">
+                        <Star className="h-4 w-4 mr-2 text-royal-gold" />
+                        Current Plan
+                      </h3>
+                      <Badge variant={user.subscription.tier === 'royal' ? 'gold' : (user.subscription.tier === 'premium' ? 'secondary' : 'outline')}>
+                        {user.subscription.tier.charAt(0).toUpperCase() + user.subscription.tier.slice(1)}
+                      </Badge>
+                    </div>
+                    
+                    <div className="grid gap-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-white/70">Status:</span>
+                        <span className="font-medium">
+                          {user.subscription.status === 'active' ? (
+                            <span className="text-green-400 flex items-center">
+                              <CheckCircle2 className="h-3 w-3 mr-1" />
+                              Active
+                            </span>
+                          ) : (
+                            user.subscription.status
+                          )}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-white/70">Plan ID:</span>
+                        <span className="font-medium">{user.subscription.planId}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-white/70">Next billing:</span>
+                        <span className="font-medium">
+                          {user.subscription.nextBillingDate ? formatDate(user.subscription.nextBillingDate) : 'N/A'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-white/70">Auto-renew:</span>
+                        <span className="font-medium">{user.subscription.autoRenew ? 'Yes' : 'No'}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    variant="outline" 
+                    className="w-full" 
+                    onClick={handleCancel}
+                    disabled={isProcessing}
+                  >
+                    {isProcessing ? (
+                      <>
+                        <div className="h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                        Processing...
+                      </>
+                    ) : (
+                      'Cancel Subscription'
+                    )}
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="mb-4">
+                    <Crown className="h-12 w-12 mx-auto text-white/30" />
+                  </div>
+                  <h3 className="text-lg font-medium mb-2">No Active Subscription</h3>
+                  <p className="text-white/60 mb-4">
+                    You don't have an active subscription. Subscribe to a plan to gain royal privileges.
+                  </p>
+                  <Button 
+                    variant="default" 
+                    onClick={() => document.querySelector('[data-value="plans"]')?.click()}
+                  >
+                    View Plans
+                  </Button>
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

@@ -1,14 +1,17 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Crown, Laugh, Shield, Skull, Target } from 'lucide-react';
-import { MockeryAction } from '@/types/mockery-types';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import { Crown, Laugh, Shield, Skull, Target, Search, AlertTriangle, Info } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import type { MockeryAction } from '@/types/mockery-types';
 
-import { getMockeryActionIcon, getMockeryName, mockeryDescriptions } from '@/utils/mockeryUtils';
-import { getMockeryTierColorClass } from '@/components/help/mockeryHelpers';
-import { getMockeryCost } from '@/utils/mockeryUtils';
+import { getMockeryActionIcon, getMockeryName, mockeryDescriptions, getMockeryCost, getMockeryTier } from '@/utils/mockeryUtils';
+import { getMockeryTierColor, getMockeryTierBadgeColor } from '@/components/help/mockeryHelpers';
 
 interface MockeryTarget {
   id: string;
@@ -19,7 +22,7 @@ interface MockeryTarget {
   tier: string;
 }
 
-interface MockeryAction {
+interface MockeryActionItem {
   id: string;
   name: string;
   description: string;
@@ -153,7 +156,7 @@ const RoyalMockeryFestival = () => {
                     const name = getMockeryName(action as any);
                     const tier = getMockeryTier(action as any);
                     const price = getMockeryCost(action as any);
-                    const tierColorClass = getMockeryTierColorClass(tier);
+                    const tierColorClass = getMockeryTierBadgeColor(tier);
                     
                     return (
                       <div 

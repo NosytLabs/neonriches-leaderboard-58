@@ -112,7 +112,7 @@ export interface MockeryUser {
 // Leaderboard user interface
 export interface LeaderboardUser {
   id: string;
-  userId?: string;
+  userId: string;
   username: string;
   displayName?: string;
   profileImage?: string;
@@ -143,5 +143,6 @@ export interface LeaderboardFilter {
   sortDirection?: 'asc' | 'desc';
 }
 
-// Individual type exports
-export { MockeryAction, MockeryTier, TeamColor, Gender, UserTier, TeamData };
+// Use proper export type syntax
+export type { MockeryAction, MockeryTier, TeamColor, Gender, UserTier, TeamData };
+

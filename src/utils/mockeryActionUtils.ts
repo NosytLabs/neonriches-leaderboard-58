@@ -1,135 +1,104 @@
 
-import { 
-  AlertTriangle, 
-  Crown, 
-  Egg, 
-  Flame, 
-  Heart, 
-  Skull, 
-  ThumbsDown, 
-  Trophy, 
-  Users, 
-  Coffee, 
-  UserMinus, 
-  Feather, 
-  Music, 
-  Lightbulb, 
-  Ghost, 
-  Shield
-} from 'lucide-react';
 import { MockeryAction } from '@/types/mockery-types';
+import { normalizeMockeryAction } from './mockeryNormalizer';
+import {
+  Target, Egg, Crown, Lock, MessageSquareOff, Flame,
+  ThumbsDown, Heart, Skull, Laugh, Fish, Award, Bell
+} from 'lucide-react';
 
-// Icon mapping for mockery actions
-export const mockeryActionIcons = {
-  tomato: AlertTriangle,
-  egg: Egg,
-  rotten_egg: Egg,
-  flame: Flame,
-  heart: Heart,
-  thumbs_down: ThumbsDown,
-  skull: Skull,
-  crown: Crown,
-  putridEgg: AlertTriangle,
-  stocks: UserMinus,
-  jester: Coffee,
-  mock: Lightbulb,
-  challenge: AlertTriangle,
-  joust: AlertTriangle,
-  duel: AlertTriangle,
-  silence: Ghost,
-  laugh: AlertTriangle,
-  fish: AlertTriangle,
-  taunt: AlertTriangle,
-  thumbsDown: ThumbsDown,
-  trumpet: Music,
-  confetti: AlertTriangle,
-  shame: AlertTriangle,
-  courtJester: Coffee,
-  smokeBomb: AlertTriangle,
-  protection: Shield,
-  royal_decree: Crown,
-  shame_certificate: AlertTriangle,
-  insult: AlertTriangle,
-  humiliate: AlertTriangle
-};
-
-// Get a display name for a mockery action
-export const getMockeryActionDisplayName = (action: string): string => {
-  // Convert camelCase/snake_case to readable format
-  return action
-    .replace(/_/g, ' ')
-    .replace(/([A-Z])/g, ' $1')
-    .replace(/^./, str => str.toUpperCase());
-};
-
-// Normalize mockery action names to ensure consistent handling
-export const normalizeMockeryAction = (action: string): MockeryAction => {
-  // Map of various formats to standardized format
-  const normalizationMap: Record<string, MockeryAction> = {
-    'putrid_egg': 'putridEgg',
-    'putrid-egg': 'putridEgg',
-    'putridegg': 'putridEgg',
-    'court_jester': 'courtJester',
-    'court-jester': 'courtJester',
-    'courtjester': 'courtJester',
-    'smoke_bomb': 'smokeBomb',
-    'smoke-bomb': 'smokeBomb',
-    'smokebomb': 'smokeBomb',
-    'thumbs_down': 'thumbsDown',
-    'thumbs-down': 'thumbsDown',
-    'thumbsdown': 'thumbsDown',
-    'royal_decree': 'royal_decree',
-    'royal-decree': 'royal_decree',
-    'royaldecree': 'royal_decree',
-    'shame_certificate': 'shame_certificate',
-    'shame-certificate': 'shame_certificate',
-    'shamecertificate': 'shame_certificate',
-    'rotten_egg': 'rotten_egg',
-    'rotten-egg': 'rotten_egg',
-    'rottenegg': 'rotten_egg'
-  };
-
-  // Return the normalized form if it exists, otherwise return as is
-  return normalizationMap[action.toLowerCase()] || action as MockeryAction;
-};
-
-// Valid mockery actions for components that need a comprehensive list
+// Available mockery actions for the UI
 export const VALID_MOCKERY_ACTIONS: MockeryAction[] = [
   'tomato',
   'egg',
   'rotten_egg',
-  'flame',
-  'heart',
-  'thumbs_down',
-  'skull',
   'crown',
-  'putridEgg',
   'stocks',
   'jester',
   'mock',
-  'challenge',
-  'joust',
-  'duel',
-  'silence',
+  'shame',
   'laugh',
   'fish',
-  'taunt',
-  'thumbsDown',
-  'trumpet',
-  'confetti',
-  'shame',
-  'courtJester',
-  'smokeBomb',
-  'protection',
-  'royal_decree',
-  'shame_certificate',
-  'insult',
-  'humiliate'
+  'protection'
 ];
 
+// Get display name for mockery action
+export const getMockeryActionDisplayName = (action: string): string => {
+  const normalizedAction = normalizeMockeryAction(action);
+  
+  const displayNames: Record<string, string> = {
+    'tomato': 'Throw Tomatoes',
+    'egg': 'Throw Eggs',
+    'rotten_egg': 'Throw Rotten Eggs',
+    'crown': 'Crown of Shame',
+    'stocks': 'Public Stocks',
+    'jester': 'Jester\'s Hat',
+    'mock': 'Public Mockery',
+    'shame': 'Public Shaming',
+    'laugh': 'Public Laughter',
+    'fish': 'Fish Slap',
+    'protection': 'Royal Protection'
+  };
+  
+  return displayNames[normalizedAction] || 'Unknown Action';
+};
+
+// Get icon component for mockery action
+export const getMockeryActionIcon = (action: string) => {
+  const normalizedAction = normalizeMockeryAction(action);
+  
+  const icons: Record<string, React.ElementType> = {
+    'tomato': Target,
+    'egg': Egg,
+    'rotten_egg': Egg,
+    'crown': Crown,
+    'stocks': Lock,
+    'jester': Crown,
+    'mock': Skull,
+    'shame': Bell,
+    'laugh': Laugh,
+    'fish': Fish,
+    'protection': Award
+  };
+  
+  return icons[normalizedAction] || Target;
+};
+
+// Get price for mockery action
+export const getMockeryActionPrice = (action: string): number => {
+  const normalizedAction = normalizeMockeryAction(action);
+  
+  const prices: Record<string, number> = {
+    'tomato': 50,
+    'egg': 75,
+    'rotten_egg': 100,
+    'crown': 200,
+    'stocks': 250,
+    'jester': 150,
+    'mock': 50,
+    'shame': 125,
+    'laugh': 75,
+    'fish': 100,
+    'protection': 500
+  };
+  
+  return prices[normalizedAction] || 50;
+};
+
+// Group mockery actions by category
+export const getMockeryActionsByCategory = () => {
+  return {
+    'common': ['tomato', 'egg', 'mock', 'laugh'],
+    'uncommon': ['rotten_egg', 'fish', 'shame'],
+    'rare': ['jester', 'crown'],
+    'epic': ['stocks'],
+    'legendary': ['protection']
+  };
+};
+
 export default {
-  mockeryActionIcons,
+  VALID_MOCKERY_ACTIONS,
   getMockeryActionDisplayName,
-  normalizeMockeryAction,
-  VALID_MOCKERY_ACTIONS
+  getMockeryActionIcon,
+  getMockeryActionPrice,
+  getMockeryActionsByCategory
 };

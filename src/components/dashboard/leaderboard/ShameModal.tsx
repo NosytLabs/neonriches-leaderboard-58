@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -6,8 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Crown, ShieldCheck, Coins } from 'lucide-react';
 import { 
   getMockeryName, 
-  getMockeryDescription,
-  getMockeryActionPrice,
+  mockeryDescriptions,
   getMockeryCost
 } from '@/utils/mockeryUtils';
 import { getDiscountedShamePrice } from '@/utils/shameUtils';
@@ -38,7 +38,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
   onCancel,
   hasDiscount = false
 }) => {
-  const regularPrice = getMockeryActionPrice(shameType);
+  const regularPrice = getMockeryCost(shameType);
   const finalPrice = hasDiscount 
     ? getDiscountedShamePrice(shameType) 
     : regularPrice;
@@ -59,16 +59,7 @@ const ShameModal: React.FC<ShameModalProps> = ({
   
   const getActionDescription = () => {
     const normalizedAction = normalizeMockeryAction(shameType);
-    switch (normalizedAction) {
-      case 'tomato': return 'Throw rotten tomatoes at this user. A medieval classic!';
-      case 'egg': return 'Hurl rotten eggs for maximum embarrassment.';
-      case 'stocks': return 'Place this noble in the stocks for public ridicule.';
-      case 'jester': return 'Mock them as the court jester.';
-      case 'crown': return 'Award them a crown of sarcasm.';
-      case 'shame': return 'Call for public shaming! Shame! Shame! Shame!';
-      case 'protection': return 'Grant royal protection against mockery for a limited time.';
-      default: return 'Apply royal mockery to this user.';
-    }
+    return mockeryDescriptions[normalizedAction as MockeryAction] || "Apply mockery to this user.";
   };
   
   const getActionIcon = () => {

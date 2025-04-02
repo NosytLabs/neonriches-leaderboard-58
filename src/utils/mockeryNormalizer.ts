@@ -2,49 +2,48 @@
 import { MockeryAction } from '@/types/mockery-types';
 
 /**
- * Normalize mockery action names to ensure consistent handling
- * Handles cases like snake_case, camelCase, etc.
+ * Normalizes a mockery action string to ensure it maps to a valid MockeryAction type
+ * This helps with legacy action names and string manipulation
  */
-export const normalizeMockeryAction = (action: string): MockeryAction => {
-  // Map of various formats to standardized format
-  const normalizationMap: Record<string, MockeryAction> = {
+export const normalizeMockeryAction = (action: string | MockeryAction): string => {
+  if (!action) return 'mock';
+  
+  // Convert to lowercase and remove any spaces or special characters
+  const normalized = String(action).toLowerCase().trim();
+  
+  // Map legacy or alternate names to their standard counterparts
+  const actionMap: Record<string, string> = {
+    'tomatoes': 'tomato',
+    'eggs': 'egg',
+    'rotten_eggs': 'rotten_egg',
     'putrid_egg': 'putridEgg',
-    'putrid-egg': 'putridEgg',
-    'putridegg': 'putridEgg',
-    'court_jester': 'courtJester',
-    'court-jester': 'courtJester',
-    'courtjester': 'courtJester',
-    'smoke_bomb': 'smokeBomb',
-    'smoke-bomb': 'smokeBomb',
-    'smokebomb': 'smokeBomb',
     'thumbs_down': 'thumbsDown',
-    'thumbs-down': 'thumbsDown',
-    'thumbsdown': 'thumbsDown',
-    'royal_decree': 'royal_decree',
-    'royal-decree': 'royal_decree',
-    'royaldecree': 'royal_decree',
-    'shame_certificate': 'shame_certificate',
-    'shame-certificate': 'shame_certificate',
-    'shamecertificate': 'shame_certificate',
-    'rotten_egg': 'rotten_egg',
-    'rotten-egg': 'rotten_egg',
-    'rottenegg': 'rotten_egg'
+    'court_jester': 'courtJester',
+    'smoke_bomb': 'smokeBomb'
   };
-
-  // Return the normalized form if it exists, otherwise return as is
-  return normalizationMap[action.toLowerCase()] || action as MockeryAction;
+  
+  return actionMap[normalized] || normalized;
 };
 
-// Export function to get readable form of mockery action
-export const getReadableMockeryAction = (action: string): string => {
-  // Convert camelCase/snake_case to readable format
-  return action
-    .replace(/_/g, ' ')
-    .replace(/([A-Z])/g, ' $1')
-    .replace(/^./, str => str.toUpperCase());
+/**
+ * Checks if a string is a valid mockery action
+ */
+export const isValidMockeryAction = (action: string): boolean => {
+  const validActions: string[] = [
+    'tomato', 'egg', 'rotten_egg', 'flame', 'heart', 
+    'thumbs_down', 'skull', 'crown', 'putridEgg', 
+    'stocks', 'jester', 'mock', 'challenge', 'joust',
+    'duel', 'silence', 'laugh', 'fish', 'taunt', 
+    'thumbsDown', 'trumpet', 'confetti', 'shame',
+    'courtJester', 'smokeBomb', 'protection',
+    'royal_decree', 'shame_certificate', 'insult', 'humiliate'
+  ];
+  
+  const normalizedAction = normalizeMockeryAction(action);
+  return validActions.includes(normalizedAction);
 };
 
 export default {
   normalizeMockeryAction,
-  getReadableMockeryAction
+  isValidMockeryAction
 };
