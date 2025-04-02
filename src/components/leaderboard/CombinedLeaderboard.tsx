@@ -1,5 +1,5 @@
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMockLeaderboard } from '@/hooks/useMockLeaderboard';
 import useAuth from '@/hooks/useAuth';
@@ -7,7 +7,7 @@ import { LeaderboardUser } from '@/types/leaderboard';
 import { MockeryAction } from '@/types/mockery-types';
 import { TeamColor } from '@/types/team';
 import { useToast } from '@/hooks/use-toast';
-import { useSound } from '@/hooks/useSound';
+import useSound from '@/hooks/useSound';
 import { toTeamColor } from '@/utils/typeConverters';
 import LeaderboardHeader from '@/components/LeaderboardHeader';
 import LeaderboardFilters from '@/components/LeaderboardFilters';

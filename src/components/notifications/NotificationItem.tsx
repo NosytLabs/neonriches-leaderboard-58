@@ -12,7 +12,7 @@ import {
   Check
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Notification } from '@/hooks/use-notifications';
+import { Notification } from '@/types/sound-types';
 
 interface NotificationItemProps {
   notification: Notification;

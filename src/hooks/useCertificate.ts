@@ -1,214 +1,150 @@
 
-import { useState, useCallback } from 'react';
-import { Certificate } from '@/types/certificates';
-import { useToast } from './use-toast';
-import { useSound } from './sounds/use-sound';
-import { UserProfile } from '@/types/user-consolidated';
+// Add the status field to each certificate in the hook implementation
+import { useState, useEffect, useCallback } from 'react';
+import { Certificate } from '@/types/certificate';
 
-// Interface for mint result
-export interface MintResult {
-  success: boolean;
-  transactionHash?: string;
-  message?: string;
-  mintAddress?: string;
-}
+export const useCertificate = () => {
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
-// Interface for certificate hook return value
-export interface UseCertificateReturn {
-  mint: (certificateId: string) => Promise<MintResult>;
-  download: (certificateId: string) => void;
-  share: (certificateId: string) => Promise<string>;
-  getUserCertificates: () => Promise<Certificate[]>;
-  getAvailableTemplates: () => Promise<Certificate[]>;
-}
-
-export const useCertificate = (): UseCertificateReturn => {
-  const { toast } = useToast();
-  const sound = useSound();
-
-  // Mock certificates for demo purposes
-  const mockCertificates: Certificate[] = [
-    {
-      id: 'cert-1',
-      title: 'Royal Spending Achievement',
-      description: 'Awarded for exceptional spending on the platform',
-      imageUrl: '/certificates/royal-spending.png',
-      userId: 'user-1',
-      dateIssued: new Date().toISOString(),
-      mintAddress: '',
-      type: 'achievement',
-      style: 'royal',
-      team: 'gold',
-      rarity: 'legendary'
-    },
-    {
-      id: 'cert-2',
-      title: 'Premium Member Recognition',
-      description: 'Celebrating your dedication as a Premium member',
-      imageUrl: '/certificates/premium-member.png',
-      userId: 'user-1',
-      dateIssued: new Date().toISOString(),
-      mintAddress: '',
-      type: 'membership',
-      style: 'premium',
-      team: 'purple',
-      rarity: 'epic'
-    }
-  ];
-
-  // Mock mint function
-  const mint = useCallback(async (certificateId: string): Promise<MintResult> => {
+  // Fetch certificates for a user
+  const fetchUserCertificates = useCallback(async (userId: string) => {
+    setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Play a sound
-      sound.playSound('success');
-      
-      // Show a toast
-      toast({
-        title: 'Certificate Minted',
-        description: 'Your certificate has been successfully minted on the blockchain',
-        variant: 'success'
-      });
-      
-      // Return success
-      return {
-        success: true,
-        transactionHash: `tx-${Date.now()}`,
-        mintAddress: `mint-${certificateId}-${Date.now()}`
-      };
-    } catch (error) {
-      console.error('Error minting certificate:', error);
-      
-      toast({
-        title: 'Minting Failed',
-        description: 'There was an error minting your certificate',
-        variant: 'destructive'
-      });
-      
-      return {
-        success: false,
-        message: 'Failed to mint certificate'
-      };
-    }
-  }, [toast, sound]);
-
-  // Mock download function
-  const download = useCallback((certificateId: string): void => {
-    try {
-      // In a real app, this would trigger a download
-      console.log(`Downloading certificate ${certificateId}`);
-      
-      // Play a sound
-      sound.playSound('download' as any);
-      
-      // Show a toast
-      toast({
-        title: 'Certificate Downloaded',
-        description: 'Your certificate has been downloaded',
-        variant: 'success'
-      });
-    } catch (error) {
-      console.error('Error downloading certificate:', error);
-      
-      toast({
-        title: 'Download Failed',
-        description: 'There was an error downloading your certificate',
-        variant: 'destructive'
-      });
-    }
-  }, [toast, sound]);
-
-  // Mock share function
-  const share = useCallback(async (certificateId: string): Promise<string> => {
-    try {
-      // Simulate API call
+      // Mock API call for demo purposes
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Show a toast
-      toast({
-        title: 'Certificate Shared',
-        description: 'A shareable link to your certificate has been created',
-        variant: 'success'
-      });
-      
-      // Return a mock shareable URL
-      return `https://spendthrone.com/certificates/share/${certificateId}`;
-    } catch (error) {
-      console.error('Error sharing certificate:', error);
-      
-      toast({
-        title: 'Share Failed',
-        description: 'There was an error generating a shareable link',
-        variant: 'destructive'
-      });
-      
-      return '';
-    }
-  }, [toast]);
-
-  // Mock get user certificates function
-  const getUserCertificates = useCallback(async (): Promise<Certificate[]> => {
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Return mock certificates
-      return mockCertificates;
-    } catch (error) {
-      console.error('Error fetching user certificates:', error);
-      return [];
-    }
-  }, []);
-
-  // Mock get available templates function
-  const getAvailableTemplates = useCallback(async (): Promise<Certificate[]> => {
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Return mock templates
-      return [
+      // Sample certificates data
+      const mockCertificates: Certificate[] = [
         {
-          id: 'template-1',
+          id: 'cert-achievement-1',
           title: 'Royal Spender',
-          description: 'For those who spend like royalty',
-          imageUrl: '/certificates/royal-spender-template.png',
-          userId: '',
-          dateIssued: '',
-          mintAddress: '',
+          description: 'Awarded for reaching the top 100 spenders',
+          imageUrl: '/images/certificates/royal-spender.png',
+          userId: userId,
+          dateIssued: new Date().toISOString(),
+          mintAddress: '0x1234567890abcdef',
           type: 'achievement',
           style: 'royal',
           team: 'gold',
-          rarity: 'legendary'
+          rarity: 'legendary',
+          status: 'issued'
         },
         {
-          id: 'template-2',
-          title: 'Team Champion',
-          description: 'For outstanding team contribution',
-          imageUrl: '/certificates/team-champion-template.png',
-          userId: '',
-          dateIssued: '',
-          mintAddress: '',
-          type: 'team',
+          id: 'cert-membership-1',
+          title: 'Premium Member',
+          description: 'Exclusive benefits for premium members',
+          imageUrl: '/images/certificates/premium-member.png',
+          userId: userId,
+          dateIssued: new Date().toISOString(),
+          mintAddress: '0xabcdef1234567890',
+          type: 'membership',
           style: 'premium',
-          team: 'all',
-          rarity: 'epic'
+          team: 'purple',
+          rarity: 'epic',
+          status: 'minted'
         }
       ];
-    } catch (error) {
-      console.error('Error fetching certificate templates:', error);
-      return [];
+      
+      setCertificates(mockCertificates);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to fetch certificates'));
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
+  // Mint a certificate as NFT
+  const mintCertificateAsNFT = useCallback(async (certificateId: string) => {
+    setIsLoading(true);
+    try {
+      // Mock API call for demo purposes
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Update the certificate status to minted
+      setCertificates(prev => 
+        prev.map(cert => 
+          cert.id === certificateId
+            ? { ...cert, status: 'minted' as const }
+            : cert
+        )
+      );
+      
+      return true;
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to mint certificate'));
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Issue a new certificate
+  const issueCertificate = useCallback(async (userId: string, type: string, template: string) => {
+    setIsLoading(true);
+    try {
+      // Mock API call for demo purposes
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Create a new certificate based on template
+      let newCertificate: Certificate;
+      
+      switch (template) {
+        case 'achievement':
+          newCertificate = {
+            id: `cert-achievement-${Date.now()}`,
+            title: 'Royal Achievement',
+            description: 'Awarded for outstanding contributions',
+            imageUrl: '/images/certificates/royal-achievement.png',
+            userId: userId,
+            dateIssued: new Date().toISOString(),
+            mintAddress: `0x${Math.random().toString(16).substring(2, 14)}`,
+            type: 'achievement',
+            style: 'royal',
+            team: 'gold',
+            rarity: 'legendary',
+            status: 'issued'
+          };
+          break;
+        case 'team':
+          newCertificate = {
+            id: `cert-team-${Date.now()}`,
+            title: 'Team Member',
+            description: 'Recognized as a valuable team member',
+            imageUrl: '/images/certificates/team-member.png',
+            userId: userId,
+            dateIssued: new Date().toISOString(),
+            mintAddress: `0x${Math.random().toString(16).substring(2, 14)}`,
+            type: 'team',
+            style: 'premium',
+            team: 'all',
+            rarity: 'rare',
+            status: 'issued'
+          };
+          break;
+        default:
+          throw new Error('Invalid certificate template');
+      }
+      
+      setCertificates(prev => [...prev, newCertificate]);
+      return newCertificate;
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to issue certificate'));
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Return the hook interface
   return {
-    mint,
-    download,
-    share,
-    getUserCertificates,
-    getAvailableTemplates
+    certificates,
+    isLoading,
+    error,
+    fetchUserCertificates,
+    mintCertificateAsNFT,
+    issueCertificate
   };
 };
 

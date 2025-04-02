@@ -1,62 +1,39 @@
 
-import { TeamColor } from '@/types/mockery';
-
-export type CertificateType = 
-  | 'nobility' 
-  | 'achievement' 
-  | 'rank' 
-  | 'spending' 
-  | 'custom'
-  | 'founder';
-
-export type CertificateStyle = 
-  | 'medieval' 
-  | 'royal' 
-  | 'elegant' 
-  | 'modern'
-  | 'vintage'
-  | 'classic';
-
-export type CertificateTeam = 
-  | 'red' 
-  | 'blue' 
-  | 'green' 
-  | 'gold' 
-  | 'purple'
-  | 'neutral';
+export type CertificateType = 'achievement' | 'spending' | 'membership' | 'team' | 'nobility' | 'special';
+export type CertificateStyle = 'royal' | 'premium' | 'standard' | 'basic' | 'special';
+export type CertificateTeam = 'red' | 'green' | 'blue' | 'gold' | 'purple' | 'all' | 'none';
+export type CertificateStatus = 'issued' | 'minted' | 'pending' | 'revoked' | 'expired';
 
 export interface Certificate {
   id: string;
-  userId: string;
   title: string;
   description: string;
   imageUrl: string;
-  thumbnailUrl?: string;
+  userId: string;
+  dateIssued: string;
+  mintAddress: string;
   type: CertificateType;
   style: CertificateStyle;
-  team: CertificateTeam | TeamColor;
-  isPublic: boolean;
-  dateIssued: string;
-  dateExpires?: string;
-  mintAddress?: string;
-  nftId?: string;
-  isVerified?: boolean;
-  templateId?: string;
-  keywords?: string[];
-  metadata?: Record<string, any>;
-  signature?: string;
+  team: CertificateTeam;
+  rarity: string;
+  status: CertificateStatus;
 }
 
 export interface CertificateTemplate {
   id: string;
+  title: string; // Required field
   name: string;
-  type: CertificateType;
-  style: CertificateStyle;
-  team: CertificateTeam;
+  description: string;
   previewUrl: string;
   imageUrl: string;
-  description: string;
-  availableForTier: string[];
-  availableForRank?: number[];
-  requiresFounder?: boolean;
+  type: CertificateType;
+  team: CertificateTeam;
+  style: CertificateStyle;
+  available: boolean;
+}
+
+export interface CertificateNFT {
+  mintAddress: string;
+  mintDate: string;
+  dateIssued?: string;
 }

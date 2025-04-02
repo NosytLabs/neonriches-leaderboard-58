@@ -1,5 +1,4 @@
-
-import { Certificate, CertificateType, CertificateTemplate, CertificateStyle } from '@/types/certificates';
+import { Certificate, CertificateTemplate, CertificateType, CertificateStyle, CertificateTeam, CertificateStatus } from '@/types/certificate';
 
 /**
  * Adapter function to ensure a certificate has all required properties
@@ -49,3 +48,42 @@ export function adaptCertificateTemplate(partialTemplate: Partial<CertificateTem
     available: partialTemplate.available !== false
   };
 }
+
+// Function to adapt template to certificate format
+export const adaptTemplateToCertificate = (
+  template: CertificateTemplate, 
+  userId: string
+): Certificate => {
+  return {
+    id: `${template.id}-${Date.now()}`,
+    title: template.title, // Use title from template
+    description: template.description,
+    imageUrl: template.imageUrl,
+    userId: userId,
+    dateIssued: new Date().toISOString(),
+    mintAddress: '', // Will be set when minted
+    type: template.type,
+    style: template.style,
+    team: template.team,
+    rarity: 'common', // Default rarity
+    status: 'pending' // Default status
+  };
+};
+
+// Convert a template object to CertificateTemplate with all required fields
+export const convertToTemplate = (
+  data: Record<string, any>
+): CertificateTemplate => {
+  return {
+    id: data.id || `template-${Date.now()}`,
+    title: data.title || data.name, // Ensure title is always set
+    name: data.name || '',
+    description: data.description || '',
+    previewUrl: data.previewUrl || '',
+    imageUrl: data.imageUrl || '',
+    type: data.type as CertificateType,
+    team: data.team as CertificateTeam,
+    style: data.style as CertificateStyle,
+    available: data.available !== undefined ? data.available : true
+  };
+};

@@ -1,7 +1,6 @@
-
 // Add missing methods that useCertificate expects
 
-import { Certificate, CertificateType, CertificateTemplate, CertificateStyle } from '@/types/certificates';
+import { Certificate, CertificateTemplate, CertificateType, CertificateStyle, CertificateTeam, CertificateStatus } from '@/types/certificate';
 import { User } from '@/types/user'; // Use user.ts instead of user-consolidated
 
 /**
@@ -74,7 +73,8 @@ const getCertificateTemplates = async (): Promise<CertificateTemplate[]> => {
   return [
     {
       id: 'template-001',
-      name: 'Royal Nobility',
+      title: 'Royal Nobility Certificate',
+      name: 'Nobility Certificate',
       description: 'A certificate for nobility achievements',
       previewUrl: '/images/certificates/previews/nobility.png',
       imageUrl: '/images/certificates/nobility-template.png',
@@ -85,13 +85,50 @@ const getCertificateTemplates = async (): Promise<CertificateTemplate[]> => {
     },
     {
       id: 'template-002',
-      name: 'Spendthrift',
+      title: 'Spendthrift Certificate',
+      name: 'Royal Spending Certificate',
       description: 'A certificate for big spenders',
       previewUrl: '/images/certificates/previews/spending.png',
       imageUrl: '/images/certificates/spending-template.png',
       type: 'spending',
       team: 'green',
       style: 'luxury' as CertificateStyle,
+      available: true
+    },
+    {
+      id: 'nobility-red',
+      title: 'Red Nobility Certificate',
+      name: 'Nobility Certificate',
+      description: 'A distinguished certificate recognizing your noble status in the realm',
+      previewUrl: '/images/certificates/nobility-red-preview.png',
+      imageUrl: '/images/certificates/nobility-red.png',
+      type: 'nobility',
+      team: 'red',
+      style: 'royal',
+      available: true
+    },
+    {
+      id: 'spending-green',
+      title: 'Green Spending Certificate',
+      name: 'Royal Spending Certificate',
+      description: 'Acknowledges your significant contributions to the royal treasury',
+      previewUrl: '/images/certificates/spending-green-preview.png',
+      imageUrl: '/images/certificates/spending-green.png',
+      type: 'spending',
+      team: 'green',
+      style: 'premium',
+      available: true
+    },
+    {
+      id: 'team-blue',
+      title: 'Blue Team Certificate',
+      name: 'Blue Team Certificate',
+      description: 'Recognizes your allegiance and contributions to the Blue Team',
+      previewUrl: '/images/certificates/team-blue-preview.png',
+      imageUrl: '/images/certificates/team-blue.png',
+      type: 'team',
+      team: 'blue',
+      style: 'standard',
       available: true
     }
   ];
@@ -101,7 +138,8 @@ const getCertificateTemplates = async (): Promise<CertificateTemplate[]> => {
 const getTemplateById = async (id: string): Promise<CertificateTemplate> => {
   return {
     id,
-    name: 'Template',
+    title: 'Template',
+    name: 'Generic Template',
     description: 'Generic template',
     previewUrl: '/images/certificates/previews/generic.png',
     imageUrl: '/images/certificates/generic-template.png',

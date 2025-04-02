@@ -64,6 +64,7 @@ export interface SoundConfig {
   enabled: boolean;
   volume: number;
   muted: boolean;
+  premium?: boolean;
 }
 
 // Sound hook interface
@@ -93,6 +94,41 @@ export type UseSoundHook = SoundHook;
 
 // Add missing types for notification sounds
 export interface UseNotificationSoundsReturn {
+  playSound: (sound: SoundType, options?: SoundOptions) => void;
+  playNotificationSound: (type?: string, options?: SoundOptions) => void;
   playSoundForNotification: (type: string) => void;
   playNewNotificationSound: () => void;
+  mute: () => void;
+  unmute: () => void;
+  isMuted: boolean;
+  toggleMuted: () => boolean;
+  setVolume: (volume: number) => void;
+  currentVolume: number;
+}
+
+// Add notification type for NotificationItem
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  type: 'rank_change' | 'achievement' | 'royal' | 'event' | 'poke' | 'system' | 'deposit' | 'milestone';
+  read: boolean;
+  timestamp: Date;
+  actions?: Array<{
+    label: string;
+    action: () => void;
+  }>;
+}
+
+// Add use-notifications interface
+export interface UseNotificationsResult {
+  notifications: Notification[];
+  unreadCount: number;
+  open: boolean;
+  setOpen: (isOpen: boolean) => void;
+  handleMarkAllAsRead: () => void;
+  handleMarkAsRead: (id: string) => void;
+  handleDeleteNotification: (id: string) => void;
+  formatTimestamp: (timestamp: Date) => string;
+  playSound: (sound: SoundType, volume?: number) => void;
 }

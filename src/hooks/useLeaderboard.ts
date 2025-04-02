@@ -1,118 +1,79 @@
 
-import { useState, useCallback } from 'react';
-import { LeaderboardUser, LeaderboardFilter, UseLeaderboardResult } from '@/types/leaderboard';
+// Fix string error type to use Error object
+import { useState, useEffect, useCallback } from 'react';
+import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
+import { getLeaderboard } from '@/services/leaderboardService';
 
-export const useLeaderboard = (): UseLeaderboardResult => {
-  const [data, setData] = useState<LeaderboardUser[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [total, setTotal] = useState<number>(0);
-  const [page, setPage] = useState<number>(1);
-  const [hasMore, setHasMore] = useState<boolean>(false);
-  
-  // Default filter that uses valid types
-  const defaultFilter: LeaderboardFilter = {
+export const useLeaderboard = () => {
+  const [users, setUsers] = useState<LeaderboardUser[]>([]);
+  const [filter, setFilter] = useState<LeaderboardFilter>({
     team: 'all',
     tier: 'all',
-    timeframe: 'all',
-    search: '',
-    sortBy: 'spent', // Using valid sortBy value
-    sortDirection: 'desc',
-    limit: 10
-  };
+    sort: 'rank',
+    timeframe: 'all'
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [total, setTotal] = useState(0);
 
-  // Mock data for testing
-  const mockData: LeaderboardUser[] = [
-    {
-      id: "1",
-      userId: "1",
-      username: "royalspender",
-      displayName: "Royal Spender",
-      profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
-      avatarUrl: "https://randomuser.me/api/portraits/men/1.jpg",
-      totalSpent: 10000,
-      amountSpent: 10000, // Add required amountSpent
-      rank: 1,
-      team: "gold",
-      tier: "premium",
-      spendStreak: 7,
-      previousRank: 2,
-      isVerified: true,
-      isProtected: true,
-      walletBalance: 5000, // Add required walletBalance
-    },
-    {
-      id: "2",
-      userId: "2",
-      username: "bigwhale",
-      displayName: "Big Whale",
-      profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
-      avatarUrl: "https://randomuser.me/api/portraits/women/2.jpg",
-      totalSpent: 8500,
-      amountSpent: 8500, // Add required amountSpent
-      rank: 2,
-      team: "blue",
-      tier: "whale",
-      spendStreak: 5,
-      previousRank: 1,
-      isVerified: true,
-      isProtected: false,
-      walletBalance: 3000, // Add required walletBalance
-    },
-    {
-      id: "3",
-      userId: "3",
-      username: "statuschaser",
-      displayName: "Status Chaser",
-      profileImage: "https://randomuser.me/api/portraits/men/3.jpg",
-      avatarUrl: "https://randomuser.me/api/portraits/men/3.jpg",
-      totalSpent: 5000,
-      amountSpent: 5000, // Add required amountSpent
-      rank: 3,
-      team: "red",
-      tier: "pro",
-      spendStreak: 2,
-      previousRank: 4,
-      isVerified: false,
-      isProtected: false,
-      walletBalance: 1200, // Add required walletBalance
+  const fetchLeaderboard = useCallback(async (resetPage = false) => {
+    const currentPage = resetPage ? 1 : page;
+    
+    if (resetPage) {
+      setPage(1);
+      setUsers([]);
     }
-  ];
-
-  const fetchLeaderboard = useCallback(async (filter: LeaderboardFilter = defaultFilter) => {
-    setLoading(true);
+    
+    setIsLoading(true);
     setError(null);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const response = await getLeaderboard(filter, currentPage);
       
-      // Return mock data
-      setData(mockData);
-      setTotal(mockData.length);
-      setHasMore(false);
+      if (resetPage) {
+        setUsers(response.users);
+      } else {
+        setUsers(prev => [...prev, ...response.users]);
+      }
+      
+      setTotal(response.total);
+      setHasMore(response.hasMore);
     } catch (err) {
-      console.error("Error fetching leaderboard:", err);
-      setError("Failed to load leaderboard data");
+      // Convert string to Error object
+      setError(err instanceof Error ? err : new Error(String(err)));
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
-  }, []);
+  }, [filter, page]);
 
-  const refetch = useCallback(async () => {
-    await fetchLeaderboard(defaultFilter);
-  }, [fetchLeaderboard]);
+  useEffect(() => {
+    fetchLeaderboard(true);
+  }, [filter]);
+
+  const loadMore = useCallback(() => {
+    if (!isLoading && hasMore) {
+      setPage(prevPage => prevPage + 1);
+    }
+  }, [isLoading, hasMore]);
+
+  useEffect(() => {
+    if (page > 1) {
+      fetchLeaderboard();
+    }
+  }, [page]);
 
   return {
-    data,
-    loading,
+    users,
+    filter,
+    setFilter,
+    isLoading,
     error,
     total,
-    fetchLeaderboard,
-    refetch,
-    page,
-    setPage,
-    hasMore
+    hasMore,
+    loadMore,
+    refresh: () => fetchLeaderboard(true)
   };
 };
 

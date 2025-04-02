@@ -13,4 +13,7 @@ const useSound = (): SoundHook => {
   return soundContext;
 };
 
+// Named export for compatibility
+export const useSound = useSound;
+
 export default useSound;

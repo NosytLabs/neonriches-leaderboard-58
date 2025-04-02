@@ -40,6 +40,12 @@ export const useNotificationSounds = (): UseNotificationSoundsReturn => {
   return {
     playSound: sound.playSound,
     playNotificationSound,
+    playSoundForNotification: (type: string) => {
+      playNotificationSound(type);
+    },
+    playNewNotificationSound: () => {
+      sound.playSound('notification');
+    },
     mute: sound.mute,
     unmute: sound.unmute,
     isMuted: sound.isMuted,
