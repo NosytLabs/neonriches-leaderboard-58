@@ -8,6 +8,7 @@ export interface SolanaContextValue {
   connecting: boolean;
   walletBalance: number;
   publicKey: { toString: () => string } | null;
+  walletAddress?: string;
   signMessage?: (message: Uint8Array) => Promise<Uint8Array>;
   sendSol?: (recipient: string, amount: number) => Promise<string | null>;
   connect: () => Promise<void>;
@@ -31,6 +32,7 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [walletBalance, setWalletBalance] = useState(0);
   const [publicKey, setPublicKey] = useState<{ toString: () => string } | null>(null);
   const [walletPubkey, setWalletPubkey] = useState<string | undefined>(undefined);
+  const [walletAddress, setWalletAddress] = useState<string | undefined>(undefined);
 
   // Mock connection function
   const connect = async () => {
@@ -46,7 +48,9 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       };
       
       setPublicKey(mockPublicKey);
-      setWalletPubkey(mockPublicKey.toString());
+      const pubkeyStr = mockPublicKey.toString();
+      setWalletPubkey(pubkeyStr);
+      setWalletAddress(pubkeyStr);
       setWalletBalance(Math.random() * 10 + 1); // Random balance between 1-11 SOL
       setConnected(true);
       
@@ -74,6 +78,7 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setPublicKey(null);
     setWalletBalance(0);
     setWalletPubkey(undefined);
+    setWalletAddress(undefined);
     
     toast({
       title: "Wallet Disconnected",
@@ -126,6 +131,7 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         connecting,
         walletBalance,
         publicKey,
+        walletAddress,
         walletPubkey,
         signMessage,
         sendSol,

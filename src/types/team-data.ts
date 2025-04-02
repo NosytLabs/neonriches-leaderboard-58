@@ -11,7 +11,7 @@ export interface TeamData {
   members: number; // Changed from memberCount to members
   memberCount?: number; // Added for backwards compatibility
   totalContribution: number;
-  totalSpent?: number; // Added this property
+  totalSpent: number; // Added this property
   rank: number;
   previousRank: number;
 }

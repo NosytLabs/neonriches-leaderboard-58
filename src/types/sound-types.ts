@@ -48,7 +48,13 @@ export type SoundType =
   | 'courtJester'
   | 'smokeBomb'
   | 'fish'
-  | 'deposit'; // Add deposit as it's used in code
+  | 'deposit' // Add deposit as it's used in code
+  | 'rank_up' // Add these to cover usage in the code
+  | 'mockery'
+  | 'level_up'
+  | 'throne'
+  | 'boost'
+  | 'unlock';
 
 export interface SoundOptions {
   volume?: number;
@@ -75,6 +81,7 @@ export interface SoundHook {
   getVolume: () => number;
   isEnabled: boolean;
   toggleEnabled: () => void;
+  play?: (sound: SoundType, options?: SoundOptions) => void;
   
   // Additional properties for compatibility
   toggleMuted: () => boolean;

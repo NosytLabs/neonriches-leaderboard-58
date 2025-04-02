@@ -15,7 +15,8 @@ export const profileBoostEffects: BoostEffect[] = [
     icon: 'sun',
     strength: 1,
     minTier: 'basic',
-    iconName: 'sun'
+    iconName: 'sun',
+    allowStacking: false
   },
   {
     id: 'sparkle',
@@ -30,7 +31,8 @@ export const profileBoostEffects: BoostEffect[] = [
     icon: 'star',
     strength: 2,
     minTier: 'silver',
-    iconName: 'star'
+    iconName: 'star',
+    allowStacking: false
   },
   {
     id: 'crown',
@@ -45,7 +47,8 @@ export const profileBoostEffects: BoostEffect[] = [
     icon: 'crown',
     strength: 3,
     minTier: 'gold',
-    iconName: 'crown'
+    iconName: 'crown',
+    allowStacking: false
   },
   {
     id: 'shine',
@@ -60,7 +63,8 @@ export const profileBoostEffects: BoostEffect[] = [
     icon: 'sun',
     strength: 2,
     minTier: 'pro',
-    iconName: 'sun'
+    iconName: 'sun',
+    allowStacking: false
   },
   {
     id: 'aura',
@@ -75,7 +79,8 @@ export const profileBoostEffects: BoostEffect[] = [
     icon: 'flame',
     strength: 3,
     minTier: 'premium',
-    iconName: 'flame'
+    iconName: 'flame',
+    allowStacking: false
   }
 ];
 
