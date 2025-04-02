@@ -1,365 +1,249 @@
-import React, { useState, useEffect } from 'react';
-import { Shell } from '@/components/ui/Shell';
-import SubscriptionPlanCard from '@/components/subscription/SubscriptionPlanCard';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/Badge';
-import { Switch } from '@/components/ui/switch';
+
+import React, { useState } from 'react';
+import { Shell } from '@/utils/componentImports';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CreditCard, Crown, Gift, Sparkles, Users } from 'lucide-react';
-import { formatCurrency } from '@/utils/formatters';
-import { useAuth } from '@/hooks/useAuth';
+import { Check, Crown, CreditCard, Calendar, Zap } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import SubscriptionPlanCard from '@/components/subscription/SubscriptionPlanCard';
+import { useToast } from '@/hooks/use-toast';
 
-interface LocalSubscriptionPlan {
-  id: string;
-  name: string;
-  tier: string;
-  description: string;
-  price: {
-    monthly: number;
-    yearly: number;
-  };
-  features: string[];
-  popular?: boolean;
-  cta?: string;
-}
-
-const SubscriptionPage = () => {
-  const { user } = useAuth();
+const Subscription = () => {
+  const { toast } = useToast();
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
-  const [selectedPlan, setSelectedPlan] = useState<string>(user?.tier || 'basic');
+  const [selectedPlan, setSelectedPlan] = useState<string>('premium');
+  const [isProcessing, setIsProcessing] = useState(false);
   
-  useEffect(() => {
-    if (user?.tier) {
-      setSelectedPlan(user.tier);
-    }
-  }, [user]);
-  
-  const handleSelectPlan = (planId: string) => {
+  const handlePlanSelect = (planId: string) => {
     setSelectedPlan(planId);
-    console.log(`Selected plan: ${planId} with billing interval: ${billingInterval}`);
   };
   
-  const toggleBillingInterval = () => {
-    setBillingInterval(billingInterval === 'monthly' ? 'yearly' : 'monthly');
+  const handleSubscribe = () => {
+    setIsProcessing(true);
+    
+    // Simulate an API call
+    setTimeout(() => {
+      toast({
+        title: 'Subscription Activated',
+        description: `You have successfully subscribed to the ${selectedPlan} plan.`,
+        variant: 'success'
+      });
+      
+      setIsProcessing(false);
+    }, 1500);
   };
   
-  const yearlyDiscount = 20; // 20% discount for yearly billing
-  
-  const subscriptionPlans: LocalSubscriptionPlan[] = [
+  // Subscription plans with pricing
+  const subscriptionPlans = [
     {
       id: 'basic',
-      tier: 'basic',
-      name: 'Basic Throne',
-      description: 'Essential features for casual spenders',
+      name: 'Basic',
+      description: 'Essential features for royal enthusiasts',
       price: {
-        monthly: 0,
-        yearly: 0
+        monthly: 4.99,
+        yearly: 49.99
       },
       features: [
-        'Basic profile customization',
-        'Access to public leaderboards',
-        'Standard certificate designs',
-        'Basic mockery actions'
-      ]
+        'Basic mockery actions',
+        'Public leaderboard visibility',
+        'Standard profile customization',
+        'Team participation'
+      ],
+      tier: 'basic'
     },
     {
-      id: 'silver',
-      tier: 'silver',
-      name: 'Silver Throne',
-      description: 'Enhanced visibility for active spenders',
+      id: 'premium',
+      name: 'Premium',
+      description: 'Enhanced features for the nobility',
       price: {
         monthly: 9.99,
-        yearly: 95.90
+        yearly: 99.99
       },
       features: [
-        'Silver profile badge',
-        '3x rank visibility boost',
-        'Enhanced profile customization',
-        'Access to 5 exclusive certificate designs',
-        'Silver tier mockery actions',
-        'Team benefits'
+        'All Basic features',
+        'Advanced mockery actions',
+        'Royal profile customization',
+        'Protection from mockery (5/month)',
+        'Premium cosmetics'
       ],
-      popular: true
-    },
-    {
-      id: 'gold',
-      tier: 'gold',
-      name: 'Gold Throne',
-      description: 'Premium features for serious spenders',
-      price: {
-        monthly: 19.99,
-        yearly: 191.90
-      },
-      features: [
-        'Gold profile badge',
-        '5x rank visibility boost',
-        'Full profile customization',
-        'Access to all certificate designs',
-        'Gold tier mockery actions',
-        'Enhanced team benefits',
-        'Priority customer support'
-      ]
+      tier: 'premium',
+      popular: true,
+      badge: 'Best Value'
     },
     {
       id: 'royal',
-      tier: 'royal',
-      name: 'Royal Throne',
-      description: 'Ultimate status for elite spenders',
+      name: 'Royal',
+      description: 'Ultimate features for the true monarch',
       price: {
-        monthly: 49.99,
-        yearly: 479.90
+        monthly: 19.99,
+        yearly: 199.99
       },
       features: [
-        'Royal profile badge and aura',
-        '10x rank visibility boost',
-        'Full customization with animated effects',
-        'Access to all certificate designs including Royal exclusives',
-        'Royal tier mockery actions',
-        'Comprehensive team benefits',
-        'VIP customer support',
-        'Early access to new features'
+        'All Premium features',
+        'Legendary mockery actions',
+        'Royal court title',
+        'Unlimited protection from mockery',
+        'Royal certificate NFT',
+        'Exclusive royal cosmetics'
       ],
-      cta: 'Ascend to Royalty'
+      tier: 'royal',
+      highlight: true
     }
   ];
   
-  const getReferralPlanName = (numberOfReferrals: number) => {
-    if (numberOfReferrals >= 20) return 'Royal';
-    if (numberOfReferrals >= 10) return 'Gold';
-    if (numberOfReferrals >= 5) return 'Silver';
-    return 'Basic';
-  };
-  
-  const getTeamPlanName = (numberOfTeamMembers: number) => {
-    if (numberOfTeamMembers >= 100) return 'Royal';
-    if (numberOfTeamMembers >= 50) return 'Gold';
-    if (numberOfTeamMembers >= 20) return 'Silver';
-    return 'Basic';
-  };
-  
-  const formatPlansForDisplay = (plans) => {
-    return plans.map(plan => ({
-      ...plan,
-      price: typeof plan.price === 'object' ? plan.price : {
-        monthly: plan.price,
-        yearly: plan.price * 10
-      }
-    }));
-  };
-  
-  const formattedPlans = formatPlansForDisplay(subscriptionPlans);
-  
   return (
-    <Shell className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto">
+    <Shell>
+      <div className="container mx-auto py-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Upgrade Your Royal Status</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Enhance your presence in the kingdom with premium features, increased visibility, and exclusive powers.
+          <h1 className="text-4xl font-bold mb-4">Royal Subscription Plans</h1>
+          <p className="text-white/70 max-w-2xl mx-auto">
+            Enhance your royal experience with premium features and exclusive benefits. 
+            Choose the plan that best suits your royal ambitions.
           </p>
         </div>
         
-        <div className="flex justify-center items-center gap-2 mb-8">
-          <span className={billingInterval === 'monthly' ? 'font-medium' : 'text-muted-foreground'}>Monthly</span>
-          <Switch checked={billingInterval === 'yearly'} onCheckedChange={toggleBillingInterval} />
-          <span className={billingInterval === 'yearly' ? 'font-medium flex items-center' : 'text-muted-foreground flex items-center'}>
-            Yearly <Badge variant="outline" className="ml-2">Save {yearlyDiscount}%</Badge>
-          </span>
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex rounded-md shadow-sm">
+            <Button
+              variant={billingInterval === 'monthly' ? 'default' : 'outline'}
+              className="rounded-r-none"
+              onClick={() => setBillingInterval('monthly')}
+            >
+              Monthly
+            </Button>
+            <Button
+              variant={billingInterval === 'yearly' ? 'default' : 'outline'}
+              className="rounded-l-none"
+              onClick={() => setBillingInterval('yearly')}
+            >
+              Yearly (2 months free)
+            </Button>
+          </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {formattedPlans.map((plan) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {subscriptionPlans.map((plan) => (
             <SubscriptionPlanCard
               key={plan.id}
-              plan={plan}
+              id={plan.id}
+              name={plan.name}
+              description={plan.description}
+              price={plan.price}
+              features={plan.features}
+              tier={plan.tier}
+              badge={plan.badge}
+              popular={plan.popular}
+              highlight={plan.highlight}
               selected={selectedPlan === plan.id}
-              onSelect={(planId) => setSelectedPlan(planId)}
+              onSelect={handlePlanSelect}
               billingInterval={billingInterval}
             />
           ))}
         </div>
         
-        <Card className="mb-12">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Sparkles className="h-5 w-5 mr-2 text-yellow-400" />
-              Special Offers
-            </CardTitle>
-            <CardDescription>
-              Exclusive opportunities to enhance your royal status
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="referral">
-              <TabsList className="mb-6">
-                <TabsTrigger value="referral">
-                  <Users className="h-4 w-4 mr-2" />
-                  Referral Program
-                </TabsTrigger>
-                <TabsTrigger value="lifetime">
-                  <Crown className="h-4 w-4 mr-2" />
-                  Lifetime Pass
-                </TabsTrigger>
-                <TabsTrigger value="team">
-                  <Users className="h-4 w-4 mr-2" />
-                  Team Packages
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="referral">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Card className="border border-gray-200 dark:border-gray-800">
-                    <CardHeader>
-                      <CardTitle className="text-lg">Silver Pass</CardTitle>
-                      <CardDescription>Refer 5 new members</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Refer 5 friends who sign up and you'll earn a free Silver subscription for 3 months.
-                      </p>
-                      <Button className="w-full">
-                        <Gift className="mr-2 h-4 w-4" />
-                        Start Referring
-                      </Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="border border-gray-200 dark:border-gray-800">
-                    <CardHeader>
-                      <CardTitle className="text-lg">Gold Pass</CardTitle>
-                      <CardDescription>Refer 10 new members</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Refer 10 friends who sign up and you'll earn a free Gold subscription for 3 months.
-                      </p>
-                      <Button className="w-full">
-                        <Gift className="mr-2 h-4 w-4" />
-                        Start Referring
-                      </Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="border border-gray-200 dark:border-gray-800">
-                    <CardHeader>
-                      <CardTitle className="text-lg">Royal Pass</CardTitle>
-                      <CardDescription>Refer 20 new members</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Refer 20 friends who sign up and you'll earn a free Royal subscription for 3 months.
-                      </p>
-                      <Button className="w-full">
-                        <Gift className="mr-2 h-4 w-4" />
-                        Start Referring
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="lifetime">
-                <Card className="border border-white/10 bg-gradient-to-br from-indigo-900/20 to-purple-900/20">
-                  <CardHeader>
-                    <Badge className="w-fit mb-2 bg-gradient-to-r from-yellow-400 to-amber-600 text-black">Exclusive Offer</Badge>
-                    <CardTitle>Lifetime Royal Pass</CardTitle>
-                    <CardDescription>One-time payment, endless royal benefits</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-baseline mb-4">
-                      <span className="text-4xl font-bold">{formatCurrency(599)}</span>
-                      <span className="text-sm text-muted-foreground ml-2">one-time payment</span>
-                    </div>
-                    
-                    <ul className="space-y-2 mb-6">
-                      <li className="flex items-center">
-                        <Crown className="h-4 w-4 text-yellow-500 mr-2" />
-                        <span>Permanent Royal tier status</span>
-                      </li>
-                      <li className="flex items-center">
-                        <Crown className="h-4 w-4 text-yellow-500 mr-2" />
-                        <span>All Royal features forever</span>
-                      </li>
-                      <li className="flex items-center">
-                        <Crown className="h-4 w-4 text-yellow-500 mr-2" />
-                        <span>Early access to all future features</span>
-                      </li>
-                      <li className="flex items-center">
-                        <Crown className="h-4 w-4 text-yellow-500 mr-2" />
-                        <span>Exclusive Lifetime Royalty badge</span>
-                      </li>
-                      <li className="flex items-center">
-                        <Crown className="h-4 w-4 text-yellow-500 mr-2" />
-                        <span>Priority customer support for life</span>
-                      </li>
-                    </ul>
-                    
-                    <Button className="w-full bg-gradient-to-r from-yellow-400 to-amber-600 text-black hover:from-yellow-500 hover:to-amber-700">
-                      <CreditCard className="mr-2 h-4 w-4" />
-                      Become Lifetime Royalty
-                    </Button>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="team">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Card className="border border-gray-200 dark:border-gray-800">
-                    <CardHeader>
-                      <CardTitle className="text-lg">Team Silver Pass</CardTitle>
-                      <CardDescription>For teams with 20+ members</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-baseline mb-4">
-                        <span className="text-2xl font-bold">{formatCurrency(7.99)}</span>
-                        <span className="text-sm text-muted-foreground ml-2">per member/month</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Perfect for small to medium teams looking to enhance their collective status in the kingdom.
-                      </p>
-                      <Button className="w-full">
-                        Contact for Team Pricing
-                      </Button>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="border border-gray-200 dark:border-gray-800">
-                    <CardHeader>
-                      <CardTitle className="text-lg">Team Gold Pass</CardTitle>
-                      <CardDescription>For teams with 50+ members</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-baseline mb-4">
-                        <span className="text-2xl font-bold">{formatCurrency(15.99)}</span>
-                        <span className="text-sm text-muted-foreground ml-2">per member/month</span>
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        Ideal for larger teams looking to dominate the kingdom with premium status and features.
-                      </p>
-                      <Button className="w-full">
-                        Contact for Team Pricing
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-        
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-4">Need help choosing a plan?</h2>
-          <p className="text-muted-foreground mb-4">
-            Our royal advisors are ready to assist you in selecting the perfect plan for your spending habits.
-          </p>
-          <Button variant="outline">
-            Contact Support
+        <div className="mt-12 text-center">
+          <Button 
+            onClick={handleSubscribe}
+            disabled={isProcessing}
+            className="px-8 py-6 text-lg"
+            size="lg"
+          >
+            {isProcessing ? (
+              <>
+                <div className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                Processing...
+              </>
+            ) : (
+              <>
+                <Zap className="mr-2 h-5 w-5" />
+                Subscribe Now
+              </>
+            )}
           </Button>
+          
+          <p className="mt-4 text-sm text-white/50">
+            Cancel anytime. No long-term commitment required.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20 max-w-6xl mx-auto">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Crown className="h-5 w-5 mr-2 text-royal-gold" />
+                Premium Benefits
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2">
+                <li className="flex items-start">
+                  <Check className="h-4 w-4 mr-2 mt-1 text-green-500" />
+                  <span>Exclusive royal mockery actions</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-4 w-4 mr-2 mt-1 text-green-500" />
+                  <span>Increased visibility on leaderboards</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-4 w-4 mr-2 mt-1 text-green-500" />
+                  <span>Special profile decorations</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <CreditCard className="h-5 w-5 mr-2" />
+                Payment Options
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2">
+                <li className="flex items-start">
+                  <Check className="h-4 w-4 mr-2 mt-1 text-green-500" />
+                  <span>Credit & Debit Cards</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-4 w-4 mr-2 mt-1 text-green-500" />
+                  <span>PayPal</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-4 w-4 mr-2 mt-1 text-green-500" />
+                  <span>Cryptocurrency</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Calendar className="h-5 w-5 mr-2" />
+                Subscription Details
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2">
+                <li className="flex items-start">
+                  <Check className="h-4 w-4 mr-2 mt-1 text-green-500" />
+                  <span>Cancel anytime</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-4 w-4 mr-2 mt-1 text-green-500" />
+                  <span>Automatic renewal</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-4 w-4 mr-2 mt-1 text-green-500" />
+                  <span>Upgrade or downgrade at any time</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </Shell>
   );
 };
 
-export default SubscriptionPage;
+export default Subscription;

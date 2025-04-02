@@ -40,14 +40,14 @@ export function ensureUserProfile(
     spendStreak: userData.spendStreak || 0,
     profileViews: userData.profileViews || 0,
     profileClicks: userData.profileClicks || 0,
-    // Handle subscription
+    // Handle subscription - make sure it has all required fields
     subscription: userData.subscription 
-      ? createSubscription(userData.subscription)
+      ? ensureSubscription(userData.subscription)
       : null,
     purchasedFeatures: userData.purchasedFeatures || [],
     // Handle optional properties
     certificateNFT: userData.certificateNFT,
-    socialLinks: userData.socialLinks || [],
+    socialLinks: ensureSocialLinks(userData.socialLinks),
     gender: userData.gender || 'prefer-not-to-say',
     lastActive: userData.lastActive || new Date().toISOString(),
     followers: userData.followers || [],
@@ -59,6 +59,45 @@ export function ensureUserProfile(
   };
 
   return baseProfile;
+}
+
+// Helper function to ensure socialLinks are in the correct format
+function ensureSocialLinks(links: any): SocialLinkInterface[] {
+  if (!links) return [];
+  
+  // If it's already an array, ensure each item has an id
+  if (Array.isArray(links)) {
+    return links.map((link: any) => ({
+      id: link.id || `link-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+      platform: link.platform || 'website',
+      url: link.url || '#',
+      username: link.username,
+      verified: link.verified || false,
+      enabled: link.enabled !== false,
+      title: link.title || link.platform,
+      clicks: link.clicks || 0,
+      icon: link.icon || link.platform,
+      label: link.label || link.platform
+    }));
+  }
+  
+  // If it's an object, convert to array
+  if (typeof links === 'object') {
+    return Object.entries(links).map(([platform, url]) => ({
+      id: `link-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+      platform,
+      url: String(url),
+      username: '',
+      verified: false,
+      enabled: true,
+      title: platform,
+      clicks: 0,
+      icon: platform,
+      label: platform
+    }));
+  }
+  
+  return [];
 }
 
 // Create a standardized UserProfile from any type of user profile
@@ -168,8 +207,8 @@ function createUserSettings(settings?: Partial<UserSettings>): any {
   };
 }
 
-// Creates a standardized UserSubscription
-function createSubscription(subscription: any): UserSubscription {
+// Ensures a subscription has all required fields
+function ensureSubscription(subscription: any): UserSubscription {
   if (!subscription) return null as any;
   
   return {

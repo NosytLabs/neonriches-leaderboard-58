@@ -3,64 +3,66 @@ import { TeamColor } from './mockery-types';
 
 export interface TeamData {
   id?: string;
-  color: TeamColor;
   name: string;
+  color: TeamColor | string;
+  ranking?: number;
+  memberCount?: number;
   icon?: string;
   motto?: string;
   description?: string;
   benefits?: string[];
-  ranking?: number;
-  memberCount?: number;
-  teamId?: string;
 }
 
-// Team-related interfaces for import compatibility
 export interface TeamMember {
   id: string;
   userId: string;
   username: string;
+  displayName?: string;
   profileImage?: string;
-  role: string;
-  joinedDate: string;
-  contribution: number;
-  rank?: number;
+  joinedAt: string;
+  role: TeamRole;
+  contributions?: number;
   isActive: boolean;
+  lastActive?: string;
 }
 
 export interface TeamRole {
   id: string;
   name: string;
+  description?: string;
   permissions: string[];
   color?: string;
   icon?: string;
 }
 
 export interface TeamStats {
+  totalMembers: number;
+  activeMembers: number;
   totalSpent: number;
-  memberCount: number;
-  avgSpent: number;
+  averageSpent: number;
   ranking: number;
-  previousRanking: number;
-  createdAt: string;
+  previousRanking?: number;
+  winStreak?: number;
+  victories?: number;
+  defeats?: number;
 }
 
 export interface TeamBenefits {
   name: string;
   description: string;
-  icon?: string;
   unlocked: boolean;
-  requiredLevel?: number;
+  icon?: string;
+  unlockedAt?: string;
 }
 
 export interface TeamInvite {
   id: string;
   teamId: string;
-  email: string;
-  username?: string;
-  status: 'pending' | 'accepted' | 'rejected' | 'expired';
-  createdAt: string;
+  userId?: string;
+  email?: string;
+  code: string;
   expiresAt: string;
-  invitedBy: string;
+  createdBy: string;
+  createdAt: string;
+  status: 'pending' | 'accepted' | 'declined' | 'expired';
 }
-
-export type { TeamColor };

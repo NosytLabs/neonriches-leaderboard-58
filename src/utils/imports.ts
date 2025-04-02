@@ -1,6 +1,6 @@
 
 // Import the correct utility functions
-import { getMockeryName, mockeryDescriptions } from '@/utils/mockeryUtils';
-import { Badge } from '@/components/ui/badge';
+import { getMockeryName, getMockeryDescription } from '@/utils/mockeryUtils';
+import { Badge } from '@/components/ui/Badge';
 
-export { getMockeryName, mockeryDescriptions, Badge };
+export { getMockeryName, getMockeryDescription, Badge };

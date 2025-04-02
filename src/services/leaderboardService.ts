@@ -1,31 +1,25 @@
 
-import { LeaderboardUser, LeaderboardFilter, LeaderboardResponse } from '@/types/leaderboard';
-import { mockLeaderboardData } from '@/data/leaderboardData';
-import { adaptLeaderboardUser } from '@/utils/typeAdapters';
-import { ensureTeamColor } from '@/utils/mockeryNormalizer';
+import { LeaderboardFilter, LeaderboardResponse, LeaderboardUser } from '@/types/leaderboard';
+import { allLeaderboardUsers } from '@/data/leaderboardData';
 
-// Simulate network delay for demo purposes
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-// Fetch leaderboard data with filtering and pagination
+/**
+ * Fetch leaderboard data based on filter parameters
+ */
 export const fetchLeaderboard = async (filter: LeaderboardFilter): Promise<LeaderboardResponse> => {
-  // Simulate API call delay
-  await delay(800);
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 500));
   
-  let filteredUsers = [...mockLeaderboardData];
+  // Start with all users
+  let filteredUsers = [...allLeaderboardUsers];
   
-  // Apply team filter
+  // Apply team filter if not 'all'
   if (filter.team && filter.team !== 'all') {
-    filteredUsers = filteredUsers.filter(user => 
-      user.team.toLowerCase() === filter.team.toLowerCase()
-    );
+    filteredUsers = filteredUsers.filter(user => user.team === filter.team);
   }
   
-  // Apply tier filter
+  // Apply tier filter if not 'all'
   if (filter.tier && filter.tier !== 'all') {
-    filteredUsers = filteredUsers.filter(user => 
-      user.tier.toLowerCase() === filter.tier.toLowerCase()
-    );
+    filteredUsers = filteredUsers.filter(user => user.tier === filter.tier);
   }
   
   // Apply timeframe filter
@@ -33,7 +27,10 @@ export const fetchLeaderboard = async (filter: LeaderboardFilter): Promise<Leade
     const now = new Date();
     let startDate: Date;
     
-    switch(filter.timeframe) {
+    switch (filter.timeframe) {
+      case 'today':
+        startDate = new Date(now.setHours(0, 0, 0, 0));
+        break;
       case 'week':
         startDate = new Date(now.setDate(now.getDate() - 7));
         break;
@@ -43,74 +40,60 @@ export const fetchLeaderboard = async (filter: LeaderboardFilter): Promise<Leade
       case 'year':
         startDate = new Date(now.setFullYear(now.getFullYear() - 1));
         break;
-      case 'today':
-        startDate = new Date(now.setHours(0, 0, 0, 0));
-        break;
       default:
         startDate = new Date(0); // Beginning of time
-        break;
     }
     
-    // For a real app, we would filter based on spending dates
-    // This is just a simulation for the demo
-    const randomFilter = Math.random();
-    filteredUsers = filteredUsers.filter(() => Math.random() > randomFilter * 0.3);
+    // Apply time-based filtering (we would do this with real data)
+    // For mock data, we'll just filter randomly to simulate
+    filteredUsers = filteredUsers.filter(() => Math.random() > 0.3);
   }
   
-  // Apply search filter
-  if (filter.search) {
+  // Apply search filter if provided
+  if (filter.search && filter.search.trim() !== '') {
     const searchTerm = filter.search.toLowerCase();
     filteredUsers = filteredUsers.filter(user => 
-      user.username.toLowerCase().includes(searchTerm) || 
+      user.username.toLowerCase().includes(searchTerm) ||
       (user.displayName && user.displayName.toLowerCase().includes(searchTerm))
     );
   }
   
-  // Sort users
-  const sortBy = filter.sortBy || filter.sort || 'totalSpent';
-  const sortDirection = filter.sortDirection || 'desc';
-  
+  // Apply sorting
+  const sortField = filter.sortBy || 'totalSpent';
   filteredUsers.sort((a, b) => {
-    const valueA = a[sortBy as keyof LeaderboardUser] as number | string;
-    const valueB = b[sortBy as keyof LeaderboardUser] as number | string;
+    const aValue = a[sortField as keyof LeaderboardUser];
+    const bValue = b[sortField as keyof LeaderboardUser];
     
-    if (typeof valueA === 'number' && typeof valueB === 'number') {
-      return sortDirection === 'asc' ? valueA - valueB : valueB - valueA;
+    if (typeof aValue === 'number' && typeof bValue === 'number') {
+      return filter.sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
     }
     
-    // Default string comparison
-    const strA = String(valueA).toLowerCase();
-    const strB = String(valueB).toLowerCase();
-    
-    if (sortDirection === 'asc') {
-      return strA.localeCompare(strB);
-    } else {
-      return strB.localeCompare(strA);
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
+      return filter.sortDirection === 'asc' 
+        ? aValue.localeCompare(bValue) 
+        : bValue.localeCompare(aValue);
     }
+    
+    return 0;
   });
   
-  // Calculate pagination
-  const page = filter.page || 1;
+  // Calculate total count
+  const totalUsers = filteredUsers.length;
+  
+  // Apply pagination
   const limit = filter.limit || 10;
+  const page = filter.page || 1;
   const startIndex = (page - 1) * limit;
   const endIndex = startIndex + limit;
   const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
   
-  // Adapt each user to ensure it has all the required properties
-  const adaptedUsers = paginatedUsers.map(user => {
-    return adaptLeaderboardUser({
-      ...user,
-      team: ensureTeamColor(user.team)
-    });
-  });
+  // Calculate total pages
+  const totalPages = Math.ceil(totalUsers / limit);
   
   return {
-    users: adaptedUsers,
-    totalUsers: filteredUsers.length,
+    users: paginatedUsers,
+    totalUsers,
     currentPage: page,
-    totalPages: Math.ceil(filteredUsers.length / limit)
+    totalPages
   };
 };
-
-// Export the fetchLeaderboard function
-export const getLeaderboard = fetchLeaderboard;

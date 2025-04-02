@@ -8,25 +8,8 @@ import { MockeryAction } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
 
 // Import from the updated utility files
-import { getMockeryActionDisplayName, getMockeryActionIcon } from '@/utils/mockeryActionUtils';
-import { mockeryActionIcons } from '@/utils/mockeryActionUtils';
-import { getMockeryCost, getMockeryTier, getMockeryName, mockeryDescriptions } from '@/utils/mockeryUtils';
-
-// Add mock utility functions that can be implemented later properly
-const getMockeryDescription = (action: MockeryAction): string => {
-  return mockeryDescriptions[action] || 'Mock the target';
-};
-
-const getMockeryTierColorClass = (tier: string): string => {
-  const colorClasses: Record<string, string> = {
-    'common': 'text-gray-300',
-    'uncommon': 'text-green-300',
-    'rare': 'text-blue-300',
-    'epic': 'text-purple-300',
-    'legendary': 'text-orange-300'
-  };
-  return colorClasses[tier] || 'text-gray-300';
-};
+import { getMockeryActionName, mockeryActionIcons, mockeryTierColors } from '@/utils/mockeryActionUtils';
+import { getMockeryTier, getMockeryDescription, getMockeryCost } from '@/utils/mockeryUtils';
 
 interface MockeryComponentProps {
   onMockUser: (actionType: string, targetUserId: string) => Promise<void>;
@@ -46,7 +29,7 @@ const MockeryComponent: React.FC<MockeryComponentProps> = ({ onMockUser, costFor
   const handleMockery = async (action: MockeryAction) => {
     toast({
       title: "Mockery Deployed!",
-      description: `You have successfully deployed ${getMockeryName(action)}.`,
+      description: `You have successfully deployed ${getMockeryActionName(action)}.`,
     });
     
     // In a real implementation, this would call onMockUser with a target ID
@@ -69,10 +52,10 @@ const MockeryComponent: React.FC<MockeryComponentProps> = ({ onMockUser, costFor
           
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
             {mockeryActions.map((action) => {
-              const name = getMockeryName(action);
+              const name = getMockeryActionName(action);
               const tier = getMockeryTier(action);
               const price = costForAction(action);
-              const tierColorClass = getMockeryTierColorClass(tier);
+              const tierColorClass = mockeryTierColors[tier];
               const ActionIcon = mockeryActionIcons[action] || AlertTriangle;
               
               return (

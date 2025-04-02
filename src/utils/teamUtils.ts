@@ -1,10 +1,39 @@
 
-import { TeamColor } from '@/types/mockery-types';
-import { TeamData } from '@/types/team';
+import { TeamColor, TeamType } from '@/types/mockery-types';
 
-// Get team name from TeamColor
-export function getTeamName(team: TeamColor | string): string {
-  const teamNames: Record<string, string> = {
+/**
+ * Convert any string to a valid TeamColor
+ */
+export const toTeamColor = (team?: string | null): TeamColor => {
+  if (!team) return 'none';
+  
+  const normalizedTeam = team.toLowerCase();
+  switch (normalizedTeam) {
+    case 'red': return 'red';
+    case 'blue': return 'blue';
+    case 'green': return 'green';
+    case 'gold': return 'gold';
+    case 'purple': return 'purple';
+    case 'silver': return 'silver';
+    case 'bronze': return 'bronze';
+    case 'crimson': return 'crimson';
+    case 'neutral': return 'neutral';
+    default: return 'none';
+  }
+};
+
+/**
+ * Alias for backward compatibility with components using asTeamColor
+ */
+export const asTeamColor = toTeamColor;
+
+/**
+ * Get the display name for a team
+ */
+export const getTeamName = (team: TeamColor | string): string => {
+  const teamColor = toTeamColor(team as string);
+  
+  const teamNames: Record<TeamColor, string> = {
     'red': 'Red Team',
     'blue': 'Blue Team',
     'green': 'Green Team',
@@ -17,12 +46,16 @@ export function getTeamName(team: TeamColor | string): string {
     'none': 'No Team'
   };
   
-  return teamNames[team.toLowerCase()] || 'Unknown Team';
-}
+  return teamNames[teamColor] || 'Unknown Team';
+};
 
-// Get Tailwind color class for a team
-export function getTeamTailwindColor(team: TeamColor | string): string {
-  const colorClasses: Record<string, string> = {
+/**
+ * Get the CSS color class for a team
+ */
+export const getTeamColor = (team: TeamColor | string): string => {
+  const teamColor = toTeamColor(team as string);
+  
+  const colorClasses: Record<TeamColor, string> = {
     'red': 'text-red-500',
     'blue': 'text-blue-500',
     'green': 'text-green-500',
@@ -30,66 +63,88 @@ export function getTeamTailwindColor(team: TeamColor | string): string {
     'purple': 'text-purple-500',
     'silver': 'text-gray-400',
     'bronze': 'text-amber-700',
-    'crimson': 'text-rose-700',
+    'crimson': 'text-red-700',
     'neutral': 'text-gray-300',
     'none': 'text-gray-500'
   };
   
-  return colorClasses[team.toLowerCase()] || 'text-gray-500';
-}
+  return colorClasses[teamColor] || 'text-gray-500';
+};
 
-// Get Tailwind background color class for a team
-export function getTeamTailwindBgColor(team: TeamColor | string): string {
-  const bgClasses: Record<string, string> = {
-    'red': 'bg-red-500',
-    'blue': 'bg-blue-500',
-    'green': 'bg-green-500',
-    'gold': 'bg-yellow-500',
-    'purple': 'bg-purple-500',
-    'silver': 'bg-gray-400',
-    'bronze': 'bg-amber-700',
-    'crimson': 'bg-rose-700',
-    'neutral': 'bg-gray-300',
-    'none': 'bg-gray-500'
+/**
+ * Get the CSS background color class for a team
+ */
+export const getTeamTailwindColor = (team: TeamColor | string): string => {
+  const teamColor = toTeamColor(team as string);
+  
+  const bgClasses: Record<TeamColor, string> = {
+    'red': 'bg-red-500/20 text-red-500',
+    'blue': 'bg-blue-500/20 text-blue-500',
+    'green': 'bg-green-500/20 text-green-500',
+    'gold': 'bg-yellow-500/20 text-yellow-500',
+    'purple': 'bg-purple-500/20 text-purple-500',
+    'silver': 'bg-gray-400/20 text-gray-400',
+    'bronze': 'bg-amber-700/20 text-amber-700',
+    'crimson': 'bg-red-700/20 text-red-700',
+    'neutral': 'bg-gray-300/20 text-gray-300',
+    'none': 'bg-gray-500/20 text-gray-500'
   };
   
-  return bgClasses[team.toLowerCase()] || 'bg-gray-500';
-}
+  return bgClasses[teamColor] || 'bg-gray-500/20 text-gray-500';
+};
 
-// Convert a string to TeamColor
-export function toTeamColor(team: string | null | undefined): TeamColor {
-  if (!team) return 'none';
+/**
+ * Get the CSS background color class for a team
+ */
+export const getTeamTailwindBgColor = (team: TeamColor | string): string => {
+  const teamColor = toTeamColor(team as string);
   
-  const normalized = team.toLowerCase();
+  const bgClasses: Record<TeamColor, string> = {
+    'red': 'bg-red-500/20',
+    'blue': 'bg-blue-500/20',
+    'green': 'bg-green-500/20',
+    'gold': 'bg-yellow-500/20',
+    'purple': 'bg-purple-500/20',
+    'silver': 'bg-gray-400/20',
+    'bronze': 'bg-amber-700/20',
+    'crimson': 'bg-red-700/20',
+    'neutral': 'bg-gray-300/20',
+    'none': 'bg-gray-500/20'
+  };
   
-  if (['red', 'blue', 'green', 'gold', 'purple', 'silver', 'bronze', 'crimson', 'neutral', 'none'].includes(normalized)) {
-    return normalized as TeamColor;
-  }
-  
-  return 'none';
-}
+  return bgClasses[teamColor] || 'bg-gray-500/20';
+};
 
-// Generate TeamData from a string team identifier
-export function createTeamData(team: string | TeamColor): TeamData {
-  const teamColor = toTeamColor(team);
+/**
+ * Create a default team data object
+ */
+export const createTeamData = (color: TeamColor | string) => {
+  const teamColor = toTeamColor(color as string);
   
   return {
-    id: teamColor,
-    color: teamColor,
+    id: `team-${teamColor}`,
     name: getTeamName(teamColor),
-    icon: `team-${teamColor}`,
+    color: teamColor,
+    ranking: Math.floor(Math.random() * 100) + 1,
+    memberCount: Math.floor(Math.random() * 1000) + 100,
+    icon: teamColor,
     motto: `${getTeamName(teamColor)} Motto`,
-    description: `This is the ${getTeamName(teamColor)} description.`,
-    benefits: [`${getTeamName(teamColor)} Benefit 1`, `${getTeamName(teamColor)} Benefit 2`],
-    ranking: Math.floor(Math.random() * 10) + 1,
-    memberCount: Math.floor(Math.random() * 1000) + 100
+    description: `Description for ${getTeamName(teamColor)}`,
+    benefits: [
+      `${getTeamName(teamColor)} Benefit 1`,
+      `${getTeamName(teamColor)} Benefit 2`,
+      `${getTeamName(teamColor)} Benefit 3`
+    ]
   };
-}
+};
 
-// Add ID to TeamData if it doesn't have one
-export function addTeamId(team: TeamData): TeamData & { id: string } {
+/**
+ * Add an ID to a team data object if it doesn't have one
+ */
+export const addTeamId = (team: any) => {
+  if (team.id) return team;
   return {
     ...team,
-    id: team.id || team.color
+    id: `team-${team.color || 'unknown'}`
   };
-}
+};
