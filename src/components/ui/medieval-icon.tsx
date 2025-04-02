@@ -1,50 +1,54 @@
 
 import React from 'react';
-import { 
-  Crown, 
-  Sword, 
-  Shield, 
-  Scroll, 
-  Key, 
-  Flag, 
-  Gem, 
-  Trophy,
-  Castle 
-} from 'lucide-react';
-
-interface MedievalIconProps {
-  name: string;
-  className?: string;
-  size?: number;
-}
+import { cn } from '@/lib/utils';
+import { MedievalIconProps, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
+import { Crown, Sword, Shield, Scroll, Key, Flag, Gem, Trophy, Castle } from 'lucide-react';
 
 const MedievalIcon: React.FC<MedievalIconProps> = ({ 
   name, 
   className = "", 
-  size = 24 
+  size = "md",
+  color = "default",
+  animated = false
 }) => {
+  // Get the appropriate size class
+  const sizeClass = typeof size === 'string' 
+    ? (size in iconSizeMap ? iconSizeMap[size as keyof typeof iconSizeMap] : iconSizeMap.md)
+    : '';
+
+  // Get the appropriate color class
+  const colorClass = typeof color === 'string' && color in iconColorMap 
+    ? iconColorMap[color as keyof typeof iconColorMap] 
+    : '';
+
+  // Animation class
+  const animationClass = animated ? 'animate-pulse' : '';
+
+  // Combined classes
+  const combinedClasses = cn(sizeClass, colorClass, animationClass, className);
+
   const getIcon = () => {
     switch (name.toLowerCase()) {
       case 'crown':
-        return <Crown size={size} className={className} />;
+        return <Crown className={combinedClasses} />;
       case 'sword':
-        return <Sword size={size} className={className} />;
+        return <Sword className={combinedClasses} />;
       case 'shield':
-        return <Shield size={size} className={className} />;
+        return <Shield className={combinedClasses} />;
       case 'scroll':
-        return <Scroll size={size} className={className} />;
+        return <Scroll className={combinedClasses} />;
       case 'key':
-        return <Key size={size} className={className} />;
+        return <Key className={combinedClasses} />;
       case 'flag':
-        return <Flag size={size} className={className} />;
+        return <Flag className={combinedClasses} />;
       case 'gem':
-        return <Gem size={size} className={className} />;
+        return <Gem className={combinedClasses} />;
       case 'trophy':
-        return <Trophy size={size} className={className} />;
+        return <Trophy className={combinedClasses} />;
       case 'castle':
-        return <Castle size={size} className={className} />;
+        return <Castle className={combinedClasses} />;
       default:
-        return <Crown size={size} className={className} />;
+        return <Crown className={combinedClasses} />;
     }
   };
 

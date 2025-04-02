@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { IconProps } from '@/types/ui/icon-types';
+import MedievalIcon from '@/components/ui/medieval-icon';
 import { Icon as IconComponent } from '@/components/ui/icon';
 
 const Icon = React.forwardRef<SVGSVGElement, IconProps>(
@@ -13,15 +13,28 @@ const Icon = React.forwardRef<SVGSVGElement, IconProps>(
       return null;
     }
     
+    // Check if this is a medieval icon
+    if (style === 'medieval') {
+      return (
+        <MedievalIcon
+          name={iconName as any}
+          size={size as any}
+          color={color as any}
+          className={className}
+          animated={animated}
+        />
+      );
+    }
+    
+    // Otherwise use the standard icon component
     return (
       <IconComponent
         ref={ref}
-        iconName={iconName}
+        icon={iconName}
         size={size}
         color={color}
         className={className}
         animated={animated}
-        style={style}
         {...props}
       />
     );

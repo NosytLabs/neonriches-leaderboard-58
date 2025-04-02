@@ -4,22 +4,12 @@ import * as LucideIcons from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { IconProps, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
 
-export interface IconComponentProps extends Omit<React.SVGProps<SVGSVGElement>, 'size' | 'color'> {
-  iconName?: string;
-  name?: string; // Added for backward compatibility
-  size?: string | number;
-  color?: string;
-  className?: string;
-  animated?: boolean;
-  style?: string;
-}
-
 /**
  * Icon component that renders Lucide icons with appropriate styling
  */
-export const Icon = React.forwardRef<SVGSVGElement, IconComponentProps>((props, ref) => {
+export const Icon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
   const { 
-    iconName, 
+    icon,
     name, // For backward compatibility
     size = 'md',
     color = 'default', 
@@ -29,11 +19,11 @@ export const Icon = React.forwardRef<SVGSVGElement, IconComponentProps>((props, 
     ...restProps 
   } = props;
 
-  // Use either iconName or name
-  const iconToUse = iconName || name;
+  // Use either icon or name
+  const iconToUse = icon || name;
 
   if (!iconToUse) {
-    console.warn('Icon component requires either iconName or name prop');
+    console.warn('Icon component requires either icon or name prop');
     return null;
   }
 

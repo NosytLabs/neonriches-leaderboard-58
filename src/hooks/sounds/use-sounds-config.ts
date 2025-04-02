@@ -1,97 +1,79 @@
 
 import { useState, useCallback, useEffect } from 'react';
-import { SoundConfig } from '@/types/sound-types';
 
-// Default sound configuration
-const defaultSoundConfig: SoundConfig = {
-  enabled: true,
-  muted: false,
-  volume: 0.5,
-  premium: false,
-  theme: 'standard'
+interface SoundConfig {
+  enabled: boolean;
+  muted: boolean;
+  volume: number;
+}
+
+// Get initial sound settings from localStorage or use defaults
+const getInitialSoundConfig = (): SoundConfig => {
+  if (typeof window === 'undefined') {
+    return {
+      enabled: true,
+      muted: false,
+      volume: 0.5
+    };
+  }
+
+  try {
+    const storedConfig = localStorage.getItem('soundConfig');
+    if (storedConfig) {
+      return JSON.parse(storedConfig);
+    }
+  } catch (error) {
+    console.error('Error parsing sound config from localStorage:', error);
+  }
+
+  return {
+    enabled: true,
+    muted: false,
+    volume: 0.5
+  };
 };
 
-/**
- * Hook to manage sound configuration settings
- * @returns Sound configuration and control functions
- */
-export const useSoundsConfig = () => {
-  const [soundConfig, setSoundConfig] = useState<SoundConfig>(defaultSoundConfig);
-  
-  // Load saved configuration from localStorage on mount
-  useEffect(() => {
-    try {
-      const savedConfig = localStorage.getItem('soundConfig');
-      if (savedConfig) {
-        setSoundConfig(JSON.parse(savedConfig));
-      }
-    } catch (error) {
-      console.warn('Error loading sound config:', error);
-    }
-  }, []);
-  
-  // Save configuration changes to localStorage
-  const saveSoundConfig = useCallback((config: SoundConfig) => {
+// Save sound settings to localStorage
+const saveSoundConfig = (config: SoundConfig): void => {
+  if (typeof window !== 'undefined') {
     try {
       localStorage.setItem('soundConfig', JSON.stringify(config));
-      setSoundConfig(config);
     } catch (error) {
-      console.warn('Error saving sound config:', error);
+      console.error('Error saving sound config to localStorage:', error);
     }
-  }, []);
-  
-  // Toggle sounds enabled/disabled
-  const toggleSounds = useCallback(() => {
-    const newConfig = {
-      ...soundConfig,
-      enabled: !soundConfig.enabled
-    };
-    saveSoundConfig(newConfig);
-  }, [soundConfig, saveSoundConfig]);
-  
+  }
+};
+
+export const useSoundsConfig = () => {
+  const [soundConfig, setSoundConfig] = useState<SoundConfig>(getInitialSoundConfig);
+
+  // Save settings whenever they change
+  useEffect(() => {
+    saveSoundConfig(soundConfig);
+  }, [soundConfig]);
+
+  // Toggle sound effects on/off
+  const toggleSounds = useCallback((): boolean => {
+    setSoundConfig(prev => ({ ...prev, enabled: !prev.enabled }));
+    return !soundConfig.enabled;
+  }, [soundConfig.enabled]);
+
   // Toggle muted state
-  const toggleMuted = useCallback(() => {
-    const newConfig = {
-      ...soundConfig,
-      muted: !soundConfig.muted
-    };
-    saveSoundConfig(newConfig);
-  }, [soundConfig, saveSoundConfig]);
-  
+  const toggleMuted = useCallback((): boolean => {
+    setSoundConfig(prev => ({ ...prev, muted: !prev.muted }));
+    return !soundConfig.muted;
+  }, [soundConfig.muted]);
+
   // Set volume level
-  const setVolume = useCallback((volume: number) => {
-    const newConfig = {
-      ...soundConfig,
-      volume: Math.max(0, Math.min(1, volume)) // Clamp between 0 and 1
-    };
-    saveSoundConfig(newConfig);
-  }, [soundConfig, saveSoundConfig]);
-  
-  // Set premium status
-  const setPremium = useCallback((premium: boolean) => {
-    const newConfig = {
-      ...soundConfig,
-      premium
-    };
-    saveSoundConfig(newConfig);
-  }, [soundConfig, saveSoundConfig]);
-  
-  // Set sound theme
-  const setTheme = useCallback((theme: 'royal' | 'standard' | 'minimal' | 'epic') => {
-    const newConfig = {
-      ...soundConfig,
-      theme
-    };
-    saveSoundConfig(newConfig);
-  }, [soundConfig, saveSoundConfig]);
-  
+  const setVolume = useCallback((volume: number): void => {
+    setSoundConfig(prev => ({ ...prev, volume: Math.min(1, Math.max(0, volume)) }));
+  }, []);
+
   return {
     soundConfig,
     toggleSounds,
     toggleMuted,
-    setVolume,
-    setPremium,
-    setTheme
+    setVolume
   };
 };
 
