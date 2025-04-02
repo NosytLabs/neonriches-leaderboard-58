@@ -29,7 +29,7 @@ export const Icon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
 
   // Get the appropriate size class
   const sizeClass = typeof size === 'string' 
-    ? (size in iconSizeMap ? iconSizeMap[size as keyof typeof iconSizeMap] : iconSizeMap.md)
+    ? (size in iconSizeMap ? iconSizeMap[size] : iconSizeMap.md)
     : `h-${size} w-${size}`;
 
   // Get the appropriate color class

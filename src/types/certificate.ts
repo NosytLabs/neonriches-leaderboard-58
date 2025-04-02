@@ -35,7 +35,7 @@ export interface CertificateTemplate {
   team: CertificateTeam;
   style: CertificateStyle;
   available: boolean;
-  availableForTier?: string; // Add missing property
+  availableForTier?: string | string[]; // Accept both string and string[]
 }
 
 export interface CertificateService {

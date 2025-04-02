@@ -1,7 +1,28 @@
 
 export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'background' | 'effect' | 'title' | 'badge' | 'theme';
-export type CosmeticCategory = 'border' | 'color' | 'font' | 'emoji' | 'background' | 'effect' | 'title' | 'badge' | 'theme';
-export type CosmeticRarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type CosmeticCategory = 
+  | 'border' 
+  | 'color' 
+  | 'font' 
+  | 'emoji' 
+  | 'background' 
+  | 'effect' 
+  | 'title' 
+  | 'badge' 
+  | 'theme'
+  | 'appearance'  // Add missing values
+  | 'profile'
+  | 'interaction';
+
+export type CosmeticRarity = 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary'
+  | 'mythic'   // Add missing values
+  | 'unique'
+  | 'royal';
 
 export interface CosmeticItem {
   id: string;
@@ -16,6 +37,8 @@ export interface CosmeticItem {
   previewUrl?: string;
   icon?: string;
   cost?: number; // Make this optional
+  imageSrc?: string;
+  image?: string;
 }
 
 export interface SocialLink {
@@ -32,6 +55,10 @@ export interface SocialLink {
   label?: string;
   type?: string;
   enabled?: boolean;
+}
+
+export interface ProfileLink extends SocialLink {
+  clicks?: number;
 }
 
 export interface UserCosmetics {
@@ -79,5 +106,5 @@ export interface CosmeticPurchaseResult {
   category: CosmeticCategory;
 }
 
-// Re-export SocialLink to ensure it's accessible when importing from this file
-export type { SocialLink };
+// Re-export specific types
+export type { SocialLink, ProfileLink };

@@ -21,11 +21,12 @@ export interface BoostEffect {
   durationDays?: number;
   effectId?: string;
   cssClass?: string;
-  // Add missing properties
+  // Add properties that were causing errors
   icon?: string;
   previewImage?: string;
   strength?: number;
   allowStacking?: boolean;
+  minTier?: string;
 }
 
 export interface ProfileBoost {

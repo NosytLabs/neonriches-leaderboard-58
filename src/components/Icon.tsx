@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { IconProps } from '@/types/ui/icon-types';
 import MedievalIcon from '@/components/ui/medieval-icon';
@@ -31,6 +32,7 @@ const Icon = React.forwardRef<SVGSVGElement, IconProps>(
       <IconComponent
         ref={ref}
         name={iconName}
+        icon={iconName}
         size={size}
         color={color}
         className={className}

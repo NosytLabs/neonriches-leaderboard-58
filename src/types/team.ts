@@ -1,94 +1,55 @@
 
-import { UserProfile } from './user-consolidated';
+import { TeamColor } from "./mockery-types";
 
-// Export TeamColor as a type
-export type TeamColor = 
-  | 'red'
-  | 'blue'
-  | 'green'
-  | 'gold'
-  | 'purple'
-  | 'none'
-  | 'neutral'
-  | 'silver'
-  | 'bronze'
-  | 'crimson';
-
-// Export TeamData interface
-export interface TeamData {
-  id: string;
-  name: string;
-  color: TeamColor;
-  description: string;
-  motto: string;
-  members: number;
-  rank: number;
-  totalSpent: number;
-  benefits: string[];
-  maxMembers: number;
-  leaderId?: string;
-  image?: string;
-}
+export type TeamRole = 'member' | 'moderator' | 'leader' | 'founder';
 
 export interface TeamMember {
   id: string;
-  userId: string;
   username: string;
-  displayName?: string;
   profileImage: string;
   role: TeamRole;
-  joinDate: string;
+  joinedAt: string;
   contribution: number;
-  rank: number;
-  status: 'active' | 'inactive' | 'pending';
-}
-
-export interface TeamRole {
-  id: string;
-  name: string;
-  permissions: string[];
-  isAdmin: boolean;
+  rank?: number;
 }
 
 export interface TeamStats {
-  totalMembers: number;
+  memberCount: number;
   totalSpent: number;
-  averageSpent: number;
   rank: number;
   previousRank: number;
-  highestRank: number;
-  events: number;
-  victories: number;
+  averageSpentPerMember: number;
+  weeklyGrowth: number;
 }
 
 export interface TeamBenefits {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  unlocked: boolean;
-  requiredSpending: number;
+  discounts: number;
+  boosts: number;
+  rewards: number;
+  protections: number;
 }
 
 export interface TeamInvite {
   id: string;
   teamId: string;
-  teamName: string;
-  teamColor: TeamColor;
-  inviterId: string;
-  inviterName: string;
-  inviteeId: string;
-  inviteeEmail: string;
-  status: 'pending' | 'accepted' | 'declined' | 'expired';
-  createdAt: string;
-  expiresAt: string;
+  userId: string;
+  invitedBy: string;
+  invitedAt: string;
+  status: 'pending' | 'accepted' | 'declined';
 }
 
-// For compatibility with existing code
 export interface TeamDataCompat {
-  id: string;
-  name: string;
   color: TeamColor;
+  name: string;
   description: string;
   members: number;
+  id: string;
+  logoUrl: string;
+  totalContribution: number;
+  rank: number;
+  previousRank: number;
+  benefits: string[];
 }
+
+// Re-export TeamColor as TeamType for backward compatibility
+export type TeamType = TeamColor;

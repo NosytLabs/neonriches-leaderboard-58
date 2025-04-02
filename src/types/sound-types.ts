@@ -73,6 +73,7 @@ export interface SoundHook {
   pauseSound?: () => void;
   resumeSound?: () => void;
   currentSound?: string | null;
+  soundConfig?: SoundConfig;
 }
 
 export interface UseSoundHook {
@@ -85,6 +86,9 @@ export interface UseSoundHook {
   soundConfig?: SoundConfig;
   toggleMuted?: () => boolean;
   pauseSound?: () => void;
+  resumeSound?: () => void;
+  currentSound?: string | null;
+  play?: (type: SoundType) => void;
 }
 
 export type SoundEffectMap = Record<SoundType, HTMLAudioElement>;
@@ -95,10 +99,13 @@ export interface SoundOptions {
   rate?: number;
   detune?: number;
   muted?: boolean;
+  onEnd?: () => void;
+  playbackRate?: number;
 }
 
 export interface UseNotificationSoundsReturn {
   playNotificationSound: (type: SoundType) => void;
   isSoundEnabled: boolean;
   toggleSound: () => void;
+  playSound?: (type: SoundType) => void;
 }

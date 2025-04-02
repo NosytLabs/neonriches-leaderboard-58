@@ -1,31 +1,25 @@
-
-// Create this file to include the MockeryAction type with 'carrot' and 'confetti'
-import { TeamColor, UserTier } from './user';
-
-export type MockeryAction = 
-  | 'tomato' 
-  | 'egg' 
-  | 'flower' 
-  | 'gold_star' 
-  | 'crown' 
-  | 'torch' 
-  | 'shame_bell'
-  | 'carrot'
-  | 'confetti'
-  | 'taunt'
+export type MockeryAction =
+  | 'tomato'
+  | 'tomatoes' // Add alias for backward compatibility
+  | 'egg'
+  | 'eggs'     // Add alias for backward compatibility
+  | 'crown'
+  | 'stocks'
+  | 'jester'
   | 'shame'
-  | 'mock'
-  | 'challenge'
-  | 'joust'
-  | 'duel'
   | 'protection'
   | 'silence'
   | 'courtJester'
   | 'smokeBomb'
   | 'putridEggs'
-  | 'stocks'
-  | 'jester'
-  | 'thumbsDown';
+  | 'taunt'
+  | 'mock'
+  | 'challenge'
+  | 'joust'
+  | 'duel'
+  | 'thumbsDown'
+  | 'carrot'
+  | 'target';
 
 export type MockeryTier = 
   | 'common' 
@@ -33,101 +27,70 @@ export type MockeryTier =
   | 'rare' 
   | 'epic' 
   | 'legendary'
-  | 'premium'
-  | 'royal'
-  | 'basic';
+  | 'royal'     // Add royal tier
+  | 'standard'  // Add standard tier
+  | 'premium';  // Add premium tier
 
-export interface MockedUser {
-  id: string;
-  username: string;
-  profileImage: string;
-  totalSpent: number;
-  rank: number;
-  tier: UserTier;
-  team: TeamColor;
-  action?: MockeryAction; 
-  userId?: string;
-}
+export type TeamColor = 
+  | 'red' 
+  | 'blue' 
+  | 'green' 
+  | 'gold' 
+  | 'purple'
+  | 'none'
+  | 'neutral'
+  | 'silver'
+  | 'bronze'
+  | 'crimson';
 
-export interface MockeryEvent {
-  id: string;
-  actionType: MockeryAction;
-  fromUserId: string;
-  fromUsername: string;
-  targetUserId: string;
-  targetUsername: string;
-  timestamp: string;
-  message?: string;
-  toUserId?: string;
-  action?: MockeryAction;
-}
+// Re-export for module compatibility
+export type { TeamColor as TeamType };
 
-export interface LeaderboardUser {
-  id: string;
-  username: string;
-  profileImage: string;
-  tier: UserTier;
-  team: TeamColor;
-  rank: number;
-  previousRank: number;
-  totalSpent: number;
-  spendStreak?: number;
-  walletBalance?: number;
-  isVerified?: boolean;
-  isVIP?: boolean;
-  displayName?: string;
-  isProtected?: boolean;
-  amountSpent?: number;
-  userId?: string;
-  spentAmount?: number;
-  rankChange?: number;
-  spendChange?: number;
-  avatarUrl?: string;
-  joinDate?: string; 
-}
-
-export interface MockeryAction {
-  id: string;
-  type: string;
-  cost: number;
-  name: string;
-  description: string;
-  iconUrl: string;
-  rarity: string;
-  cooldown: number;
-}
-
-export interface MockeryResponse {
-  success: boolean;
-  message: string;
-  actionId?: string;
-  mockedUserId?: string;
-  tier?: MockeryTier;
-}
-
-// Export TeamColor and UserTier to ensure they're accessible when importing from this file
-export { TeamColor, UserTier };
-
-// Export LeaderboardFilter type
-export interface LeaderboardFilter {
-  team?: string | 'all';
-  tier?: string | 'all';
-  timeframe?: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all';
-  search?: string;
-  sortBy?: 'rank' | 'spent' | 'username';
-  sortDirection?: 'asc' | 'desc';
-  limit?: number;
-}
-
-// Export TeamData
 export interface TeamData {
   color: TeamColor;
   name: string;
   description: string;
-  memberCount: number;
-  totalSpent: number;
-  captain?: string;
-  motto?: string;
-  benefits?: string[];
-  icon?: string;
+  members: number;
+  id: string;
+  logoUrl: string;
+  totalContribution: number;
+  rank: number;
+  previousRank: number;
+  benefits: string[];
 }
+
+export type UserTier = 
+  | 'free' 
+  | 'basic' 
+  | 'premium' 
+  | 'pro' 
+  | 'royal' 
+  | 'legendary';
+
+export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
+
+export interface LeaderboardUser {
+  id: string;
+  username: string;
+  displayName: string;
+  profileImage: string;
+  rank: number;
+  previousRank: number;
+  tier: UserTier | string;
+  totalSpent: number;
+  amountSpent?: number;
+  team: TeamColor;
+  walletBalance?: number;
+  rankChange?: number;
+  spendChange?: number;
+  spentAmount?: number;
+}
+
+export interface LeaderboardFilter {
+  timeframe: string;
+  team?: string;
+  limit: number;
+}
+
+// Use export type for type-only exports
+export type { LeaderboardUser, LeaderboardFilter };
