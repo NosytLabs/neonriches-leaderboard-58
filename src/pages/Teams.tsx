@@ -1,68 +1,43 @@
+import React from 'react';
+import { Shell } from '@/components/ui/shell';
+import PageHeader from '@/components/common/PageHeader';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import TeamOverview from '@/components/teams/TeamOverview';
+import TeamSelection from '@/components/teams/TeamSelection';
+import { TeamMembersTable } from '@/components/teams/TeamMembersTable';
 
-import React, { useState } from 'react';
-import { Container } from '@/components/ui/container';
-import { Shell } from '@/components/ui/Shell'; // Fixed casing
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import TeamSelector from '@/components/teams/TeamSelector';
-import TeamBenefitsDisplay from '@/components/teams/TeamBenefitsDisplay';
-import TeamMembersTable from '@/components/teams/TeamMembersTable';
-import TeamJoinButton from '@/components/teams/TeamJoinButton';
-import { useTeam } from '@/hooks/useTeam';
-import { TeamColor } from '@/types/team';
-
-const Teams = () => {
-  const { currentTeam, changeTeam, isLoading, error, getTeamName, getTeamBenefits, allTeams } = useTeam();
-  const [selectedTeam, setSelectedTeam] = useState<TeamColor>(currentTeam as TeamColor);
-  
-  const handleTeamChange = async (newTeam: TeamColor) => {
-    setSelectedTeam(newTeam);
-    const success = await changeTeam(newTeam);
-    if (success) {
-      console.log('Team changed successfully');
-    } else {
-      console.error('Failed to change team');
-    }
-  };
-  
+const TeamsPage: React.FC = () => {
   return (
     <Shell>
-      <Container>
-        <Card className="glass-morphism border-white/10">
-          <CardHeader>
-            <CardTitle>Choose Your Allegiance</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <TeamSelector 
-              onTeamChange={handleTeamChange}
-              team={selectedTeam}
-            />
-            {error && <p className="text-red-500">{error}</p>}
-            {isLoading && <p>Loading...</p>}
-          </CardContent>
-        </Card>
+      <PageHeader
+        title="Royal Teams"
+        description="Join a team and compete for glory and rewards."
+        size="md"
+      />
+      
+      <div className="container mx-auto py-8">
+        <Tabs defaultValue="overview" className="space-y-4">
+          <TabsList className="glass-morphism border-white/10 grid grid-cols-2 md:w-[400px]">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="selection">Selection</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="overview" className="space-y-4">
+            <TeamOverview />
+          </TabsContent>
+          
+          <TabsContent value="selection" className="space-y-4">
+            <TeamSelection />
+          </TabsContent>
+        </Tabs>
         
-        <Card className="glass-morphism border-white/10 mt-6">
-          <CardHeader>
-            <CardTitle>{getTeamName(selectedTeam)} Benefits</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <TeamBenefitsDisplay team={selectedTeam} />
-          </CardContent>
-        </Card>
-        
-        <Card className="glass-morphism border-white/10 mt-6">
-          <CardHeader>
-            <CardTitle>Team Members</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <TeamMembersTable team={selectedTeam} />
-          </CardContent>
-        </Card>
-        
-        <TeamJoinButton team={selectedTeam} />
-      </Container>
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Team Members</h2>
+          <TeamMembersTable />
+        </div>
+      </div>
     </Shell>
   );
 };
 
-export default Teams;
+export default TeamsPage;

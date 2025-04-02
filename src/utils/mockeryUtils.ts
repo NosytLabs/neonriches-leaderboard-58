@@ -1,209 +1,121 @@
 
+import { AlertTriangle, Crown, Egg, ThumbsDown, Target, UserX, Trash2 } from 'lucide-react';
 import { MockeryAction, MockeryTier } from '@/types/mockery-types';
-import { mockeryActionIcons } from './mockeryActionUtils';
 
-// Mapping of mockery actions to their display names
+// Map mockery actions to their display names
 export const mockeryNames: Record<string, string> = {
-  'tomato': 'Tomatoes',
-  'egg': 'Eggs',
-  'rotten_egg': 'Rotten Eggs',
-  'flame': 'Flame',
-  'heart': 'Heart',
-  'thumbs_down': 'Thumbs Down',
-  'skull': 'Skull',
+  'tomato': 'Throw Tomato',
+  'egg': 'Throw Egg',
+  'putridEgg': 'Throw Putrid Egg',
   'crown': 'Mock Crown',
-  'putridEgg': 'Putrid Egg',
-  'stocks': 'Stocks',
-  'jester': 'Jester Hat',
-  'mock': 'Mock',
-  'challenge': 'Challenge',
-  'joust': 'Joust',
-  'duel': 'Duel',
-  'silence': 'Silence',
-  'laugh': 'Laugh',
-  'fish': 'Fish',
-  'taunt': 'Taunt',
   'thumbsDown': 'Thumbs Down',
-  'trumpet': 'Trumpet',
-  'confetti': 'Confetti',
-  'shame': 'Public Shame',
-  'courtJester': 'Court Jester',
-  'smokeBomb': 'Smoke Bomb',
-  'protection': 'Royal Protection',
-  'royal_decree': 'Royal Decree',
-  'shame_certificate': 'Shame Certificate',
-  'insult': 'Insult',
-  'humiliate': 'Humiliate'
+  'mock': 'Public Mockery',
+  'stocks': 'Put in Stocks',
+  'jester': 'Make Jester',
+  'taunt': 'Royal Taunt'
 };
 
-// Descriptions for mockery actions
+// Map mockery actions to their costs
+export const mockeryCosts: Record<string, number> = {
+  'tomato': 10,
+  'egg': 25,
+  'putridEgg': 50,
+  'crown': 100,
+  'thumbsDown': 5,
+  'mock': 15,
+  'stocks': 75,
+  'jester': 35,
+  'taunt': 20
+};
+
+// Map mockery actions to their descriptions
 export const mockeryDescriptions: Record<string, string> = {
-  'tomato': 'Throw virtual tomatoes at this user.',
-  'egg': 'Throw virtual eggs at this user.',
-  'rotten_egg': 'Throw virtual rotten eggs at this user.',
-  'flame': 'Roast this user with a flame.',
-  'heart': 'Show affection to this user.',
-  'thumbs_down': 'Show disapproval to this user.',
-  'skull': 'Mark this user as defeated.',
-  'crown': 'Crown this user mockingly.',
-  'putridEgg': 'Throw a putrid egg at this user.',
-  'stocks': 'Put this user in virtual stocks for public display.',
-  'jester': 'Make this user your court jester.',
-  'mock': 'Mock this user.',
-  'challenge': 'Challenge this user to a competition.',
-  'joust': 'Challenge this user to a joust.',
-  'duel': 'Challenge this user to a duel.',
-  'silence': 'Silence this user temporarily.',
-  'laugh': 'Laugh at this user.',
-  'fish': 'Slap this user with a virtual fish.',
-  'taunt': 'Taunt this user.',
-  'thumbsDown': 'Show disapproval to this user.',
-  'trumpet': 'Announce this user\'s shame.',
-  'confetti': 'Shower this user with mocking confetti.',
-  'shame': 'Publicly shame this user.',
-  'courtJester': 'Designate this user as your court jester.',
-  'smokeBomb': 'Throw a smoke bomb at this user.',
-  'protection': 'Protect yourself from mockery.',
-  'royal_decree': 'Issue a royal decree against this user.',
-  'shame_certificate': 'Issue a certificate of shame to this user.',
-  'insult': 'Insult this user.',
-  'humiliate': 'Humiliate this user.'
+  'tomato': 'Throw a tomato at this user, marking them with a tomato for 24 hours.',
+  'egg': 'Throw an egg at this user, marking them with an egg for 48 hours.',
+  'putridEgg': 'Throw a putrid egg at this user, marking them with a putrid egg for 72 hours.',
+  'crown': 'Give this user a mockery crown, making them look ridiculous for a week.',
+  'thumbsDown': 'Show your disapproval of this user with a thumbs down.',
+  'mock': 'Publicly mock this user, sending a message to the kingdom.',
+  'stocks': 'Put this user in the stocks for 24 hours.',
+  'jester': 'Force this user to wear a jester\'s hat for 3 days.',
+  'taunt': 'Taunt this user with a royal message.'
 };
 
-// Get mockery name
-export const getMockeryName = (action: MockeryAction | string): string => {
-  return mockeryNames[action as string] || 'Mock';
+// Map mockery actions to their tiers
+export const mockeryTiers: Record<string, MockeryTier> = {
+  'tomato': 'common',
+  'egg': 'uncommon',
+  'putridEgg': 'rare',
+  'crown': 'epic',
+  'thumbsDown': 'common',
+  'mock': 'uncommon',
+  'stocks': 'rare',
+  'jester': 'uncommon',
+  'taunt': 'common'
 };
 
-// Get mockery description
-export const getMockeryDescription = (action: MockeryAction | string): string => {
-  return mockeryDescriptions[action as string] || 'Mock this user.';
+// Returns the icon component for a mockery action
+export const getMockeryActionIconComponent = (action: MockeryAction) => {
+  switch (action) {
+    case 'tomato': return Target;
+    case 'egg': return Egg;
+    case 'putridEgg': return Trash2;
+    case 'crown': return Crown;
+    case 'thumbsDown': return ThumbsDown;
+    case 'mock': return UserX;
+    case 'stocks': return AlertTriangle;
+    case 'jester': return Crown;
+    case 'taunt': return AlertTriangle;
+    default: return AlertTriangle;
+  }
 };
 
-// Get mockery tier
-export const getMockeryTier = (action: MockeryAction | string): MockeryTier => {
-  const tierMap: Record<string, MockeryTier> = {
-    'tomato': 'common',
-    'egg': 'common',
-    'flame': 'uncommon',
-    'heart': 'common',
-    'thumbs_down': 'common',
-    'skull': 'rare',
-    'crown': 'rare',
-    'putridEgg': 'uncommon',
-    'stocks': 'epic',
-    'jester': 'epic',
-    'mock': 'common',
-    'challenge': 'uncommon',
-    'joust': 'rare',
-    'duel': 'rare',
-    'silence': 'epic',
-    'laugh': 'common',
-    'fish': 'uncommon',
-    'taunt': 'common',
-    'thumbsDown': 'common',
-    'trumpet': 'uncommon',
-    'confetti': 'uncommon',
-    'shame': 'rare',
-    'courtJester': 'epic',
-    'smokeBomb': 'rare',
-    'protection': 'legendary',
-    'royal_decree': 'legendary',
-    'shame_certificate': 'epic',
-    'insult': 'common',
-    'humiliate': 'rare'
-  };
-  
-  return tierMap[action as string] || 'common';
+// Get the color for a mockery action icon
+export const getMockeryActionIconColor = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomato': return 'text-red-500';
+    case 'egg': return 'text-yellow-500';
+    case 'putridEgg': return 'text-green-500';
+    case 'crown': return 'text-purple-500';
+    case 'thumbsDown': return 'text-blue-500';
+    case 'mock': return 'text-orange-500';
+    case 'stocks': return 'text-indigo-500';
+    case 'jester': return 'text-pink-500';
+    case 'taunt': return 'text-teal-500';
+    default: return 'text-gray-500';
+  }
 };
 
-// Get mockery costs
-export const getMockeryCost = (action: MockeryAction | string): number => {
-  const costMap: Record<string, number> = {
-    'tomato': 25,
-    'egg': 50,
-    'flame': 75,
-    'heart': 10,
-    'thumbs_down': 15,
-    'skull': 100,
-    'crown': 150,
-    'putridEgg': 75,
-    'stocks': 200,
-    'jester': 250,
-    'mock': 10,
-    'challenge': 50,
-    'joust': 100,
-    'duel': 150,
-    'silence': 300,
-    'laugh': 25,
-    'fish': 50,
-    'taunt': 25,
-    'thumbsDown': 15,
-    'trumpet': 50,
-    'confetti': 75,
-    'shame': 100,
-    'courtJester': 250,
-    'smokeBomb': 150,
-    'protection': 500,
-    'royal_decree': 1000,
-    'shame_certificate': 300,
-    'insult': 25,
-    'humiliate': 125
-  };
-  
-  return costMap[action as string] || 10;
+// Helper functions
+export const getMockeryName = (action: MockeryAction): string => {
+  return mockeryNames[action] || action;
 };
 
-// Get mockery action icon color
-export const getMockeryActionIconColor = (action: MockeryAction | string): string => {
-  const colorMap: Record<string, string> = {
-    'tomato': 'text-red-500',
-    'egg': 'text-yellow-500',
-    'flame': 'text-orange-500',
-    'heart': 'text-pink-500',
-    'thumbs_down': 'text-blue-500',
-    'skull': 'text-gray-700',
-    'crown': 'text-yellow-400',
-    'putridEgg': 'text-green-600',
-    'stocks': 'text-gray-600',
-    'jester': 'text-purple-500',
-    'mock': 'text-cyan-500',
-    'challenge': 'text-red-600',
-    'joust': 'text-amber-700',
-    'duel': 'text-red-700',
-    'silence': 'text-gray-400',
-    'laugh': 'text-yellow-400',
-    'fish': 'text-blue-400',
-    'taunt': 'text-red-400',
-    'thumbsDown': 'text-blue-500',
-    'trumpet': 'text-yellow-600',
-    'confetti': 'text-pink-400',
-    'shame': 'text-red-600',
-    'courtJester': 'text-purple-500',
-    'smokeBomb': 'text-gray-500',
-    'protection': 'text-indigo-500',
-    'royal_decree': 'text-purple-700',
-    'shame_certificate': 'text-red-800',
-    'insult': 'text-orange-400',
-    'humiliate': 'text-red-700'
-  };
-  
-  return colorMap[action as string] || 'text-gray-500';
+export const getMockeryTier = (action: MockeryAction): MockeryTier => {
+  return mockeryTiers[action] || 'common';
 };
 
-// Get mockery tier color class
-export const getMockeryTierColorClass = (tier: string | MockeryTier): string => {
-  const tierColorClasses: Record<string, string> = {
-    'common': 'text-gray-300',
-    'uncommon': 'text-green-300',
-    'rare': 'text-blue-300',
-    'epic': 'text-purple-300',
-    'legendary': 'text-orange-300',
-    'royal': 'text-royal-gold'
-  };
-  
-  return tierColorClasses[tier as string] || 'text-gray-300';
+export const getMockeryCost = (action: MockeryAction): number => {
+  return mockeryCosts[action] || 10;
 };
 
-// Export mockery action price for back-compat
-export const getMockeryActionPrice = getMockeryCost;
+export const getMockeryDescription = (action: MockeryAction): string => {
+  return mockeryDescriptions[action] || 'Mock this user';
+};
+
+export const getMockeryActionIcon = (action: MockeryAction) => {
+  return getMockeryActionIconComponent(action);
+};
+
+export default {
+  mockeryNames,
+  mockeryCosts,
+  mockeryDescriptions,
+  mockeryTiers,
+  getMockeryName,
+  getMockeryTier,
+  getMockeryCost,
+  getMockeryDescription,
+  getMockeryActionIcon,
+  getMockeryActionIconColor
+};

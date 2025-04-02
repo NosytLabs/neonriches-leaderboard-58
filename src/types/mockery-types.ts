@@ -1,169 +1,97 @@
 
-// Define the mockery action types with all variations
-export type MockeryAction = 
-  | 'tomato'
-  | 'egg' 
-  | 'rotten_egg'
-  | 'flame'
-  | 'heart'
-  | 'thumbs_down'
-  | 'skull'
-  | 'crown'
-  | 'putridEgg'
-  | 'stocks'
-  | 'jester'
-  | 'mock'
-  | 'challenge'
-  | 'joust'
-  | 'duel'
-  | 'silence'
-  | 'laugh'
-  | 'fish'
-  | 'taunt'
-  | 'thumbsDown'
-  | 'trumpet'
-  | 'confetti'
-  | 'shame'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'protection'
-  | 'royal_decree'
-  | 'shame_certificate'
-  | 'insult'
-  | 'humiliate';
+// Define the base types for the mockery system
+export type MockeryAction = 'tomato' | 'egg' | 'putridEgg' | 'crown' | 'thumbsDown' | 'mock' | 'stocks' | 'jester' | 'taunt';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
+export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
+export type UserTier = 'free' | 'basic' | 'premium' | 'royal' | 'legendary' | 'founder';
 
-// Define mockery tier types - expanded to include all values used in components
-export type MockeryTier = 
-  | 'common' 
-  | 'uncommon' 
-  | 'rare' 
-  | 'epic' 
-  | 'legendary'
-  | 'royal'
-  | 'basic'
-  | 'premium'
-  | 'silver'
-  | 'bronze'
-  | 'standard';
-
-// Team color types
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze' | 'crimson';
-
-// Gender types
-export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
-
-// User tier types
-export type UserTier = 
-  | 'free'
-  | 'basic'
-  | 'pro'
-  | 'premium'
-  | 'royal'
-  | 'founder'
-  | 'platinum'
-  | 'diamond'
-  | 'gold'
-  | 'silver'
-  | 'bronze'
-  | 'vip'
-  | 'whale'
-  | 'shark'
-  | 'dolphin'
-  | 'noble'
-  | 'standard'
-  | 'elite'
-  | 'legendary';
-
-// TeamData interface for TeamLeaderboard
+// Define the interfaces
 export interface TeamData {
   id: string;
   name: string;
   color: TeamColor;
   members: number;
-  rank: number;
   totalSpent: number;
-  avatar?: string;
+  rank: number;
+  previousRank?: number;
+  logo?: string;
   description?: string;
+  leaderUsername?: string;
+  createdAt: string;
 }
 
-// Mockery event interface
 export interface MockeryEvent {
   id: string;
-  action: MockeryAction;
-  fromUserId: string;
   targetUserId: string;
+  actionType: MockeryAction;
+  actionTier: MockeryTier;
+  initiatorUserId: string;
   timestamp: string;
-  value: number;
-  description?: string;
+  expiresAt: string;
+  message?: string;
+  isPublic: boolean;
+  isActive: boolean;
 }
 
-// Mockery user interface
 export interface MockeryUser {
-  id: string;
+  userId: string;
   username: string;
   displayName?: string;
   profileImage?: string;
-  team?: TeamColor;
-  tier?: UserTier;
-  rank?: number;
-  spendStreak?: number;
+  totalMockeriesReceived: number;
+  totalMockeriesSent: number;
+  currentMockeries: MockeryEvent[];
+  lastMockedAt?: string;
+  isProtected: boolean;
+  protectionExpiresAt?: string;
 }
 
-// Leaderboard user interface
 export interface LeaderboardUser {
-  id: string;
-  userId: string;
+  id?: string;
+  userId?: string;
   username: string;
-  displayName: string;
+  displayName?: string;
   profileImage?: string;
-  isVerified?: boolean;
-  rank: number;
-  previousRank: number;
-  team?: TeamColor | string;
-  tier?: UserTier | string;
+  team?: string | TeamColor;
+  tier?: string;
+  rank?: number;
+  previousRank?: number;
   totalSpent?: number;
   amountSpent?: number;
-  spendStreak?: number;
-  walletBalance?: number;
-  rankChange?: number;
-  spendChange?: number;
-  isProtected?: boolean;
-  avatarUrl?: string;
+  joinedDate?: string;
+  isVerified?: boolean;
 }
 
-// Leaderboard filter interface - expanded with additional properties
 export interface LeaderboardFilter {
-  period: 'daily' | 'weekly' | 'monthly' | 'all-time';
-  team: TeamColor | 'all' | string;
-  limit: number;
-  tier?: string;
-  timeframe?: string;
+  timeframe: 'all' | 'week' | 'month' | 'year';
+  team: string | TeamColor | 'all';
+  tier?: string | 'all';
   search?: string;
-  sortBy?: string;
+  sortBy?: 'totalSpent' | 'rank' | 'joinDate';
   sortDirection?: 'asc' | 'desc';
 }
 
-// Mockery result interface
 export interface MockeryResult {
   success: boolean;
-  message?: string;
-  cost?: number;
-  targetUser?: string;
-  action?: MockeryAction;
-  timestamp?: string;
+  message: string;
+  cost: number;
+  mockeryId?: string;
+  expiresAt?: string;
+  actionType?: MockeryAction;
 }
 
-// Export using 'export type' syntax to avoid conflicts
-export type { 
-  MockeryAction, 
-  MockeryTier, 
-  TeamColor, 
-  Gender, 
-  UserTier, 
-  TeamData, 
-  MockeryEvent, 
-  MockeryUser, 
-  LeaderboardUser, 
-  LeaderboardFilter, 
-  MockeryResult 
+// Use 'export type' for re-exporting types to avoid conflicts
+export type {
+  MockeryAction,
+  MockeryTier,
+  TeamColor,
+  Gender,
+  UserTier,
+  TeamData,
+  MockeryEvent,
+  MockeryUser,
+  LeaderboardUser,
+  LeaderboardFilter,
+  MockeryResult
 };

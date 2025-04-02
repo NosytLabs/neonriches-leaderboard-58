@@ -1,12 +1,12 @@
-
 import React from 'react';
-import Shell from '@/components/Shell';
+import { useNavigate } from 'react-router-dom';
+import { Shell } from '@/components/ui/shell';
 import PageSEO from '@/components/common/PageSEO';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ExternalLink, History, Trophy, Crown, Info, ArrowRight } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import usePageTracking from '@/hooks/usePageTracking';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { cn } from '@/lib/utils';

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Shell } from '@/components/ui/shell';
+import PageHeader from '@/components/common/PageHeader';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { LeaderboardList } from '@/components/leaderboard/components/LeaderboardList';
 import LeaderboardFilters from '@/components/LeaderboardFilters';
-import LeaderboardList from '@/components/leaderboard/components/LeaderboardList';
 import LeaderboardHeader from '@/components/LeaderboardHeader';
 import { LeaderboardUser, LeaderboardFilter } from '@/types/mockery-types';
 import { useMockLeaderboard } from '@/hooks/useMockLeaderboard';

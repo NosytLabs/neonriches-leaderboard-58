@@ -315,12 +315,12 @@ const SubscriptionManagement = () => {
         <Button ref={buttonRef} type="submit">
           Pay with PayPal
         </Button>
-        <img
-          alt=""
-          border="0"
-          src="https://www.paypal.com/en_US/i/scr/pixel.gif"
-          width="1"
-          height="1"
+        <img 
+          src="/images/payment-options.png" 
+          alt="Payment options" 
+          style={{ border: '1px solid rgba(255,255,255,0.1)' }} 
+          width="400" 
+          height="50" 
         />
       </form>
     </Shell>

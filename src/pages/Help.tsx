@@ -1,10 +1,9 @@
-
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Shell } from '@/components/ui/shell';
+import PageHeader from '@/components/common/PageHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollText, Crown, Shield, Coins, Target, Users, FileText, HelpCircle } from 'lucide-react';
-import RoyalEncyclopedia from '@/components/help/RoyalEncyclopedia';
-import RoyalDivider from '@/components/ui/royal-divider';
+import FaqComponent from '@/components/FaqComponent';
+import { RoyalEncyclopedia } from '@/components/help/RoyalEncyclopedia';
 
 const HelpPage = () => {
   return (
@@ -38,61 +37,7 @@ const HelpPage = () => {
           </TabsContent>
           
           <TabsContent value="faq">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <HelpCircle className="h-5 w-5 text-royal-gold" />
-                  Frequently Asked Questions
-                </CardTitle>
-                <CardDescription>
-                  Answers to common questions about P2W.FUN
-                </CardDescription>
-              </CardHeader>
-              
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="glass-morphism border-white/10 p-4 rounded-lg">
-                    <h3 className="font-bold mb-2">What is P2W.FUN?</h3>
-                    <p className="text-white/80">
-                      P2W.FUN is a satirical social experiment that explores the dynamics of wealth and competition. 
-                      It features a persistent leaderboard where your rank is determined solely by how much money you spend.
-                    </p>
-                  </div>
-                  
-                  <div className="glass-morphism border-white/10 p-4 rounded-lg">
-                    <h3 className="font-bold mb-2">How does the leaderboard work?</h3>
-                    <p className="text-white/80">
-                      Your position on the leaderboard is directly proportional to your total spending. Each dollar you spend equals one unit of rank.
-                      The leaderboard never resets, creating a persistent record of contribution.
-                    </p>
-                  </div>
-                  
-                  <div className="glass-morphism border-white/10 p-4 rounded-lg">
-                    <h3 className="font-bold mb-2">What are mockery effects?</h3>
-                    <p className="text-white/80">
-                      Mockery effects are purely cosmetic visual changes that can be applied to other users' profiles as a form of satirical interaction.
-                      They have no impact on leaderboard rankings or functionality, but provide entertaining visual embellishments.
-                    </p>
-                  </div>
-                  
-                  <div className="glass-morphism border-white/10 p-4 rounded-lg">
-                    <h3 className="font-bold mb-2">How do I join a team?</h3>
-                    <p className="text-white/80">
-                      You can join one of three teams: Red (neon fire), Green (lime zap), or Blue (cool pulse). 
-                      Team rankings are based on the total spent by all team members. You can switch teams, but there may be a waiting period.
-                    </p>
-                  </div>
-                  
-                  <div className="glass-morphism border-white/10 p-4 rounded-lg">
-                    <h3 className="font-bold mb-2">What's the difference between profile tiers?</h3>
-                    <p className="text-white/80">
-                      P2W.FUN offers two profile tiers: Free Tier ($1+) with basic customization, and Pro Tier ($25+) with enhanced features 
-                      including more text, images, links, animations, and custom RGB effects.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <FaqComponent />
           </TabsContent>
           
           <TabsContent value="rules">

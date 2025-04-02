@@ -173,8 +173,8 @@ const SubscriptionPage = () => {
             <SubscriptionPlanCard
               key={plan.id}
               plan={plan}
-              selected={selectedPlan?.id === plan.id}
-              onSelect={handleSelectPlan}
+              selected={selectedPlan === plan.id}
+              onSelect={(planId) => setSelectedPlan(planId)}
               billingInterval={billingInterval}
             />
           ))}

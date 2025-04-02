@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shell } from '@/components/ui/Shell';
+import { Shell } from '@/components/ui/shell';
 
 const Community = () => {
   const navigate = useNavigate();
