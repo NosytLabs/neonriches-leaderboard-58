@@ -1,146 +1,162 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Egg, Crown, AlertCircle, Shield } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Egg, Flame, Laugh, ThumbsDown } from 'lucide-react';
+import { getInitials } from '@/utils/stringUtils';
 import { MockeryAction } from '@/types/mockery-types';
-import { useToast } from '@/hooks/use-toast';
-import { useSound } from '@/hooks/use-sound';
-import { getMockeryName, getMockeryDescription, getMockeryTier, getMockeryTierColorClass } from '@/utils/mockeryUtils';
+import { 
+  getMockeryName, 
+  getMockeryDescription, 
+  getMockeryTier, 
+  getMockeryTierColorClass 
+} from '@/utils/mockeryUtils';
 
-const PublicShamingFeature: React.FC = () => {
-  const { toast } = useToast();
-  const sound = useSound();
-  const [selectedAction, setSelectedAction] = useState<MockeryAction>('tomatoes');
-  
-  const mockeryActions: MockeryAction[] = [
-    'tomatoes',
-    'eggs',
-    'stocks',
-    'jester',
-    'crown'
+const PublicShamingFeature = () => {
+  // Mock data for demonstration
+  const mockedUsers = [
+    {
+      id: '1',
+      username: 'spender123',
+      displayName: 'Big Spender',
+      avatarUrl: '/avatars/user1.png',
+      rank: 3,
+      totalSpent: 5200,
+      mockeryCount: {
+        tomatoes: 12,
+        eggs: 5,
+        thumbsDown: 3,
+        carrot: 1
+      }
+    },
+    {
+      id: '2',
+      username: 'royalMoney',
+      displayName: 'Royal Money',
+      avatarUrl: '/avatars/user2.png',
+      rank: 7,
+      totalSpent: 3800,
+      mockeryCount: {
+        tomatoes: 8,
+        eggs: 2,
+        thumbsDown: 7,
+        carrot: 4
+      }
+    }
   ];
   
-  const handleSelectAction = (action: MockeryAction) => {
-    setSelectedAction(action);
-    sound.playSound('click');
-  };
+  const [userMockery, setUserMockery] = useState<Record<string, Partial<Record<MockeryAction, number>>>>({
+    '1': {
+      tomatoes: 12,
+      eggs: 5,
+      thumbsDown: 3,
+      carrot: 1
+    },
+    '2': {
+      tomatoes: 8,
+      eggs: 2,
+      thumbsDown: 7,
+      carrot: 4
+    }
+  });
   
-  const handleApplyShame = () => {
-    toast({
-      title: "Mockery Applied",
-      description: `You've applied ${getMockeryName(selectedAction)} to the selected user.`,
+  // Apply mockery to a user
+  const handleApplyMockery = (userId: string, action: MockeryAction) => {
+    setUserMockery(prev => {
+      const userMockeries = prev[userId] || {};
+      const currentCount = userMockeries[action] || 0;
+      
+      return {
+        ...prev,
+        [userId]: {
+          ...userMockeries,
+          [action]: currentCount + 1
+        }
+      };
     });
-    sound.playSound('mockery');
-  };
-  
-  const handleShield = () => {
-    toast({
-      title: "Protection Purchased",
-      description: "You've purchased Royal Protection for 48 hours.",
-    });
-    sound.playSound('purchase');
-  };
-  
-  // Generate popularity data for each mockery action - ensuring we include all mockery actions
-  const mockeryStats: Partial<Record<MockeryAction, number>> = {
-    tomatoes: 256,
-    eggs: 189,
-    stocks: 124,
-    crown: 78,
-    jester: 143,
-    fish: 102, // Add the missing 'fish' action
-    putridEggs: 52,
-    silence: 31,
-    courtJester: 20,
-    smokeBomb: 45,
-    shame: 15,
-    protection: 67,
-    challenge: 18,
-    taunt: 42,
-    mock: 96,
-    joust: 30,
-    duel: 12,
-    thumbsDown: 85,
-    gift: 47,
-    carrot: 23
   };
   
   return (
-    <Card className="glass-morphism border-royal-crimson/20">
+    <Card className="bg-black/20 border-white/10">
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <Egg className="h-5 w-5 text-royal-crimson mr-2" />
-          Public Mockery
+        <CardTitle className="text-lg font-medium flex items-center">
+          <Flame className="h-5 w-5 mr-2 text-red-500" />
+          Public Shaming Leaderboard
         </CardTitle>
       </CardHeader>
-      
-      <CardContent>
-        <p className="text-sm text-white/70 mb-4">
-          Humiliate those who outrank you with these mockery options. Choose wisely!
-        </p>
-        
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-          {mockeryActions.map((action) => {
-            const actionTier = getMockeryTier(action);
-            const tierColorClass = getMockeryTierColorClass(actionTier);
-            
-            return (
-              <div 
-                key={action}
-                className={`p-3 rounded-md border cursor-pointer transition-colors ${
-                  selectedAction === action 
-                    ? 'bg-royal-crimson/20 border-royal-crimson/40' 
-                    : 'bg-background/50 border-white/10 hover:bg-royal-crimson/10 hover:border-royal-crimson/20'
-                }`}
-                onClick={() => handleSelectAction(action)}
-              >
-                <div className="flex justify-between mb-1">
-                  <span className="font-medium text-sm">{getMockeryName(action)}</span>
-                  <Badge variant="outline" className={`text-xs ${tierColorClass}`}>
-                    {actionTier}
-                  </Badge>
-                </div>
-                <p className="text-xs text-white/60">{getMockeryDescription(action)}</p>
-                <div className="flex justify-between items-center mt-2">
-                  <span className="text-xs text-white/50">
-                    Used {mockeryStats[action] || 0} times
-                  </span>
-                  <span className="text-sm font-bold">${Math.floor(15 + Math.random() * 50)}</span>
+      <CardContent className="space-y-4">
+        {mockedUsers.map(user => (
+          <div 
+            key={user.id} 
+            className="p-3 border border-white/10 rounded-lg bg-black/30 hover:bg-black/40 transition-colors"
+          >
+            <div className="flex items-center">
+              <Avatar className="h-10 w-10 mr-3">
+                <AvatarImage src={user.avatarUrl} alt={user.username} />
+                <AvatarFallback>{getInitials(user.displayName || user.username)}</AvatarFallback>
+              </Avatar>
+              
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-medium text-sm">{user.displayName || user.username}</h3>
+                    <p className="text-xs text-white/60">Rank #{user.rank} • ${user.totalSpent.toLocaleString()}</p>
+                  </div>
+                  
+                  <div className="flex items-center space-x-1">
+                    {Object.entries(userMockery[user.id] || {}).map(([key, count]) => (
+                      <Badge 
+                        key={key} 
+                        variant="outline" 
+                        className="bg-black/30 text-xs px-1.5"
+                      >
+                        {key === 'tomatoes' && <Flame className="h-3 w-3 mr-1 text-red-500" />}
+                        {key === 'eggs' && <Egg className="h-3 w-3 mr-1 text-yellow-500" />}
+                        {key === 'thumbsDown' && <ThumbsDown className="h-3 w-3 mr-1 text-blue-500" />}
+                        {key === 'carrot' && <Laugh className="h-3 w-3 mr-1 text-orange-500" />}
+                        {count}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
-        
-        <div className="p-3 rounded-lg bg-royal-crimson/10 border border-royal-crimson/20 mb-4">
-          <div className="flex items-start">
-            <AlertCircle className="h-5 w-5 text-royal-crimson mr-2 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-white/80">
-              Warning: Mockery is public and visible to all. The target will be notified, and they may retaliate.
-            </p>
+            </div>
+            
+            <div className="flex justify-between mt-3 gap-2">
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="w-full border-red-500/20 hover:border-red-500/40 hover:bg-red-500/10 text-xs"
+                onClick={() => handleApplyMockery(user.id, 'tomatoes')}
+              >
+                <Flame className="h-3.5 w-3.5 mr-1.5 text-red-500" />
+                Tomatoes
+              </Button>
+              
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="w-full border-yellow-500/20 hover:border-yellow-500/40 hover:bg-yellow-500/10 text-xs"
+                onClick={() => handleApplyMockery(user.id, 'eggs')}
+              >
+                <Egg className="h-3.5 w-3.5 mr-1.5 text-yellow-500" />
+                Eggs
+              </Button>
+              
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="w-full border-blue-500/20 hover:border-blue-500/40 hover:bg-blue-500/10 text-xs"
+                onClick={() => handleApplyMockery(user.id, 'thumbsDown')}
+              >
+                <ThumbsDown className="h-3.5 w-3.5 mr-1.5 text-blue-500" />
+                Thumbs Down
+              </Button>
+            </div>
           </div>
-        </div>
-        
-        <div className="flex justify-between items-center">
-          <Button 
-            variant="default" 
-            className="bg-royal-crimson hover:bg-royal-crimson/80"
-            onClick={handleApplyShame}
-          >
-            Apply {getMockeryName(selectedAction)}
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            className="border-royal-gold/50 text-royal-gold hover:bg-royal-gold/10"
-            onClick={handleShield}
-          >
-            <Shield className="h-4 w-4 mr-2" />
-            Buy Protection ($75)
-          </Button>
-        </div>
+        ))}
       </CardContent>
     </Card>
   );

@@ -1,31 +1,31 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useMockLeaderboard } from '@/hooks/useMockLeaderboard';
-import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
-import LeaderboardFilters from '@/components/LeaderboardFilters';
-import LeaderboardHeader from '@/components/LeaderboardHeader';
-import LeaderboardItem from '@/components/ui/LeaderboardItem';
 import { Card, CardContent } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import LeaderboardFilters from '@/components/LeaderboardFilters';
+import LeaderboardList from '@/components/leaderboard/components/LeaderboardList';
+import LeaderboardHeader from '@/components/LeaderboardHeader';
+import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
+import { useMockLeaderboard } from '@/hooks/useMockLeaderboard';
+import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const Leaderboard = () => {
   const navigate = useNavigate();
-  const { loading, mockLeaderboardData } = useMockLeaderboard();
-  const [currentUserId] = useState<string | null>(null);
+  const { user } = useAuth();
+  const { loading, mockLeaderboardData } = useMockLeaderboard?.() || { loading: true, mockLeaderboardData: [] };
   
+  // Initialize filter state
   const [filter, setFilter] = useState<LeaderboardFilter>({
     team: 'all',
     tier: 'all',
-    timeframe: 'all',
+    timeframe: 'all-time',
     search: '',
-    sortBy: 'rank',
-    sortDirection: 'asc'
+    sortBy: 'rank'
   });
   
   const [filteredUsers, setFilteredUsers] = useState<LeaderboardUser[]>([]);
   
-  // Apply filters whenever the filter or data changes
+  // Apply filters whenever filter or data changes
   useEffect(() => {
     if (!mockLeaderboardData) return;
     
@@ -77,24 +77,11 @@ const Leaderboard = () => {
   };
   
   const handleProfileClick = (userId: string, username: string) => {
-    console.log(`Navigate to profile: ${username}`);
-    // In a real app, navigate to profile page
-    // navigate(`/profile/${username}`);
+    navigate(`/profile/${username}`);
   };
   
-  const renderSkeletons = () => {
-    return Array(8).fill(0).map((_, index) => (
-      <div key={index} className="flex items-center p-3 rounded-md border border-white/10 hover:bg-white/5">
-        <Skeleton className="h-8 w-8 rounded-full" />
-        <div className="ml-3 space-y-2">
-          <Skeleton className="h-4 w-40" />
-          <Skeleton className="h-3 w-20" />
-        </div>
-        <div className="ml-auto">
-          <Skeleton className="h-4 w-16" />
-        </div>
-      </div>
-    ));
+  const handleShameUser = (user: LeaderboardUser) => {
+    navigate(`/mockery/${user.username}?action=shame`);
   };
   
   return (
@@ -111,25 +98,13 @@ const Leaderboard = () => {
       <div className="mt-6">
         <Card className="bg-black/20 border-white/10">
           <CardContent className="p-4">
-            <div className="space-y-3">
-              {loading ? (
-                renderSkeletons()
-              ) : filteredUsers.length > 0 ? (
-                filteredUsers.map((user, index) => (
-                  <LeaderboardItem
-                    key={user.id}
-                    user={user}
-                    position={user.rank}
-                    isCurrentUser={user.id === currentUserId}
-                    onClick={() => handleProfileClick(user.id, user.username)}
-                  />
-                ))
-              ) : (
-                <div className="text-center py-8 text-white/60">
-                  No users match your filters.
-                </div>
-              )}
-            </div>
+            <LeaderboardList 
+              users={filteredUsers} 
+              loading={loading} 
+              currentUserId={user?.id || ''} 
+              onProfileClick={handleProfileClick}
+              onShameUser={handleShameUser}
+            />
           </CardContent>
         </Card>
       </div>

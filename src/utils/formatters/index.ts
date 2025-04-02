@@ -1,5 +1,7 @@
 
 // Common formatting functions
+
+// Format currency with $ sign and decimal places
 export const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -9,23 +11,20 @@ export const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
-export const formatDollarAmount = (value: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(value);
-};
+// Alias for formatCurrency for backward compatibility
+export const formatDollarAmount = formatCurrency;
 
+// Format number with commas
 export const formatNumber = (num: number): string => {
   return new Intl.NumberFormat('en-US').format(num);
 };
 
+// Format percentage with % sign
 export const formatPercentage = (value: number): string => {
   return `${(value * 100).toFixed(1)}%`;
 };
 
+// Format date to readable string
 export const formatDate = (date: string): string => {
   return new Date(date).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -34,6 +33,7 @@ export const formatDate = (date: string): string => {
   });
 };
 
+// Format time to readable string
 export const formatTime = (date: string): string => {
   return new Date(date).toLocaleTimeString('en-US', {
     hour: '2-digit',
@@ -41,6 +41,7 @@ export const formatTime = (date: string): string => {
   });
 };
 
+// Format date and time to readable string
 export const formatDateTime = (date: string): string => {
   return new Date(date).toLocaleString('en-US', {
     year: 'numeric',
@@ -51,6 +52,7 @@ export const formatDateTime = (date: string): string => {
   });
 };
 
+// Format time ago (e.g. "2 hours ago")
 export const formatTimeAgo = (dateString: string): string => {
   const now = new Date();
   const date = new Date(dateString);
@@ -65,14 +67,3 @@ export const formatTimeAgo = (dateString: string): string => {
   return `${Math.floor(diffInSeconds / 31536000)} years ago`;
 };
 
-// Make sure all functions are explicitly exported
-export {
-  formatCurrency,
-  formatDollarAmount,
-  formatNumber,
-  formatPercentage,
-  formatDate,
-  formatTime,
-  formatDateTime,
-  formatTimeAgo
-};

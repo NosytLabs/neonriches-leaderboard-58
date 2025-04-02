@@ -25,10 +25,9 @@ const CombinedLeaderboard: React.FC = () => {
   const [filter, setFilter] = useState<LeaderboardFilter>({
     team: 'all',
     tier: 'all',
-    timeframe: 'all',
+    timeframe: 'all-time',
     search: '',
-    sortBy: 'rank',
-    sortDirection: 'asc'
+    sortBy: 'rank'
   });
   
   const [filteredUsers, setFilteredUsers] = useState<LeaderboardUser[]>([]);

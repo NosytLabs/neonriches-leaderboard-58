@@ -9,9 +9,10 @@ export * from './shameUtils';
 // Add explicit exports for commonly used functions
 export { safeToString, ensureStringId, getInitials } from './stringUtils';
 export { 
-  formatDollarAmount, 
   formatCurrency, 
+  formatDollarAmount, 
   formatNumber,
   formatDate,
   formatTimeAgo
 } from './formatters';
+

@@ -1,4 +1,5 @@
 
+
 export interface LeaderboardUser {
   id: string;
   userId: string;
@@ -24,14 +25,15 @@ export interface LeaderboardUser {
   rankChange?: number;
   thumbsDown?: number;
   carrot?: number;       // Add mockery action type
+  fish?: number;         // Add fish mockery action
 }
 
 export interface LeaderboardFilter {
   team?: string;
   tier?: string;
   // Use both timeframe and timeFrame for compatibility
-  timeframe?: 'all' | 'day' | 'week' | 'month' | 'year' | string;
-  timeFrame?: 'all' | 'day' | 'week' | 'month' | 'year' | string;
+  timeframe?: 'all' | 'day' | 'week' | 'month' | 'year' | 'all-time' | 'today' | string;
+  timeFrame?: 'all' | 'day' | 'week' | 'month' | 'year' | 'all-time' | 'today' | string;
   search?: string;
   sort?: string;
   sortBy?: string;
@@ -52,3 +54,4 @@ export interface TypedLeaderboardFilter extends LeaderboardFilter {
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
 }
+
