@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { UserProfile } from '@/types/user-consolidated';
+import { ensureUserTier } from '@/utils/typeUnifier';
 import { useAuth } from '@/hooks/useAuth';
 import { Shell } from '@/components/ui/shell';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -10,6 +12,24 @@ import { Badge } from '@/components/ui/badge';
 import { adaptSubscription } from '@/utils/userProfileAdapter';
 import { UserSubscription } from '@/types/user-consolidated';
 import SubscriptionPlanCard, { SubscriptionPlanProps } from './SubscriptionPlanCard';
+
+const ensureValidStatus = (status: string): "active" | "cancelled" | "expired" | "pending" | "paused" => {
+  const validStatuses = ["active", "cancelled", "expired", "pending", "paused"];
+  return validStatuses.includes(status) 
+    ? (status as "active" | "cancelled" | "expired" | "pending" | "paused") 
+    : "active";
+};
+
+const createSubscription = (planId: any, nextBillingDate: string, tier: any) => {
+  return {
+    id: `sub_${Math.random().toString(36).substr(2, 9)}`,
+    planId,
+    nextBillingDate,
+    status: "active" as "active" | "cancelled" | "expired" | "pending" | "paused",
+    tier: ensureUserTier(tier),
+    startDate: new Date().toISOString()
+  };
+};
 
 const SubscriptionManagement = () => {
   const { user, updateUserProfile } = useAuth();
@@ -101,14 +121,7 @@ const SubscriptionManagement = () => {
     const nextBillingDate = nextBilling.toISOString();
     
     // Create a subscription object
-    const subscription = {
-      id: `sub_${Date.now()}`,
-      planId: selectedPlan.id,
-      nextBillingDate: nextBillingDate,
-      status: 'active',
-      tier: selectedPlan.tier,
-      startDate: new Date().toISOString()
-    };
+    const subscription = createSubscription(selectedPlan.id, nextBillingDate, selectedPlan.tier);
     
     // Update user profile with subscription details
     const success = await updateUserProfile({ subscription });
@@ -170,6 +183,13 @@ const SubscriptionManagement = () => {
   const handlePayment = () => {
     if (buttonRef.current) {
       buttonRef.current.click();
+    }
+  };
+  
+  const handleImageClick = () => {
+    const element = document.getElementById('subscription-options');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
   
@@ -316,11 +336,12 @@ const SubscriptionManagement = () => {
           Pay with PayPal
         </Button>
         <img 
-          src="/images/payment-options.png" 
-          alt="Payment options" 
-          style={{ border: '1px solid rgba(255,255,255,0.1)' }} 
-          width="400" 
-          height="50" 
+          alt="Scroll to subscription options" 
+          style={{ border: '2px solid var(--royal-gold)' }}
+          src="/assets/subscription-options.jpg" 
+          width="100%"
+          height="auto"
+          onClick={handleImageClick}
         />
       </form>
     </Shell>

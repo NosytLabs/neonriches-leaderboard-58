@@ -32,7 +32,7 @@ export const LeaderboardList: React.FC<LeaderboardListProps> = ({
           currentUserId={currentUserId}
           compact={compact}
           onProfileClick={onProfileClick}
-          onShameUser={onShameUser}
+          onShameUser={() => onShameUser && onShameUser(user)}
         />
       ))}
     </div>

@@ -1,192 +1,183 @@
+
 import React from 'react';
 import { Shell } from '@/components/ui/shell';
-import PageHeader from '@/components/common/PageHeader';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import FaqComponent from '@/components/FaqComponent';
 import { RoyalEncyclopedia } from '@/components/help/RoyalEncyclopedia';
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle 
+} from '@/components/ui/card';
+import { 
+  ScrollText, 
+  HelpCircle, 
+  FileText, 
+  Target,
+  Crown,
+  Shield,
+  Users
+} from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+
+// For RoyalDivider
+const RoyalDivider = () => <Separator className="my-6 bg-white/10" />;
 
 const HelpPage = () => {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto">
-        <header className="mb-8 text-center">
-          <h1 className="text-3xl font-bold font-royal mb-2 royal-gradient">Royal Encyclopedia</h1>
-          <p className="text-white/70 max-w-2xl mx-auto">
-            The definitive guide to P2W.FUN, including mockery effects, leaderboard rules, and feature explanations.
-          </p>
-        </header>
+    <Shell className="container mx-auto px-4 py-6">
+      <div className="flex flex-col space-y-6">
+        <h1 className="text-3xl font-bold">Help & Support</h1>
         
-        <Tabs defaultValue="encyclopedia" className="w-full mb-10">
-          <TabsList className="w-full grid grid-cols-4 mb-8">
-            <TabsTrigger value="encyclopedia" className="flex items-center gap-2">
-              <ScrollText className="h-4 w-4" /> Encyclopedia
-            </TabsTrigger>
-            <TabsTrigger value="faq" className="flex items-center gap-2">
-              <HelpCircle className="h-4 w-4" /> FAQ
-            </TabsTrigger>
-            <TabsTrigger value="rules" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" /> Rules
-            </TabsTrigger>
-            <TabsTrigger value="updates" className="flex items-center gap-2">
-              <Target className="h-4 w-4" /> Updates
-            </TabsTrigger>
-          </TabsList>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="glass-morphism border border-white/10 rounded-lg p-4 flex flex-col items-center text-center hover:bg-white/5 transition cursor-pointer">
+            <div className="w-12 h-12 rounded-full bg-royal-gold/20 flex items-center justify-center mb-3">
+              <ScrollText size={24} className="text-royal-gold" />
+            </div>
+            <h3 className="font-semibold">User Guide</h3>
+            <p className="text-sm text-white/60 mt-2">Learn how to use the platform</p>
+          </div>
           
-          <TabsContent value="encyclopedia">
-            <RoyalEncyclopedia />
-          </TabsContent>
+          <div className="glass-morphism border border-white/10 rounded-lg p-4 flex flex-col items-center text-center hover:bg-white/5 transition cursor-pointer">
+            <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-3">
+              <HelpCircle size={24} className="text-blue-500" />
+            </div>
+            <h3 className="font-semibold">FAQ</h3>
+            <p className="text-sm text-white/60 mt-2">Frequently asked questions</p>
+          </div>
           
-          <TabsContent value="faq">
-            <FaqComponent />
-          </TabsContent>
+          <div className="glass-morphism border border-white/10 rounded-lg p-4 flex flex-col items-center text-center hover:bg-white/5 transition cursor-pointer">
+            <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-3">
+              <FileText size={24} className="text-green-500" />
+            </div>
+            <h3 className="font-semibold">Documentation</h3>
+            <p className="text-sm text-white/60 mt-2">Detailed platform documentation</p>
+          </div>
           
-          <TabsContent value="rules">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-royal-gold" />
-                  Rules & Guidelines
-                </CardTitle>
-                <CardDescription>
-                  The official rules of the kingdom
-                </CardDescription>
-              </CardHeader>
+          <div className="glass-morphism border border-white/10 rounded-lg p-4 flex flex-col items-center text-center hover:bg-white/5 transition cursor-pointer">
+            <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-3">
+              <Target size={24} className="text-purple-500" />
+            </div>
+            <h3 className="font-semibold">Getting Started</h3>
+            <p className="text-sm text-white/60 mt-2">Quick start guide for new users</p>
+          </div>
+        </div>
+        
+        <Card className="bg-black/20 border-white/10">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <FileText className="mr-2 h-5 w-5 text-royal-gold" />
+              Royal Encyclopedia
+            </CardTitle>
+            <CardDescription>
+              Learn about all aspects of the Royal Court
+            </CardDescription>
+          </CardHeader>
+          
+          <CardContent>
+            <div className="prose prose-invert max-w-none">
+              <h3>What are Royal Points?</h3>
+              <p>
+                Royal Points are the currency of status within the royal court. You earn them primarily by making purchases, 
+                but also through various activities like participating in events, referring friends, and completing challenges.
+              </p>
               
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="glass-morphism border-white/10 p-4 rounded-lg">
-                    <h3 className="font-bold mb-2 text-royal-gold">Content Guidelines</h3>
-                    <p className="text-white/80 mb-4">
-                      While P2W.FUN embraces satire and humor, we maintain some basic content standards:
-                    </p>
-                    <ul className="list-disc pl-5 space-y-2 text-white/80">
-                      <li>No offensive, hateful, or discriminatory content</li>
-                      <li>No explicit sexual or excessively violent content</li>
-                      <li>No illegal content or promotion of illegal activities</li>
-                      <li>No impersonation of other users or staff</li>
-                      <li>No spamming or disruptive behavior</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="glass-morphism border-white/10 p-4 rounded-lg">
-                    <h3 className="font-bold mb-2 text-royal-gold">Mockery System Rules</h3>
-                    <p className="text-white/80 mb-4">
-                      The mockery system is designed for satirical entertainment, and follows these rules:
-                    </p>
-                    <ul className="list-disc pl-5 space-y-2 text-white/80">
-                      <li>All mockery effects are temporary and purely visual</li>
-                      <li>Mockery has no impact on leaderboard position or functionality</li>
-                      <li>Users can purchase protection from mockery</li>
-                      <li>Mockery is subject to cooldown periods to prevent spam</li>
-                      <li>Mockery content is subject to the same content guidelines as profiles</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="glass-morphism border-white/10 p-4 rounded-lg">
-                    <h3 className="font-bold mb-2 text-royal-gold">Refund Policy</h3>
-                    <p className="text-white/80">
-                      Due to the nature of P2W.FUN as a satirical social experiment, all transactions are final and non-refundable.
-                      This includes leaderboard contributions, mockery purchases, and profile upgrades.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="updates">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Target className="h-5 w-5 text-royal-gold" />
-                  Recent Updates
-                </CardTitle>
-                <CardDescription>
-                  The latest improvements to the kingdom
-                </CardDescription>
-              </CardHeader>
+              <h3>What are Teams?</h3>
+              <p>
+                Teams allow users to band together under a common banner. Each team has unique benefits, specialties, and a distinct 
+                visual identity. Teams compete on leaderboards for glory and real rewards.
+              </p>
               
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="p-4 glass-morphism border-royal-purple/30 rounded-lg bg-royal-purple/5">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-bold text-royal-purple">Enhanced Mockery System</h3>
-                      <span className="text-xs text-white/50">June 2023</span>
-                    </div>
-                    <ul className="list-disc pl-5 space-y-2 text-white/80">
-                      <li>Consolidated mockery and shame systems</li>
-                      <li>Added 12 new mockery types across 5 tiers</li>
-                      <li>Implemented advanced visual effects and animations</li>
-                      <li>Added mockery bundles and protection options</li>
-                      <li>Created Hall of Shame leaderboard</li>
-                    </ul>
+              <h3>What is Mockery?</h3>
+              <p>
+                Mockery is a playful feature that allows users to interact with each other through various actions like taunts, 
+                challenges, and light-hearted jests. It's all in good fun and adds to the competitive atmosphere.
+              </p>
+              
+              <h3>How do Ranks work?</h3>
+              <p>
+                Ranks are calculated based on your total spending, activity level, and team contributions. Higher ranks grant 
+                additional benefits and visibility. You can view your current rank on the Leaderboard page.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-black/20 border-white/10">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Target className="mr-2 h-5 w-5 text-royal-gold" />
+              Quick Tips
+            </CardTitle>
+            <CardDescription>
+              Fast ways to improve your royal experience
+            </CardDescription>
+          </CardHeader>
+          
+          <CardContent>
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <span className="bg-royal-gold/20 text-royal-gold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">1</span>
+                <span>Complete your profile to increase visibility and enable all features</span>
+              </li>
+              <li className="flex items-start">
+                <span className="bg-royal-gold/20 text-royal-gold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">2</span>
+                <span>Join a team to receive team bonuses and participate in team competitions</span>
+              </li>
+              <li className="flex items-start">
+                <span className="bg-royal-gold/20 text-royal-gold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">3</span>
+                <span>Maintain a spending streak for additional bonus multipliers</span>
+              </li>
+              <li className="flex items-start">
+                <span className="bg-royal-gold/20 text-royal-gold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">4</span>
+                <span>Participate in events for exclusive rewards and rapid rank progression</span>
+              </li>
+              <li className="flex items-start">
+                <span className="bg-royal-gold/20 text-royal-gold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">5</span>
+                <span>Check the leaderboard regularly to see your position and set goals</span>
+              </li>
+            </ul>
+
+            <RoyalDivider />
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+              <div className="glass-morphism border border-white/10 rounded-lg p-4">
+                <div className="flex items-center mb-3">
+                  <div className="w-8 h-8 rounded-full bg-royal-gold/20 flex items-center justify-center mr-3">
+                    <Crown size={16} className="text-royal-gold" />
                   </div>
-                  
-                  <div className="p-4 glass-morphism border-royal-gold/30 rounded-lg bg-royal-gold/5">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-bold text-royal-gold">Royal Interface Update</h3>
-                      <span className="text-xs text-white/50">May 2023</span>
-                    </div>
-                    <ul className="list-disc pl-5 space-y-2 text-white/80">
-                      <li>Refined color scheme with more consistent royal theming</li>
-                      <li>Improved card and button components</li>
-                      <li>Enhanced animations and transitions</li>
-                      <li>Added Royal Encyclopedia for help and documentation</li>
-                      <li>Optimized code for better performance</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="p-4 glass-morphism border-royal-crimson/30 rounded-lg bg-royal-crimson/5">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-bold text-royal-crimson">Team System Expansion</h3>
-                      <span className="text-xs text-white/50">April 2023</span>
-                    </div>
-                    <ul className="list-disc pl-5 space-y-2 text-white/80">
-                      <li>Enhanced team competition mechanics</li>
-                      <li>Added weekly team-based challenges</li>
-                      <li>Implemented team chat and coordination features</li>
-                      <li>Created team-specific visual effects and badges</li>
-                      <li>Added team contribution analytics</li>
-                    </ul>
-                  </div>
+                  <h4 className="font-semibold">Royal Status</h4>
                 </div>
-                
-                <RoyalDivider variant="line" className="my-8" />
-                
-                <div className="text-center">
-                  <h3 className="font-bold text-lg mb-4 royal-gradient">Coming Soon</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="p-4 glass-morphism border-white/10 rounded-lg">
-                      <Crown className="h-8 w-8 mx-auto mb-2 text-royal-gold" />
-                      <h4 className="font-bold mb-1">Royal Decrees</h4>
-                      <p className="text-sm text-white/70">
-                        Site-wide proclamations and challenges
-                      </p>
-                    </div>
-                    
-                    <div className="p-4 glass-morphism border-white/10 rounded-lg">
-                      <Shield className="h-8 w-8 mx-auto mb-2 text-royal-crimson" />
-                      <h4 className="font-bold mb-1">Faction Warfare</h4>
-                      <p className="text-sm text-white/70">
-                        Enhanced team competitions with territory control
-                      </p>
-                    </div>
-                    
-                    <div className="p-4 glass-morphism border-white/10 rounded-lg">
-                      <Users className="h-8 w-8 mx-auto mb-2 text-royal-navy" />
-                      <h4 className="font-bold mb-1">Noble Alliances</h4>
-                      <p className="text-sm text-white/70">
-                        Form sub-groups within teams for additional bonuses
-                      </p>
-                    </div>
+                <p className="text-sm text-white/70">Higher ranks give you more visibility and exclusive features</p>
+              </div>
+              
+              <div className="glass-morphism border border-white/10 rounded-lg p-4">
+                <div className="flex items-center mb-3">
+                  <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+                    <Shield size={16} className="text-blue-500" />
                   </div>
+                  <h4 className="font-semibold">Team Benefits</h4>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                <p className="text-sm text-white/70">Teams provide bonuses and exclusive cosmetic options</p>
+              </div>
+              
+              <div className="glass-morphism border border-white/10 rounded-lg p-4">
+                <div className="flex items-center mb-3">
+                  <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+                    <Users size={16} className="text-green-500" />
+                  </div>
+                  <h4 className="font-semibold">Community</h4>
+                </div>
+                <p className="text-sm text-white/70">Engage with other users for additional rewards</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Render the RoyalEncyclopedia component */}
+        <RoyalEncyclopedia />
       </div>
-    </div>
+    </Shell>
   );
 };
 

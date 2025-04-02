@@ -1,97 +1,209 @@
 
-// Define the base types for the mockery system
-export type MockeryAction = 'tomato' | 'egg' | 'putridEgg' | 'crown' | 'thumbsDown' | 'mock' | 'stocks' | 'jester' | 'taunt';
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
-export type UserTier = 'free' | 'basic' | 'premium' | 'royal' | 'legendary' | 'founder';
+// Define all possible mockery actions
+export type MockeryAction = 
+  | 'taunt'
+  | 'shame'
+  | 'jester'
+  | 'mock'
+  | 'challenge'
+  | 'joust'
+  | 'duel'
+  | 'tomato'
+  | 'egg'
+  | 'crown'
+  | 'stocks'
+  | 'putridEgg'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection'
+  | 'thumbsDown'
+  | 'laugh'
+  | 'fish'
+  | 'trumpet'
+  | 'confetti'
+  | 'rotten_egg'
+  | 'flame'
+  | 'thumbs_down'
+  | 'heart'
+  | 'skull';
 
-// Define the interfaces
-export interface TeamData {
+// Legacy alias support
+export type LegacyMockeryAction = 
+  | 'tomatoes' 
+  | 'eggs' 
+  | 'putridEggs';
+
+export type MockeryTier = 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary'
+  | 'royal'
+  | 'basic'
+  | 'premium'
+  | 'silver'
+  | 'bronze'
+  | 'standard';
+
+export interface MockeryItem {
   id: string;
+  type: MockeryAction;
+  senderId: string;
+  targetId: string;
+  message: string;
+  createdAt: string;
+  isPublic: boolean;
+  cost: number;
+  team?: TeamColor;
+  reactions?: number;
+}
+
+export interface MockeryResponse {
+  id: string;
+  mockeryId: string;
+  userId: string;
+  content: string;
+  createdAt: string;
+  isPublic: boolean;
+}
+
+export interface MockeryStats {
+  sentCount: number;
+  receivedCount: number;
+  responseRate: number;
+  favoriteType: MockeryAction;
+  topTarget?: {
+    userId: string;
+    username: string;
+    count: number;
+  };
+}
+
+// Export TeamColor so it's available when importing from this file
+export type TeamColor = 
+  | 'red' 
+  | 'blue' 
+  | 'green' 
+  | 'gold' 
+  | 'purple' 
+  | 'none' 
+  | 'neutral' 
+  | 'silver' 
+  | 'bronze' 
+  | 'crimson';
+
+// Also define UserTier to include all possible values
+export type UserTier = 
+  | 'free'
+  | 'basic'
+  | 'pro'
+  | 'premium'
+  | 'royal'
+  | 'founder'
+  | 'platinum'
+  | 'diamond'
+  | 'gold'
+  | 'silver'
+  | 'bronze'
+  | 'vip'
+  | 'whale'
+  | 'shark'
+  | 'dolphin'
+  | 'noble'
+  | 'standard'
+  | 'elite'
+  | 'legendary';
+
+// Add Gender type
+export type Gender = 
+  | 'male' 
+  | 'female' 
+  | 'non-binary' 
+  | 'other' 
+  | 'prefer-not-to-say'
+  | 'king'
+  | 'queen'
+  | 'jester'
+  | 'noble';
+
+// TeamData for team statistics
+export interface TeamData {
   name: string;
   color: TeamColor;
-  members: number;
+  memberCount: number;
   totalSpent: number;
   rank: number;
-  previousRank?: number;
-  logo?: string;
-  description?: string;
-  leaderUsername?: string;
-  createdAt: string;
+  motto?: string;
+  leader?: string;
+  benefits?: string[];
 }
 
+// Define MockeryUser for user representation in mockery interactions
+export interface MockeryUser {
+  id: string;
+  userId?: string;
+  username: string;
+  displayName: string;
+  profileImage: string;
+  rank: number;
+  tier: string;
+  team: TeamColor;
+}
+
+// Define MockeryEvent for events in the mockery system
 export interface MockeryEvent {
   id: string;
-  targetUserId: string;
+  type?: string;
   actionType: MockeryAction;
-  actionTier: MockeryTier;
-  initiatorUserId: string;
+  senderId: string;
+  senderName: string;
+  targetId: string;
+  targetName: string;
   timestamp: string;
-  expiresAt: string;
   message?: string;
-  isPublic: boolean;
-  isActive: boolean;
+  tier: MockeryTier;
+  cost?: number;
 }
 
-export interface MockeryUser {
-  userId: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  totalMockeriesReceived: number;
-  totalMockeriesSent: number;
-  currentMockeries: MockeryEvent[];
-  lastMockedAt?: string;
-  isProtected: boolean;
-  protectionExpiresAt?: string;
-}
-
+// Define LeaderboardUser for leaderboard representation
 export interface LeaderboardUser {
   id?: string;
   userId?: string;
   username: string;
   displayName?: string;
   profileImage?: string;
-  team?: string | TeamColor;
-  tier?: string;
-  rank?: number;
-  previousRank?: number;
+  avatarUrl?: string;
   totalSpent?: number;
   amountSpent?: number;
-  joinedDate?: string;
+  rank?: number;
+  previousRank?: number;
+  team?: string;
+  tier?: string;
+  spendStreak?: number;
+  walletBalance?: number;
+  rankChange?: number;
+  spendChange?: number;
+  isProtected?: boolean;
   isVerified?: boolean;
 }
 
+// Define LeaderboardFilter for filtering leaderboard views
 export interface LeaderboardFilter {
-  timeframe: 'all' | 'week' | 'month' | 'year';
-  team: string | TeamColor | 'all';
-  tier?: string | 'all';
-  search?: string;
-  sortBy?: 'totalSpent' | 'rank' | 'joinDate';
-  sortDirection?: 'asc' | 'desc';
+  sortBy: string;
+  team: string;
+  timeframe: "all" | "week" | "month" | "year";
+  search: string;
+  limit: number;
 }
 
+// Result of mockery actions
 export interface MockeryResult {
   success: boolean;
   message: string;
-  cost: number;
-  mockeryId?: string;
-  expiresAt?: string;
+  cost?: number;
   actionType?: MockeryAction;
+  targetId?: string;
+  error?: string;
 }
-
-// Use 'export type' for re-exporting types to avoid conflicts
-export type {
-  MockeryAction,
-  MockeryTier,
-  TeamColor,
-  Gender,
-  UserTier,
-  TeamData,
-  MockeryEvent,
-  MockeryUser,
-  LeaderboardUser,
-  LeaderboardFilter,
-  MockeryResult
-};

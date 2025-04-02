@@ -1,18 +1,37 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Shell } from '@/components/ui/shell';
 import PageHeader from '@/components/common/PageHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TeamOverview from '@/components/teams/TeamOverview';
 import TeamSelection from '@/components/teams/TeamSelection';
 import { TeamMembersTable } from '@/components/teams/TeamMembersTable';
+import useAuth from '@/hooks/useAuth';
+import { toStandardUserProfile } from '@/utils/typeUnifier';
 
 const TeamsPage: React.FC = () => {
+  const { user, updateUser } = useAuth();
+  const [selectedTeam, setSelectedTeam] = useState('');
+
+  // Create a standard user profile
+  const standardUser = user ? toStandardUserProfile(user) : null;
+
+  const handleUpdateTeam = async (team: string) => {
+    if (user && updateUser) {
+      await updateUser({ team });
+    }
+  };
+
+  const handleTeamSelect = (team: string) => {
+    setSelectedTeam(team);
+  };
+
   return (
     <Shell>
       <PageHeader
         title="Royal Teams"
         description="Join a team and compete for glory and rewards."
-        size="md"
+        size="default"
       />
       
       <div className="container mx-auto py-8">
@@ -23,11 +42,16 @@ const TeamsPage: React.FC = () => {
           </TabsList>
           
           <TabsContent value="overview" className="space-y-4">
-            <TeamOverview />
+            {standardUser && (
+              <TeamOverview 
+                user={standardUser} 
+                onUpdateTeam={handleUpdateTeam} 
+              />
+            )}
           </TabsContent>
           
           <TabsContent value="selection" className="space-y-4">
-            <TeamSelection />
+            <TeamSelection onTeamSelect={handleTeamSelect} />
           </TabsContent>
         </Tabs>
         

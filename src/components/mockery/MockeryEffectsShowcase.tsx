@@ -1,134 +1,41 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogTrigger } from '@/components/ui/dialog';
-import { AlertCircle, ShieldAlert, Crown, Clock, Filter } from 'lucide-react';
-import { MockeryAction } from '@/types/mockery-types';
-import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 
-// Import properly from mockeryUtils
-import { hasWeeklyDiscount, getDiscountedShamePrice } from '@/utils/shameUtils';
-import { 
-  getMockeryName, 
-  mockeryDescriptions,
-  getMockeryActionIconColor,
-  getMockeryCost
-} from '@/utils/mockeryUtils';
+import React from 'react';
+import MockeryEffect from './MockeryEffect';
+import { MockeryAction } from '@/types/mockery-types';
+import { ensureMockeryAction } from '@/utils/typeUnifier';
 
 interface MockeryEffectsShowcaseProps {
-  onSelectMockery: (action: MockeryAction) => void;
+  // Props
 }
 
-const MockeryEffectsShowcase: React.FC<MockeryEffectsShowcaseProps> = ({ onSelectMockery }) => {
-  const [selectedAction, setSelectedAction] = useState<MockeryAction | null>(null);
-  const hasDiscount = hasWeeklyDiscount();
-  
-  // Define mockery actions using the standardized format
+const MockeryEffectsShowcase: React.FC<MockeryEffectsShowcaseProps> = () => {
+  // Convert string literals to MockeryAction using our helper
   const mockeryActions: MockeryAction[] = [
-    'tomato', 'egg', 'putridEgg', 'jester', 'crown',
-    'shame', 'silence', 'courtJester', 'smokeBomb', 'protection'
+    ensureMockeryAction('shame'),
+    ensureMockeryAction('silence'),
+    ensureMockeryAction('courtJester'),
+    ensureMockeryAction('smokeBomb'),
+    ensureMockeryAction('protection')
   ];
-  
-  const handleMockerySelect = (action: MockeryAction) => {
-    setSelectedAction(action);
-  };
-  
-  const handleConfirmMockery = () => {
-    if (selectedAction) {
-      onSelectMockery(selectedAction);
-      setSelectedAction(null);
-    }
-  };
-  
-  const handleCancelMockery = () => {
-    setSelectedAction(null);
-  };
-  
+
   return (
-    <Card className="glass-morphism border-white/10">
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <AlertCircle className="mr-2 h-4 w-4 text-royal-crimson" />
-          Royal Mockery Effects
-        </CardTitle>
-      </CardHeader>
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">Mockery Effects</h2>
+      <p className="text-white/70">
+        See how different mockery actions appear on the target's profile.
+      </p>
       
-      <CardContent className="grid gap-4">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {mockeryActions.map((action) => (
-            <Button
-              key={action}
-              variant="outline"
-              className="flex flex-col items-center justify-center p-3 rounded-lg border-white/10 hover:bg-black/30 transition-colors"
-              onClick={() => handleMockerySelect(action)}
-            >
-              <div className="text-2xl mb-1" style={{ color: getMockeryActionIconColor(action) }}>
-                {getMockeryName(action)}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+        {mockeryActions.map(action => (
+          <div key={action} className="bg-black/20 border border-white/10 rounded-lg overflow-hidden">
+            <div className="p-4">
+              <h3 className="text-lg font-semibold capitalize">{action}</h3>
+              <div className="h-40 flex items-center justify-center">
+                <MockeryEffect actionType={action} />
               </div>
-              <div className="text-xs text-white/60">{mockeryDescriptions[action]}</div>
-            </Button>
-          ))}
-        </div>
-        
-        <Dialog open={selectedAction !== null} onOpenChange={() => setSelectedAction(null)}>
-          <DialogTrigger asChild>
-            <Button variant="secondary" disabled className="opacity-0 pointer-events-none">
-              Select Mockery Effect
-            </Button>
-          </DialogTrigger>
-          
-          {selectedAction && (
-            <MockeryConfirmationModal
-              action={selectedAction}
-              hasDiscount={hasDiscount}
-              onConfirm={handleConfirmMockery}
-              onCancel={handleCancelMockery}
-            />
-          )}
-        </Dialog>
-      </CardContent>
-    </Card>
-  );
-};
-
-interface MockeryConfirmationModalProps {
-  action: MockeryAction;
-  hasDiscount: boolean;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
-
-const MockeryConfirmationModal: React.FC<MockeryConfirmationModalProps> = ({ action, hasDiscount, onConfirm, onCancel }) => {
-  const regularPrice = getMockeryCost(action);
-  // Fix: Only pass one argument to getDiscountedShamePrice
-  const discountedPrice = hasDiscount ? getDiscountedShamePrice(action) : null;
-  
-  return (
-    <div className="glass-morphism border-white/10 p-6 rounded-lg">
-      <h3 className="text-lg font-semibold mb-4">Confirm Mockery: {getMockeryName(action)}</h3>
-      <p className="text-sm text-white/70 mb-4">{mockeryDescriptions[action]}</p>
-      
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <Clock className="h-4 w-4 mr-2 text-white/60" />
-          <span className="text-sm text-white/70">Duration: Varies</span>
-        </div>
-        
-        {discountedPrice !== null ? (
-          <div className="flex items-center">
-            <span className="text-sm text-white/60 line-through mr-2">${regularPrice}</span>
-            <span className="text-lg font-semibold text-emerald-400">${discountedPrice.toFixed(2)}</span>
+            </div>
           </div>
-        ) : (
-          <span className="text-lg font-semibold">${regularPrice}</span>
-        )}
-      </div>
-      
-      <div className="flex justify-end space-x-2">
-        <Button variant="outline" onClick={onCancel}>Cancel</Button>
-        <Button className="bg-royal-crimson hover:bg-royal-crimson/80 text-white" onClick={onConfirm}>
-          Confirm Mockery
-        </Button>
+        ))}
       </div>
     </div>
   );

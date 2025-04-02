@@ -14,7 +14,8 @@ import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { UserProfile } from '@/types/user';
 import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
-import { toTeamColor } from '@/utils/typeConverter';
+import { ensureTeamColor } from '@/utils/typeUnifier';
+import { toConsolidatedUserProfile, toStandardUserProfile } from '@/utils/typeUnifier';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -75,36 +76,9 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Ensure displayName is always set
-  const processedUser: UserProfile = {
-    ...user,
-    displayName: user.displayName || user.username || 'Anonymous User',
-    profileImage: user.profileImage || '/placeholder.png',
-    bio: user.bio || '',
-    settings: {
-      ...user.settings,
-      theme: (user.settings?.theme as "royal" | "dark" | "light" | "system") || 'system',
-      profileVisibility: user.settings?.profileVisibility || 'public',
-      allowProfileLinks: user.settings?.allowProfileLinks !== false,
-      notifications: user.settings?.notifications !== false,
-      emailNotifications: user.settings?.emailNotifications || false,
-      marketingEmails: user.settings?.marketingEmails || false,
-      showRank: user.settings?.showRank !== false,
-      darkMode: user.settings?.darkMode !== false,
-      soundEffects: user.settings?.soundEffects !== false,
-      showBadges: user.settings?.showBadges !== false,
-      showTeam: user.settings?.showTeam !== false,
-      showSpending: user.settings?.showSpending !== false
-    }
-  };
-
-  // Create a consolidated user for components that require it
-  const consolidatedUser: ConsolidatedUserProfile = {
-    ...processedUser,
-    team: processedUser.team?.toString() || 'none', 
-    displayName: processedUser.displayName || processedUser.username,
-    joinedDate: processedUser.joinedDate || new Date().toISOString()
-  };
+  // Ensure the user has all required properties for both user types
+  const standardUser = toStandardUserProfile(user);
+  const consolidatedUser = toConsolidatedUserProfile(user);
 
   const handleSpend = () => {
     toast({
@@ -154,7 +128,7 @@ const EnhancedDashboard = () => {
         <div className="mt-6">
           <TabsContent value="overview">
             <OverviewTab 
-              user={processedUser}
+              user={standardUser}
               onSpend={handleSpend} 
               onPaymentSuccess={handlePaymentSuccess} 
             />
@@ -165,7 +139,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="team">
-            <TeamStatusCard user={processedUser} />
+            <TeamStatusCard user={standardUser} />
           </TabsContent>
           
           <TabsContent value="achievements">
@@ -173,7 +147,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="upgrade">
-            <CashThroneUpgrade user={processedUser} />
+            <CashThroneUpgrade user={standardUser} />
           </TabsContent>
         </div>
       </Tabs>

@@ -1,4 +1,5 @@
-// Fix the import casing
+
+import React from 'react';
 import { Badge } from '@/components/ui/badge'; // Changed from Badge to badge
 
 // Add export for the component
