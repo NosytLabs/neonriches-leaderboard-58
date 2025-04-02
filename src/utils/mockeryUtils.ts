@@ -5,7 +5,7 @@ import TomatoIcon from '@/components/icons/TomatoIcon';
 
 // Helper function to get mockery action name
 export const getMockeryName = (action: MockeryAction): string => {
-  const actionNames: Record<MockeryAction, string> = {
+  const actionNames: Record<string, string> = {
     'tomato': 'Rotten Tomatoes',
     'egg': 'Egg Barrage',
     'putridEgg': 'Putrid Eggs',
@@ -25,12 +25,12 @@ export const getMockeryName = (action: MockeryAction): string => {
     'thumbsDown': 'Thumbs Down'
   };
   
-  return actionNames[action as MockeryAction] || 'Unknown Mockery';
+  return actionNames[action] || 'Unknown Mockery';
 };
 
 // Helper function to get mockery description
 export const getMockeryDescription = (action: MockeryAction): string => {
-  const descriptions: Record<MockeryAction, string> = {
+  const descriptions: Record<string, string> = {
     'tomato': 'Throw rotten tomatoes at a noble.',
     'egg': 'Pelt a noble with eggs.',
     'putridEgg': 'Throw putrid eggs that leave a lasting stench.',
@@ -50,12 +50,12 @@ export const getMockeryDescription = (action: MockeryAction): string => {
     'thumbsDown': 'Express your disapproval of a noble.'
   };
   
-  return descriptions[action as MockeryAction] || 'A mysterious form of mockery.';
+  return descriptions[action] || 'A mysterious form of mockery.';
 };
 
 // Helper function to get mockery action price
 export const getMockeryActionPrice = (action: MockeryAction): number => {
-  const prices: Record<MockeryAction, number> = {
+  const prices: Record<string, number> = {
     'tomato': 50,
     'egg': 75,
     'putridEgg': 100,
@@ -75,7 +75,7 @@ export const getMockeryActionPrice = (action: MockeryAction): number => {
     'thumbsDown': 25
   };
   
-  return prices[action as MockeryAction] || 100;
+  return prices[action] || 100;
 };
 
 // Legacy alias for getMockeryActionPrice for backward compatibility
@@ -83,7 +83,7 @@ export const getMockeryCost = getMockeryActionPrice;
 
 // Helper function to get mockery tier
 export const getMockeryTier = (action: MockeryAction): MockeryTier => {
-  const tiers: Record<MockeryAction, MockeryTier> = {
+  const tiers: Record<string, MockeryTier> = {
     'tomato': 'common',
     'egg': 'common',
     'putridEgg': 'uncommon',
@@ -103,7 +103,7 @@ export const getMockeryTier = (action: MockeryAction): MockeryTier => {
     'thumbsDown': 'common'
   };
   
-  return tiers[action as MockeryAction] || 'common';
+  return tiers[action] || 'common';
 };
 
 // Helper function to get mockery tier color class
@@ -127,7 +127,7 @@ export const getMockeryTierColorClass = (tier: MockeryTier): string => {
 
 // Helper function to get mockery action icon
 export const getMockeryActionIcon = (action: MockeryAction) => {
-  const icons: Record<MockeryAction, any> = {
+  const icons: Record<string, any> = {
     'tomato': TomatoIcon,
     'egg': Egg,
     'putridEgg': Egg,
@@ -147,12 +147,12 @@ export const getMockeryActionIcon = (action: MockeryAction) => {
     'thumbsDown': UserX
   };
   
-  return icons[action as MockeryAction] || Target;
+  return icons[action] || Target;
 };
 
 // Helper function to get mockery action icon color
 export const getMockeryActionIconColor = (action: MockeryAction): string => {
-  const colors: Record<MockeryAction, string> = {
+  const colors: Record<string, string> = {
     'tomato': '#e53e3e',
     'egg': '#f6e05e',
     'putridEgg': '#68d391',
@@ -167,10 +167,10 @@ export const getMockeryActionIconColor = (action: MockeryAction): string => {
     'taunt': '#ecc94b',
     'mock': '#38b2ac',
     'challenge': '#f56565',
-    'joust': '#805ad5',
-    'duel': '#e53e3e',
-    'thumbsDown': '#a0aec0'
+    'joust': '#f6ad55',
+    'duel': '#9f7aea',
+    'thumbsDown': '#e53e3e'
   };
   
-  return colors[action as MockeryAction] || '#a0aec0';
+  return colors[action] || '#a0aec0';
 };

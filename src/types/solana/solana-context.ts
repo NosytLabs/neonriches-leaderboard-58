@@ -8,7 +8,7 @@ export interface SolanaContextType {
   disconnect: () => Promise<void>;
   connect: () => Promise<void>;
   publicKey: PublicKey | null;
-  walletAddress: string | null; // Add this missing property
+  walletAddress: string | null; // Added this missing property
   signTransaction: (transaction: Transaction) => Promise<Transaction>;
   signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>;
   signMessage: (message: Uint8Array) => Promise<Uint8Array>;
@@ -27,7 +27,8 @@ export interface SolanaTransaction {
   sender: string;
   receiver: string;
   type: 'send' | 'receive' | 'spend' | 'deposit' | 'reward';
-  transactionHash?: string; // Add this missing property
+  transactionHash?: string; // Added this missing property
+  status?: string; // Added for compatibility
 }
 
 export interface OnChainLeaderboardEntry {
@@ -35,5 +36,5 @@ export interface OnChainLeaderboardEntry {
   amount: number;
   rank: number;
   previousRank: number;
-  timestamp?: number; // Add this missing property
+  timestamp?: number; // Added this missing property
 }

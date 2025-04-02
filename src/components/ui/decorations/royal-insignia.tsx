@@ -1,40 +1,34 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import MedievalIcon from '@/components/ui/medieval-icon';
-import { BaseDecorationProps } from '@/types/ui/decorations/types';
-import { sizeClasses } from './sizeClasses';
+import MedievalIcon from '../medieval-icon';
 
-const RoyalInsignia: React.FC<BaseDecorationProps> = ({
+interface RoyalInsigniaProps {
+  color?: string;
+  size?: string;
+  className?: string;
+  variant?: 'solid' | 'outline';
+}
+
+const RoyalInsignia: React.FC<RoyalInsigniaProps> = ({
   color = 'gold',
-  size = 'md',
-  animate = false,
-  className
+  size = 'lg',
+  className = '',
+  variant = 'solid'
 }) => {
-  const sizeClass = sizeClasses[size];
-  
   return (
-    <div className={cn(
-      'relative',
-      sizeClass.container,
-      className
-    )}>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <MedievalIcon 
-          name="crown" 
-          size={sizeClass.icon} 
-          color={color as any} 
-          animated={animate} 
+    <div className={`royal-insignia ${className}`}>
+      <div className="relative">
+        <MedievalIcon
+          name="crown"
+          size={size}
+          color={color}
         />
-      </div>
-      <div className="absolute inset-0 flex items-center justify-center opacity-30">
-        <div className={cn(
-          'absolute rounded-full',
-          sizeClass.border,
-          color === 'gold' ? 'border-royal-gold/30' : 
-          color === 'royal' ? 'border-royal-purple/30' : 'border-white/20',
-          'border-2'
-        )}></div>
+        
+        {variant === 'solid' && (
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/4">
+            <div className="w-1 h-4 bg-current rounded-full" style={{ backgroundColor: color }}></div>
+          </div>
+        )}
       </div>
     </div>
   );

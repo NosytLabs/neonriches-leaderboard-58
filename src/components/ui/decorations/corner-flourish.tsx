@@ -1,42 +1,41 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import MedievalIcon from '@/components/ui/medieval-icon';
-import { BaseDecorationProps } from '@/types/ui/decorations/types';
-import { sizeClasses } from './sizeClasses';
+import MedievalIcon from '../medieval-icon';
 
-const CornerFlourish: React.FC<BaseDecorationProps> = ({
+interface CornerFlourishProps {
+  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  color?: string;
+  size?: string;
+  className?: string;
+}
+
+const CornerFlourish: React.FC<CornerFlourishProps> = ({
+  position = 'top-left',
   color = 'gold',
   size = 'md',
-  animate = false,
-  className
+  className = ''
 }) => {
-  const sizeClass = sizeClasses[size];
-  
+  const getTransform = () => {
+    switch (position) {
+      case 'top-right': return 'rotate(90deg)';
+      case 'bottom-right': return 'rotate(180deg)';
+      case 'bottom-left': return 'rotate(270deg)';
+      default: return 'rotate(0deg)';
+    }
+  };
+
   return (
-    <div className={cn(
-      'relative',
-      sizeClass.container,
-      className
-    )}>
-      <div className={cn(
-        'absolute border-t-2 border-l-2',
-        sizeClass.border,
-        color === 'gold' ? 'border-royal-gold/30' : 
-        color === 'royal' ? 'border-royal-purple/30' : 'border-white/20'
-      )}></div>
-      <div className={cn(
-        'absolute',
-        sizeClass.container,
-        animate ? 'animate-pulse-slow' : ''
-      )} style={{ transform: 'rotate(-45deg)', opacity: 0.2 }}>
-        <MedievalIcon 
-          name="scroll" 
-          size={sizeClass.icon} 
-          color={color as any} 
-          animated={animate}
-        />
-      </div>
+    <div 
+      className={`absolute ${className}`}
+      style={{ 
+        transform: getTransform(),
+      }}
+    >
+      <MedievalIcon
+        name="scroll"
+        size={size}
+        color={color}
+      />
     </div>
   );
 };

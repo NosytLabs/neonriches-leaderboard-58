@@ -35,6 +35,8 @@ const toastVariants = cva(
         warning: "border-amber-500/30 bg-amber-500/10 text-amber-500",
         gold: "border-royal-gold/30 bg-royal-gold/10 text-royal-gold",
         royal: "border-royal-purple/30 bg-royal-purple/10 text-royal-purple",
+        secondary: "border-gray-500/30 bg-gray-500/10 text-gray-300",
+        outline: "border border-gray-200 bg-transparent",
       },
     },
     defaultVariants: {

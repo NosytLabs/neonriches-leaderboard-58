@@ -1,34 +1,43 @@
 
-import { MockeryAction, LegacyMockeryAction } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery-types';
+
+/**
+ * Map legacy mockery action strings to the standardized format
+ */
+const LEGACY_TO_STANDARD_MAPPING: Record<string, MockeryAction> = {
+  'tomatoes': 'tomato',
+  'eggs': 'egg',
+  'putridEggs': 'putridEgg'
+};
+
+/**
+ * Map standard mockery actions to their legacy format
+ */
+const STANDARD_TO_LEGACY_MAPPING: Record<MockeryAction, string> = {
+  'tomato': 'tomatoes',
+  'egg': 'eggs',
+  'putridEgg': 'putridEggs'
+} as const;
 
 /**
  * Normalize legacy mockery actions to the new format
  */
-export function normalizeMockeryAction(action: MockeryAction | LegacyMockeryAction | string): MockeryAction {
-  // Handle specific cases
-  if (action === 'tomatoes') return 'tomato';
-  if (action === 'eggs') return 'egg';
-  if (action === 'putridEggs') return 'putridEgg';
-  
-  // Default case
-  return action as MockeryAction;
+export function normalizeMockeryAction(action: string): MockeryAction {
+  return LEGACY_TO_STANDARD_MAPPING[action] || action as MockeryAction;
 }
 
 /**
  * Check if the action is a legacy action
  */
 export function isLegacyMockeryAction(action: string): boolean {
-  return action === 'tomatoes' || action === 'eggs' || action === 'putridEggs';
+  return Object.keys(LEGACY_TO_STANDARD_MAPPING).includes(action);
 }
 
 /**
  * Get the legacy action from the new format if needed
  */
-export function getLegacyMockeryAction(action: MockeryAction): LegacyMockeryAction | MockeryAction {
-  if (action === 'tomato') return 'tomatoes';
-  if (action === 'egg') return 'eggs';
-  if (action === 'putridEgg') return 'putridEggs';
-  return action;
+export function getLegacyMockeryAction(action: MockeryAction): string {
+  return STANDARD_TO_LEGACY_MAPPING[action] || action;
 }
 
 export default normalizeMockeryAction;

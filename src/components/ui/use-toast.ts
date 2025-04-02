@@ -15,6 +15,7 @@ export type ToastProps = {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   variant?: "default" | "destructive" | "success" | "warning" | "gold" | "royal" | "secondary" | "outline";
+  duration?: number;
 };
 
 export type Toast = {
@@ -23,6 +24,7 @@ export type Toast = {
   description?: React.ReactNode;
   action?: ToastActionElement;
   variant?: "default" | "destructive" | "success" | "warning" | "gold" | "royal" | "secondary" | "outline";
+  duration?: number;
 };
 
 type ToasterToast = Toast & {
@@ -74,6 +76,7 @@ export function useToast() {
 // Additional interface to ensure compatibility
 export interface ToastOptions extends Toast {
   variant?: "default" | "destructive" | "success" | "warning" | "gold" | "royal" | "secondary" | "outline";
+  duration?: number;
 }
 
 // Simple function to toast - helpful for imperative calls

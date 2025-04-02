@@ -4,6 +4,9 @@ import { UserTier, TeamColor, Gender } from './mockery-types';
 // Use export type instead of just export to fix isolatedModules issue
 export type { TeamColor, UserTier, Gender };
 
+// Export TeamType alias for TeamColor for backward compatibility
+export type TeamType = TeamColor;
+
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'followers' | 'friends' | string;
   allowProfileLinks: boolean;
@@ -24,6 +27,9 @@ export interface UserSettings {
   rankChangeNotifications?: boolean;
   eventAlerts?: boolean;
   walletAlerts?: boolean;
+  showEmailOnProfile?: boolean;
+  rankChangeAlerts?: boolean;
+  newFollowerAlerts?: boolean;
 }
 
 export interface UserSubscription {
@@ -45,6 +51,8 @@ export interface SocialLink {
   username?: string;
   verified?: boolean;
   enabled?: boolean;
+  title?: string;
+  clicks?: number;
 }
 
 // Consolidated UserProfile type that's compatible across different files
@@ -60,6 +68,9 @@ export interface UserProfile {
   createdAt?: string;
   isVerified?: boolean;
   isProtected?: boolean;
+  isVIP?: boolean;
+  isFounder?: boolean;
+  isAdmin?: boolean;
   team: TeamColor | string;
   tier: UserTier | string;
   rank: number;
@@ -82,4 +93,10 @@ export interface UserProfile {
   };
   socialLinks?: SocialLink[] | Record<string, string>;
   gender?: Gender | string;
+  lastActive?: string;
+  followers?: string[];
+  following?: string[];
+  achievements?: string[];
+  badges?: string[];
+  boostCount?: number;
 }

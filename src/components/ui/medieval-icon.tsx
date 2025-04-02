@@ -1,58 +1,50 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
 import { MedievalIconProps, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
-import { Crown, Sword, Shield, Scroll, Key, Flag, Gem, Trophy, Castle } from 'lucide-react';
 
-const MedievalIcon: React.FC<MedievalIconProps> = ({ 
-  name, 
-  className = "", 
-  size = "md",
-  color = "default",
-  animated = false
+const MedievalIcon: React.FC<MedievalIconProps> = ({
+  name,
+  size = 'md',
+  color = 'default',
+  animated = false,
 }) => {
-  // Get the appropriate size class
-  const sizeClass = typeof size === 'string' 
-    ? (size in iconSizeMap ? iconSizeMap[size as keyof typeof iconSizeMap] : iconSizeMap.md)
-    : '';
+  const sizeValue = iconSizeMap[size] || size;
+  const colorValue = iconColorMap[color] || color;
 
-  // Get the appropriate color class
-  const colorClass = typeof color === 'string' && color in iconColorMap 
-    ? iconColorMap[color as keyof typeof iconColorMap] 
-    : '';
+  // Default icon path if name doesn't match
+  let iconPath = '/assets/icons/medieval/crown.svg';
 
-  // Animation class
-  const animationClass = animated ? 'animate-pulse' : '';
+  // Map icon name to file path
+  if (name === 'crown') iconPath = '/assets/icons/medieval/crown.svg';
+  if (name === 'sword') iconPath = '/assets/icons/medieval/sword.svg';
+  if (name === 'shield') iconPath = '/assets/icons/medieval/shield.svg';
+  if (name === 'dragon') iconPath = '/assets/icons/medieval/dragon.svg';
+  if (name === 'castle') iconPath = '/assets/icons/medieval/castle.svg';
+  if (name === 'scroll') iconPath = '/assets/icons/medieval/scroll.svg';
+  if (name === 'key') iconPath = '/assets/icons/medieval/key.svg';
+  if (name === 'coin') iconPath = '/assets/icons/medieval/coin.svg';
+  if (name === 'coins') iconPath = '/assets/icons/medieval/coins.svg';
+  if (name === 'chest') iconPath = '/assets/icons/medieval/chest.svg';
+  if (name === 'throne') iconPath = '/assets/icons/medieval/throne.svg';
+  if (name === 'treasure-chest') iconPath = '/assets/icons/medieval/treasure-chest.svg';
 
-  // Combined classes
-  const combinedClasses = cn(sizeClass, colorClass, animationClass, className);
-
-  const getIcon = () => {
-    switch (name.toLowerCase()) {
-      case 'crown':
-        return <Crown className={combinedClasses} />;
-      case 'sword':
-        return <Sword className={combinedClasses} />;
-      case 'shield':
-        return <Shield className={combinedClasses} />;
-      case 'scroll':
-        return <Scroll className={combinedClasses} />;
-      case 'key':
-        return <Key className={combinedClasses} />;
-      case 'flag':
-        return <Flag className={combinedClasses} />;
-      case 'gem':
-        return <Gem className={combinedClasses} />;
-      case 'trophy':
-        return <Trophy className={combinedClasses} />;
-      case 'castle':
-        return <Castle className={combinedClasses} />;
-      default:
-        return <Crown className={combinedClasses} />;
-    }
-  };
-
-  return getIcon();
+  return (
+    <div 
+      className={`medieval-icon ${animated ? 'medieval-icon-animated' : ''}`}
+      style={{ 
+        width: sizeValue,
+        height: sizeValue,
+        color: colorValue
+      }}
+    >
+      <img 
+        src={iconPath} 
+        alt={`${name} icon`} 
+        width={sizeValue}
+        height={sizeValue}
+      />
+    </div>
+  );
 };
 
 export default MedievalIcon;

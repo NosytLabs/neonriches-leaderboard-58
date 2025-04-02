@@ -15,9 +15,10 @@ import {
   Shield
 } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery';
+import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 
 interface MockeryIconRendererProps {
-  action: MockeryAction;
+  action: MockeryAction | string;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -41,12 +42,15 @@ const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({
   
   const iconClass = `${getSizeClass()} ${className}`;
   
-  switch (action) {
-    case 'tomatoes':
+  // Normalize the action to use standard format
+  const normalizedAction = normalizeMockeryAction(action as string);
+  
+  switch (normalizedAction) {
+    case 'tomato':
       return <AlertCircle className={`${iconClass} text-red-500`} />;
-    case 'eggs':
+    case 'egg':
       return <Egg className={`${iconClass} text-yellow-500`} />;
-    case 'putridEggs':
+    case 'putridEgg':
       return <Egg className={`${iconClass} text-green-500`} />;
     case 'crown':
       return <Crown className={`${iconClass} text-royal-gold`} />;

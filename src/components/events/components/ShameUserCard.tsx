@@ -6,6 +6,7 @@ import { Egg, Lock } from 'lucide-react';
 import { MockeryAction, TeamColor } from '@/types/mockery-types';
 import { cn } from '@/lib/utils';
 import MockeryIconRenderer from '@/components/mockery/components/MockeryIconRenderer';
+import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 
 interface User {
   id: string | number;
@@ -35,23 +36,40 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
   isOnCooldown,
   shameCount = 0,
   onShame,
-  featuredAction = 'tomatoes'
+  featuredAction = 'tomato'  // Updated from 'tomatoes'
 }) => {
   const userId = typeof user.id === 'string' ? parseInt(user.id, 10) : user.id;
   const spentAmount = user.totalSpent || user.amountSpent || 0;
   
-  const handleShameAction = (action: MockeryAction) => {
+  const handleShameAction = (action: string) => {
     if (isOnCooldown) return;
-    onShame(userId, action);
+    // Normalize the action before passing it to onShame
+    const normalizedAction = normalizeMockeryAction(action);
+    onShame(userId, normalizedAction);
+  };
+  
+  // Use normalized comparison for effects
+  const getShamedEffectClass = () => {
+    if (!isShamed) return "";
+    
+    if (normalizeMockeryAction(isShamed.type) === 'tomato') {
+      return "shame-effect-tomatoes";
+    }
+    if (normalizeMockeryAction(isShamed.type) === 'egg') {
+      return "shame-effect-eggs";
+    }
+    if (normalizeMockeryAction(isShamed.type) === 'stocks') {
+      return "shame-effect-stocks";
+    }
+    
+    return "";
   };
   
   return (
     <Card className={cn(
       "glass-morphism border-white/10 overflow-hidden transition-all duration-300",
       isShamed && "border-royal-gold/30",
-      isShamed?.type === 'tomatoes' && "shame-effect-tomatoes",
-      isShamed?.type === 'eggs' && "shame-effect-eggs",
-      isShamed?.type === 'stocks' && "shame-effect-stocks",
+      getShamedEffectClass()
     )}>
       <CardContent className="p-4">
         <div className="flex items-center space-x-4">
@@ -95,10 +113,10 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
               "border-red-500/20 hover:border-red-500/40 hover:bg-red-500/10",
               isOnCooldown && "opacity-50 cursor-not-allowed"
             )}
-            onClick={() => handleShameAction('tomatoes')}
+            onClick={() => handleShameAction('tomato')}
             disabled={isOnCooldown}
           >
-            <MockeryIconRenderer action="tomatoes" size="sm" className="mr-1" />
+            <MockeryIconRenderer action="tomato" size="sm" className="mr-1" />
             Tomato
           </Button>
           
@@ -108,9 +126,9 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
             className={cn(
               "border-yellow-500/20 hover:border-yellow-500/40 hover:bg-yellow-500/10",
               isOnCooldown && "opacity-50 cursor-not-allowed",
-              featuredAction === 'eggs' && "border-royal-gold/50 animate-pulse-subtle"
+              featuredAction === 'egg' && "border-royal-gold/50 animate-pulse-subtle"
             )}
-            onClick={() => handleShameAction('eggs')}
+            onClick={() => handleShameAction('egg')}
             disabled={isOnCooldown}
           >
             <Egg size={14} className="mr-1 text-yellow-500" />

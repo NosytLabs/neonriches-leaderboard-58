@@ -1,81 +1,101 @@
 
-import { CSSProperties, ReactNode } from 'react';
 import { LucideProps } from 'lucide-react';
+import { CSSProperties } from 'react';
 
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | number;
+// Define icon size options
+export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+
+// Define icon color options
 export type IconColor = 
   | 'default'
   | 'primary'
   | 'secondary'
-  | 'accent'
-  | 'muted'
-  | 'royal'
+  | 'success'
+  | 'warning'
+  | 'error'
   | 'gold'
-  | 'crimson'
-  | 'purple'
-  | string;
-export type IconStyle = 'default' | 'outline' | 'filled' | 'duotone' | 'royal';
+  | 'silver'
+  | 'bronze'
+  | 'royal'
+  | 'white'
+  | 'black';
 
+// Define icon style options
+export type IconStyle =
+  | 'default'
+  | 'filled'
+  | 'outlined'
+  | 'rounded'
+  | 'medieval'
+  | 'royal';
+
+// Define medieval icon names
 export type MedievalIconName = 
   | 'crown' 
-  | 'scroll' 
-  | 'chalice' 
-  | 'shield' 
   | 'sword' 
-  | 'castle' 
-  | 'dragon' 
-  | 'knight' 
-  | 'tower' 
-  | 'flag';
+  | 'shield' 
+  | 'dragon'
+  | 'castle'
+  | 'scroll'
+  | 'key'
+  | 'coin'
+  | 'coins'
+  | 'chest'
+  | 'throne'
+  | 'treasure-chest';
 
-export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-
+// Icon props interface extending Lucide props
 export interface IconProps extends LucideProps {
-  icon?: string;
-  name?: string;
-  iconName?: string;
   size?: IconSize;
   color?: IconColor;
   style?: IconStyle | CSSProperties;
-  animated?: boolean;
 }
 
+// Medieval Icon props
 export interface MedievalIconProps {
   name: MedievalIconName;
   size?: MedievalIconSize;
-  color?: string;
-  className?: string;
+  color?: IconColor;
+  animated?: boolean;
 }
 
+// Icon adapter props for compatibility with different icon systems
 export interface IconAdapterProps {
   name: string;
-  size?: string | number;
-  color?: string;
-  className?: string;
-  style?: CSSProperties;
-  onClick?: () => void;
-  children?: ReactNode;
+  size?: IconSize | string | number;
+  color?: IconColor | string;
+  style?: IconStyle | CSSProperties;
 }
 
-// Size mapping for icon components
-export const iconSizeMap: Record<IconSize | string, string> = {
-  'xs': 'h-3 w-3',
-  'sm': 'h-4 w-4',
-  'md': 'h-5 w-5',
-  'lg': 'h-6 w-6',
-  'xl': 'h-8 w-8',
-  '2xl': 'h-10 w-10',
+// Size mapping for consistent sizing across icon systems
+export const iconSizeMap: Record<IconSize, string> = {
+  'xs': '0.75rem',
+  'sm': '1rem',
+  'md': '1.25rem',
+  'lg': '1.5rem',
+  'xl': '2rem',
+  '2xl': '2.5rem',
+  '3xl': '3rem',
+  '4xl': '4rem'
 };
 
-// Color mapping for icon components
-export const iconColorMap: Record<IconColor | string, string> = {
-  'default': 'text-foreground',
-  'primary': 'text-primary',
-  'secondary': 'text-secondary',
-  'accent': 'text-accent',
-  'muted': 'text-muted-foreground',
-  'royal': 'text-royal-gold',
-  'gold': 'text-yellow-500',
-  'crimson': 'text-red-600',
-  'purple': 'text-purple-500',
+// Color mapping for consistent colors across icon systems
+export const iconColorMap: Record<IconColor, string> = {
+  'default': 'currentColor',
+  'primary': 'var(--color-primary)',
+  'secondary': 'var(--color-secondary)',
+  'success': 'var(--color-success)',
+  'warning': 'var(--color-warning)',
+  'error': 'var(--color-error)',
+  'gold': 'var(--color-royal-gold)',
+  'silver': 'var(--color-silver)',
+  'bronze': 'var(--color-bronze)',
+  'royal': 'var(--color-royal-purple)',
+  'white': 'white',
+  'black': 'black'
 };
+
+// Use export type for better TS compatibility with isolatedModules
+export type { IconProps, MedievalIconProps, IconAdapterProps, IconSize, IconColor, IconStyle, MedievalIconName, MedievalIconSize };
+export { iconSizeMap, iconColorMap };
