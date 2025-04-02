@@ -71,7 +71,7 @@ export interface LeaderboardUser {
   id: string;
   userId: string;
   username: string;
-  displayName?: string;
+  displayName: string; // Changed from optional to required
   profileImage?: string;
   tier: string | UserTier;
   team: string | TeamColor;
@@ -88,10 +88,14 @@ export interface LeaderboardUser {
 }
 
 export interface LeaderboardFilter {
-  timeframe: 'day' | 'week' | 'month' | 'all';
+  timeframe: 'day' | 'week' | 'month' | 'all' | 'year' | 'all-time' | 'today';
   team?: TeamColor | 'all';
   limit?: number;
   page?: number;
+  tier?: string;
+  search?: string;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
 }
 
 export interface MockeryEvent {

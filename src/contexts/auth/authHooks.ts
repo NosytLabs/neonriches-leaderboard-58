@@ -114,7 +114,9 @@ export const useAuthMethods = (
       // Ensure displayName is not undefined
       const userWithDisplayName = {
         ...user,
-        displayName: user.displayName || user.username
+        displayName: user.displayName || user.username,
+        // Ensure totalSpent is set
+        totalSpent: user.totalSpent || user.amountSpent || 0
       };
       
       // Update user metadata in Supabase Auth
@@ -147,7 +149,7 @@ export const useAuthMethods = (
       
       if (profileUpdateError) throw profileUpdateError;
       
-      // Update local state with ensured displayName
+      // Update local state with ensured displayName and totalSpent
       const newUser = { 
         ...userWithDisplayName, 
         ...updatedUser, 
@@ -182,17 +184,18 @@ export const useAuthMethods = (
       // Convert days to string for the API
       const daysStr = String(days);
       
-      // Ensure user has displayName
-      const userWithDisplayName = {
+      // Ensure user has displayName and totalSpent
+      const userWithRequiredFields = {
         ...user,
-        displayName: user.displayName || user.username
+        displayName: user.displayName || user.username,
+        totalSpent: user.totalSpent || user.amountSpent || 0,
       };
       
-      const newBoosts = addProfileBoostWithDays(userWithDisplayName, days, level);
+      const newBoosts = addProfileBoostWithDays(userWithRequiredFields, days, level);
       
       // Create a properly typed updated user object
       const updatedUser: UserProfile = {
-        ...userWithDisplayName,
+        ...userWithRequiredFields,
         profileBoosts: newBoosts
       };
       

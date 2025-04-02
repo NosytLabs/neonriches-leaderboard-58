@@ -13,7 +13,7 @@ const SolanaWalletButton: React.FC<SolanaWalletButtonProps> = ({
   variant = 'default',
   size = 'default'
 }) => {
-  const { connect, disconnect, connected, walletAddress, walletPubkey } = useSolana();
+  const { connect, disconnect, connected, walletAddress } = useSolana();
   
   const handleClick = () => {
     if (connected) {
@@ -29,7 +29,7 @@ const SolanaWalletButton: React.FC<SolanaWalletButtonProps> = ({
       size={size} 
       onClick={handleClick}
     >
-      {connected ? truncateAddress(walletAddress || walletPubkey || '') : 'Connect Wallet'}
+      {connected ? truncateAddress(walletAddress || '') : 'Connect Wallet'}
     </Button>
   );
 };

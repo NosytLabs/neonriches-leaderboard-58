@@ -1,13 +1,12 @@
-
 import { useState, useCallback } from 'react';
-import { MockeryAction, MockeryEvent, MockedUser } from '@/types/mockery-types';
+import { MockeryAction, MockeryEvent, MockeryUser } from '@/types/mockery-types';
 import { useToast } from './use-toast';
 import { useSound } from './sounds/use-sound';
 
 // Interface for the return value of this hook
 interface UseMockeryResult {
-  targetUser: MockedUser | null;
-  mockUser: (action: MockeryAction, targetUser: MockedUser) => Promise<boolean>;
+  targetUser: MockeryUser | null;
+  mockUser: (action: MockeryAction, targetUser: MockeryUser) => Promise<boolean>;
   isMocking: boolean;
   mockeryResult: MockeryEvent | null;
   costForAction: (action: MockeryAction) => number;
@@ -15,14 +14,14 @@ interface UseMockeryResult {
 }
 
 export const useMockery = (): UseMockeryResult => {
-  const [targetUser, setTargetUser] = useState<MockedUser | null>(null);
+  const [targetUser, setTargetUser] = useState<MockeryUser | null>(null);
   const [isMocking, setIsMocking] = useState<boolean>(false);
   const [mockeryResult, setMockeryResult] = useState<MockeryEvent | null>(null);
   const { toast } = useToast();
   const sound = useSound();
 
   // Example mock users for demo purposes
-  const mockUsers: { [key: string]: MockedUser } = {
+  const mockUsers: { [key: string]: MockeryUser } = {
     "user1": {
       id: "1",
       userId: "1", // Add userId for compatibility
@@ -31,7 +30,8 @@ export const useMockery = (): UseMockeryResult => {
       profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
       team: "gold",
       tier: "royal",
-      rank: 1
+      rank: 1,
+      totalSpent: 15000 // Added required property
     },
     "user2": {
       id: "2",
@@ -41,7 +41,8 @@ export const useMockery = (): UseMockeryResult => {
       profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
       team: "purple",
       tier: "premium",
-      rank: 2
+      rank: 2,
+      totalSpent: 12000 // Added required property
     },
     "user3": {
       id: "3",
@@ -51,12 +52,13 @@ export const useMockery = (): UseMockeryResult => {
       profileImage: "https://randomuser.me/api/portraits/men/3.jpg",
       team: "red",
       tier: "basic",
-      rank: 3
+      rank: 3,
+      totalSpent: 8000 // Added required property
     }
   };
 
   // Function to mock a user with a specific action
-  const mockUser = useCallback(async (action: MockeryAction, user: MockedUser): Promise<boolean> => {
+  const mockUser = useCallback(async (action: MockeryAction, user: MockeryUser): Promise<boolean> => {
     setIsMocking(true);
     setTargetUser(user);
 
@@ -78,14 +80,13 @@ export const useMockery = (): UseMockeryResult => {
       // Create a mock result
       const result: MockeryEvent = {
         id: `mock-${Date.now()}`,
-        action,
+        type: action, // Use type instead of action for consistency
         fromUserId: "current-user",
         toUserId: user.userId || '', // Use userId for compatibility
         timestamp: new Date().toISOString(),
         fromUser: mockUsers["user1"],
         toUser: user,
-        cost: costForAction(action), // Add cost for compatibility
-        tier: 'common'
+        cost: costForAction(action) // Add cost for compatibility
       };
       
       setMockeryResult(result);

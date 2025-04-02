@@ -1,69 +1,66 @@
 
 import { MockeryAction } from '@/types/mockery-types';
-import { convertLegacyMockeryAction } from '../mockeryConverter';
 
 /**
- * Get icon for mockery action
+ * This utility maps mockery actions to their icon names
+ * For use with various icon libraries or CSS classes
  */
-export const getMockeryActionIcon = (action: string): string => {
-  // Normalize the action using the converter
-  const normalizedAction = convertLegacyMockeryAction(action);
-  
-  const actionIcons: Record<MockeryAction, string> = {
-    'tomato': 'tomato',
-    'egg': 'egg',
-    'putridEgg': 'egg-rotten',
-    'taunt': 'message-circle',
-    'shame': 'frown',
-    'jester': 'hat',
-    'mock': 'laugh',
-    'challenge': 'sword',
-    'joust': 'lance',
-    'duel': 'swords',
-    'crown': 'crown',
-    'stocks': 'lock',
-    'silence': 'volume-x',
-    'courtJester': 'hat-court',
-    'smokeBomb': 'cloud',
-    'protection': 'shield',
-    'thumbsDown': 'thumbs-down',
-    'laugh': 'smile',
-    'fish': 'fish'
-  };
 
-  return actionIcons[normalizedAction] || 'help-circle';
+// Map of mockery actions to icon paths
+const mockeryIcons: Partial<Record<MockeryAction, string>> = {
+  tomato: 'food',
+  egg: 'egg',
+  putridEgg: 'egg-fried',
+  taunt: 'message-square',
+  shame: 'thumbs-down',
+  jester: 'crown',
+  mock: 'message',
+  challenge: 'flag',
+  joust: 'swords',
+  duel: 'sword',
+  crown: 'crown',
+  stocks: 'lock',
+  silence: 'message-square-off',
+  courtJester: 'sparkles',
+  smokeBomb: 'cloud-fog',
+  protection: 'shield',
+  thumbs_down: 'thumbs-down',
+  laugh: 'smile',
+  fish: 'fish',
+  // Add the remaining MockeryAction types
+  rotten_egg: 'egg',
+  flame: 'flame',
+  heart: 'heart',
+  skull: 'skull',
+  thumbsDown: 'thumbs-down',
 };
 
-/**
- * Get mockery action from its icon
- */
-export const getActionFromIcon = (icon: string): MockeryAction | null => {
-  const iconToAction: Record<string, MockeryAction> = {
-    'tomato': 'tomato',
-    'egg': 'egg',
-    'egg-rotten': 'putridEgg',
-    'message-circle': 'taunt',
-    'frown': 'shame',
-    'hat': 'jester',
-    'laugh': 'mock',
-    'sword': 'challenge',
-    'lance': 'joust',
-    'swords': 'duel',
-    'crown': 'crown',
-    'lock': 'stocks',
-    'volume-x': 'silence',
-    'hat-court': 'courtJester',
-    'cloud': 'smokeBomb',
-    'shield': 'protection',
-    'thumbs-down': 'thumbsDown',
-    'smile': 'laugh',
-    'fish': 'fish'
-  };
-
-  return iconToAction[icon] || null;
+// Define a more comprehensive set of mockery actions with associated icons
+export const mockeryIconMap: Record<string, string> = {
+  'tomato': 'tomato',
+  'egg': 'egg',
+  'rotten_egg': 'egg-off',
+  'putridEgg': 'egg-off',
+  'shame': 'thumbs-down',
+  'mock': 'message-square',
+  'challenge': 'flag',
+  'joust': 'swords',
+  'duel': 'swords-x',
+  'flame': 'flame',
+  'jester': 'crown',
+  'crown': 'crown',
+  'stocks': 'lock',
+  'silence': 'message-square-off',
+  'courtJester': 'sparkles',
+  'smokeBomb': 'cloud-fog',
+  'protection': 'shield',
+  'thumbs_down': 'thumbs-down',
+  'thumbsDown': 'thumbs-down',
+  'taunt': 'message-circle',
+  'heart': 'heart',
+  'skull': 'skull',
+  'laugh': 'smile',
+  'fish': 'fish',
 };
 
-export default {
-  getMockeryActionIcon,
-  getActionFromIcon
-};
+export default mockeryIcons;

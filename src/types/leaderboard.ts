@@ -1,74 +1,58 @@
 
 import { TeamColor } from './mockery-types';
-import { UserTier } from './user';
 
 export interface LeaderboardUser {
   id: string;
   userId: string;
   username: string;
-  displayName: string;
-  profileImage: string;
-  avatarUrl?: string;
+  displayName: string; // Required field
+  profileImage?: string;
+  avatarUrl?: string; // Some components use this alternative
+  tier: string;
+  team: TeamColor | string;
   rank: number;
   previousRank: number;
-  team: TeamColor;
-  tier: UserTier | string;
   totalSpent: number;
-  amountSpent: number; // Ensure this property is required
-  walletBalance: number;
-  spendStreak: number;
+  amountSpent: number;
+  walletBalance?: number;
   isVerified?: boolean;
+  spendStreak?: number;
   isProtected?: boolean;
-  joinDate?: string;
-  bio?: string;
-  // Optional properties
   rankChange?: number;
   spendChange?: number;
+  joinDate?: string;
 }
 
 export interface LeaderboardFilter {
-  team: TeamColor | 'all';
-  tier: UserTier | 'all';
-  timeframe: 'year' | 'month' | 'week' | 'all-time' | 'today' | 'all'; // Added 'all' as valid option
-  search: string;
-  sortBy: 'username' | 'rank' | 'spent' | 'totalSpent'; // Added 'totalSpent' as valid option
-  sortDirection: 'asc' | 'desc';
-  limit: number;
+  timeframe: 'day' | 'week' | 'month' | 'all' | 'year' | 'all-time' | 'today';
+  team?: TeamColor | 'all';
+  limit?: number;
+  page?: number;
+  tier?: string;
+  search?: string;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
 }
 
-export interface LeaderboardResponse {
-  items: LeaderboardUser[];
-  total: number;
-  page: number;
-  limit: number;
-  hasMore: boolean;
-}
-
-export interface UseLeaderboardResult {
-  loading: boolean;
-  error: string | null;
-  data: LeaderboardUser[];
-  total: number;
-  fetchLeaderboard: (filter: LeaderboardFilter) => Promise<void>;
-  refetch: () => Promise<void>;
-  page: number;
-  setPage: (page: number) => void;
-  hasMore: boolean;
-}
-
-// Export these interfaces for use throughout the application
 export interface LeaderboardConfig {
-  showRankChange: boolean;
-  showSpendChange: boolean;
-  showActions: boolean;
-  showTeam: boolean;
-  compact: boolean;
+  title?: string;
+  showFilter?: boolean;
+  showSearch?: boolean;
+  showTeamFilter?: boolean;
+  variant?: 'default' | 'compact' | 'royal' | 'minimal';
+  maxItems?: number;
+  hideRankChange?: boolean;
+  highlightUser?: boolean;
+  currentUserId?: string;
 }
 
 export interface LeaderboardProps {
-  title?: string;
-  config?: Partial<LeaderboardConfig>;
-  initialFilter?: Partial<LeaderboardFilter>;
+  users: LeaderboardUser[];
+  filter?: LeaderboardFilter;
+  onFilterChange?: (filter: Partial<LeaderboardFilter>) => void;
+  config?: LeaderboardConfig;
+  isLoading?: boolean;
+  showActions?: boolean;
   onUserClick?: (userId: string) => void;
-  maxItems?: number;
+  onShameUser?: (user: LeaderboardUser) => void;
 }

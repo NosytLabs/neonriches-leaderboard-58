@@ -1,104 +1,38 @@
-
-import { CosmeticRarity, CosmeticCategory, CosmeticItem, UserCosmeticState } from '@/types/cosmetics';
-
-/**
- * Get the color class for a specific rarity
- */
-export const getRarityColor = (rarity: CosmeticRarity): string => {
-  switch (rarity) {
-    case 'legendary':
-      return 'text-orange-400';
-    case 'epic':
-      return 'text-purple-400';
-    case 'rare':
-      return 'text-blue-400';
-    case 'uncommon':
-      return 'text-green-400';
-    case 'common':
-    default:
-      return 'text-gray-400';
-  }
-};
+import { UserCosmetics } from '@/types/cosmetics';
 
 /**
- * Get the background color class for a specific rarity
+ * Gets an icon for a user's cosmetic based on category and cosmetic id
  */
-export const getRarityBgColor = (rarity: CosmeticRarity): string => {
-  switch (rarity) {
-    case 'legendary':
-      return 'bg-orange-400/10';
-    case 'epic':
-      return 'bg-purple-400/10';
-    case 'rare':
-      return 'bg-blue-400/10';
-    case 'uncommon':
-      return 'bg-green-400/10';
-    case 'common':
-    default:
-      return 'bg-gray-400/10';
-  }
-};
-
-/**
- * Get the border color class for a specific rarity
- */
-export const getRarityBorderColor = (rarity: CosmeticRarity): string => {
-  switch (rarity) {
-    case 'legendary':
-      return 'border-orange-400/20';
-    case 'epic':
-      return 'border-purple-400/20';
-    case 'rare':
-      return 'border-blue-400/20';
-    case 'uncommon':
-      return 'border-green-400/20';
-    case 'common':
-    default:
-      return 'border-gray-400/20';
-  }
-};
-
-/**
- * Convert a cosmetic category to display name
- */
-export const getCategoryDisplayName = (category: CosmeticCategory): string => {
-  return category.charAt(0).toUpperCase() + category.slice(1);
-};
-
-/**
- * Get appropriate CSS class for a cosmetic type
- */
-export const getCosmeticClassForType = (type: CosmeticCategory, value: string): string => {
-  switch (type) {
-    case 'border':
-      return `border-2 border-${value}`;
-    case 'color':
-      return `text-${value}`;
-    case 'background':
-      return `bg-${value}`;
-    case 'font':
-      return `font-${value}`;
-    default:
-      return '';
-  }
-};
-
-/**
- * Check if a cosmetic is unlocked for the user
- */
-export const isCosmeticUnlocked = (
-  cosmeticId: string, 
-  cosmeticType: CosmeticCategory, 
-  userCosmetics: UserCosmeticState
-): boolean => {
-  const unlockedKey = `unlocked${cosmeticType.charAt(0).toUpperCase() + cosmeticType.slice(1)}s` as keyof UserCosmeticState;
-  const legacyKey = `${cosmeticType}s` as keyof UserCosmeticState;
+export const getCosmeticIcon = (cosmetics: UserCosmetics | undefined, category: string, id: string): string => {
+  if (!cosmetics) return '';
   
-  const unlockedArray = userCosmetics[unlockedKey] as string[] | undefined;
-  const legacyArray = userCosmetics[legacyKey] as string[] | undefined;
+  // Handle case where category doesn't exist
+  if (!cosmetics[category]) return '';
   
-  return (
-    (Array.isArray(unlockedArray) && unlockedArray.includes(cosmeticId)) ||
-    (Array.isArray(legacyArray) && legacyArray.includes(cosmeticId))
-  );
+  // Check if the user has this cosmetic
+  const categoryItems = cosmetics[category];
+  if (Array.isArray(categoryItems) && categoryItems.includes(id)) {
+    // Return icon based on id and category
+    return `/assets/cosmetics/${category}/${id}.png`;
+  }
+  
+  return '';
+};
+
+/**
+ * Checks if a user has a specific cosmetic
+ */
+export const hasCosmetic = (cosmetics: UserCosmetics | undefined, category: string, id: string): boolean => {
+  if (!cosmetics) return false;
+  
+  // Handle case where category doesn't exist
+  const categoryItems = cosmetics[category];
+  if (!categoryItems) return false;
+  
+  // Check if the user has this cosmetic
+  if (Array.isArray(categoryItems)) {
+    return categoryItems.includes(id);
+  }
+  
+  return false;
 };

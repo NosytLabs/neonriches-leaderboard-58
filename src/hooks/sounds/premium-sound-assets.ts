@@ -1,89 +1,99 @@
 
 import { SoundType } from '@/types/sound-types';
 
-interface PremiumSoundPack {
-  name: string;
-  description: string;
-  baseUrl: string;
-  soundMappings: Record<string, SoundType>;
-  customVolumes?: Partial<Record<SoundType, number>>;
-}
+// Define the Premium Sound Assets
+type SoundAssetMap = Record<SoundType, string>;
 
-export const premiumSoundPacks: Record<string, PremiumSoundPack> = {
-  royal: {
-    name: 'Royal Court',
-    description: 'Elegant and regal sounds befitting your noble status',
-    baseUrl: '/sounds/premium/royal/',
-    soundMappings: {
-      'success.mp3': 'success',
-      'error.mp3': 'error',
-      'notification.mp3': 'notification',
-      'achievement.mp3': 'achievement',
-      'purchase.mp3': 'purchase',
-      'deposit.mp3': 'deposit',
-      'withdrawal.mp3': 'withdrawal',
-      'rank_up.mp3': 'rank_up',
-      'mockery.mp3': 'mockery',
-      'royal.mp3': 'royal',
-      'click.mp3': 'click',
-      'message.mp3': 'message',
-      'coin.mp3': 'coin',
-      'level_up.mp3': 'level_up',
-      'throne.mp3': 'throne',
-      'boost.mp3': 'boost',
-      'shame.mp3': 'shame',
-      'reward.mp3': 'reward',
-      'chime.mp3': 'chime',
-      'fanfare.mp3': 'fanfare',
-      'coinDrop.mp3': 'coinDrop'
-    },
-    customVolumes: {
-      'success': 0.7,
-      'error': 0.6,
-      'notification': 0.5,
-      'achievement': 0.8,
-      'coin': 0.4,
-      'level_up': 0.9,
-      'royal': 0.7,
-      'mockery': 0.8,
-      'throne': 0.9,
-      'shame': 0.75
-    }
-  },
-  
-  medieval: {
-    name: 'Medieval Ambiance',
-    description: 'Authentic sounds from the days of old',
-    baseUrl: '/sounds/premium/medieval/',
-    soundMappings: {
-      'success.mp3': 'success',
-      'error.mp3': 'error',
-      'notification.mp3': 'notification',
-      'achievement.mp3': 'achievement',
-      'purchase.mp3': 'purchase',
-      'deposit.mp3': 'deposit',
-      'withdrawal.mp3': 'withdrawal',
-      'rank_up.mp3': 'rank_up',
-      'mockery.mp3': 'mockery',
-      'royal.mp3': 'royal',
-      'click.mp3': 'click',
-      'message.mp3': 'message',
-      'coin.mp3': 'coin',
-      'level_up.mp3': 'level_up'
-    }
-  },
-  
-  minimal: {
-    name: 'Minimalist',
-    description: 'Subtle, unobtrusive sounds for focused users',
-    baseUrl: '/sounds/premium/minimal/',
-    soundMappings: {
-      'success.mp3': 'success',
-      'error.mp3': 'error',
-      'notification.mp3': 'notification',
-      'click.mp3': 'click'
-    }
-  }
+export const premiumSoundAssets: Partial<SoundAssetMap> = {
+  click: '/assets/sounds/premium/click.mp3',
+  success: '/assets/sounds/premium/success.mp3',
+  error: '/assets/sounds/premium/error.mp3',
+  notification: '/assets/sounds/premium/notification.mp3',
+  achievement: '/assets/sounds/premium/achievement.mp3',
+  purchase: '/assets/sounds/premium/purchase.mp3',
+  levelUp: '/assets/sounds/premium/level-up.mp3',
+  transaction: '/assets/sounds/premium/transaction.mp3',
+  warning: '/assets/sounds/premium/warning.mp3',
+  message: '/assets/sounds/premium/message.mp3',
+  ui: '/assets/sounds/premium/ui.mp3',
+  transition: '/assets/sounds/premium/transition.mp3',
+  hover: '/assets/sounds/premium/hover.mp3',
+  shame: '/assets/sounds/premium/shame.mp3',
+  royal: '/assets/sounds/premium/royal.mp3',
+  coin: '/assets/sounds/premium/coin.mp3',
+  coinDrop: '/assets/sounds/premium/coin-drop.mp3',
+  team: '/assets/sounds/premium/team.mp3',
+  badge: '/assets/sounds/premium/badge.mp3',
+  alert: '/assets/sounds/premium/alert.mp3',
+  chime: '/assets/sounds/premium/chime.mp3',
+  reward: '/assets/sounds/premium/reward.mp3',
+  toggle: '/assets/sounds/premium/toggle.mp3',
+  upgrade: '/assets/sounds/premium/upgrade.mp3',
+  down: '/assets/sounds/premium/down.mp3',
+  up: '/assets/sounds/premium/up.mp3',
+  withdraw: '/assets/sounds/premium/withdraw.mp3', // Fixed from 'withdrawal'
+  royalAnnouncement: '/assets/sounds/premium/royal-announcement.mp3',
+  fanfare: '/assets/sounds/premium/fanfare.mp3',
+  trumpet: '/assets/sounds/premium/trumpet.mp3',
+  medallion: '/assets/sounds/premium/medallion.mp3',
+  protection: '/assets/sounds/premium/protection.mp3',
+  taunt: '/assets/sounds/premium/taunt.mp3',
+  mock: '/assets/sounds/premium/mock.mp3',
+  challenge: '/assets/sounds/premium/challenge.mp3',
+  joust: '/assets/sounds/premium/joust.mp3',
+  duel: '/assets/sounds/premium/duel.mp3',
+  crown: '/assets/sounds/premium/crown.mp3',
+  stocks: '/assets/sounds/premium/stocks.mp3',
+  silence: '/assets/sounds/premium/silence.mp3',
+  courtJester: '/assets/sounds/premium/court-jester.mp3',
+  smokeBomb: '/assets/sounds/premium/smoke-bomb.mp3',
+  putridEgg: '/assets/sounds/premium/putrid-egg.mp3',
+  fish: '/assets/sounds/premium/fish.mp3',
+  // Add missing required sound types
+  deposit: '/assets/sounds/premium/deposit.mp3',
+  rank_up: '/assets/sounds/premium/rank-up.mp3',
+  mockery: '/assets/sounds/premium/mockery.mp3',
+  level_up: '/assets/sounds/premium/level-up.mp3',
+  throne: '/assets/sounds/premium/throne.mp3',
+  boost: '/assets/sounds/premium/boost.mp3',
+  unlock: '/assets/sounds/premium/unlock.mp3'
 };
 
-export default premiumSoundPacks;
+// Export default sound assets that can be used as a fallback
+export const defaultSoundAssets: Partial<SoundAssetMap> = {
+  click: '/assets/sounds/default/click.mp3',
+  success: '/assets/sounds/default/success.mp3',
+  error: '/assets/sounds/default/error.mp3',
+  notification: '/assets/sounds/default/notification.mp3',
+  achievement: '/assets/sounds/default/achievement.mp3',
+  purchase: '/assets/sounds/default/purchase.mp3',
+  levelUp: '/assets/sounds/default/level-up.mp3',
+  transaction: '/assets/sounds/default/transaction.mp3',
+  warning: '/assets/sounds/default/warning.mp3',
+  message: '/assets/sounds/default/message.mp3',
+  ui: '/assets/sounds/default/ui.mp3',
+  transition: '/assets/sounds/default/transition.mp3',
+  hover: '/assets/sounds/default/hover.mp3',
+  shame: '/assets/sounds/default/shame.mp3',
+  royal: '/assets/sounds/default/royal.mp3',
+  coin: '/assets/sounds/default/coin.mp3',
+  coinDrop: '/assets/sounds/default/coin-drop.mp3',
+  team: '/assets/sounds/default/team.mp3',
+  badge: '/assets/sounds/default/badge.mp3',
+  alert: '/assets/sounds/default/alert.mp3',
+  chime: '/assets/sounds/default/chime.mp3',
+  reward: '/assets/sounds/default/reward.mp3',
+  toggle: '/assets/sounds/default/toggle.mp3',
+  upgrade: '/assets/sounds/default/upgrade.mp3',
+  down: '/assets/sounds/default/down.mp3',
+  up: '/assets/sounds/default/up.mp3',
+  withdraw: '/assets/sounds/default/withdraw.mp3', // Fixed from 'withdrawal'
+  // Add missing required sound types
+  deposit: '/assets/sounds/default/deposit.mp3',
+  rank_up: '/assets/sounds/default/rank-up.mp3',
+  mockery: '/assets/sounds/default/mockery.mp3',
+  level_up: '/assets/sounds/default/level-up.mp3',
+  throne: '/assets/sounds/default/throne.mp3',
+  boost: '/assets/sounds/default/boost.mp3',
+  unlock: '/assets/sounds/default/unlock.mp3'
+};

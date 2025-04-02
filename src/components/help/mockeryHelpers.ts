@@ -56,6 +56,11 @@ export const getMockeryTierColor = (tier: MockeryTier): { text: string, bg: stri
         bg: 'bg-amber-900/20',
         border: 'border-royal-gold/30'
       };
+    case 'basic':
+    case 'premium':
+    case 'silver':
+    case 'bronze':
+    case 'standard':
     default:
       return {
         text: 'text-gray-200',

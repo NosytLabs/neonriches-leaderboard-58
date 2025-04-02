@@ -1,89 +1,136 @@
 
 import { UserProfile } from '@/types/user-consolidated';
 
-// Mock implementation of Google sign-in
-export const signInWithGoogle = async (): Promise<boolean> => {
-  // In a real implementation, this would redirect to Google OAuth
-  console.log('Signing in with Google...');
-  
-  // Simulate a delay for the authentication process
-  await new Promise(resolve => setTimeout(resolve, 1500));
-  
-  // Return true to indicate successful authentication
-  return true;
-};
-
-// Function to create a mock user profile
-export const createMockUser = (username: string): UserProfile => {
-  return {
-    id: `user-${Date.now()}`,
-    username,
-    displayName: username.charAt(0).toUpperCase() + username.slice(1),
-    email: `${username}@example.com`,
-    profileImage: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`,
-    bio: `I am ${username}, a noble spender in the realm of SpendThrone.`,
-    joinedDate: new Date().toISOString(),
-    tier: 'basic',
-    team: 'blue',
-    rank: Math.floor(Math.random() * 100) + 1,
-    previousRank: Math.floor(Math.random() * 100) + 1,
-    totalSpent: Math.floor(Math.random() * 1000),
-    amountSpent: Math.floor(Math.random() * 1000),
-    walletBalance: Math.floor(Math.random() * 500),
-    settings: {
-      profileVisibility: 'public',
-      allowProfileLinks: true,
-      theme: 'dark',
-      notifications: true,
-      emailNotifications: false,
-      marketingEmails: false,
-      showRank: true,
-      darkMode: true,
-      soundEffects: true,
-      showBadges: true,
-      showTeam: true,
-      showSpending: true
+// Simulate authentication service for testing without backend
+const mockAuthService = {
+  login: async (email: string, password: string): Promise<{ success: boolean; user?: UserProfile; error?: string }> => {
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+    
+    if (email === 'demo@example.com' && password === 'password') {
+      return {
+        success: true,
+        user: {
+          id: 'user-123',
+          username: 'demo_user',
+          displayName: 'Demo User',
+          email: 'demo@example.com',
+          profileImage: 'https://randomuser.me/api/portraits/men/1.jpg',
+          bio: 'This is a demo user account',
+          joinedDate: new Date().toISOString(),
+          tier: 'premium',
+          team: 'gold',
+          rank: 42,
+          previousRank: 45,
+          totalSpent: 1500,
+          amountSpent: 1500,
+          walletBalance: 500,
+          settings: {
+            profileVisibility: 'public',
+            allowProfileLinks: true,
+            theme: 'dark',
+            notifications: true,
+            emailNotifications: false,
+            marketingEmails: false,
+            showRank: true,
+            darkMode: true,
+            soundEffects: true,
+            showBadges: true,
+            showTeam: true,
+            showSpending: true
+          },
+          // Add required fields
+          profileBoosts: [],
+          cosmetics: {
+            border: [],
+            color: [],
+            font: [],
+            emoji: [],
+            title: [],
+            background: [],
+            effect: [],
+            badge: [],
+            theme: []
+          },
+          spendStreak: 0
+        }
+      };
     }
-  };
-};
-
-// Add missing functions mentioned in error messages
-export const signInWithEmail = async (email: string): Promise<boolean> => {
-  console.log(`Sending magic link to ${email}...`);
+    
+    return {
+      success: false,
+      error: 'Invalid email or password'
+    };
+  },
   
-  // Simulate a delay for sending the magic link
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  register: async (username: string, email: string, password: string): Promise<{ success: boolean; user?: UserProfile; error?: string }> => {
+    await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+    
+    // Check for existing user (demo purposes)
+    if (email === 'demo@example.com') {
+      return {
+        success: false,
+        error: 'Email already in use'
+      };
+    }
+    
+    return {
+      success: true,
+      user: {
+        id: `user-${Date.now()}`,
+        username,
+        displayName: username,
+        email,
+        profileImage: 'https://randomuser.me/api/portraits/men/2.jpg',
+        bio: '',
+        joinedDate: new Date().toISOString(),
+        tier: 'basic',
+        team: 'none',
+        rank: 999,
+        previousRank: 999,
+        totalSpent: 0,
+        amountSpent: 0,
+        walletBalance: 100,
+        settings: {
+          profileVisibility: 'public',
+          allowProfileLinks: true,
+          theme: 'dark',
+          notifications: true,
+          emailNotifications: false,
+          marketingEmails: false,
+          showRank: true,
+          darkMode: true,
+          soundEffects: true,
+          showBadges: true,
+          showTeam: true,
+          showSpending: true
+        },
+        // Add required fields
+        profileBoosts: [],
+        cosmetics: {
+          border: [],
+          color: [],
+          font: [],
+          emoji: [],
+          title: [],
+          background: [],
+          effect: [],
+          badge: [],
+          theme: []
+        },
+        spendStreak: 0
+      }
+    };
+  },
   
-  // Return true to indicate successful email sending
-  return true;
-};
-
-export const verifyMfaCode = async (code: string): Promise<boolean> => {
-  console.log(`Verifying MFA code: ${code}`);
+  logout: async (): Promise<{ success: boolean }> => {
+    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API call
+    return { success: true };
+  },
   
-  // Simple validation that the code is 6 digits
-  if (!/^\d{6}$/.test(code)) {
-    throw new Error('Invalid verification code');
+  resetPassword: async (email: string): Promise<{ success: boolean; error?: string }> => {
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+    return { success: true };
   }
-  
-  // Simulate a delay for verification
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Return true to indicate successful verification
-  return true;
 };
 
-export const resetPassword = async (email: string): Promise<boolean> => {
-  console.log(`Sending password reset link to ${email}...`);
-  
-  // Validate email format
-  if (!email || !email.includes('@')) {
-    throw new Error('Invalid email address');
-  }
-  
-  // Simulate a delay for sending the reset link
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Return true to indicate successful email sending
-  return true;
-};
+export default mockAuthService;

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Shell } from '@/components/ui/Shell';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -9,110 +8,109 @@ import { TeamData } from '@/types/team-data';
 import { TeamColor } from '@/types/mockery-types';
 import { toTeamColor } from '@/utils/typeConverters';
 
-// Sample team data
-const mockTeams: TeamData[] = [
+const teamsData: TeamData[] = [
   {
-    id: '1',
-    name: 'Gold Monarchs',
-    color: toTeamColor('gold'),
-    description: 'The elite team of royal spenders',
-    logoUrl: '/teams/gold-logo.png',
-    members: 156,
-    totalContribution: 250000,
-    rank: 1,
-    previousRank: 2,
+    id: "red-team",
+    name: "Red Royals",
+    color: "red",
+    description: "The Red Royals are known for their fiery passion and competitive spirit.",
+    logoUrl: "/assets/teams/red-logo.png",
     benefits: [
-      'Royal protection',
-      'Crown badge',
-      'Extended mockery options',
-      'VIP events access',
-      'Golden cosmetics'
-    ]
-  },
-  {
-    id: '2',
-    name: 'Crimson Cavaliers',
-    color: toTeamColor('red'),
-    description: 'Bold and aggressive spenders who stop at nothing',
-    logoUrl: '/teams/red-logo.png',
-    members: 230,
-    totalContribution: 180000,
+      "Exclusive red name color in leaderboards",
+      "10% bonus on all mockery actions",
+      "Weekly team challenges with bonus rewards",
+      "Special access to 'Royal Red' chat channel"
+    ],
+    members: 450,
+    totalContribution: 25000,
     rank: 2,
     previousRank: 1,
-    benefits: [
-      'Attack bonuses',
-      'Mockery discounts',
-      'Offensive boosts',
-      'Comeback mechanics',
-      'Aggressive cosmetics'
-    ]
+    totalSpent: 25000
   },
   {
-    id: '3',
-    name: 'Azure Alliance',
-    color: toTeamColor('blue'),
-    description: 'Strategic and calculated contributors',
-    logoUrl: '/teams/blue-logo.png',
-    members: 185,
-    totalContribution: 150000,
+    id: "blue-team",
+    name: "Blue Brigade",
+    color: "blue",
+    description: "The Blue Brigade represents calm strategy and loyal cooperation.",
+    logoUrl: "/assets/teams/blue-logo.png",
+    benefits: [
+      "Exclusive blue name color in leaderboards",
+      "15% discount on protection actions",
+      "Team defense bonuses",
+      "Special access to 'Blue Room' strategy forums"
+    ],
+    members: 380,
+    totalContribution: 22000,
     rank: 3,
-    previousRank: 4,
-    benefits: [
-      'Defense bonuses',
-      'Protection discounts',
-      'Strategic boosts',
-      'Team shields',
-      'Tactical cosmetics'
-    ]
-  },
-  {
-    id: '4',
-    name: 'Emerald Empire',
-    color: toTeamColor('green'),
-    description: 'Growth-focused team with long-term vision',
-    logoUrl: '/teams/green-logo.png',
-    members: 320,
-    totalContribution: 120000,
-    rank: 4,
     previousRank: 3,
-    benefits: [
-      'Growth bonuses',
-      'New member rewards',
-      'Sustainability boosts',
-      'Recruitment bonuses',
-      'Nature-themed cosmetics'
-    ]
+    totalSpent: 22000
   },
   {
-    id: '5',
-    name: 'Royal Majesty',
-    color: toTeamColor('purple'),
-    description: 'Elegant and prestigious spenders with refined taste',
-    logoUrl: '/teams/purple-logo.png',
-    members: 98,
-    totalContribution: 110000,
-    rank: 5,
-    previousRank: 5,
+    id: "green-team",
+    name: "Green Giants",
+    color: "green",
+    description: "The Green Giants focus on growth, prosperity, and economic dominance.",
+    logoUrl: "/assets/teams/green-logo.png",
     benefits: [
-      'Prestige bonuses',
-      'Exclusive cosmetics',
-      'VIP access',
-      'Special events',
-      'Royal-adjacent privileges'
-    ]
+      "Exclusive green name color in leaderboards",
+      "5% bonus on all spending activity",
+      "Economic boosts for team members",
+      "Special access to 'Green Growth' investment challenges"
+    ],
+    members: 320,
+    totalContribution: 18500,
+    rank: 4,
+    previousRank: 5,
+    totalSpent: 18500
+  },
+  {
+    id: "gold-team",
+    name: "Golden Throne",
+    color: "gold",
+    description: "The Golden Throne represents luxury, prestige, and royal excellence.",
+    logoUrl: "/assets/teams/gold-logo.png",
+    benefits: [
+      "Exclusive gold name color in leaderboards",
+      "Priority placement in royal events",
+      "10% bonus on all royal challenges",
+      "Special access to 'Golden Court' exclusive chat"
+    ],
+    members: 200,
+    totalContribution: 30000,
+    rank: 1,
+    previousRank: 2,
+    totalSpent: 30000
+  },
+  {
+    id: "purple-team",
+    name: "Purple Prestige",
+    color: "purple",
+    description: "The Purple Prestige team values creativity, mystery, and magical influence.",
+    logoUrl: "/assets/teams/purple-logo.png",
+    benefits: [
+      "Exclusive purple name color in leaderboards",
+      "20% discount on mockery cooldowns",
+      "Special mystery boxes for active members",
+      "Access to 'Purple Palace' exclusive events"
+    ],
+    members: 280,
+    totalContribution: 15000,
+    rank: 5,
+    previousRank: 4,
+    totalSpent: 15000
   }
 ];
 
 const TeamsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [selectedTeam, setSelectedTeam] = useState<TeamData>(mockTeams[0]);
+  const [selectedTeam, setSelectedTeam] = useState<TeamData>(teamsData[0]);
   const [userTeam, setUserTeam] = useState<TeamColor>(toTeamColor('gold'));
   
   const handleSelectTeam = (teamId: string) => {
-    const team = mockTeams.find(t => t.id === teamId);
+    const team = teamsData.find(t => t.id === teamId);
     if (team) {
       setSelectedTeam(team);
-      setUserTeam(team.color as TeamColor); // Cast to TeamColor
+      setUserTeam(team.color as TeamColor);
     }
   };
   
@@ -134,14 +132,14 @@ const TeamsPage: React.FC = () => {
           
           <TabsContent value="selection">
             <TeamSelection 
-              teams={mockTeams} 
+              teams={teamsData} 
               selectedTeam={selectedTeam} 
               onSelectTeam={handleSelectTeam} 
             />
           </TabsContent>
           
           <TabsContent value="leaderboard">
-            <TeamLeaderboard teams={mockTeams} userTeam={userTeam} />
+            <TeamLeaderboard teams={teamsData} userTeam={userTeam} />
           </TabsContent>
         </Tabs>
       </div>

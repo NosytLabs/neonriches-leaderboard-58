@@ -2,69 +2,67 @@
 import { TeamColor } from './mockery-types';
 
 export type CertificateType = 
-  | 'nobility' 
   | 'achievement' 
-  | 'spending' 
   | 'rank' 
+  | 'spending' 
+  | 'contribution'
   | 'team' 
-  | 'founder' 
   | 'membership' 
-  | 'participation' 
-  | 'contest';
+  | 'royal' 
+  | 'founder'
+  | 'throne'
+  | 'prestige'
+  | 'special';
 
 export type CertificateStyle = 
+  | 'basic' 
   | 'standard' 
   | 'royal' 
-  | 'luxury' 
-  | 'modern' 
-  | 'vintage' 
-  | 'minimalist' 
-  | 'ornate' 
-  | 'parchment';
+  | 'premium'
+  | 'elite'
+  | 'legendary'
+  | 'gold'
+  | 'silver'
+  | 'bronze';
 
-export type CertificateTeam = TeamColor | 'neutral';
+export type CertificateTeam = TeamColor | 'none';
 
 export interface Certificate {
   id: string;
   title: string;
   description: string;
+  type: CertificateType;
   imageUrl: string;
   dateIssued: string;
-  issuedAt?: string; // Alias for dateIssued
-  status: 'pending' | 'minted' | 'revoked' | 'expired';
-  type: CertificateType;
+  issuedAt?: string; // For backward compatibility
   userId: string;
+  style: CertificateStyle;
+  team?: CertificateTeam;
   mintAddress?: string;
   mintDate?: string;
   isMinted?: boolean;
-  style: CertificateStyle;
-  issuerName: string;
-  recipientName: string;
-  recipientId: string;
-  team?: CertificateTeam;
-  tier?: string;
+  status?: 'pending' | 'minted' | 'failed';
+  previewUrl?: string; // Added for compatibility
+  name?: string; // Added for compatibility
 }
 
 export interface CertificateTemplate {
   id: string;
-  name: string;
+  title: string;
   description: string;
-  previewUrl: string;
-  imageUrl: string;
   type: CertificateType;
-  team: CertificateTeam;
+  imageUrl: string;
   style: CertificateStyle;
-  available: boolean;
+  team?: CertificateTeam;
+  requiredRank?: number;
+  requiredSpending?: number;
+  requiredTeam?: TeamColor;
+  isLimited?: boolean;
 }
 
-// Add CertificateRepository interface to fix the missing type
 export interface CertificateRepository {
-  getUserCertificates: (userId: string) => Promise<Certificate[]>;
-  getCertificateById: (id: string) => Promise<Certificate>;
-  getCertificateTemplates: () => Promise<CertificateTemplate[]>;
-  getTemplateById: (id: string) => Promise<CertificateTemplate>;
-  getAvailableCertificateTemplates: () => Promise<CertificateTemplate[]>;
-  mintCertificateAsNFT: (certificateId: string) => Promise<{ success: boolean; transactionHash?: string; message?: string }>;
-  claimCertificate: (templateId: string, userId: string) => Promise<Certificate>;
-  generateShareableImage: (certificateId: string) => Promise<string>;
+  getCertificates: (userId: string) => Promise<Certificate[]>;
+  getCertificate: (id: string) => Promise<Certificate | null>;
+  mintCertificate: (id: string) => Promise<boolean>;
+  createCertificate: (template: CertificateTemplate, userId: string) => Promise<Certificate>;
 }

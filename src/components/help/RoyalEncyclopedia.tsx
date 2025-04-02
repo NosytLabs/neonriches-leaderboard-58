@@ -40,7 +40,7 @@ const RoyalEncyclopedia = () => {
                   const tierColors = getMockeryTierColor(tier);
                   return (
                     <div 
-                      key={tier.toString()}
+                      key={tier}
                       className={`p-3 rounded-lg ${safeAccess(tierColors, 'bg', 'bg-gray-800/60')} ${safeAccess(tierColors, 'border', 'border-gray-600')} border`}
                     >
                       <span className={`font-semibold ${safeAccess(tierColors, 'text', 'text-white/80')}`}>

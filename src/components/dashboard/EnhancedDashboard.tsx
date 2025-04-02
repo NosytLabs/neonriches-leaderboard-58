@@ -44,7 +44,7 @@ function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfi
     tier: user.tier || 'basic',
     rank: user.rank || 0,
     previousRank: user.previousRank || 0,
-    totalSpent: user.totalSpent || 0,
+    totalSpent: user.totalSpent || 0, // Ensure totalSpent is set
     amountSpent: user.amountSpent || 0,
     walletBalance: user.walletBalance || 0,
     settings: {

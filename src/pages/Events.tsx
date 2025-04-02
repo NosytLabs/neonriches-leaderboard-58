@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { EventDetails } from '@/types/events';
 import { toTeamColor } from '@/utils/typeConverters';
 import { LeaderboardUser } from '@/types/leaderboard';
+import { TeamColor } from '@/types/mockery-types';
 
 export default function EventsPage() {
   const allEvents = events;
@@ -100,6 +101,44 @@ export default function EventsPage() {
       walletBalance: 7000,
       previousRank: 2,
       joinDate: '2023-01-10',
+      isVerified: true
+    }
+  ];
+
+  // Update the leaders data to include amountSpent
+  const leaders: LeaderboardUser[] = [
+    {
+      id: "user1",
+      userId: "user1",
+      username: "royalspender",
+      profileImage: "https://randomuser.me/api/portraits/men/32.jpg",
+      totalSpent: 12500,
+      amountSpent: 12500,
+      rank: 1, 
+      team: "gold" as TeamColor,
+      tier: "royal",
+      spendStreak: 14,
+      displayName: "Royal Spender",
+      walletBalance: 5000,
+      previousRank: 1,
+      joinDate: "2023-01-15",
+      isVerified: true
+    },
+    {
+      id: "user2",
+      userId: "user2",
+      username: "elitespender",
+      profileImage: "https://randomuser.me/api/portraits/women/32.jpg", 
+      totalSpent: 10200,
+      amountSpent: 10200,
+      rank: 2,
+      team: "purple" as TeamColor, 
+      tier: "premium",
+      spendStreak: 8,
+      displayName: "Elite Spender",
+      walletBalance: 3200,
+      previousRank: 3,
+      joinDate: "2023-02-22", 
       isVerified: true
     }
   ];

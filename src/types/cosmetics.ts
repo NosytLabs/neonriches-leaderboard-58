@@ -1,5 +1,15 @@
+export interface CosmeticType {
+  id: string;
+  name: string;
+  description: string;
+  thumbnail: string;
+  price: number;
+  category: CosmeticCategory;
+  rarity: CosmeticRarity;
+  unlockRequirement?: string;
+  isDefault?: boolean;
+}
 
-export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'background' | 'effect' | 'title' | 'badge' | 'theme';
 export type CosmeticCategory = 
   | 'border' 
   | 'color' 
@@ -41,25 +51,30 @@ export interface CosmeticItem {
   image?: string;
 }
 
-export interface SocialLink {
+export interface SocialLinkInterface {
   id?: string | number;
-  platform?: string;
+  platform: string;
   url: string;
   username?: string;
-  display?: string;
-  icon?: string;
   verified?: boolean;
-  primary?: boolean;
-  clicks?: number;
-  title?: string;
-  label?: string;
-  type?: string;
   enabled?: boolean;
+  title?: string;
+  clicks?: number;
+  icon?: string;
+  label?: string;
 }
 
-export interface ProfileLink extends SocialLink {
-  clicks?: number;
+export interface ProfileLinkInterface {
+  id?: string;
+  platform: string;
+  url: string;
+  title?: string;
+  icon?: string;
+  label?: string;
 }
+
+export { SocialLinkInterface as SocialLink };
+export { ProfileLinkInterface as ProfileLink };
 
 export interface UserCosmetics {
   border?: string[];
