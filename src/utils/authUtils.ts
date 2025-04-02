@@ -41,7 +41,22 @@ export const processUser = (
     walletBalance: userData.walletBalance || 0,
     totalSpent: userData.totalSpent || userData.amountSpent || 0,
     amountSpent: userData.amountSpent || userData.totalSpent || 0,
-    // Add other fields as needed
+    settings: userData.settings || {
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'dark',
+      notifications: true,
+      emailNotifications: false,
+      marketingEmails: false,
+      showRank: true,
+      darkMode: true,
+      soundEffects: true,
+      showBadges: true,
+      showEmailOnProfile: false,
+      rankChangeAlerts: false,
+      showTeam: true,
+      showSpending: true
+    }
   };
   
   // Optional fields
@@ -59,10 +74,6 @@ export const processUser = (
   
   if (userData.achievements) {
     user.achievements = userData.achievements;
-  }
-  
-  if (userData.settings) {
-    user.settings = userData.settings;
   }
   
   return user;

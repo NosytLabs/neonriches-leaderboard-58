@@ -33,7 +33,7 @@ export interface UserProfile {
     mintDate: string;
   };
   lastActive?: string;
-  gender?: string;
+  gender?: Gender;
   // Additional fields from errors
   activeTitle?: string;
   profileViews?: number;
@@ -85,6 +85,8 @@ export interface SocialLink {
   username?: string;
   verified?: boolean;
   clicks?: number;
+  title?: string;
+  label?: string; // Add label property to fix errors
 }
 
 export interface ProfileBoost {
@@ -114,10 +116,17 @@ export interface ProfileLink {
   url: string;
   title?: string;
   icon?: string;
+  label?: string; // Add label property to fix errors
 }
 
 // Type alias for a simplified User type that matches UserProfile
 export type User = UserProfile;
 
+// Explicitly export TeamType to fix errors
+export type TeamType = TeamColor;
+
 // Re-export TeamColor and UserTier for easier access
 export type { TeamColor, UserTier };
+
+// Gender type to fix type conversion errors
+export type Gender = 'male' | 'female' | 'other' | 'none' | 'king' | 'queen' | 'jester' | 'noble' | 'prefer-not-to-say';

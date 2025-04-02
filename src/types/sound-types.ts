@@ -15,7 +15,9 @@ export type SoundType =
   | 'swoosh'
   | 'message'
   | 'reward'
-  | 'fanfare';
+  | 'fanfare'
+  | 'rank_up'
+  | 'transfer';
 
 export type SoundPackType = 
   | 'default'
@@ -50,7 +52,7 @@ export interface PremiumSoundPackDetails {
   previewSound: string;
   sounds: string[];
   features: string[];
-  enabled: boolean;
+  enabled: boolean; // Add enabled property which was missing
 }
 
-// Use 'export type' for TypeScript isolatedModules compatibility
+// Do not use 'export' for TypeScript isolatedModules compatibility

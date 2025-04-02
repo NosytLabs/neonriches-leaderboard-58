@@ -63,7 +63,7 @@ export const getInitials = (name: string, chars: number = 2): string => {
   return initials.toUpperCase();
 };
 
-// Format dollar amount (separate from formatCurrency in index.ts)
+// Format dollar amount
 export const formatDollarAmount = (amount: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -72,3 +72,5 @@ export const formatDollarAmount = (amount: number): string => {
     maximumFractionDigits: 2
   }).format(amount);
 };
+
+// Use named exports rather than re-exporting to prevent errors

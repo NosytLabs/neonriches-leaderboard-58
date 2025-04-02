@@ -6,7 +6,7 @@ export type Gender = 'male' | 'female' | 'other' | 'none';
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'followers' | 'friends';
   allowProfileLinks: boolean;
-  theme: 'dark' | 'light' | 'system' | 'royal';
+  theme: 'light' | 'dark' | 'system' | 'royal';
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
@@ -58,7 +58,7 @@ export interface SocialLink {
   username?: string;
   label?: string;
   icon?: string;
-  clicks?: number; // Added to fix the error in LinksEditor
+  clicks?: number;
 }
 
 export interface UserProfile {
@@ -114,6 +114,7 @@ export interface UserProfile {
 }
 
 // Use 'export type' instead of 'export' to avoid conflicts
-export type { UserTier as UserTierType, TeamColor as TeamColorType };
+export type { UserTier as UserTierType };
+export type { TeamColor as TeamColorType };
 export type TeamType = TeamColor;
 export type User = UserProfile;

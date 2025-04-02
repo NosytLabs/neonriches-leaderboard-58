@@ -99,7 +99,8 @@ interface MockeryConfirmationModalProps {
 
 const MockeryConfirmationModal: React.FC<MockeryConfirmationModalProps> = ({ action, hasDiscount, onConfirm, onCancel }) => {
   const regularPrice = getMockeryActionPrice(action);
-  const discountedPrice = hasDiscount ? getDiscountedShamePrice(action, 'basic') : null;
+  // Fix: Only pass one argument to getDiscountedShamePrice
+  const discountedPrice = hasDiscount ? getDiscountedShamePrice(action) : null;
   
   return (
     <div className="glass-morphism border-white/10 p-6 rounded-lg">

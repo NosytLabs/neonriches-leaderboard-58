@@ -1,18 +1,17 @@
 
-// Re-export utility functions from other files
-export * from './stringUtils';
+// Re-export utility functions to make them easier to import
 export * from './formatters';
-export * from './typeConverters';
-export * from './mockeryUtils';
-export * from './shameUtils';
-
-// Add explicit exports for commonly used functions
-export { safeToString, ensureStringId, getInitials } from './stringUtils';
-export { 
-  formatCurrency, 
-  formatDollarAmount, 
-  formatNumber,
-  formatDate,
-  formatTimeAgo
-} from './formatters';
-
+export * from './dates';
+export * from './validation';
+export * from './numbers';
+export * from './hooks';
+export * from './arrays';
+export * from './objects';
+export * from './strings';
+export * from './dom';
+export * from './async';
+export * from './colors';
+export * from './formatDateTime';
+export { formatDollarAmount } from './formatters/stringFormatters';
+export * from './user';
+// Add other exports as needed

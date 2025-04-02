@@ -14,25 +14,25 @@ export const useNotificationSounds = () => {
     // Convert string type to SoundType and play appropriate sound
     switch (type) {
       case 'achievement':
-        sound.playSound('achievement' as SoundType, soundOptions);
+        sound.playSound('achievement', soundOptions);
         break;
       case 'message':
-        sound.playSound('notification' as SoundType, soundOptions);
+        sound.playSound('message' as SoundType, soundOptions);
         break;
       case 'alert':
-        sound.playSound('notification' as SoundType, soundOptions);
+        sound.playSound('notification', soundOptions);
         break;
       case 'success':
-        sound.playSound('success' as SoundType, soundOptions);
+        sound.playSound('success', soundOptions);
         break;
       case 'error':
-        sound.playSound('error' as SoundType, soundOptions);
+        sound.playSound('error', soundOptions);
         break;
       case 'reward':
-        sound.playSound('notification' as SoundType, soundOptions); // Fallback to notification for now
+        sound.playSound('reward' as SoundType, soundOptions); // Cast as SoundType
         break;
       default:
-        sound.playSound('notification' as SoundType, soundOptions);
+        sound.playSound('notification', soundOptions);
         break;
     }
   };

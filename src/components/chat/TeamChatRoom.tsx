@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { TeamType } from '@/types/user';
+import { TeamType } from '@/types/mockery';
 import { useNotificationSounds } from '@/hooks/sounds/use-notification-sounds';
 
 interface TeamChatRoomProps {

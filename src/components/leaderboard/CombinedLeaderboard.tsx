@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMockLeaderboard } from '@/hooks/useMockLeaderboard';
 import { useAuth } from '@/hooks/useAuth';
-import { LeaderboardFilter, LeaderboardUser } from '@/types/leaderboard';
+import { LeaderboardUser } from '@/types/leaderboard';
 import { MockeryAction } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
 import { useSound } from '@/hooks/use-sound';
@@ -15,6 +15,16 @@ import { Dialog } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import ShameModal from '@/components/dashboard/leaderboard/ShameModal';
 
+// Define an updated LeaderboardFilter that includes sortDirection
+interface CombinedLeaderboardFilter {
+  team: string;
+  tier: string;
+  timeframe: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all';
+  search: string;
+  sortBy: string;
+  sortDirection?: 'asc' | 'desc';
+}
+
 const CombinedLeaderboard: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth ? useAuth() : { user: null };
@@ -22,12 +32,13 @@ const CombinedLeaderboard: React.FC = () => {
   const sound = useSound ? useSound() : { playSound: () => {} };
   const { loading, mockLeaderboardData } = useMockLeaderboard?.() || { loading: true, mockLeaderboardData: [] };
   
-  const [filter, setFilter] = useState<LeaderboardFilter>({
+  const [filter, setFilter] = useState<CombinedLeaderboardFilter>({
     team: 'all',
     tier: 'all',
     timeframe: 'all-time',
     search: '',
-    sortBy: 'rank'
+    sortBy: 'rank',
+    sortDirection: 'asc' // Add default sortDirection
   });
   
   const [filteredUsers, setFilteredUsers] = useState<LeaderboardUser[]>([]);
@@ -82,7 +93,8 @@ const CombinedLeaderboard: React.FC = () => {
     setFilteredUsers(result);
   }, [filter, mockLeaderboardData]);
   
-  const handleFilterChange = (newFilter: Partial<LeaderboardFilter>) => {
+  // Convert the filter to match the expected type
+  const handleFilterChange = (newFilter: Partial<CombinedLeaderboardFilter>) => {
     setFilter(prev => ({ ...prev, ...newFilter }));
   };
   

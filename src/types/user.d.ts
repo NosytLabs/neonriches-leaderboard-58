@@ -1,8 +1,8 @@
 
 import { UserCosmetics } from './cosmetics';
 
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze';
-export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze';
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze' | 'crimson';
+export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze' | 'crimson';
 export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
 
 export type UserTier = 
@@ -53,7 +53,7 @@ export interface SocialLink {
   primary?: boolean;
   clicks?: number;
   title?: string;
-  label?: string;
+  label?: string; // Add the label property to fix errors
   type?: string;
 }
 
@@ -139,4 +139,3 @@ export interface UserProfile {
   joinedAt?: string;
   createdAt?: string;
 }
-
