@@ -1,15 +1,19 @@
 
 import React from 'react';
 import { MedievalIconProps, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
+import { cn } from '@/lib/utils';
 
 const MedievalIcon: React.FC<MedievalIconProps> = ({
   name,
   size = 'md',
   color = 'default',
   animated = false,
+  className = ''
 }) => {
   const sizeValue = iconSizeMap[size] || size;
-  const colorValue = iconColorMap[color] || color;
+  const colorValue = typeof color === 'string' && color in iconColorMap 
+    ? iconColorMap[color as keyof typeof iconColorMap] 
+    : color;
 
   // Default icon path if name doesn't match
   let iconPath = '/assets/icons/medieval/crown.svg';
@@ -27,10 +31,16 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
   if (name === 'chest') iconPath = '/assets/icons/medieval/chest.svg';
   if (name === 'throne') iconPath = '/assets/icons/medieval/throne.svg';
   if (name === 'treasure-chest') iconPath = '/assets/icons/medieval/treasure-chest.svg';
+  if (name === 'chalice') iconPath = '/assets/icons/medieval/chalice.svg';
+  if (name === 'flag') iconPath = '/assets/icons/medieval/flag.svg';
+  if (name === 'tower') iconPath = '/assets/icons/medieval/tower.svg';
+  if (name === 'banner') iconPath = '/assets/icons/medieval/banner.svg';
+  if (name === 'dagger') iconPath = '/assets/icons/medieval/dagger.svg';
+  if (name === 'potion') iconPath = '/assets/icons/medieval/potion.svg';
 
   return (
     <div 
-      className={`medieval-icon ${animated ? 'medieval-icon-animated' : ''}`}
+      className={cn(`medieval-icon ${animated ? 'medieval-icon-animated' : ''}`, className)}
       style={{ 
         width: sizeValue,
         height: sizeValue,

@@ -18,8 +18,8 @@ import { useToast } from '@/hooks/use-toast';
 const MockeryComponent = () => {
   const { toast } = useToast();
   const mockeryActions: MockeryAction[] = [
-    'tomato',  // Changed from 'tomatoes'
-    'egg',     // Changed from 'eggs'
+    'tomato',  
+    'egg',     
     'crown',
     'stocks',
     'jester'

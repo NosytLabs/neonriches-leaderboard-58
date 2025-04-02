@@ -1,10 +1,11 @@
 
 import React from 'react';
 import MedievalIcon from '../medieval-icon';
+import { MedievalIconSize, IconColor } from '@/types/ui/icon-types';
 
 interface CoatOfArmsProps {
-  color?: string;
-  size?: string;
+  color?: IconColor;
+  size?: MedievalIconSize;
   className?: string;
 }
 

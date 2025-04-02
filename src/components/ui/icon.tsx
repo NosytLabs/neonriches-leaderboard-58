@@ -9,8 +9,9 @@ import { IconProps, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
  */
 export const Icon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
   const { 
+    name,
     icon,
-    name, // For backward compatibility
+    iconName,
     size = 'md',
     color = 'default', 
     className, 
@@ -19,11 +20,11 @@ export const Icon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
     ...restProps 
   } = props;
 
-  // Use either icon or name
-  const iconToUse = icon || name;
+  // Use either icon, name, or iconName for backward compatibility
+  const iconToUse = icon || name || iconName;
 
   if (!iconToUse) {
-    console.warn('Icon component requires either icon or name prop');
+    console.warn('Icon component requires either icon, name, or iconName prop');
     return null;
   }
 

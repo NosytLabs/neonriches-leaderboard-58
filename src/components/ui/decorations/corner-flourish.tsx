@@ -1,11 +1,12 @@
 
 import React from 'react';
 import MedievalIcon from '../medieval-icon';
+import { MedievalIconSize, IconColor } from '@/types/ui/icon-types';
 
 interface CornerFlourishProps {
   position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-  color?: string;
-  size?: string;
+  color?: IconColor;
+  size?: MedievalIconSize;
   className?: string;
 }
 

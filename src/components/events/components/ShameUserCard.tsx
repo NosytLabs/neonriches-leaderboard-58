@@ -36,7 +36,7 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
   isOnCooldown,
   shameCount = 0,
   onShame,
-  featuredAction = 'tomato'  // Updated from 'tomatoes'
+  featuredAction = 'tomato'
 }) => {
   const userId = typeof user.id === 'string' ? parseInt(user.id, 10) : user.id;
   const spentAmount = user.totalSpent || user.amountSpent || 0;
@@ -52,13 +52,15 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
   const getShamedEffectClass = () => {
     if (!isShamed) return "";
     
-    if (normalizeMockeryAction(isShamed.type) === 'tomato') {
+    const normalizedType = normalizeMockeryAction(isShamed.type as string);
+    
+    if (normalizedType === 'tomato') {
       return "shame-effect-tomatoes";
     }
-    if (normalizeMockeryAction(isShamed.type) === 'egg') {
+    if (normalizedType === 'egg') {
       return "shame-effect-eggs";
     }
-    if (normalizeMockeryAction(isShamed.type) === 'stocks') {
+    if (normalizedType === 'stocks') {
       return "shame-effect-stocks";
     }
     

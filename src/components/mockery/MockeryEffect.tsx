@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MockeryAction } from '@/types/mockery-types';
 import { cn } from '@/lib/utils';
 import { getMockeryDescription } from '@/utils/mockeryUtils';
+import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 
 interface MockeryEffectProps {
   username: string;
@@ -22,8 +23,10 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
   const [showImpactEffect, setShowImpactEffect] = useState(false);
   
   const getEffectContent = () => {
-    switch (action) {
-      case 'tomatoes':
+    const normalizedAction = normalizeMockeryAction(action as string);
+    
+    switch (normalizedAction) {
+      case 'tomato':
         return {
           emoji: '🍅',
           text: 'Splat!',
@@ -32,7 +35,7 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
           sound: 'splat',
           impact: 'splatter'
         };
-      case 'eggs':
+      case 'egg':
         return {
           emoji: '🥚',
           text: 'Crack!',
@@ -41,7 +44,7 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
           sound: 'crack',
           impact: 'shell-fragments'
         };
-      case 'putridEggs':
+      case 'putridEgg':
         return {
           emoji: '🥚',
           text: 'Crack!',
@@ -104,13 +107,14 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
     if (!isActive) return;
     
     let particleCount = 20;
+    const normalizedAction = normalizeMockeryAction(action as string);
     
-    switch (action) {
-      case 'tomatoes':
+    switch (normalizedAction) {
+      case 'tomato':
         particleCount = 25;
         break;
-      case 'eggs':
-      case 'putridEggs':
+      case 'egg':
+      case 'putridEgg':
         particleCount = 15;
         break;
       case 'smokeBomb':
@@ -125,8 +129,8 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
     
     const newParticles = Array.from({ length: particleCount }, (_, i) => ({
       id: i,
-      x: action === 'silence' ? 50 + (Math.random() * 30 - 15) : Math.random() * 100,
-      y: action === 'silence' ? 50 + (Math.random() * 30 - 15) : Math.random() * 100,
+      x: normalizedAction === 'silence' ? 50 + (Math.random() * 30 - 15) : Math.random() * 100,
+      y: normalizedAction === 'silence' ? 50 + (Math.random() * 30 - 15) : Math.random() * 100,
       rotation: Math.random() * 360,
       velocity: 1 + Math.random() * 2,
       delay: Math.random() * 0.5
@@ -159,7 +163,7 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
     return null;
   }
   
-  if (isActive && action === 'smokeBomb') {
+  if (isActive && normalizeMockeryAction(action as string) === 'smokeBomb') {
     return (
       <AnimatePresence>
         <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden perspective">
@@ -197,7 +201,7 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
-              {getMockeryDescription(action)}
+              {getMockeryDescription(normalizeMockeryAction(action as string))}
             </motion.div>
           </motion.div>
           

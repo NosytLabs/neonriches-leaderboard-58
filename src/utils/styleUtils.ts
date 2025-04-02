@@ -1,94 +1,113 @@
 
+import { CSSProperties } from 'react';
+
 /**
- * Utility functions for handling styles in the application
+ * Helper functions for styling components
  */
 
-// Convert hex color to RGB values
-export const hexToRgb = (hex: string): { r: number; g: number; b: number } | null => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-      }
-    : null;
-};
-
-// Get contrast color (black or white) based on background color
-export const getContrastColor = (hexColor: string): 'black' | 'white' => {
-  const rgb = hexToRgb(hexColor);
-  if (!rgb) return 'white';
-  
-  // Calculate luminance using YIQ formula
-  const yiq = (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
-  return yiq >= 128 ? 'black' : 'white';
-};
-
-// Get color by user tier
-export const getTierColor = (tier: string): string => {
-  const tierColors: Record<string, string> = {
-    'free': '#718096', // gray
-    'basic': '#4299e1', // blue
-    'premium': '#9f7aea', // purple
-    'royal': '#f6ad55', // orange
-    'pro': '#3182ce', // darker blue
-    'gold': '#ecc94b', // gold
-    'silver': '#cbd5e0', // silver
-    'bronze': '#c05621', // bronze
-    'legendary': '#e53e3e', // red
+/**
+ * Returns flexbox CSS properties
+ */
+export const asFlex = (
+  justify: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly' = 'center',
+  align: 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline' = 'center',
+  direction: 'row' | 'row-reverse' | 'column' | 'column-reverse' = 'row'
+): CSSProperties => {
+  return {
+    display: 'flex',
+    flexDirection: direction,
+    justifyContent: justify,
+    alignItems: align
   };
-  
-  return tierColors[tier.toLowerCase()] || '#718096';
 };
 
-// Get CSS gradient based on tier
-export const getTierGradient = (tier: string): string => {
-  const tierGradients: Record<string, string> = {
-    'royal': 'linear-gradient(135deg, #f6ad55 0%, #ed8936 100%)',
-    'premium': 'linear-gradient(135deg, #9f7aea 0%, #6b46c1 100%)',
-    'pro': 'linear-gradient(135deg, #4299e1 0%, #3182ce 100%)',
-    'gold': 'linear-gradient(135deg, #ecc94b 0%, #d69e2e 100%)',
-    'legendary': 'linear-gradient(135deg, #e53e3e 0%, #c53030 100%)',
+/**
+ * Returns grid CSS properties
+ */
+export const asGrid = (
+  columns: number | string = 2,
+  gap: number | string = 1,
+  rows?: number | string
+): CSSProperties => {
+  return {
+    display: 'grid',
+    gridTemplateColumns: typeof columns === 'number' ? `repeat(${columns}, 1fr)` : columns,
+    ...(rows && { gridTemplateRows: typeof rows === 'number' ? `repeat(${rows}, 1fr)` : rows }),
+    gap: typeof gap === 'number' ? `${gap}rem` : gap
   };
-  
-  return tierGradients[tier.toLowerCase()] || 'none';
 };
 
-// Get CSS shadow based on tier
-export const getTierShadow = (tier: string): string => {
-  const tierShadows: Record<string, string> = {
-    'royal': '0 4px 14px 0 rgba(246, 173, 85, 0.4)',
-    'premium': '0 4px 14px 0 rgba(159, 122, 234, 0.4)',
-    'gold': '0 4px 14px 0 rgba(236, 201, 75, 0.4)',
-    'legendary': '0 4px 14px 0 rgba(229, 62, 62, 0.4)',
+/**
+ * Returns royal-themed styling
+ */
+export const asRoyal = (
+  variant: 'gold' | 'crimson' | 'emerald' | 'sapphire' = 'gold',
+  isHovered: boolean = false
+): CSSProperties => {
+  const variantStyles = {
+    gold: {
+      color: isHovered ? '#FFD700' : '#B8860B',
+      borderColor: '#B8860B',
+      background: 'rgba(184, 134, 11, 0.1)'
+    },
+    crimson: {
+      color: isHovered ? '#DC143C' : '#8B0000',
+      borderColor: '#8B0000',
+      background: 'rgba(139, 0, 0, 0.1)'
+    },
+    emerald: {
+      color: isHovered ? '#50C878' : '#2E8B57',
+      borderColor: '#2E8B57',
+      background: 'rgba(46, 139, 87, 0.1)'
+    },
+    sapphire: {
+      color: isHovered ? '#0F52BA' : '#082567',
+      borderColor: '#082567',
+      background: 'rgba(8, 37, 103, 0.1)'
+    }
   };
-  
-  return tierShadows[tier.toLowerCase()] || 'none';
+
+  return variantStyles[variant];
 };
 
-// Generate a CSS class based on user tier
-export const getTierClass = (tier: string): string => {
-  const tierClasses: Record<string, string> = {
-    'free': 'tier-free',
-    'basic': 'tier-basic',
-    'premium': 'tier-premium',
-    'royal': 'tier-royal',
-    'pro': 'tier-pro',
-    'gold': 'tier-gold',
-    'silver': 'tier-silver',
-    'bronze': 'tier-bronze',
-    'legendary': 'tier-legendary',
+/**
+ * Returns padding/margin helper
+ */
+export const asSpaced = (
+  padding?: string | number,
+  margin?: string | number
+): CSSProperties => {
+  return {
+    ...(padding !== undefined && { 
+      padding: typeof padding === 'number' ? `${padding}rem` : padding 
+    }),
+    ...(margin !== undefined && { 
+      margin: typeof margin === 'number' ? `${margin}rem` : margin 
+    })
   };
-  
-  return tierClasses[tier.toLowerCase()] || 'tier-basic';
+};
+
+/**
+ * Returns text styling
+ */
+export const asText = (
+  size?: string | number,
+  weight?: string | number,
+  align?: 'left' | 'center' | 'right' | 'justify'
+): CSSProperties => {
+  return {
+    ...(size !== undefined && { 
+      fontSize: typeof size === 'number' ? `${size}rem` : size 
+    }),
+    ...(weight !== undefined && { fontWeight: weight }),
+    ...(align !== undefined && { textAlign: align })
+  };
 };
 
 export default {
-  hexToRgb,
-  getContrastColor,
-  getTierColor,
-  getTierGradient,
-  getTierShadow,
-  getTierClass,
+  asFlex,
+  asGrid,
+  asRoyal,
+  asSpaced,
+  asText
 };

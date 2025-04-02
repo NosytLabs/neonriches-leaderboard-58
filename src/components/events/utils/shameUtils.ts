@@ -1,3 +1,4 @@
+
 import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { UserTier } from '@/types/user-types';
 import { getMockeryActionPrice } from '@/utils/mockeryUtils';
@@ -48,5 +49,5 @@ export const hasWeeklyDiscount = (): boolean => {
 // Get the weekly discounted action
 export const getWeeklyDiscountedAction = (): MockeryAction => {
   // In a real application, this might rotate weekly or be fetched from an API
-  return 'tomatoes';
+  return 'tomato';
 };

@@ -1,70 +1,60 @@
 
-/**
- * Team related types
- */
+// Define TeamColor types
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze' | 'crimson';
 
-// Define core TeamColor type
-export type TeamColor = 
-  | 'red' 
-  | 'blue' 
-  | 'green' 
-  | 'gold' 
-  | 'purple'
-  | 'none'
-  | 'neutral'
-  | 'silver'
-  | 'bronze'
-  | 'crimson';
+// For backward compatibility
+export type TeamType = TeamColor;
 
-export type TeamRole = 'member' | 'moderator' | 'leader' | 'founder';
-
-export interface TeamMember {
+// Team data interface
+export interface Team {
   id: string;
-  username: string;
-  profileImage: string;
-  role: TeamRole;
-  joinedAt: string;
-  contribution: number;
-  rank?: number;
-}
-
-export interface TeamStats {
-  memberCount: number;
-  totalSpent: number;
-  rank: number;
-  previousRank: number;
-  averageSpentPerMember: number;
-  weeklyGrowth: number;
-}
-
-export interface TeamBenefits {
-  discounts: number;
-  boosts: number;
-  rewards: number;
-  protections: number;
-}
-
-export interface TeamInvite {
-  id: string;
-  teamId: string;
-  userId: string;
-  invitedBy: string;
-  invitedAt: string;
-  status: 'pending' | 'accepted' | 'declined';
-}
-
-export interface TeamData {
-  id: string;
-  color: TeamColor;
   name: string;
+  color: TeamColor;
   description: string;
   members: number;
-  logoUrl: string;
-  totalContribution: number;
+  contribution: number;
   rank: number;
   previousRank: number;
+  logo: string;
+  banner?: string;
+  motto?: string;
   benefits: string[];
+  leader?: string;
+  foundedDate?: string;
 }
 
-// Re-export TeamColor as TeamType for backward compatibility
-export type TeamType = TeamColor;
+// Team member data
+export interface TeamMember {
+  id: string;
+  userId: string;
+  username: string;
+  profileImage?: string;
+  joinDate: string;
+  contribution: number;
+  rank: number;
+  badges?: string[];
+  isLeader?: boolean;
+  role?: string;
+}
+
+// Team stats
+export interface TeamStats {
+  totalMembers: number;
+  activeMembers: number;
+  totalContribution: number;
+  weeklyGrowth: number;
+  monthlyGrowth: number;
+  winStreak: number;
+  rank: number;
+  previousRank: number;
+  victories: number;
+  defeats: number;
+}
+
+export default {
+  TeamColor,
+  TeamType,
+  Team,
+  TeamMember,
+  TeamStats
+};

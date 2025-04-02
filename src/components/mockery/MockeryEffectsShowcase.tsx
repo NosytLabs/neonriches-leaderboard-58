@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { AlertCircle, ShieldAlert, Crown, Clock, Filter } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery-types';
+import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 
 // Import properly from mockeryUtils
 import { hasWeeklyDiscount, getDiscountedShamePrice } from '@/utils/shameUtils';
@@ -23,8 +24,9 @@ const MockeryEffectsShowcase: React.FC<MockeryEffectsShowcaseProps> = ({ onSelec
   const [selectedAction, setSelectedAction] = useState<MockeryAction | null>(null);
   const hasDiscount = hasWeeklyDiscount();
   
+  // Define mockery actions using the standardized format
   const mockeryActions: MockeryAction[] = [
-    'tomatoes', 'eggs', 'putridEggs', 'jester', 'crown',
+    'tomato', 'egg', 'putridEgg', 'jester', 'crown',
     'shame', 'silence', 'courtJester', 'smokeBomb', 'protection'
   ];
   

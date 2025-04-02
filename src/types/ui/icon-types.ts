@@ -4,7 +4,9 @@ import { CSSProperties } from 'react';
 
 // Define icon size options
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
-export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+
+// Define medieval icon size options
+export type MedievalIconSize = IconSize;
 
 // Define icon color options
 export type IconColor = 
@@ -19,7 +21,13 @@ export type IconColor =
   | 'bronze'
   | 'royal'
   | 'white'
-  | 'black';
+  | 'black'
+  | 'crimson'
+  | 'emerald'
+  | 'red'
+  | 'blue'
+  | 'green'
+  | 'purple';
 
 // Define icon style options
 export type IconStyle =
@@ -43,13 +51,25 @@ export type MedievalIconName =
   | 'coins'
   | 'chest'
   | 'throne'
-  | 'treasure-chest';
+  | 'treasure-chest'
+  | 'chalice'
+  | 'flag'
+  | 'tower'
+  | 'banner'
+  | 'dagger'
+  | 'potion';
 
-// Icon props interface extending Lucide props
-export interface IconProps extends LucideProps {
-  size?: IconSize;
-  color?: IconColor;
+// Icon props interface
+export interface IconProps {
+  name?: string;
+  icon?: string;
+  iconName?: string;
+  size?: IconSize | number;
+  color?: IconColor | string;
+  className?: string;
   style?: IconStyle | CSSProperties;
+  animated?: boolean;
+  [key: string]: any;
 }
 
 // Medieval Icon props
@@ -58,6 +78,7 @@ export interface MedievalIconProps {
   size?: MedievalIconSize;
   color?: IconColor;
   animated?: boolean;
+  className?: string;
 }
 
 // Icon adapter props for compatibility with different icon systems
@@ -70,32 +91,34 @@ export interface IconAdapterProps {
 
 // Size mapping for consistent sizing across icon systems
 export const iconSizeMap: Record<IconSize, string> = {
-  'xs': '0.75rem',
-  'sm': '1rem',
-  'md': '1.25rem',
-  'lg': '1.5rem',
-  'xl': '2rem',
-  '2xl': '2.5rem',
-  '3xl': '3rem',
-  '4xl': '4rem'
+  'xs': 'w-3 h-3',
+  'sm': 'w-4 h-4',
+  'md': 'w-6 h-6',
+  'lg': 'w-8 h-8',
+  'xl': 'w-10 h-10',
+  '2xl': 'w-12 h-12',
+  '3xl': 'w-16 h-16',
+  '4xl': 'w-20 h-20'
 };
 
 // Color mapping for consistent colors across icon systems
 export const iconColorMap: Record<IconColor, string> = {
-  'default': 'currentColor',
-  'primary': 'var(--color-primary)',
-  'secondary': 'var(--color-secondary)',
-  'success': 'var(--color-success)',
-  'warning': 'var(--color-warning)',
-  'error': 'var(--color-error)',
-  'gold': 'var(--color-royal-gold)',
-  'silver': 'var(--color-silver)',
-  'bronze': 'var(--color-bronze)',
-  'royal': 'var(--color-royal-purple)',
-  'white': 'white',
-  'black': 'black'
+  'default': 'text-foreground',
+  'primary': 'text-primary',
+  'secondary': 'text-secondary',
+  'success': 'text-green-500',
+  'warning': 'text-amber-500',
+  'error': 'text-red-500',
+  'gold': 'text-royal-gold',
+  'silver': 'text-gray-300',
+  'bronze': 'text-amber-700',
+  'royal': 'text-royal-purple',
+  'white': 'text-white',
+  'black': 'text-black',
+  'crimson': 'text-royal-crimson',
+  'emerald': 'text-emerald-500',
+  'red': 'text-red-500',
+  'blue': 'text-blue-500',
+  'green': 'text-green-500',
+  'purple': 'text-purple-500'
 };
-
-// Use export type for better TS compatibility with isolatedModules
-export type { IconProps, MedievalIconProps, IconAdapterProps, IconSize, IconColor, IconStyle, MedievalIconName, MedievalIconSize };
-export { iconSizeMap, iconColorMap };
