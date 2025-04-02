@@ -1,10 +1,6 @@
 
-// Fix imports to use consistent casing
-
-// Import from the correct path with consistent casing
+// Import from the UI shell component for consistency
 import { Shell } from '@/components/ui/shell/Shell';
-export { Shell };
 
-// Make sure we're exporting it as the default too
-const ShellComponent = Shell;
-export default ShellComponent;
+export { Shell };
+export default Shell;
