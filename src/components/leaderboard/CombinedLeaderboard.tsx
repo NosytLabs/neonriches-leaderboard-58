@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMockLeaderboard } from '@/hooks/useMockLeaderboard';
@@ -15,9 +14,8 @@ import { Dialog } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import ShameModal from '@/components/dashboard/leaderboard/ShameModal';
 
-// Define an updated LeaderboardFilter that includes sortDirection
 interface CombinedLeaderboardFilter {
-  team: TeamColor | 'all';  // Updated to match LeaderboardFilter
+  team: TeamColor | 'all';
   tier: string;
   timeframe: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all';
   search: string;
@@ -39,7 +37,7 @@ const CombinedLeaderboard: React.FC = () => {
     timeframe: 'all-time',
     search: '',
     sortBy: 'rank',
-    sortDirection: 'asc' // Add default sortDirection
+    sortDirection: 'asc'
   });
   
   const [filteredUsers, setFilteredUsers] = useState<LeaderboardUser[]>([]);
@@ -47,23 +45,19 @@ const CombinedLeaderboard: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
   const [shameAction, setShameAction] = useState<MockeryAction>('tomatoes');
   
-  // Apply filters whenever the filter or data changes
   useEffect(() => {
     if (!mockLeaderboardData) return;
     
     let result = [...mockLeaderboardData];
     
-    // Apply team filter
     if (filter.team && filter.team !== 'all') {
       result = result.filter(user => user.team === filter.team);
     }
     
-    // Apply tier filter
     if (filter.tier && filter.tier !== 'all') {
       result = result.filter(user => user.tier === filter.tier);
     }
     
-    // Apply search filter
     if (filter.search) {
       const searchTerm = filter.search.toLowerCase();
       result = result.filter(user => 
@@ -72,7 +66,6 @@ const CombinedLeaderboard: React.FC = () => {
       );
     }
     
-    // Apply sorting
     const sortField = filter.sortBy || 'rank';
     const sortDir = filter.sortDirection || 'asc';
     
@@ -94,7 +87,6 @@ const CombinedLeaderboard: React.FC = () => {
     setFilteredUsers(result);
   }, [filter, mockLeaderboardData]);
   
-  // Convert the filter to match the expected type
   const handleFilterChange = (newFilter: Partial<CombinedLeaderboardFilter>) => {
     setFilter(prev => ({ ...prev, ...newFilter }));
   };
@@ -105,14 +97,13 @@ const CombinedLeaderboard: React.FC = () => {
   
   const handleShameUser = (user: LeaderboardUser) => {
     setSelectedUser(user);
-    setShameAction('tomatoes'); // Default action
+    setShameAction('tomatoes');
     setShowShameModal(true);
   };
   
   const handleShameConfirm = () => {
     if (!selectedUser) return;
     
-    // In a real app, we would call an API to apply the shame
     if (sound.playSound) {
       sound.playSound('notification');
     }

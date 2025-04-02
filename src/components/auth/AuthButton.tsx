@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/contexts/auth';
+import useAuth from '@/hooks/useAuth';
 import { Link } from 'react-router-dom';
 import { LogIn, LogOut, UserPlus } from 'lucide-react';
 

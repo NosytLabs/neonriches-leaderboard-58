@@ -19,7 +19,7 @@ import {
   Bell,
   ChevronDown,
 } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import UserBadge from '@/components/ui/user-badge';

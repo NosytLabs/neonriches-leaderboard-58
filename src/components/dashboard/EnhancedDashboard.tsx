@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Trophy, Crown, Users, Activity, Zap } from 'lucide-react';
 import { Achievement } from '@/components/achievements/AchievementDisplay';

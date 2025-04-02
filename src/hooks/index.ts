@@ -1,6 +1,6 @@
 
 // Auth
-export { useAuth } from './useAuth';
+export { default as useAuth } from './useAuth';
 
 // Sounds
 export { useSound } from './sounds/use-sound';

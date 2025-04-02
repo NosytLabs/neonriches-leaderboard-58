@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -5,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import LoginForm from '@/components/auth/LoginForm';
 import RegisterForm from '@/components/auth/RegisterForm';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
 import MedievalIcon from '@/components/ui/medieval-icon';
 import useNotificationSounds from '@/hooks/sounds/use-notification-sounds';
 

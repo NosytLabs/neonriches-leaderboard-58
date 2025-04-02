@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '@/contexts/auth';
 import Leaderboard from '@/pages/LeaderboardPage';
 import MockeryPage from '@/pages/MockeryPage';
+import Auth from '@/pages/Auth';
 
 const App: React.FC = () => {
   // Create a context object for react-helmet-async
@@ -18,6 +19,8 @@ const App: React.FC = () => {
           <Route path="/" element={<Leaderboard />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/mockery/:username" element={<MockeryPage />} />
+          <Route path="/login" element={<Auth />} />
+          <Route path="/register" element={<Auth />} />
         </Routes>
         <Toaster />
       </AuthProvider>
