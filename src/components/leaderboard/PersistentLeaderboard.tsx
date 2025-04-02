@@ -1,30 +1,33 @@
-
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLeaderboard } from '@/hooks/useLeaderboard';
-import LeaderboardList from './LeaderboardList';
-import { LeaderboardFilter } from '@/types/leaderboard';
+import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
+import { UserTier, TeamColor } from '@/types/mockery-types';
 import { Loader } from 'lucide-react';
 
 const PersistentLeaderboard = () => {
-  const [filter, setFilter] = useState<Partial<LeaderboardFilter>>({
-    tier: undefined,
-    sortBy: 'totalSpent',
-    team: undefined,
-    search: '',
-    sortDirection: 'asc',
+  const [filter, setFilter] = useState<LeaderboardFilter>({
+    team: 'all',
+    tier: 'all',
     timeframe: 'all',
+    search: '',
+    sortBy: 'spent',
+    sortDirection: 'desc',
     limit: 10
   });
-  
-  const { users, loading, error } = useLeaderboard(filter as LeaderboardFilter);
-  const [errorMessage, setErrorMessage] = useState('');
-  
+
+  const { data, loading, error, fetchLeaderboard } = useLeaderboard();
+
   useEffect(() => {
-    if (error) {
-      setErrorMessage(error);
-    }
-  }, [error]);
-  
+    fetchLeaderboard(filter);
+  }, [filter, fetchLeaderboard]);
+
+  const handleFilterChange = (key: keyof LeaderboardFilter, value: any) => {
+    setFilter(prev => ({
+      ...prev,
+      [key]: value
+    }));
+  };
+
   return (
     <div className="relative">
       {loading && (
@@ -34,9 +37,9 @@ const PersistentLeaderboard = () => {
       )}
       
       <LeaderboardList 
-        users={users} 
+        users={data} 
         loading={loading} 
-        error={errorMessage} 
+        error={error} 
       />
     </div>
   );

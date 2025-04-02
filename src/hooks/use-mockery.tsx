@@ -1,146 +1,162 @@
 
 import { useState, useCallback } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { useSound } from '@/hooks/use-sound';
-import { MockeryAction, MockedUser, MockeryEvent } from '@/types/mockery-types';
-import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
+import { MockeryAction, MockeryEvent, MockedUser } from '@/types/mockery-types';
+import { useToast } from './use-toast';
+import { useSound } from './sounds/use-sound';
 
-export const useMockery = () => {
-  const [mockedUsers, setMockedUsers] = useState<MockedUser[]>([
-    {
-      id: "user1",
-      username: "EliteSpender",
-      displayName: "Elite Spender",
-      profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
-      tier: "royal",
-      team: "red",
-      // Additional properties
-      action: "tomato",
-      appliedBy: "system",
-      appliedAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 3600000).toISOString(),
-      totalSpent: 15000,
-      rank: 1,
-      spendStreak: 7,
-      mockeryCount: 5,
-      lastMockedAt: new Date().toISOString(),
-      recentActions: ['tomato', 'egg']
-    },
-    {
-      id: "user2",
-      username: "MoneyThrone",
-      displayName: "Money Throne",
-      profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
-      tier: "premium",
-      team: "blue",
-      // Additional properties
-      action: "egg",
-      appliedBy: "user123",
-      appliedAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 7200000).toISOString(),
-      totalSpent: 12000,
-      rank: 2,
-      spendStreak: 5,
-      mockeryCount: 3,
-      lastMockedAt: new Date().toISOString(),
-      recentActions: ['egg', 'crown']
-    }
-  ]);
-  
-  const [selectedAction, setSelectedAction] = useState<MockeryAction>("crown");
+// Interface for the return value of this hook
+interface UseMockeryResult {
+  targetUser: MockedUser | null;
+  mockUser: (action: MockeryAction, targetUser: MockedUser) => Promise<boolean>;
+  isMocking: boolean;
+  mockeryResult: MockeryEvent | null;
+  costForAction: (action: MockeryAction) => number;
+  resetMockery: () => void;
+}
+
+export const useMockery = (): UseMockeryResult => {
+  const [targetUser, setTargetUser] = useState<MockedUser | null>(null);
+  const [isMocking, setIsMocking] = useState<boolean>(false);
+  const [mockeryResult, setMockeryResult] = useState<MockeryEvent | null>(null);
   const { toast } = useToast();
   const sound = useSound();
-  
-  const applyMockery = useCallback((userId: string, action: MockeryAction, reason?: string) => {
-    // Normalize action before storing
-    const normalizedAction = normalizeMockeryAction(action as string) as MockeryAction;
-    
-    const mockUser: MockedUser = {
-      id: userId,
-      username: "MockedUser",
-      displayName: "Mocked User",
+
+  // Example mock users for demo purposes
+  const mockUsers: { [key: string]: MockedUser } = {
+    "user1": {
+      id: "1",
+      userId: "1", // Add userId for compatibility
+      username: "kingspender",
+      displayName: "King Spender",
+      profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
+      team: "gold",
+      tier: "royal",
+      rank: 1
+    },
+    "user2": {
+      id: "2",
+      userId: "2", // Add userId for compatibility
+      username: "queenofcash",
+      displayName: "Queen of Cash",
+      profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
+      team: "purple",
+      tier: "premium",
+      rank: 2
+    },
+    "user3": {
+      id: "3",
+      userId: "3", // Add userId for compatibility
+      username: "statuschaser",
+      displayName: "Status Chaser",
       profileImage: "https://randomuser.me/api/portraits/men/3.jpg",
+      team: "red",
       tier: "basic",
-      team: "green",
-      // Additional properties
-      action: normalizedAction,
-      appliedBy: "current-user",
-      appliedAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 3600000).toISOString(),
-      reason: reason,
-      totalSpent: 5000,
-      rank: 15,
-      spendStreak: 3,
-      mockeryCount: 1,
-      lastMockedAt: new Date().toISOString(),
-      recentActions: [normalizedAction]
+      rank: 3
+    }
+  };
+
+  // Function to mock a user with a specific action
+  const mockUser = useCallback(async (action: MockeryAction, user: MockedUser): Promise<boolean> => {
+    setIsMocking(true);
+    setTargetUser(user);
+
+    try {
+      // In a real app, this would be an API call
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Play a sound effect based on the action
+      if (action === 'tomato') {
+        sound.playSound('error');
+      } else if (action === 'crown') {
+        sound.playSound('royal');
+      } else if (action === 'taunt') {
+        sound.playSound('mock');
+      } else {
+        sound.playSound('notification');
+      }
+      
+      // Create a mock result
+      const result: MockeryEvent = {
+        id: `mock-${Date.now()}`,
+        action,
+        fromUserId: "current-user",
+        toUserId: user.userId || '', // Use userId for compatibility
+        timestamp: new Date().toISOString(),
+        fromUser: mockUsers["user1"],
+        toUser: user,
+        cost: costForAction(action), // Add cost for compatibility
+        tier: 'common'
+      };
+      
+      setMockeryResult(result);
+      
+      // Show a toast notification
+      toast({
+        title: 'Mockery Successful',
+        description: `You used ${action} on ${user.displayName}`,
+        variant: 'success'
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('Error mocking user:', error);
+      
+      toast({
+        title: 'Mockery Failed',
+        description: 'There was an error processing your mockery',
+        variant: 'destructive'
+      });
+      
+      return false;
+    } finally {
+      setIsMocking(false);
+    }
+  }, [toast, sound]);
+
+  // Calculate cost for different actions
+  const costForAction = useCallback((action: MockeryAction): number => {
+    const costs: Record<string, number> = {
+      tomato: 10,
+      egg: 15,
+      rotten_egg: 25,
+      crown: 100,
+      heart: 5,
+      laugh: 5,
+      skull: 30,
+      thumbs_down: 5,
+      flame: 20,
+      putridEgg: 50,
+      stocks: 75,
+      shame: 60,
+      protection: 150,
+      jester: 40,
+      courtJester: 80,
+      silence: 120,
+      smokeBomb: 90,
+      taunt: 30,
+      mock: 40,
+      challenge: 100,
+      joust: 200,
+      duel: 200,
+      fish: 25
     };
     
-    setMockedUsers(prev => [...prev, mockUser]);
-    
-    toast({
-      title: "Mockery Applied",
-      description: `You've applied ${action} to user ${userId}`,
-      variant: "default"
-    });
-    
-    sound.playSound("notification");
-    
-    return mockUser;
-  }, [toast, sound]);
-  
-  const removeMockery = useCallback((userId: string) => {
-    setMockedUsers(prev => prev.filter(user => user.id !== userId));
-    
-    toast({
-      title: "Mockery Removed",
-      description: `You've removed mockery from user ${userId}`,
-      variant: "default"
-    });
-  }, [toast]);
-  
-  // Add mock events for display that match MockeryEvent interface
-  const mockEvents: MockeryEvent[] = [
-    {
-      id: "event1",
-      fromUserId: "currentUser",
-      toUserId: "user1",
-      action: "tomato",
-      timestamp: new Date().toISOString(),
-      tier: "common",
-      isAnonymous: false,
-      message: "You got tomatoes!",
-      // Additional properties for compatibility
-      cost: 10,
-      targetId: "user1",
-      fromId: "currentUser",
-      appliedBy: "user123",
-      seen: false
-    },
-    {
-      id: "event2",
-      fromUserId: "currentUser",
-      toUserId: "user2",
-      action: "crown",
-      timestamp: new Date(Date.now() - 86400000).toISOString(),
-      tier: "epic",
-      isAnonymous: true,
-      // Additional properties for compatibility
-      cost: 50,
-      targetId: "user2",
-      fromId: "currentUser",
-      appliedBy: "user456",
-      seen: false
-    }
-  ];
-  
+    return costs[action] || 10;
+  }, []);
+
+  // Reset the mockery state
+  const resetMockery = useCallback(() => {
+    setTargetUser(null);
+    setMockeryResult(null);
+  }, []);
+
   return {
-    mockedUsers,
-    selectedAction,
-    setSelectedAction,
-    applyMockery,
-    removeMockery,
-    mockEvents
+    targetUser,
+    mockUser,
+    isMocking,
+    mockeryResult,
+    costForAction,
+    resetMockery
   };
 };
 

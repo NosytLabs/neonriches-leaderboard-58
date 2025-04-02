@@ -1,140 +1,119 @@
 
-import { useState, useEffect } from 'react';
-import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
+import { useState, useCallback } from 'react';
+import { LeaderboardUser, LeaderboardFilter, UseLeaderboardResult } from '@/types/leaderboard';
 
-// Default filter
-const defaultFilter: LeaderboardFilter = {
-  tier: undefined,
-  sortBy: 'totalSpent',
-  team: undefined,
-  search: '',
-  sortDirection: 'asc',
-  timeframe: 'all',
-  limit: 10
-};
-
-/**
- * Hook to fetch and manage leaderboard data
- */
-export function useLeaderboard(initialFilter: Partial<LeaderboardFilter> = {}) {
-  const [users, setUsers] = useState<LeaderboardUser[]>([]);
-  const [loading, setLoading] = useState(true);
+export const useLeaderboard = (): UseLeaderboardResult => {
+  const [data, setData] = useState<LeaderboardUser[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<LeaderboardFilter>({
-    ...defaultFilter,
-    ...initialFilter,
-  });
+  const [total, setTotal] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
+  const [hasMore, setHasMore] = useState<boolean>(false);
+  
+  // Default filter that uses valid types
+  const defaultFilter: LeaderboardFilter = {
+    team: 'all',
+    tier: 'all',
+    timeframe: 'all',
+    search: '',
+    sortBy: 'spent', // Using valid sortBy value
+    sortDirection: 'desc',
+    limit: 10
+  };
 
-  useEffect(() => {
-    const fetchLeaderboard = async () => {
-      setLoading(true);
-      setError(null);
+  // Mock data for testing
+  const mockData: LeaderboardUser[] = [
+    {
+      id: "1",
+      userId: "1",
+      username: "royalspender",
+      displayName: "Royal Spender",
+      profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
+      avatarUrl: "https://randomuser.me/api/portraits/men/1.jpg",
+      totalSpent: 10000,
+      amountSpent: 10000, // Add required amountSpent
+      rank: 1,
+      team: "gold",
+      tier: "premium",
+      spendStreak: 7,
+      previousRank: 2,
+      isVerified: true,
+      isProtected: true,
+      walletBalance: 5000, // Add required walletBalance
+    },
+    {
+      id: "2",
+      userId: "2",
+      username: "bigwhale",
+      displayName: "Big Whale",
+      profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
+      avatarUrl: "https://randomuser.me/api/portraits/women/2.jpg",
+      totalSpent: 8500,
+      amountSpent: 8500, // Add required amountSpent
+      rank: 2,
+      team: "blue",
+      tier: "whale",
+      spendStreak: 5,
+      previousRank: 1,
+      isVerified: true,
+      isProtected: false,
+      walletBalance: 3000, // Add required walletBalance
+    },
+    {
+      id: "3",
+      userId: "3",
+      username: "statuschaser",
+      displayName: "Status Chaser",
+      profileImage: "https://randomuser.me/api/portraits/men/3.jpg",
+      avatarUrl: "https://randomuser.me/api/portraits/men/3.jpg",
+      totalSpent: 5000,
+      amountSpent: 5000, // Add required amountSpent
+      rank: 3,
+      team: "red",
+      tier: "pro",
+      spendStreak: 2,
+      previousRank: 4,
+      isVerified: false,
+      isProtected: false,
+      walletBalance: 1200, // Add required walletBalance
+    }
+  ];
+
+  const fetchLeaderboard = useCallback(async (filter: LeaderboardFilter = defaultFilter) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      try {
-        // For now, we'll use mock data
-        // In a real implementation, this would call an API
-        const mockUsers: LeaderboardUser[] = [
-          {
-            id: '1',
-            userId: '1',
-            username: 'royalspender',
-            displayName: 'Royal Spender',
-            profileImage: '/assets/avatars/1.png',
-            avatarUrl: '/assets/avatars/1.png',
-            totalSpent: 5000,
-            rank: 1,
-            team: 'gold',
-            tier: 'royal',
-            spendStreak: 7,
-            previousRank: 1,
-            isVerified: true,
-            isProtected: true
-          },
-          {
-            id: '2',
-            userId: '2',
-            username: 'bigwhale',
-            displayName: 'Big Whale',
-            profileImage: '/assets/avatars/2.png',
-            avatarUrl: '/assets/avatars/2.png',
-            totalSpent: 4500,
-            rank: 2,
-            team: 'blue',
-            tier: 'whale',
-            spendStreak: 5,
-            previousRank: 3,
-            isVerified: true,
-            isProtected: false
-          },
-          {
-            id: '3',
-            userId: '3',
-            username: 'loyaluser',
-            displayName: 'Loyal User',
-            profileImage: '/assets/avatars/3.png',
-            avatarUrl: '/assets/avatars/3.png',
-            totalSpent: 3200,
-            rank: 3,
-            team: 'red',
-            tier: 'premium',
-            spendStreak: 3,
-            previousRank: 2,
-            isVerified: false,
-            isProtected: false
-          }
-        ];
-        
-        // Apply filters (simplified implementation)
-        let filteredUsers = [...mockUsers];
-        
-        // Filter by team if specified
-        if (filter.team && filter.team !== 'all') {
-          filteredUsers = filteredUsers.filter(user => 
-            user.team === filter.team
-          );
-        }
-        
-        // Filter by search term
-        if (filter.search) {
-          const searchLower = filter.search.toLowerCase();
-          filteredUsers = filteredUsers.filter(user => 
-            user.username.toLowerCase().includes(searchLower) ||
-            (user.displayName && user.displayName.toLowerCase().includes(searchLower))
-          );
-        }
-        
-        // Apply sorting
-        filteredUsers.sort((a, b) => {
-          const aValue = a[filter.sortBy as keyof LeaderboardUser] as number;
-          const bValue = b[filter.sortBy as keyof LeaderboardUser] as number;
-          
-          return filter.sortDirection === 'asc' 
-            ? aValue - bValue 
-            : bValue - aValue;
-        });
-        
-        // Apply limit
-        if (filter.limit) {
-          filteredUsers = filteredUsers.slice(0, filter.limit);
-        }
-        
-        setUsers(filteredUsers);
-      } catch (error) {
-        console.error('Error fetching leaderboard:', error);
-        setError('Failed to load leaderboard data');
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchLeaderboard();
-  }, [filter]);
+      // Return mock data
+      setData(mockData);
+      setTotal(mockData.length);
+      setHasMore(false);
+    } catch (err) {
+      console.error("Error fetching leaderboard:", err);
+      setError("Failed to load leaderboard data");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const refetch = useCallback(async () => {
+    await fetchLeaderboard(defaultFilter);
+  }, [fetchLeaderboard]);
 
   return {
-    users,
+    data,
     loading,
     error,
-    filter,
-    setFilter
+    total,
+    fetchLeaderboard,
+    refetch,
+    page,
+    setPage,
+    hasMore
   };
-}
+};
+
+export default useLeaderboard;

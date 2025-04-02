@@ -14,14 +14,14 @@ export interface LeaderboardUser {
   team: TeamColor;
   tier: UserTier | string;
   totalSpent: number;
-  amountSpent: number;
+  amountSpent: number; // Ensure this property is required
   walletBalance: number;
   spendStreak: number;
   isVerified?: boolean;
   isProtected?: boolean;
   joinDate?: string;
   bio?: string;
-  // Add these properties to fix errors in components
+  // Optional properties
   rankChange?: number;
   spendChange?: number;
 }
@@ -31,7 +31,7 @@ export interface LeaderboardFilter {
   tier: UserTier | 'all';
   timeframe: 'year' | 'month' | 'week' | 'all-time' | 'today' | 'all'; // Added 'all' as valid option
   search: string;
-  sortBy: 'username' | 'rank' | 'spent'; // Restrict to these specific values
+  sortBy: 'username' | 'rank' | 'spent' | 'totalSpent'; // Added 'totalSpent' as valid option
   sortDirection: 'asc' | 'desc';
   limit: number;
 }
@@ -56,7 +56,7 @@ export interface UseLeaderboardResult {
   hasMore: boolean;
 }
 
-// Add these interfaces to fix missing exports in types/index.ts
+// Export these interfaces for use throughout the application
 export interface LeaderboardConfig {
   showRankChange: boolean;
   showSpendChange: boolean;

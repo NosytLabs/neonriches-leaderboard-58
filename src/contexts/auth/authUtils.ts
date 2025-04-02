@@ -1,4 +1,3 @@
-
 import { UserProfile } from '@/types/user-consolidated';
 import { ProfileBoost } from '@/types/boost';
 import { UserCosmetics } from '@/types/cosmetics';
@@ -26,6 +25,19 @@ export const createDemoUserProfile = (id: string = 'demo-user', username: string
     walletBalance: 1000,
     totalSpent: 500,
     amountSpent: 500,
+    profileBoosts: [],
+    cosmetics: {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    },
+    spendStreak: 0,
     settings: {
       profileVisibility: 'public',
       allowProfileLinks: true,
@@ -39,28 +51,13 @@ export const createDemoUserProfile = (id: string = 'demo-user', username: string
       showBadges: true,
       showTeam: true,
       showSpending: true
-    },
-    cosmetics: {
-      border: [],
-      color: [],
-      font: [],
-      emoji: [],
-      title: [],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    },
-    following: [],
-    followers: [],
-    spendStreak: 3
+    }
   };
 };
 
 /**
  * Process user data from the server to match the frontend User type
  * @param userData - Raw user data from the server
- * @param options - Processing options
  * @returns - Processed user data
  */
 export const processUser = (
@@ -85,6 +82,19 @@ export const processUser = (
     walletBalance: userData.walletBalance || 0,
     totalSpent: userData.totalSpent || userData.amountSpent || 0,
     amountSpent: userData.amountSpent || userData.totalSpent || 0,
+    profileBoosts: userData.profileBoosts || [],
+    cosmetics: userData.cosmetics || {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    },
+    spendStreak: userData.spendStreak || 0,
     settings: userData.settings || {
       profileVisibility: 'public',
       allowProfileLinks: true,
@@ -110,10 +120,6 @@ export const processUser = (
   
   if (userData.following) {
     user.following = Array.isArray(userData.following) ? userData.following : [];
-  }
-  
-  if (userData.cosmetics) {
-    user.cosmetics = userData.cosmetics;
   }
   
   if (userData.achievements) {

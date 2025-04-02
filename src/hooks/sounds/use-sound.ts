@@ -1,55 +1,57 @@
 
-import { useContext } from 'react';
-import { SoundContext } from './SoundProvider';
-import { SoundHook, SoundOptions, SoundType } from '../sound-types';
+import { useCallback } from 'react';
+import { useSoundContext } from './SoundProvider';
+import { SoundType, SoundOptions, SoundHook } from '@/types/sound-types';
 
 /**
- * Hook to use sound effects
+ * Custom hook for sound functionality
+ * Provides methods to play, control, and configure sounds in the application
+ * @returns Sound control methods and state
  */
 export const useSound = (): SoundHook => {
-  const context = useContext(SoundContext);
-  
-  if (!context) {
-    console.error('useSound must be used within a SoundProvider');
-    
-    // Return a no-op implementation
-    return {
-      playSound: () => {},
-      stopSound: () => {},
-      pauseSound: () => {},
-      resumeSound: () => {},
-      toggleMute: () => {},
-      isMuted: false,
-      setVolume: () => {},
-      getVolume: () => 0,
-      isEnabled: false,
-      toggleEnabled: () => {},
-      
-      // Compatibility methods
-      toggleMuted: () => {},
-      mute: () => {},
-      unmute: () => {},
-      currentVolume: 0,
-      soundConfig: {}
-    };
-  }
-  
-  // Add compatibility methods
-  return {
-    ...context,
-    toggleMuted: context.toggleMute,
-    mute: context.toggleMute,
-    unmute: context.toggleMute,
-    currentVolume: context.getVolume()
-  };
-};
+  const soundContext = useSoundContext();
 
-/**
- * Shorthand hook for just playing sounds
- */
-export const usePlaySound = (): (sound: SoundType, options?: SoundOptions) => void => {
-  const { playSound } = useSound();
-  return playSound;
+  // Normalize methods to match the SoundHook interface
+  const toggleMuted = useCallback((): boolean => {
+    return soundContext.toggleMute();
+  }, [soundContext]);
+
+  const isMuted = soundContext.isMuted;
+
+  const mute = useCallback(() => {
+    soundContext.mute();
+  }, [soundContext]);
+
+  const unmute = useCallback(() => {
+    soundContext.unmute();
+  }, [soundContext]);
+
+  const setVolume = useCallback((volume: number) => {
+    soundContext.setVolume(volume);
+  }, [soundContext]);
+
+  const currentVolume = soundContext.currentVolume;
+
+  const soundConfig: SoundHook["soundConfig"] = {
+    enabled: soundContext.isEnabled,
+    volume: soundContext.currentVolume,
+    muted: soundContext.isMuted
+  };
+
+  // Return a properly formatted SoundHook object
+  return {
+    ...soundContext,
+    toggleMuted,
+    isMuted,
+    mute,
+    unmute,
+    setVolume,
+    currentVolume,
+    soundConfig,
+    getVolume: soundContext.getVolume,
+    isEnabled: soundContext.isEnabled,
+    toggleEnabled: soundContext.toggleEnabled
+  };
 };
 
 export default useSound;

@@ -46,8 +46,7 @@ export interface MockeryEventBase {
   tier?: MockeryTier;
   message?: string;
   isAnonymous?: boolean;
-  // Add cost property to satisfy the use in hooks
-  cost?: number;
+  cost?: number; // Add cost property to satisfy the use in hooks
 }
 
 export interface MockeryEvent extends MockeryEventBase {
@@ -62,15 +61,14 @@ export interface MockeryEvent extends MockeryEventBase {
 }
 
 export interface MockedUser {
-  id: string;
+  id?: string;
+  userId?: string; // Add userId property for compatibility
   username: string;
   displayName: string;
   profileImage: string;
   team: TeamColor;
   tier: UserTier;
   rank?: number;
-  // Add userId to satisfy use in hooks
-  userId?: string;
   // Add additional properties used in use-mockery.tsx
   action?: MockeryAction;
   appliedBy?: string;
@@ -128,8 +126,8 @@ export type Gender =
   | 'jester'
   | 'noble';
 
-// Export LeaderboardUser to fix imports
-export type { LeaderboardUser } from '@/types/leaderboard';
+// Export LeaderboardUser type from correct location to fix imports
+export { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
 
 // Define mock results interface
 export interface MockeryResult {
@@ -139,4 +137,22 @@ export interface MockeryResult {
   mockeryText?: string;
   victim?: MockedUser;
   mocker?: MockedUser;
+}
+
+// Export TeamData interface to fix imports
+export interface TeamData {
+  id: string;
+  name: string;
+  color: TeamColor;
+  description: string;
+  logo?: string;
+  logoUrl?: string;
+  memberCount?: number;
+  members?: number;
+  totalContribution?: number;
+  rank: number;
+  previousRank?: number;
+  leaderUsername?: string;
+  leaderUserId?: string;
+  benefits?: string[];
 }

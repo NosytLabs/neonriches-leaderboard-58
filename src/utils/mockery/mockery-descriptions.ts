@@ -1,67 +1,63 @@
 
 import { MockeryAction } from '@/types/mockery-types';
 
-/**
- * Short descriptions for mockery actions
- */
-export const mockeryShortDescriptions: Record<MockeryAction, string> = {
-  tomato: "Throw a rotten tomato",
-  egg: "Throw an egg",
-  putridEgg: "Throw a putrid egg",
-  rotten_egg: "Throw a rotten egg",
-  flame: "Send flames",
-  heart: "Send hearts",
-  thumbs_down: "Give thumbs down",
-  laugh: "Laugh at them",
-  skull: "Send a skull",
-  crown: "Crown them",
-  stocks: "Put them in the stocks",
-  jester: "Make them the jester",
-  shame: "Shame them publicly",
-  silence: "Silence them",
-  courtJester: "Make them the court jester",
-  smokeBomb: "Throw a smoke bomb",
-  protection: "Offer protection",
-  taunt: "Taunt them",
-  mock: "Mock them",
-  challenge: "Challenge them",
-  joust: "Challenge to a joust",
-  duel: "Challenge to a duel",
-  fish: "Slap with a fish",
-  thumbsDown: "Give thumbs down"
+// Long descriptions for mockery actions
+export const mockeryDescriptions: Record<MockeryAction, string> = {
+  tomato: "Throw a ripe tomato at this user! A classic form of public rebuke that's been used for centuries.",
+  egg: "Lob an egg at this user! Watch out for the mess and smell that follows.",
+  rotten_egg: "Launch a putrid, rotten egg! The smell will linger longer than their shame.",
+  flame: "Send a flame to burn their pride! A hot mockery that sizzles with criticism.",
+  heart: "Show some mock affection with a heart! A sarcastic display of care.",
+  thumbs_down: "Give a clear disapproval with a thumbs down! Let them know exactly what you think.",
+  laugh: "Laugh at their expense! Nothing diminishes status quite like being the butt of a joke.",
+  skull: "Send a skull to symbolize the death of their dignity! A grim reminder of their social demise.",
+  crown: "Award them a mock crown, the monarchs of mistake-making! Rule over the kingdom of errors.",
+  putridEgg: "Hurl a particularly noxious egg that's been fermenting for weeks! The stench is legendary.",
+  stocks: "Place them in the public stocks for all to mock! A medieval punishment for modern folly.",
+  jester: "Name them the court jester! They'll entertain the crowd with their foolishness.",
+  mock: "Openly mock their status aspirations! A direct challenge to their social climbing.",
+  challenge: "Issue a formal spending challenge! Can they put their money where their mouth is?",
+  joust: "Challenge them to a spending joust! Two enter, one leaves with status intact.",
+  duel: "Demand a status duel at dawn! A formal contest of spending prowess.",
+  taunt: "Taunt them with your superior status! A verbal jab at their standing.",
+  fish: "Slap them with a wet fish! An absurd and humiliating rebuke.",
+  protection: "Break through their protective shield with this powerful mockery!",
+  shame: "Invoke the ancient 'Bell of Shame' to announce their folly to all!",
+  silence: "Cast a spell of silence upon them, preventing them from defending their reputation!",
+  courtJester: "Appoint them as your personal court jester, complete with cap and bells!",
+  smokeBomb: "Deploy a smoke bomb of confusion to disorient their social standing!",
+  thumbsDown: "Give a clear disapproval with a thumbs down! Let them know exactly what you think."
 };
 
-/**
- * Full descriptions for mockery actions
- */
-export const mockeryFullDescriptions: Record<MockeryAction, string> = {
-  tomato: "Show your disapproval by pelting them with a juicy, rotten tomato that will leave a mark!",
-  egg: "Hurl an egg at their profile and watch it crack on impact. Messy but effective!",
-  putridEgg: "Launch a particularly putrid egg that's been aging for maximum stench!",
-  rotten_egg: "Throw a rotten egg that will leave them with a stench that lasts for days!",
-  flame: "Burn them with your fiery criticism and leave them feeling the heat!",
-  heart: "Shower them with love and affection to counteract the mockery.",
-  thumbs_down: "Express your disapproval with a simple but effective gesture.",
-  laugh: "Laugh loudly at their expense, drawing attention to their follies.",
-  skull: "Send them a grim reminder of their failures with a menacing skull.",
-  crown: "Sarcastically crown them as the ruler of whatever mistake they've made.",
-  stocks: "Lock them in the medieval stocks for public ridicule and humiliation.",
-  jester: "Assign them the role of jester, highlighting their foolishness for all to see.",
-  shame: "Ring the shame bell and parade them through the streets of the digital kingdom.",
-  silence: "Enforce a moment of silence to reflect on their poor decisions.",
-  courtJester: "Elevate them to the distinguished position of Court Jester for exceptional folly.",
-  smokeBomb: "Deploy a smoke bomb to create confusion and distraction.",
-  protection: "Offer your protection against the mockery of others. A noble gesture!",
-  taunt: "Provoke them with taunting words designed to get under their skin.",
-  mock: "Simply mock them with words, the classic approach to mockery.",
-  challenge: "Issue a formal challenge to settle matters properly.",
-  joust: "Challenge them to a joust, the traditional way to settle disputes among nobles.",
-  duel: "Challenge them to a duel at dawn for the ultimate resolution.",
-  fish: "Deliver the traditional slap with a fish, a timeless insult of the highest order.",
-  thumbsDown: "Express your disapproval with a simple but effective gesture."
+// Short descriptions for tooltip display
+export const mockeryShortDescriptions: Record<MockeryAction, string> = {
+  tomato: "Classic public rebuke",
+  egg: "Messy humiliation",
+  rotten_egg: "Putrid, lingering shame",
+  flame: "Burn their pride",
+  heart: "Sarcastic affection",
+  thumbs_down: "Clear disapproval",
+  laugh: "Diminish with laughter",
+  skull: "Death of dignity",
+  crown: "Monarch of mistakes",
+  putridEgg: "Noxious humiliation",
+  stocks: "Public punishment",
+  jester: "Court entertainer",
+  mock: "Status challenge",
+  challenge: "Spending contest",
+  joust: "Status combat",
+  duel: "Formal contest",
+  taunt: "Status superiority",
+  fish: "Absurd humiliation",
+  protection: "Shield breaker",
+  shame: "Public announcement",
+  silence: "Reputation block",
+  courtJester: "Ridiculous appointment",
+  smokeBomb: "Social confusion",
+  thumbsDown: "Clear disapproval"
 };
 
 export default {
-  mockeryShortDescriptions,
-  mockeryFullDescriptions
+  mockeryDescriptions,
+  mockeryShortDescriptions
 };

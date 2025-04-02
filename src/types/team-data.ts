@@ -8,7 +8,7 @@ export interface TeamData {
   description: string;
   logoUrl: string;
   benefits: string[];
-  members: number;
+  members: number; // Changed from memberCount to members
   totalContribution: number;
   rank: number;
   previousRank: number;

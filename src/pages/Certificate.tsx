@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/auth';
 import Header from '@/components/Header';
@@ -21,29 +20,80 @@ const CertificatePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>(user?.team || 'default');
   
   const { 
-    certificate, 
-    templates, 
-    userCertificates, 
-    loading, 
-    isMinting, 
-    mintCertificate, 
-    generateShareableImage 
-  } = useCertificate({ 
-    user: user, 
-    certificateId: id 
-  });
+    mint, 
+    download, 
+    share, 
+    getUserCertificates, 
+    getAvailableTemplates 
+  } = useCertificate();
+
+  // New state variables to match the hook API
+  const [certificate, setCertificate] = useState<Certificate | null>(null);
+  const [templates, setTemplates] = useState<Certificate[]>([]);
+  const [userCertificates, setUserCertificates] = useState<Certificate[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isMinting, setIsMinting] = useState(false);
   
-  const handleMint = async (cert: Certificate): Promise<boolean> => {
-    return await mintCertificate(cert);
+  // Load certificates and templates
+  useEffect(() => {
+    if (user) {
+      setLoading(true);
+      
+      // If we have a specific certificate ID, fetch that certificate
+      if (id) {
+        // This would be an API call in a real app
+        getUserCertificates().then(certs => {
+          const foundCert = certs.find(cert => cert.id === id);
+          if (foundCert) {
+            setCertificate(foundCert);
+          }
+          setLoading(false);
+        }).catch(error => {
+          console.error("Error loading certificate:", error);
+          setLoading(false);
+        });
+      } else {
+        // Load user certificates
+        getUserCertificates().then(certs => {
+          setUserCertificates(certs);
+          
+          // Load available templates
+          return getAvailableTemplates();
+        }).then(availableTemplates => {
+          setTemplates(availableTemplates);
+          setLoading(false);
+        }).catch(error => {
+          console.error("Error loading certificates:", error);
+          setLoading(false);
+        });
+      }
+    }
+  }, [user, id, getUserCertificates, getAvailableTemplates]);
+
+  const mintCertificate = async (cert: Certificate): Promise<boolean> => {
+    if (!cert) return false;
+    
+    setIsMinting(true);
+    try {
+      const result = await mint(cert.id);
+      setIsMinting(false);
+      return result.success;
+    } catch (error) {
+      console.error("Error minting certificate:", error);
+      setIsMinting(false);
+      return false;
+    }
   };
-  
-  const handleShare = async (cert: Certificate): Promise<string> => {
-    return await generateShareableImage(cert);
-  };
-  
-  const handleDownload = (cert: Certificate): void => {
-    // Implementation would depend on how downloading works in the app
-    console.log('Download certificate:', cert);
+
+  const generateShareableImage = async (cert: Certificate): Promise<string> => {
+    if (!cert) return '';
+    
+    try {
+      return await share(cert.id);
+    } catch (error) {
+      console.error("Error generating shareable image:", error);
+      return '';
+    }
   };
   
   if (!user) {
@@ -85,8 +135,8 @@ const CertificatePage: React.FC = () => {
                 <CertificateDisplay 
                   certificate={certificate}
                   user={user}
-                  onMint={handleMint}
-                  onShare={handleShare}
+                  onMint={mintCertificate}
+                  onShare={generateShareableImage}
                   onDownload={handleDownload}
                   isMinting={isMinting}
                 />
@@ -118,8 +168,8 @@ const CertificatePage: React.FC = () => {
                                 key={cert.id}
                                 certificate={cert}
                                 user={user}
-                                onMint={handleMint}
-                                onShare={handleShare}
+                                onMint={mintCertificate}
+                                onShare={generateShareableImage}
                                 onDownload={handleDownload}
                                 isMinting={isMinting && certificate?.id === cert.id}
                               />
@@ -170,6 +220,14 @@ const CertificatePage: React.FC = () => {
       <Footer />
     </div>
   );
+};
+
+// Helper function to handle downloading certificates
+const handleDownload = (certificate: Certificate) => {
+  if (!certificate) return;
+  
+  // Implementation would depend on how downloading works in the app
+  console.log('Download certificate:', certificate);
 };
 
 export default CertificatePage;

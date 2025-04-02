@@ -25,7 +25,7 @@ function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfi
   if (!user) return null as any;
   
   // Convert the team property to ensure it's a valid TeamColor
-  const teamColor = toTeamColor(user.team);
+  const teamColor = toTeamColor(user.team) as TeamColor;
   
   return {
     id: user.id,

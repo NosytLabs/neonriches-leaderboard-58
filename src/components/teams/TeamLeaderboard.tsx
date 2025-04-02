@@ -1,10 +1,11 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ArrowUp, ArrowDown, Search, Trophy } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { ArrowDown, ArrowUp, Medal, Trophy, Users } from 'lucide-react';
-import { TeamData, TeamColor } from '@/types/mockery-types';
+import { TeamData } from '@/types/team-data';
+import { toTeamColor } from '@/utils/typeConverters';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/utils/formatters';
 
@@ -14,8 +15,71 @@ interface TeamLeaderboardProps {
   limit?: number;
 }
 
+const mockTeams: TeamData[] = [
+  {
+    id: "1",
+    name: "Gold Spenders",
+    color: toTeamColor("gold"),
+    description: "The elite team of royal spenders",
+    logoUrl: "/teams/gold-logo.png",
+    members: 120,
+    totalContribution: 250000,
+    rank: 1,
+    previousRank: 2,
+    benefits: ["Royal protection", "Crown badge", "Extended mockery options"]
+  },
+  {
+    id: "2",
+    name: "Blue Warriors",
+    color: toTeamColor("blue"),
+    description: "Strategic spenders with a plan",
+    logoUrl: "/teams/blue-logo.png",
+    members: 240,
+    totalContribution: 180000,
+    rank: 2,
+    previousRank: 1,
+    benefits: ["Team boost bonuses", "Special events access", "Community rewards"]
+  },
+  {
+    id: "3",
+    name: "Red Rivals",
+    color: toTeamColor("red"),
+    description: "Competitive and aggressive spenders",
+    logoUrl: "/teams/red-logo.png",
+    members: 205,
+    totalContribution: 160000,
+    rank: 3,
+    previousRank: 3,
+    benefits: ["Rival bonuses", "Comeback mechanics", "Team challenges"]
+  },
+  {
+    id: "4",
+    name: "Green Growth",
+    color: toTeamColor("green"),
+    description: "Steady and sustainable spenders",
+    logoUrl: "/teams/green-logo.png",
+    members: 320,
+    totalContribution: 120000,
+    rank: 4,
+    previousRank: 5,
+    benefits: ["Growth bonuses", "New member rewards", "Group incentives"]
+  },
+  {
+    id: "5",
+    name: "Purple Prestige",
+    color: toTeamColor("purple"),
+    description: "Elegant and prestigious spenders",
+    logoUrl: "/teams/purple-logo.png",
+    members: 90,
+    totalContribution: 90000,
+    rank: 5,
+    previousRank: 4,
+    benefits: ["Prestige badges", "Exclusive cosmetics", "VIP events"]
+  }
+];
+
 const TeamLeaderboard: React.FC<TeamLeaderboardProps> = ({ 
-  teams = [], 
+  teams = mockTeams, 
   title = "Team Leaderboard",
   limit = 5
 }) => {
