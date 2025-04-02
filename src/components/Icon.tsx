@@ -1,57 +1,8 @@
 
-import React from 'react';
-import * as LucideIcons from 'lucide-react';
-import { cn } from '@/utils/classNameUtils';
-import { IconProps, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
+// This is a redirect file to maintain backward compatibility
+// and avoid having to update all references to this component
 
-/**
- * Icon component that renders Lucide icons with appropriate styling
- */
-export const Icon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
-  const { 
-    icon,
-    name, // For backward compatibility
-    iconName, // Support iconName prop
-    size = 'md',
-    color = 'default', 
-    className, 
-    animated = false,
-    style = 'default',
-    ...restProps 
-  } = props;
+import { Icon } from '@/components/ui/icon';
 
-  // Use either icon, name, or iconName
-  const iconToUse = icon || name || iconName;
-
-  if (!iconToUse) {
-    console.warn('Icon component requires either icon, name, or iconName prop');
-    return null;
-  }
-
-  // Get the appropriate size class
-  const sizeClass = typeof size === 'string' 
-    ? (size in iconSizeMap ? iconSizeMap[size] : iconSizeMap.md)
-    : `h-${size} w-${size}`;
-
-  // Get the appropriate color class
-  const colorClass = color in iconColorMap ? iconColorMap[color] : (color || iconColorMap.default);
-
-  // Get the icon component
-  const IconComponent = (LucideIcons as any)[iconToUse] || LucideIcons.HelpCircle;
-
-  // If style is a string (IconStyle), apply appropriate styling; otherwise use it as CSSProperties
-  const styleProps = typeof style === 'string' ? {} : style;
-
-  return (
-    <IconComponent
-      ref={ref}
-      className={cn(sizeClass, colorClass, animated && 'animate-pulse', className)}
-      style={styleProps}
-      {...restProps}
-    />
-  );
-});
-
-Icon.displayName = 'Icon';
-
+export { Icon };
 export default Icon;

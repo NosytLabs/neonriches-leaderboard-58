@@ -9,9 +9,9 @@ import { IconProps, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
  */
 export const Icon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
   const { 
-    name,
     icon,
-    iconName,
+    name, // For backward compatibility
+    iconName, // Support iconName prop
     size = 'md',
     color = 'default', 
     className, 
@@ -20,7 +20,7 @@ export const Icon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
     ...restProps 
   } = props;
 
-  // Use either icon, name, or iconName for backward compatibility
+  // Use either icon, name, or iconName
   const iconToUse = icon || name || iconName;
 
   if (!iconToUse) {
@@ -34,42 +34,19 @@ export const Icon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
     : `h-${size} w-${size}`;
 
   // Get the appropriate color class
-  let colorClass = '';
-  if (typeof color === 'string') {
-    if (color in iconColorMap) {
-      colorClass = iconColorMap[color as keyof typeof iconColorMap];
-    } else if (color.startsWith('#') || color.startsWith('rgb')) {
-      // If it's a custom color, use inline style
-      colorClass = '';
-    } else {
-      // Assume it's a Tailwind color utility
-      colorClass = `text-${color}`;
-    }
-  }
+  const colorClass = color in iconColorMap ? iconColorMap[color] : (color || iconColorMap.default);
 
-  // Animation class if animated is true
-  const animationClass = animated ? 'animate-pulse' : '';
+  // Get the icon component
+  const IconComponent = (LucideIcons as any)[iconToUse] || LucideIcons.HelpCircle;
 
-  // Find the matching Lucide icon component
-  // Format iconName to match Lucide export names (PascalCase)
-  const formattedIconName = iconToUse
-    .split('-')
-    .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-    .join('');
-
-  // Get the icon component - cast LucideIcons to any to avoid TypeScript errors
-  const LucideIcon = (LucideIcons as any)[formattedIconName];
-
-  if (!LucideIcon) {
-    console.warn(`Icon not found: ${iconToUse}`);
-    return null;
-  }
+  // If style is a string (IconStyle), apply appropriate styling; otherwise use it as CSSProperties
+  const styleProps = typeof style === 'string' ? {} : style;
 
   return (
-    <LucideIcon
+    <IconComponent
       ref={ref}
-      className={cn(sizeClass, colorClass, animationClass, className)}
-      style={typeof style === 'object' ? style : undefined}
+      className={cn(sizeClass, colorClass, animated && 'animate-pulse', className)}
+      style={styleProps}
       {...restProps}
     />
   );
