@@ -54,6 +54,7 @@ export interface LeaderboardResponse {
   users: LeaderboardUser[];
   total: number;
   currentUserRank?: number;
+  hasMore?: boolean;
 }
 
 export interface UseLeaderboardResult {

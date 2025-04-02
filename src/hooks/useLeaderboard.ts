@@ -1,5 +1,4 @@
 
-// Fix string error type to use Error object
 import { useState, useEffect, useCallback } from 'react';
 import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
 import { getLeaderboard } from '@/services/leaderboardService';
@@ -10,8 +9,10 @@ export const useLeaderboard = () => {
     team: 'all',
     tier: 'all',
     timeframe: 'all',
-    sortBy: 'rank'
-    // Removed 'sort' property as it doesn't exist in LeaderboardFilter
+    sortBy: 'rank',
+    sortDirection: 'asc',
+    search: '',
+    limit: 10
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -40,7 +41,7 @@ export const useLeaderboard = () => {
       }
       
       setTotal(response.total);
-      setHasMore(response.hasMore);
+      setHasMore(response.hasMore || false);
     } catch (err) {
       // Convert string to Error object
       setError(err instanceof Error ? err : new Error(String(err)));

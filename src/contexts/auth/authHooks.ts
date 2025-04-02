@@ -1,11 +1,12 @@
+
 import { useState } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { UserProfile } from '@/types/user';
 import { ProfileBoost } from '@/types/user';
+import { UserSubscription } from '@/types/user-consolidated';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { addProfileBoostWithDays, addCosmeticByCategoryString } from './authUtils';
-import { ensureTotalSpent } from '@/utils/userTypes';
 import { adaptUserProfile, createUserSubscription } from '@/utils/typeAdapters';
 
 export const useAuthState = () => {
@@ -109,29 +110,18 @@ export const useAuthMethods = (
 
   const updateUserProfile = async (userData: Partial<UserProfile>): Promise<boolean> => {
     try {
-      // Ensure all required fields are present
+      if (!user) return false;
+      
+      // Ensure all required fields are present using adaptUserProfile
       const adaptedUserData = adaptUserProfile({
         ...user,
         ...userData,
         // Make sure settings is provided since it's required
-        settings: userData.settings || user?.settings || {
-          profileVisibility: 'public',
-          allowProfileLinks: true,
-          theme: 'dark',
-          notifications: true,
-          emailNotifications: false,
-          marketingEmails: false,
-          showRank: true,
-          darkMode: true,
-          soundEffects: true,
-          showBadges: true,
-          showTeam: true,
-          showSpending: true
-        },
+        settings: userData.settings || user.settings,
         // Make sure displayName is provided
-        displayName: userData.displayName || user?.displayName || userData.username || user?.username || '',
+        displayName: userData.displayName || user.displayName || user.username,
         // Make sure totalSpent is provided
-        totalSpent: userData.totalSpent || user?.totalSpent || 0
+        totalSpent: userData.totalSpent || user.totalSpent || 0
       });
       
       // Update user metadata in Supabase Auth
@@ -165,12 +155,7 @@ export const useAuthMethods = (
       if (profileUpdateError) throw profileUpdateError;
       
       // Update local state with ensured displayName and totalSpent
-      const newUser = { 
-        ...adaptedUserData, 
-        ...userData, 
-        totalSpent: adaptedUserData.totalSpent || adaptedUserData.amountSpent || 0,
-        displayName: adaptedUserData.displayName || adaptedUserData.username
-      };
+      const newUser = adaptedUserData;
       
       setUser(newUser);
       
@@ -178,6 +163,8 @@ export const useAuthMethods = (
         title: "Profile Updated",
         description: "Your profile has been updated successfully",
       });
+      
+      return true;
     } catch (error) {
       console.error('Update profile error:', error);
       setError(error as Error);
@@ -188,7 +175,7 @@ export const useAuthMethods = (
         variant: "destructive"
       });
       
-      throw error;
+      return false;
     }
   };
 
@@ -196,22 +183,11 @@ export const useAuthMethods = (
     try {
       if (!user) return false;
       
-      // Convert days to string for the API
-      const daysStr = String(days);
-      
-      // Ensure user has displayName and required fields
-      const userWithRequiredFields = {
-        ...user,
-        displayName: user.displayName || user.username,
-        totalSpent: user.totalSpent || user.amountSpent || 0,
-        walletBalance: user.walletBalance || 0 // Add walletBalance
-      };
-      
-      const newBoosts = addProfileBoostWithDays(userWithRequiredFields, days, level);
+      const newBoosts = addProfileBoostWithDays(user, days, level);
       
       // Create a properly typed updated user object
       const updatedUser: UserProfile = {
-        ...userWithRequiredFields,
+        ...user,
         profileBoosts: newBoosts
       };
       
@@ -249,16 +225,10 @@ export const useAuthMethods = (
     try {
       if (!user) return false;
       
-      // Ensure user has displayName
-      const userWithDisplayName = {
-        ...user,
-        displayName: user.displayName || user.username
-      };
-      
-      const updatedCosmetics = addCosmeticByCategoryString(userWithDisplayName, cosmeticId, category);
+      const updatedCosmetics = addCosmeticByCategoryString(user, cosmeticId, category);
       
       const updatedUser = {
-        ...userWithDisplayName,
+        ...user,
         cosmetics: updatedCosmetics,
       };
       
@@ -291,6 +261,8 @@ export const useAuthMethods = (
 
   const updateSubscription = async (subscriptionData: Partial<UserSubscription>): Promise<boolean> => {
     try {
+      if (!user) return false;
+      
       // Create a full UserSubscription with required fields
       const subscription = createUserSubscription(
         subscriptionData.planId || 'default',
@@ -303,9 +275,6 @@ export const useAuthMethods = (
       const updatedUser = adaptUserProfile({
         ...user,
         subscription,
-        // Make sure required fields are always set
-        displayName: user?.displayName || user?.username || '',
-        totalSpent: user?.totalSpent || 0
       });
       
       setUser(updatedUser);

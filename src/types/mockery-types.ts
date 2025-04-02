@@ -1,6 +1,46 @@
 
-// Use 'export type' for TeamColor and UserTier to fix isolated modules issue
+// Add or update the mockery-types.ts file
+export type MockeryAction = 
+  | 'tomato'
+  | 'egg'
+  | 'putridEgg'
+  | 'rotten_egg'
+  | 'jester'
+  | 'crown'
+  | 'stocks'
+  | 'shame'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection'
+  | 'flame'
+  | 'thumbs_down'
+  | 'thumbsDown'
+  | 'heart'
+  | 'skull'
+  | 'mock'
+  | 'challenge'
+  | 'joust'
+  | 'duel'
+  | 'trumpet'
+  | 'confetti'
+  | 'taunt';
+
+export type MockeryTier = 
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
+  | 'legendary'
+  | 'royal'
+  | 'silver'
+  | 'bronze'
+  | 'basic'
+  | 'premium'
+  | 'standard';
+
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze' | 'crimson';
+
 export type UserTier = 
   | 'free'
   | 'basic'
@@ -22,129 +62,34 @@ export type UserTier =
   | 'elite'
   | 'legendary';
 
-export type MockeryAction = 
-  | 'tomato' 
-  | 'egg' 
-  | 'rotten_egg'
-  | 'putridEgg'
-  | 'shame' 
-  | 'mock' 
-  | 'challenge' 
-  | 'joust' 
-  | 'duel' 
-  | 'flame'
-  | 'jester'
-  | 'crown'
-  | 'stocks'
-  | 'silence'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'protection'
-  | 'thumbs_down'
-  | 'thumbsDown'
-  | 'taunt'
-  | 'heart'
-  | 'skull'
-  | 'laugh'
-  | 'fish';
-
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal' | 'basic' | 'premium' | 'silver' | 'bronze' | 'standard';
-
-export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
-
-export interface TeamData {
-  id: string;
-  name: string;
-  color: TeamColor;
-  description: string;
-  logoUrl: string;
-  benefits: string[];
-  members: number;
-  memberCount?: number; // Added for backwards compatibility
-  totalContribution: number;
-  totalSpent: number; // Ensure this is required
-  rank: number;
-  previousRank: number;
-}
-
 export interface LeaderboardUser {
   id: string;
-  userId: string;
+  userId?: string;
   username: string;
-  displayName: string; // Changed from optional to required
+  displayName: string;
   profileImage?: string;
-  tier: string | UserTier;
-  team: string | TeamColor;
+  avatarUrl?: string;
   rank: number;
   previousRank?: number;
-  totalSpent: number;
-  amountSpent: number;
-  walletBalance?: number;
+  totalSpent?: number;
+  amountSpent?: number;
+  tier?: string;
+  team?: TeamColor | string;
   isVerified?: boolean;
-  spendStreak?: number;
   isProtected?: boolean;
+  spendStreak?: number;
   rankChange?: number;
   spendChange?: number;
-  avatarUrl?: string; // Added for compatibility
-  joinDate?: string; // Added for compatibility
+  walletBalance?: number;
 }
 
 export interface LeaderboardFilter {
-  timeframe: 'day' | 'week' | 'month' | 'all' | 'year' | 'all-time' | 'today';
-  team?: TeamColor | 'all';
-  limit?: number;
-  page?: number;
+  team?: string;
   tier?: string;
+  timeframe?: string;
   search?: string;
   sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
+  sortDirection?: string;
+  limit?: number;
+  sort?: string;
 }
-
-export interface MockeryEvent {
-  id: string;
-  type?: MockeryAction;
-  action?: MockeryAction; // For backwards compatibility
-  timestamp: string;
-  fromUserId: string;
-  toUserId: string;
-  fromUser?: MockeryUser;
-  toUser?: MockeryUser;
-  fromUsername?: string;
-  toUsername?: string;
-  amount?: number;
-  message?: string;
-  publicDisplay?: boolean;
-  cost?: number;
-  tier?: MockeryTier;
-}
-
-export interface MockeryUser {
-  id: string;
-  userId?: string; // For compatibility
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  totalSpent: number;
-  rank: number;
-  team: TeamColor;
-  tier: UserTier;
-  spendStreak?: number;
-}
-
-export interface MockeryStats {
-  totalMockeries: number;
-  mostReceivedType: MockeryAction;
-  mostSentType: MockeryAction;
-  totalReceived: number;
-  totalSent: number;
-  lastMockedBy?: string;
-  lastMockedAt?: string;
-}
-
-// For compatibility
-export type MockedUser = MockeryUser;
-
-// Re-export types for convenience and backward compatibility
-export type { TeamColor as TeamColorType };
-export type { UserTier as UserTierType };
-export type { Gender as GenderType };

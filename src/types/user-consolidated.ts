@@ -8,7 +8,7 @@ export type { TeamColor, UserTier, Gender };
 export type TeamType = TeamColor;
 
 export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'followers' | 'friends' | string;
+  profileVisibility: 'public' | 'private' | 'followers' | 'friends';
   allowProfileLinks: boolean;
   theme: 'royal' | 'dark' | 'light' | 'system' | string;
   notifications: boolean;

@@ -1,51 +1,79 @@
 
-import { TeamColor } from "./team";
+export type CertificateType = 
+  | 'achievement' 
+  | 'rank' 
+  | 'spending' 
+  | 'membership' 
+  | 'royal' 
+  | 'team' 
+  | 'special';
 
-export type CertificateType = 'nobility' | 'spending' | 'achievement' | 'membership' | 'rank' | 'team';
-export type CertificateStatus = 'pending' | 'minted' | 'verified' | 'revoked';
-export type CertificateTeam = TeamColor | 'none' | 'all';
-export type CertificateStyle = 'standard' | 'premium' | 'royal' | 'legendary' | 'classic';
+export type CertificateStyle = 
+  | 'standard' 
+  | 'gold' 
+  | 'silver' 
+  | 'royal' 
+  | 'premium' 
+  | 'modern' 
+  | 'classic';
+
+export type CertificateTeam = 
+  | 'red' 
+  | 'blue' 
+  | 'green' 
+  | 'gold' 
+  | 'purple' 
+  | 'none'
+  | 'all';
+
+export type CertificateStatus = 
+  | 'pending' 
+  | 'issued' 
+  | 'revoked' 
+  | 'expired' 
+  | 'draft';
 
 export interface Certificate {
   id: string;
   title: string;
   description: string;
   imageUrl: string;
+  userId: string;
   dateIssued: string;
-  status: CertificateStatus;
+  mintAddress?: string;
   type: CertificateType;
   style: CertificateStyle;
+  team: CertificateTeam;
+  status: CertificateStatus;
+  rarity?: string;
   issuerName: string;
   recipientName: string;
   recipientId: string;
-  userId?: string;
-  team?: CertificateTeam;
-  issuedAt?: string;
-  mintAddress?: string;
-  mintDate?: string; // Added property
-  tier?: string;
-  rarity?: string; // Added property
 }
 
 export interface CertificateTemplate {
   id: string;
-  name: string;
+  title: string;
   description: string;
-  previewUrl: string;
   imageUrl: string;
   type: CertificateType;
-  team: CertificateTeam;
   style: CertificateStyle;
-  available: boolean;
-  availableForTier?: string | string[]; // Accept both string and string[]
-  requiresFounder?: boolean;
-  availableForRank?: string;
-  title?: string; // Added property
+  team: CertificateTeam;
+  rarity?: string;
+  dateIssued?: string;
+  userId?: string;
+  status?: CertificateStatus;
 }
 
-export interface CertificateService {
-  getUserCertificates(userId: string): Promise<Certificate[]>;
-  mintCertificate(certificate: Certificate): Promise<Certificate>;
-  verifyCertificate(id: string): Promise<boolean>;
-  getCertificateTemplates(): Promise<CertificateTemplate[]>;
+export interface UseCertificateResult {
+  certificates: Certificate[];
+  templates: CertificateTemplate[];
+  loading: boolean;
+  error: Error | null;
+  createCertificate: (data: Partial<Certificate>) => Promise<Certificate>;
+  fetchUserCertificates: () => Promise<Certificate[]>;
+  fetchTemplates: () => Promise<CertificateTemplate[]>;
+  mint: (certificate: Certificate) => Promise<void>;
+  download: (certificate: Certificate) => void;
+  share: (certificate: Certificate) => void;
 }
