@@ -12,7 +12,7 @@ export const toTeamColor = (team: string | null | undefined): TeamColor => {
   // Check if the string is a valid TeamColor
   const validTeamColors: TeamColor[] = [
     'red', 'blue', 'green', 'gold', 'purple', 'none', 
-    'neutral', 'silver', 'bronze'
+    'neutral', 'silver', 'bronze', 'crimson'
   ];
   
   if (validTeamColors.includes(team as TeamColor)) {
