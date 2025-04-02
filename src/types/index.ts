@@ -9,18 +9,19 @@ export type {
   MockeryAction,
   MockeryTier,
   TeamData,
-  TeamColor
+  TeamColor,
+  UserTier,
+  Gender
 } from './mockery-types';
 
 // User types - these override mockery-types when there's a conflict
 export type {
   UserProfile,
-  UserSettings,
-  Gender
+  UserSettings
 } from './user-consolidated';
 
 // Re-export TeamType for backward compatibility
-export type TeamType = TeamColor;
+export type { TeamType } from './team-data';
 
 export type {
   AuthState,
@@ -50,7 +51,8 @@ export type {
   UserCosmetics,
   UserCosmeticState,
   CosmeticStoreSection,
-  CosmeticPurchaseResult
+  CosmeticPurchaseResult,
+  ProfileLink
 } from './cosmetics';
 
 export type {
@@ -65,8 +67,7 @@ export type {
   TeamRole,
   TeamStats,
   TeamBenefits,
-  TeamInvite,
-  TeamDataCompat
+  TeamInvite
 } from './team';
 
 export type {
@@ -78,7 +79,7 @@ export type {
 
 // UI types
 export type { IconProps, IconSize, IconColor, IconStyle } from './ui/icon-types';
-export type { SoundType, SoundOptions, SoundConfig } from './sound-types';
+export type { SoundType, SoundOptions, SoundConfig, UseSoundHook } from './sound-types';
 
 // For backwards compatibility
 import { UserProfile } from './user-consolidated';

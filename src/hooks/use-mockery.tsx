@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useSound } from '@/hooks/use-sound';
 import { MockeryAction, MockedUser, MockeryEvent } from '@/types/mockery-types';
+import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 
 export const useMockery = () => {
   const [mockedUsers, setMockedUsers] = useState<MockedUser[]>([
@@ -14,7 +15,7 @@ export const useMockery = () => {
       profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
       tier: "royal",
       team: "red",
-      action: "tomatoes",
+      action: "tomato", // Fixed from "tomatoes"
       appliedBy: "system",
       appliedAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 3600000).toISOString(),
@@ -30,7 +31,7 @@ export const useMockery = () => {
       profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
       tier: "premium",
       team: "blue",
-      action: "eggs",
+      action: "egg", // Fixed from "eggs"
       appliedBy: "user123",
       appliedAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 7200000).toISOString(),
@@ -45,6 +46,9 @@ export const useMockery = () => {
   const sound = useSound();
   
   const applyMockery = useCallback((userId: string, action: MockeryAction, reason?: string) => {
+    // Normalize action before storing
+    const normalizedAction = normalizeMockeryAction(action);
+    
     const mockUser: MockedUser = {
       id: userId,
       userId: userId,
@@ -53,7 +57,7 @@ export const useMockery = () => {
       profileImage: "https://randomuser.me/api/portraits/men/3.jpg",
       tier: "basic",
       team: "green",
-      action: action,
+      action: normalizedAction,
       appliedBy: "current-user",
       appliedAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 3600000).toISOString(),
@@ -90,8 +94,8 @@ export const useMockery = () => {
   const mockEvents: MockeryEvent[] = [
     {
       id: "event1",
-      fromUserId: "currentUser",
-      toUserId: "user1",
+      fromUser: "currentUser", // Changed fromUserId to fromUser
+      toUser: "user1", // Changed toUserId to toUser
       action: "tomatoes",
       targetId: "user1",
       fromId: "currentUser",
@@ -103,8 +107,8 @@ export const useMockery = () => {
     },
     {
       id: "event2",
-      fromUserId: "currentUser",
-      toUserId: "user2",
+      fromUser: "currentUser", // Changed fromUserId to fromUser
+      toUser: "user2", // Changed toUserId to toUser
       action: "crown",
       targetId: "user2",
       fromId: "currentUser",

@@ -2,12 +2,15 @@
 import { MockeryAction } from '@/types/mockery-types';
 import { UserTier } from '@/types/mockery-types';
 import { getMockeryActionPrice } from '@/utils/mockeryUtils';
+import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 
 /**
  * Get shame action price based on mockery action
  */
 export const getShameActionPrice = (action: MockeryAction): number => {
-  return getMockeryActionPrice(action);
+  // Normalize the action first to handle legacy names
+  const normalizedAction = normalizeMockeryAction(action);
+  return getMockeryActionPrice(normalizedAction);
 };
 
 /**
@@ -30,7 +33,9 @@ export const getShameTierPrices = (tier: UserTier | string): number => {
  * Get the discounted price for a shame action based on tier
  */
 export const getDiscountedShamePrice = (action: MockeryAction): number => {
-  const basePrice = getShameActionPrice(action);
+  // Normalize the action first to handle legacy names
+  const normalizedAction = normalizeMockeryAction(action);
+  const basePrice = getShameActionPrice(normalizedAction);
   return Math.floor(basePrice * 0.5); // 50% discount
 };
 
@@ -43,5 +48,5 @@ export const hasWeeklyDiscount = (): boolean => {
 // Get the weekly discounted action
 export const getWeeklyDiscountedAction = (): MockeryAction => {
   // In a real application, this might rotate weekly or be fetched from an API
-  return 'tomatoes';
+  return 'tomato'; // Fixed from "tomatoes"
 };

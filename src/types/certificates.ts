@@ -1,74 +1,74 @@
 
 export type CertificateType = 
-  | 'achievement'
+  | 'nobility' 
+  | 'spending' 
+  | 'achievement' 
   | 'rank'
-  | 'team'
-  | 'spending'
-  | 'special'
+  | 'founder'
+  | 'legacy'
+  | 'commemorative'
+  | 'tournament'
   | 'event'
-  | 'royal'
-  | 'noble'
-  | 'nobility'; // Added to support existing code
+  | 'anniversary'
+  | 'special';
 
 export type CertificateStyle = 
-  | 'classic'
+  | 'classic' 
+  | 'royal' 
   | 'modern'
-  | 'medieval'
-  | 'royal'
-  | 'gothic'
-  | 'minimalist';
+  | 'vintage'
+  | 'minimalist'
+  | 'ornate'
+  | 'gilded'
+  | 'embossed'
+  | 'scrolled';
 
 export type CertificateTeam = 
-  | 'red'
-  | 'blue'
-  | 'green'
-  | 'gold'
+  | 'red' 
+  | 'blue' 
+  | 'green' 
+  | 'gold' 
   | 'purple'
-  | 'none';
+  | 'neutral'
+  | 'royal';
 
 export interface Certificate {
   id: string;
   title: string;
   description: string;
-  type: CertificateType;
-  style: CertificateStyle;
   imageUrl: string;
   dateIssued: string;
-  issuedAt?: string; // Alternative date format
+  status: 'pending' | 'minted' | 'revoked';
+  type: CertificateType;
+  userId?: string;
+  team?: CertificateTeam;
+  tier?: string;
+  issuedAt?: string;
+  mintAddress?: string;
+  style: CertificateStyle;
   issuerName: string;
   recipientName: string;
   recipientId: string;
-  mintAddress?: string;
-  isMinted?: boolean;
-  status?: 'pending' | 'minted' | 'failed';
-  team?: CertificateTeam;
-  signature?: string;
-  achievements?: string[];
-  metadata?: Record<string, any>;
-  nftAddress?: string; // Added to support existing code
-  userId?: string; // Added to support existing code
-  createdAt?: string; // Added to support existing code
 }
 
 export interface CertificateTemplate {
   id: string;
-  type: CertificateType;
-  style: CertificateStyle;
+  name: string;
+  description: string;
+  previewUrl: string;
   imageUrl: string;
-  name?: string;
-  previewUrl?: string;
-  description?: string;
+  type: CertificateType;
+  team: CertificateTeam;
+  style: CertificateStyle;
   available: boolean;
-  requiredTier?: string;
-  price?: number;
-  team?: CertificateTeam; // Added to support existing code
+  availableForTier?: string[];
+  requiresFounder?: boolean;
 }
 
 export interface CertificateRepository {
-  getCertificateById(id: string): Promise<Certificate | null>;
-  getCertificatesByUserId(userId: string): Promise<Certificate[]>;
-  getUserCertificates(userId: string): Promise<Certificate[]>;
-  mintCertificate(certificate: Certificate): Promise<Certificate>;
-  createCertificate(certificate: Partial<Certificate>): Promise<Certificate>;
-  verifyCertificate(id: string): Promise<boolean>;
+  getUserCertificates: (userId: string) => Promise<Certificate[]>;
+  getCertificateById: (id: string) => Promise<Certificate | null>;
+  mintCertificate: (certificate: Certificate) => Promise<Certificate>;
+  getTemplates: () => Promise<CertificateTemplate[]>;
+  getTemplateById: (id: string) => Promise<CertificateTemplate | null>;
 }

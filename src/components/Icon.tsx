@@ -39,10 +39,14 @@ export const Icon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
   // Get the icon component
   const IconComponent = (LucideIcons as any)[iconToUse] || LucideIcons.HelpCircle;
 
+  // If style is a string (IconStyle), apply appropriate styling; otherwise use it as CSSProperties
+  const styleProps = typeof style === 'string' ? {} : style;
+
   return (
     <IconComponent
       ref={ref}
       className={cn(sizeClass, colorClass, animated && 'animate-pulse', className)}
+      style={styleProps}
       {...restProps}
     />
   );

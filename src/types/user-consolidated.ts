@@ -1,18 +1,13 @@
 
-import { TeamColor as TeamColorType } from "./mockery-types";
-import { UserCosmetics } from "./cosmetics";
-import { ProfileBoost } from "./boost";
+import { UserTier, TeamColor, Gender } from './mockery-types';
 
-// Use export type for types
-export type TeamColor = TeamColorType;
-export type UserTier = 'free' | 'basic' | 'pro' | 'premium' | 'royal' | 'legendary' | string;
-
-export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
+// Use export type instead of just export to fix isolatedModules issue
+export type { TeamColor, UserTier, Gender };
 
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'followers' | 'friends' | string;
   allowProfileLinks: boolean;
-  theme: string; // Use string to accommodate custom themes
+  theme: 'royal' | 'dark' | 'light' | 'system' | string;
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
@@ -20,99 +15,71 @@ export interface UserSettings {
   darkMode: boolean;
   soundEffects: boolean;
   showBadges: boolean;
-  showEmailOnProfile?: boolean;
-  rankChangeAlerts?: boolean;
   showTeam: boolean;
   showSpending: boolean;
-  newFollowerAlerts?: boolean;
-  teamNotifications?: boolean;
+  allowMentions?: boolean;
   shameAlerts?: boolean;
-  publicProfile?: boolean;
-  language?: string;
-  allowMessages?: boolean;
+  teamNotifications?: boolean;
+  leaderboardAlerts?: boolean;
+  rankChangeNotifications?: boolean;
+  eventAlerts?: boolean;
+  walletAlerts?: boolean;
 }
 
 export interface UserSubscription {
   id: string;
-  planId: string;
   tier: string;
-  status: 'active' | 'cancelled' | 'paused';
+  status: 'active' | 'cancelled' | 'expired' | 'pending';
   startDate: string;
-  nextBillingDate: string;
   endDate?: string;
   autoRenew?: boolean;
-  amount?: number;
+  planId?: string;
+  nextBillingDate?: string;
+  cancelAtPeriodEnd?: boolean;
 }
 
 export interface SocialLink {
-  id?: string;
+  id: string;
   platform: string;
   url: string;
-  title?: string;
   username?: string;
   verified?: boolean;
-  icon?: string;
-  clicks?: number;
-  label?: string;
-  enabled?: boolean; // Add the missing property
+  enabled?: boolean;
 }
 
-export interface ProfileLink {
-  id?: string;
-  platform: string;
-  url: string;
-  title?: string;
-  icon?: string;
-  label?: string;
-  clicks?: number; // Add the missing property
-}
-
+// Consolidated UserProfile type that's compatible across different files
 export interface UserProfile {
   id: string;
   username: string;
   displayName: string;
   email?: string;
   profileImage: string;
-  bio: string;
+  bio?: string;
   joinedDate: string;
-  tier: UserTier;
-  team: TeamColor;
+  joinDate?: string;
+  createdAt?: string;
+  isVerified?: boolean;
+  isProtected?: boolean;
+  team: TeamColor | string;
+  tier: UserTier | string;
   rank: number;
   previousRank: number;
   totalSpent: number;
   amountSpent: number;
-  walletBalance?: number;
-  isFounder?: boolean;
-  isVerified?: boolean;
-  isVIP?: boolean;
-  isProtected?: boolean;
-  isAdmin?: boolean;
-  spendStreak?: number;
-  lastActive?: string;
-  lastLogin?: string;
-  following?: string[];
-  followers?: string[];
-  cosmetics: UserCosmetics;
+  walletBalance: number;
   settings: UserSettings;
-  profileBoosts?: ProfileBoost[];
-  socialLinks?: SocialLink[] | Record<string, string>;
+  profileBoosts: any[];
+  cosmetics: any;
+  spendStreak: number;
   profileViews?: number;
   profileClicks?: number;
+  subscription?: UserSubscription | null;
   purchasedFeatures?: string[];
-  subscription?: UserSubscription;
-  teamRank?: number;
-  activeTitle?: string;
-  certificateNFT?: {
+  certificateNFT?: { 
     mintAddress: string;
     mintDate: string;
     dateIssued?: string;
   };
-  // Compatibility fields
-  joinDate?: string;
-  joinedAt?: string;
-  createdAt?: string;
-  boostCount?: number;
-  gender?: string;
-  achievements?: any[]; // Add optional achievements property
-  badges?: string[]; // Add optional badges property
+  socialLinks?: SocialLink[] | Record<string, string>;
+  gender?: Gender | string;
 }

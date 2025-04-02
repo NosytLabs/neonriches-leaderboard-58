@@ -23,6 +23,8 @@ export type UserTier =
   | 'standard'
   | 'elite';
 
+export type Gender = 'male' | 'female' | 'non-binary' | 'prefer-not-to-say' | 'other';
+
 export type MockeryAction = 
   | 'taunt'
   | 'shame'
@@ -42,11 +44,37 @@ export type MockeryAction =
   | 'protection'
   | 'thumbsDown';
 
-// Legacy MockeryAction aliases
+// Legacy alias support
 export type LegacyMockeryAction = 
   | 'tomatoes' 
   | 'eggs' 
   | 'putridEggs';
+
+export type MockeryTier = 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary'
+  | 'royal'
+  | 'basic'
+  | 'premium'
+  | 'silver'
+  | 'bronze'
+  | 'standard';
+
+export interface TeamData {
+  id: string;
+  color: TeamColor;
+  name: string;
+  description: string;
+  logoUrl: string;
+  benefits: string[];
+  members: number;
+  totalContribution: number;
+  rank: number;
+  previousRank: number;
+}
 
 // Conversion function
 export function normalizeMockeryAction(action: MockeryAction | LegacyMockeryAction): MockeryAction {
@@ -68,9 +96,13 @@ export interface LeaderboardUser {
   tier: UserTier | string;
   spendStreak: number;
   walletBalance?: number;
-  previousRank?: number;
+  previousRank: number;
   joinDate?: string;
   isVerified?: boolean;
+  rankChange?: number;
+  spendChange?: number;
+  isProtected?: boolean;
+  amountSpent?: number;
 }
 
 export interface LeaderboardFilter {
@@ -80,7 +112,7 @@ export interface LeaderboardFilter {
   search: string;
   sortBy: string;
   sortDirection: 'asc' | 'desc';
-  limit?: number;
+  limit: number;
 }
 
 export interface MockeryEvent {
@@ -112,7 +144,7 @@ export interface MockedUser {
   totalSpent?: number;
   rank?: number;
   spendStreak?: number;
-  appliedBy?: string; // Add this property
+  appliedBy?: string;
 }
 
 // Helper function to convert a legacy action to a new action
@@ -125,4 +157,3 @@ export function convertLegacyAction(action: MockeryAction | LegacyMockeryAction)
 
 // Re-export for consistency
 export { TeamColor };
-export type { LeaderboardUser, LeaderboardFilter, MockedUser, MockeryEvent, UserTier };

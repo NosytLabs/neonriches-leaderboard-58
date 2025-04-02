@@ -1,38 +1,37 @@
 
-export type SocialPlatform = 
-  | 'twitter'
-  | 'instagram'
-  | 'facebook'
-  | 'linkedin'
-  | 'github'
-  | 'youtube'
-  | 'twitch'
-  | 'discord'
-  | 'tiktok'
-  | 'website'
-  | 'other';
+// Define social link types to resolve conflicts between different type definitions
 
 export interface SocialLink {
   id: string;
-  platform: SocialPlatform;
+  platform: string;
   url: string;
-  title?: string;
-  isPrimary?: boolean;
-  isVerified?: boolean;
+  username?: string;
+  verified?: boolean;
+  enabled?: boolean;
+  clicks?: number; // Add this property to allow it on SocialLink
 }
 
 export interface ProfileLink {
   id: string;
   url: string;
   title: string;
-  clicks: number;
-  isActive: boolean;
-  createdAt: string;
+  clicks?: number; // Add this property to allow it on ProfileLink
+  active?: boolean;
+  position?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export interface ProfileImage {
-  id: string;
-  url: string;
-  isPrimary: boolean;
-  title?: string;
-}
+export type SocialPlatform = 
+  | 'twitter'
+  | 'instagram'
+  | 'facebook'
+  | 'youtube'
+  | 'twitch'
+  | 'linkedin'
+  | 'github'
+  | 'telegram'
+  | 'discord'
+  | 'tiktok'
+  | 'website'
+  | 'other';

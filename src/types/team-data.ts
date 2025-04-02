@@ -14,6 +14,7 @@ export interface TeamData {
   previousRank: number;
 }
 
-// Re-export TeamColor from team.ts
-export { TeamColor };
-export type TeamType = TeamColor; // For backwards compatibility
+// Re-export TeamColor for convenience
+export type { TeamColor };
+// For backwards compatibility
+export type TeamType = TeamColor;

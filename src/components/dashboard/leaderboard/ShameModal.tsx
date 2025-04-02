@@ -1,11 +1,17 @@
-
 import React from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Crown, ShieldAlert, Target } from 'lucide-react';
-import { TeamColor } from '@/types/team';
-import { MockeryAction } from '@/types/mockery';
-import { getShameActionPrice } from '@/components/events/utils/shameUtils';
+import { MockeryAction, TeamColor } from '@/types/mockery-types';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Crown, ShieldCheck, Coins } from 'lucide-react';
+import { 
+  getMockeryName, 
+  getMockeryDescription,
+  getMockeryActionPrice
+} from '@/utils/mockeryUtils';
+import { getDiscountedShamePrice } from '@/utils/shameUtils';
+import { getInitials } from '@/utils/formatters/stringFormatters';
+import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 
 interface ShameModalProps {
   targetUser: {
@@ -31,13 +37,16 @@ const ShameModal: React.FC<ShameModalProps> = ({
   onCancel,
   hasDiscount = false
 }) => {
-  const actionPrice = getShameActionPrice(shameType);
-  const finalPrice = hasDiscount ? Math.floor(actionPrice * 0.75) : actionPrice;
+  const regularPrice = getMockeryActionPrice(shameType);
+  const finalPrice = hasDiscount 
+    ? getDiscountedShamePrice(shameType) 
+    : regularPrice;
   
   const getActionTitle = () => {
-    switch (shameType) {
-      case 'tomatoes': return 'Throw Tomatoes';
-      case 'eggs': return 'Throw Rotten Eggs';
+    const normalizedAction = normalizeMockeryAction(shameType);
+    switch (normalizedAction) {
+      case 'tomato': return 'Throw Tomatoes';
+      case 'egg': return 'Throw Rotten Eggs';
       case 'stocks': return 'Place in Stocks';
       case 'jester': return 'Make a Jester';
       case 'crown': return 'Award Crown';
@@ -48,9 +57,10 @@ const ShameModal: React.FC<ShameModalProps> = ({
   };
   
   const getActionDescription = () => {
-    switch (shameType) {
-      case 'tomatoes': return 'Throw rotten tomatoes at this user. A medieval classic!';
-      case 'eggs': return 'Hurl rotten eggs for maximum embarrassment.';
+    const normalizedAction = normalizeMockeryAction(shameType);
+    switch (normalizedAction) {
+      case 'tomato': return 'Throw rotten tomatoes at this user. A medieval classic!';
+      case 'egg': return 'Hurl rotten eggs for maximum embarrassment.';
       case 'stocks': return 'Place this noble in the stocks for public ridicule.';
       case 'jester': return 'Mock them as the court jester.';
       case 'crown': return 'Award them a crown of sarcasm.';
@@ -61,12 +71,13 @@ const ShameModal: React.FC<ShameModalProps> = ({
   };
   
   const getActionIcon = () => {
-    switch (shameType) {
+    const normalizedAction = normalizeMockeryAction(shameType);
+    switch (normalizedAction) {
       case 'crown':
       case 'protection':
-        return <ShieldAlert className="h-5 w-5 text-royal-gold" />;
+        return <ShieldCheck className="h-5 w-5 text-royal-gold" />;
       default:
-        return <Target className="h-5 w-5 text-red-500" />;
+        return <Coins className="h-5 w-5 text-red-500" />;
     }
   };
   
@@ -77,14 +88,11 @@ const ShameModal: React.FC<ShameModalProps> = ({
           {getActionIcon()}
           <span className="ml-2">{getActionTitle()}</span>
         </DialogTitle>
-        <DialogDescription>
-          {getActionDescription()}
-        </DialogDescription>
       </DialogHeader>
       
       <div className="flex items-center space-x-4 py-4">
         <div className="h-12 w-12 rounded-full overflow-hidden bg-black/20">
-          <img 
+          <AvatarImage 
             src={targetUser.profileImage || '/placeholder.svg'} 
             alt={targetUser.username}
             className="h-full w-full object-cover"

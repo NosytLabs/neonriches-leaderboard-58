@@ -1,15 +1,23 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useToast as useShadcnToast, ToastActionElement } from '@/components/ui/use-toast';
+import { useToast as useShadcnToast } from '@/components/ui/use-toast';
 
 type ToastVariant = 'default' | 'destructive' | 'success' | 'warning' | 'gold' | 'royal' | 'secondary' | 'outline';
 
 interface ToastContextProps {
   toast: (props: {
-    title?: ReactNode;
-    description?: ReactNode;
+    title?: React.ReactNode;
+    description?: React.ReactNode;
     variant?: ToastVariant;
-    action?: ToastActionElement;
+    action?: React.ReactNode;
+    duration?: number;
+  }) => void;
+  // Add the missing 'addToast' property that components are looking for
+  addToast: (props: {
+    title?: React.ReactNode;
+    description?: React.ReactNode;
+    variant?: ToastVariant;
+    action?: React.ReactNode;
     duration?: number;
   }) => void;
 }
@@ -20,23 +28,27 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const { toast } = useShadcnToast();
 
   const showToast = (props: {
-    title?: ReactNode;
-    description?: ReactNode;
+    title?: React.ReactNode;
+    description?: React.ReactNode;
     variant?: ToastVariant;
-    action?: ToastActionElement;
+    action?: React.ReactNode;
     duration?: number;
   }) => {
     toast({
       title: props.title,
       description: props.description,
       variant: props.variant as any,
-      action: props.action as any,  // Cast to any to fix type issue
+      action: props.action,
       duration: props.duration,
     });
   };
 
   return (
-    <ToastContext.Provider value={{ toast: showToast }}>
+    <ToastContext.Provider value={{ 
+      toast: showToast,
+      // Add addToast as an alias for toast for backward compatibility
+      addToast: showToast 
+    }}>
       {children}
     </ToastContext.Provider>
   );

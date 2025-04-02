@@ -40,7 +40,7 @@ export interface ProfileBoost {
   active?: boolean; // Make active optional
   effectId?: string;
   // Add properties needed for user.ts ProfileBoost
-  isActive?: boolean; // Optional in user.ts
+  isActive?: boolean; // Optional for backward compatibility
   strength?: number;
   appliedBy?: string;
   name?: string;

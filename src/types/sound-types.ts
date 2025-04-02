@@ -46,7 +46,7 @@ export type SoundType =
   | 'throne'
   | 'chime'
   | 'warning'
-  | 'withdraw'; // Add additional sound types that are needed
+  | 'withdraw';
 
 export interface SoundOptions {
   volume?: number;
@@ -78,21 +78,25 @@ export interface UseNotificationSoundsReturn {
   toggleMuted: () => boolean;
   setVolume: (volume: number) => void;
   currentVolume: number;
-  playNotificationSound?: (type: string, options?: SoundOptions) => void; // Add missing method
+  playNotificationSound: (type?: string, options?: SoundOptions) => void;
 }
 
 export interface UseSoundHook {
   playSound: (sound: SoundType, options?: SoundOptions) => void;
   pauseSound?: (sound: SoundType) => void;
   resumeSound?: () => void;
+  stopSound?: (sound: SoundType) => void;
   currentSound?: string | null;
   currentVolume?: number;
   isSoundEnabled?: boolean;
+  isMuted?: boolean;
   soundConfig?: SoundConfig;
   toggleMuted?: () => boolean;
   mute?: () => void;
   unmute?: () => void;
   setVolume?: (volume: number) => void;
+  play?: (sound: SoundType, options?: SoundOptions) => void;
+  isPlaying?: boolean;
 }
 
 export interface PremiumSoundPackDetails {
@@ -105,12 +109,19 @@ export interface PremiumSoundPackDetails {
   icon?: string;
 }
 
-// Export sound types
-export type {
-  SoundType,
-  SoundOptions,
-  SoundConfig,
-  UseNotificationSoundsReturn,
-  PremiumSoundPackDetails,
-  UseSoundHook
+export type SoundHook = {
+  playSound: (sound: SoundType, options?: SoundOptions) => void;
+  stopSound: (sound: SoundType) => void;
+  pauseSound?: (sound: SoundType) => void;
+  resumeSound?: () => void;
+  isPlaying: boolean;
+  currentSound?: string | null;
+  currentVolume?: number;
+  isSoundEnabled?: boolean;
+  isMuted?: boolean;
+  soundConfig?: SoundConfig;
+  toggleMuted?: () => boolean;
+  mute?: () => void;
+  unmute?: () => void;
+  setVolume?: (volume: number) => void;
 };
