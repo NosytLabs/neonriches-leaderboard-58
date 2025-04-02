@@ -40,7 +40,50 @@ export const createMockUser = (username: string): UserProfile => {
       showRank: true,
       darkMode: true,
       soundEffects: true,
-      showBadges: true
+      showBadges: true,
+      showTeam: true,
+      showSpending: true
     }
   };
+};
+
+// Add missing functions mentioned in error messages
+export const signInWithEmail = async (email: string): Promise<boolean> => {
+  console.log(`Sending magic link to ${email}...`);
+  
+  // Simulate a delay for sending the magic link
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Return true to indicate successful email sending
+  return true;
+};
+
+export const verifyMfaCode = async (code: string): Promise<boolean> => {
+  console.log(`Verifying MFA code: ${code}`);
+  
+  // Simple validation that the code is 6 digits
+  if (!/^\d{6}$/.test(code)) {
+    throw new Error('Invalid verification code');
+  }
+  
+  // Simulate a delay for verification
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Return true to indicate successful verification
+  return true;
+};
+
+export const resetPassword = async (email: string): Promise<boolean> => {
+  console.log(`Sending password reset link to ${email}...`);
+  
+  // Validate email format
+  if (!email || !email.includes('@')) {
+    throw new Error('Invalid email address');
+  }
+  
+  // Simulate a delay for sending the reset link
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Return true to indicate successful email sending
+  return true;
 };

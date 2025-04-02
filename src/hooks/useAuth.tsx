@@ -31,4 +31,6 @@ const useAuth = (): AuthContextType => {
   return context;
 };
 
+// Export both default and named export for flexibility
 export default useAuth;
+export { useAuth };

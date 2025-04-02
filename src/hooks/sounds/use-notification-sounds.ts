@@ -1,14 +1,7 @@
 
 import { useCallback } from 'react';
-import { SoundType, SoundOptions } from '@/types/sound-types';
+import { SoundType, SoundOptions, UseNotificationSoundsReturn } from '@/types/sound-types';
 import { useSound } from './use-sound';
-
-interface UseNotificationSoundsReturn {
-  playSound: (type: SoundType, options?: SoundOptions) => void;
-  mute: () => void;
-  unmute: () => void;
-  isMuted: boolean;
-}
 
 /**
  * Hook for playing notification sounds
@@ -26,6 +19,10 @@ export const useNotificationSounds = (): UseNotificationSoundsReturn => {
     playSoundFn(type, notificationOptions);
   }, [playSoundFn]);
   
+  const playNotificationSound = useCallback((type: SoundType = 'notification', options: SoundOptions = {}) => {
+    playSound(type, options);
+  }, [playSound]);
+  
   const mute = useCallback(() => {
     if (soundConfig?.muted === false && toggleMuted) {
       toggleMuted();
@@ -40,6 +37,7 @@ export const useNotificationSounds = (): UseNotificationSoundsReturn => {
   
   return {
     playSound,
+    playNotificationSound,
     mute,
     unmute,
     isMuted: soundConfig?.muted || false

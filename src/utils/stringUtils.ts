@@ -1,64 +1,78 @@
 
 /**
- * Safely converts any value to a string
- * @param value The value to convert to a string
- * @returns The string representation of the value
+ * Get initials from a name (first letters of first and last name)
  */
-export const safeToString = (value: any): string => {
-  if (value === null || value === undefined) {
-    return '';
-  }
+export const getInitials = (name: string): string => {
+  if (!name) return '?';
   
-  if (typeof value === 'object') {
-    try {
-      return JSON.stringify(value);
-    } catch (e) {
-      return String(value);
-    }
-  }
+  const nameParts = name.split(' ').filter(part => part.length > 0);
   
-  return String(value);
+  if (nameParts.length === 0) return '?';
+  if (nameParts.length === 1) return nameParts[0].charAt(0).toUpperCase();
+  
+  return (nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0)).toUpperCase();
 };
 
 /**
- * Truncates a string to a specified length
- * @param str The string to truncate
- * @param maxLength The maximum length of the string
- * @param ellipsis Whether to add ellipsis at the end
- * @returns The truncated string
+ * Truncate a string if it exceeds the maximum length
  */
-export const truncateString = (
-  str: string, 
-  maxLength: number = 50, 
-  ellipsis: boolean = true
-): string => {
-  if (!str || str.length <= maxLength) {
-    return str;
+export const truncateString = (str: string, maxLength: number = 20): string => {
+  if (!str || str.length <= maxLength) return str;
+  return str.substring(0, maxLength) + '...';
+};
+
+/**
+ * Convert a string to title case (first letter of each word capitalized)
+ */
+export const toTitleCase = (str: string): string => {
+  if (!str) return '';
+  
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
+/**
+ * Generate a random ID
+ */
+export const generateId = (length: number = 8): string => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   
-  return ellipsis 
-    ? `${str.slice(0, maxLength)}...` 
-    : str.slice(0, maxLength);
+  return result;
 };
 
 /**
- * Ensures a string starts with a specific prefix
- * @param str The string to check
- * @param prefix The prefix to ensure
- * @returns The string with the prefix
+ * Convert a string to snake_case
  */
-export const ensurePrefix = (str: string, prefix: string): string => {
-  if (!str) return prefix;
-  if (str.startsWith(prefix)) return str;
-  return `${prefix}${str}`;
+export const toSnakeCase = (str: string): string => {
+  return str
+    .toLowerCase()
+    .replace(/\s+/g, '_')
+    .replace(/[^\w_]/g, '');
 };
 
 /**
- * Strips HTML tags from a string
- * @param html The string with HTML to strip
- * @returns The string without HTML tags
+ * Convert a string to kebab-case
  */
-export const stripHtml = (html: string): string => {
-  if (!html) return '';
-  return html.replace(/<[^>]*>?/gm, '');
+export const toKebabCase = (str: string): string => {
+  return str
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]/g, '');
+};
+
+export default {
+  getInitials,
+  truncateString,
+  toTitleCase,
+  generateId,
+  toSnakeCase,
+  toKebabCase
 };

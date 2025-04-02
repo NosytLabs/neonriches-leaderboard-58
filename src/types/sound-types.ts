@@ -1,103 +1,94 @@
 
-// Define all possible sound types
+// Define the available sound types
 export type SoundType = 
-  | 'coin' 
-  | 'success' 
-  | 'error' 
-  | 'click' 
-  | 'notification' 
-  | 'achievement' 
-  | 'purchase' 
-  | 'deposit' 
-  | 'mockery' 
-  | 'fanfare' 
-  | 'levelUp' 
-  | 'level_up' 
-  | 'shame' 
-  | 'royal' 
-  | 'boost' 
-  | 'message'
-  | 'swordClash'
-  | 'noblesLaugh'
-  | 'withdraw'
-  | 'withdrawal'
-  | 'coinDrop'
-  | 'protection'
-  | 'sparkle'
-  | 'reward'
-  | 'rank_up'
-  | 'team'
-  | 'trumpet'
-  | 'warning'
-  | 'medallion'
-  | 'royalAnnouncement'
-  | 'seal'
-  | 'transfer'
-  | 'unlock'
-  | 'parchmentUnfurl'
-  | 'pageChange'
-  | 'wish'
-  | 'inkScribble'
+  | 'click'
   | 'hover'
-  | 'advertisement'
-  | 'chime';
+  | 'success'
+  | 'error'
+  | 'notification'
+  | 'purchase'
+  | 'coins'
+  | 'achievement'
+  | 'levelUp'
+  | 'warning'
+  | 'toggle'
+  | 'alert'
+  | 'badge'
+  | 'upgrade'
+  | 'down'
+  | 'up'
+  | 'royal_preview'
+  | 'royal_bell'
+  | 'royal_fanfare'
+  | 'royalAnnouncement'
+  | 'royal_success'
+  | 'epic_preview'
+  | 'epic_victory'
+  | 'epic_defeat'
+  | 'epic_discovery'
+  | 'epic_challenge'
+  | 'minimal_preview'
+  | 'minimal_notification'
+  | 'minimal_success'
+  | 'minimal_alert'
+  | 'minimal_action'
+  | 'throne';
 
-// Sound options for playback
+// Sound configuration options
 export interface SoundOptions {
   volume?: number;
   loop?: boolean;
-  playbackRate?: number;
-  onEnd?: () => void;
-  interrupt?: boolean;
   delay?: number;
+  pitch?: number;
+  playbackRate?: number;
+  groupId?: string;
+  stopOthers?: boolean;
+  onEnd?: () => void;
 }
 
-// Define the sound configuration type
+// Sound configuration
 export interface SoundConfig {
   enabled: boolean;
   muted: boolean;
   volume: number;
-  effects?: Record<string, boolean>;
-  music?: Record<string, boolean>;
-  ambience?: Record<string, boolean>;
+  effects: Record<string, boolean>;
+  premium: boolean;
+  theme: string;
 }
 
-// Define the hook interface for sound system
-export interface UseSoundHook {
+// Sound hook return type
+export interface SoundHook {
   playSound: (type: SoundType, options?: SoundOptions) => void;
   stopSound: (type?: SoundType) => void;
-  pauseSound: (type?: SoundType) => void;
-  resumeSound: (type?: SoundType) => void;
-  isPlaying: (type: SoundType) => boolean;
   play: (type: SoundType, options?: SoundOptions) => void;
   isSoundEnabled: boolean;
   currentVolume: number;
+  currentSound?: SoundType;
+  pauseSound?: (type?: SoundType) => void;
+  resumeSound?: (type?: SoundType) => void;
+  isPlaying?: (type: SoundType) => boolean;
   toggleSounds?: () => void;
   toggleMuted?: () => void;
   setVolume?: (volume: number) => void;
   soundConfig?: SoundConfig;
 }
 
-// NotificationSoundOptions is an alias for SoundOptions
-export type NotificationSoundOptions = SoundOptions;
-
-// Audio related types
-export type AudioLoaderReturn = {
-  audio: Record<SoundType, HTMLAudioElement>;
-  volume: number;
+// Use Sound hook return type for broader functionality
+export interface UseSoundHook extends SoundHook {
+  pauseSound: (type?: SoundType) => void;
+  resumeSound: (type?: SoundType) => void;
+  isPlaying: (type: SoundType) => boolean;
+  toggleSounds: () => void;
+  toggleMuted: () => void;
   setVolume: (volume: number) => void;
-  isEnabled: boolean;
-  setEnabled: (enabled: boolean) => void;
-  isPremium: boolean;
-  setPremium: (premium: boolean) => void;
-  isLoaded: boolean;
-};
+  soundConfig: SoundConfig;
+}
 
-export interface PremiumSoundPackDetails {
-  id?: string;
-  name: string;
-  description: string;
-  price: number;
-  sounds: SoundType[];
-  previewSound?: SoundType;
+// Notification sounds hook return type
+export interface UseNotificationSoundsReturn {
+  playSound: (type: SoundType, options?: SoundOptions) => void;
+  mute: () => void;
+  unmute: () => void;
+  isMuted: boolean;
+  playNotificationSound: (type?: SoundType, options?: SoundOptions) => void;
 }

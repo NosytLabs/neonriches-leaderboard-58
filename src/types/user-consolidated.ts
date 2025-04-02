@@ -1,55 +1,9 @@
 
-import { TeamColor } from '@/types/mockery-types';
-import { ProfileBoost } from '@/types/boost';
-import { SocialLink } from '@/types/cosmetics';
+import { TeamColor } from './team';
+import { ProfileBoost } from './boost';
+import { UserCosmetics } from './cosmetics';
 
-export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble' | 'none';
-
-export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'followers' | 'friends';
-  allowProfileLinks: boolean;
-  theme: 'light' | 'dark' | 'system' | 'royal';
-  notifications: boolean;
-  emailNotifications: boolean;
-  marketingEmails: boolean;
-  showRank: boolean;
-  darkMode: boolean;
-  soundEffects: boolean;
-  showBadges: boolean;
-  showEmailOnProfile?: boolean;
-  rankChangeAlerts?: boolean;
-  showTeam: boolean;
-  showSpending: boolean;
-  newFollowerAlerts?: boolean;
-  teamNotifications?: boolean;
-  language?: string;
-  publicProfile?: boolean;
-  shameAlerts?: boolean;
-  allowMessages?: boolean;
-}
-
-export interface UserCosmetics {
-  border: string[];
-  color: string[];
-  font: string[];
-  emoji: string[];
-  title: string[];
-  background: string[];
-  effect: string[];
-  badge: string[];
-  theme: string[];
-  [key: string]: string[] | string | undefined;
-  activeTitle?: string;
-  activeBorder?: string;
-  activeBackground?: string;
-  activeEffect?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeEmoji?: string;
-  activeBadge?: string;
-  activeTheme?: string;
-}
-
+// User profile consolidated type to prevent duplicate declarations
 export interface UserProfile {
   id: string;
   username: string;
@@ -62,37 +16,61 @@ export interface UserProfile {
   createdAt?: string;
   isVerified?: boolean;
   isProtected?: boolean;
-  isFounder?: boolean;
-  isVIP?: boolean;
-  isAdmin?: boolean;
-  team: TeamColor;
   tier: string;
+  team: string;
   rank: number;
   previousRank: number;
   totalSpent: number;
-  amountSpent?: number;
+  amountSpent: number;
   walletBalance?: number;
   settings: UserSettings;
-  cosmetics?: UserCosmetics;
-  following?: string[];
-  followers?: string[];
-  achievements?: string[];
-  badges?: string[];
   profileBoosts?: ProfileBoost[];
-  socialLinks?: SocialLink[];
+  cosmetics: UserCosmetics;
+  lastActive?: string;
+  activeTitle?: string;
   spendStreak?: number;
   profileViews?: number;
   profileClicks?: number;
-  gender?: Gender;
-  lastActive?: string;
-  boostCount?: number;
+  subscription?: UserSubscription;
   purchasedFeatures?: string[];
-  teamRank?: number;
+  certificates?: string[];
   certificateNFT?: {
     mintAddress: string;
     mintDate: string;
     dateIssued?: string;
   };
+  gender?: string;
 }
 
-export type User = UserProfile;
+export interface UserSettings {
+  profileVisibility: "public" | "private" | "followers" | "friends";
+  allowProfileLinks: boolean;
+  theme: string;
+  notifications: boolean;
+  emailNotifications: boolean;
+  marketingEmails: boolean;
+  showRank: boolean;
+  darkMode: boolean;
+  soundEffects: boolean;
+  showBadges: boolean;
+  showTeam: boolean;
+  showSpending: boolean;
+}
+
+export interface UserSubscription {
+  id: string;
+  tier: string;
+  status: 'active' | 'canceled' | 'past_due' | 'trialing';
+  startDate: string;
+  endDate?: string;
+  renewalDate?: string;
+  price: number;
+  interval: 'monthly' | 'yearly';
+  features: string[];
+}
+
+export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say';
+
+// Export the TeamColor type for compatibility
+export type { TeamColor };
+export type { SocialLink } from './cosmetics';

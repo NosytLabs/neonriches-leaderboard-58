@@ -1,4 +1,35 @@
 
+import { UserProfile } from './user-consolidated';
+
+// Export TeamColor as a type
+export type TeamColor = 
+  | 'red'
+  | 'blue'
+  | 'green'
+  | 'gold'
+  | 'purple'
+  | 'none'
+  | 'neutral'
+  | 'silver'
+  | 'bronze'
+  | 'crimson';
+
+// Export TeamData interface
+export interface TeamData {
+  id: string;
+  name: string;
+  color: TeamColor;
+  description: string;
+  motto: string;
+  members: number;
+  rank: number;
+  totalSpent: number;
+  benefits: string[];
+  maxMembers: number;
+  leaderId?: string;
+  image?: string;
+}
+
 export interface TeamMember {
   id: string;
   userId: string;
@@ -9,52 +40,55 @@ export interface TeamMember {
   joinDate: string;
   contribution: number;
   rank: number;
+  status: 'active' | 'inactive' | 'pending';
 }
 
-export type TeamRole = 
-  | 'leader'
-  | 'co-leader'
-  | 'officer'
-  | 'member'
-  | 'recruit'
-  | 'elite'
-  | 'champion';
+export interface TeamRole {
+  id: string;
+  name: string;
+  permissions: string[];
+  isAdmin: boolean;
+}
 
 export interface TeamStats {
   totalMembers: number;
   totalSpent: number;
-  averageRank: number;
-  globalRank: number;
-  winCount: number;
-  lossCount: number;
+  averageSpent: number;
+  rank: number;
+  previousRank: number;
+  highestRank: number;
+  events: number;
+  victories: number;
 }
 
 export interface TeamBenefits {
-  discountRate: number;
-  bonusRate: number;
-  exclusiveAccess: boolean;
-  specialBadges: boolean;
-  prioritySupport: boolean;
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  unlocked: boolean;
+  requiredSpending: number;
 }
 
 export interface TeamInvite {
   id: string;
   teamId: string;
+  teamName: string;
+  teamColor: TeamColor;
   inviterId: string;
+  inviterName: string;
   inviteeId: string;
+  inviteeEmail: string;
   status: 'pending' | 'accepted' | 'declined' | 'expired';
   createdAt: string;
   expiresAt: string;
 }
 
+// For compatibility with existing code
 export interface TeamDataCompat {
   id: string;
   name: string;
-  color: string;
-  memberCount: number;
-  totalSpent: number;
-  rank: number;
-  crest: string;
-  leaderUsername?: string;
-  leaderAvatar?: string;
+  color: TeamColor;
+  description: string;
+  members: number;
 }

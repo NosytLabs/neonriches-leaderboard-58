@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
 import PasswordInput from './PasswordInput';
 import FormError from './FormError';
 
@@ -131,4 +131,3 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, redirectTo }) => {
 };
 
 export default SignUpForm;
-

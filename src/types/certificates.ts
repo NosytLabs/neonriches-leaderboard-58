@@ -7,7 +7,8 @@ export type CertificateType =
   | 'special'
   | 'event'
   | 'royal'
-  | 'noble';
+  | 'noble'
+  | 'nobility'; // Added to support existing code
 
 export type CertificateStyle = 
   | 'classic'
@@ -44,6 +45,9 @@ export interface Certificate {
   signature?: string;
   achievements?: string[];
   metadata?: Record<string, any>;
+  nftAddress?: string; // Added to support existing code
+  userId?: string; // Added to support existing code
+  createdAt?: string; // Added to support existing code
 }
 
 export interface CertificateTemplate {
@@ -57,6 +61,7 @@ export interface CertificateTemplate {
   available: boolean;
   requiredTier?: string;
   price?: number;
+  team?: CertificateTeam; // Added to support existing code
 }
 
 export interface CertificateRepository {

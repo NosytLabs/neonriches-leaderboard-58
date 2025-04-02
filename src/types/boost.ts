@@ -19,6 +19,7 @@ export interface BoostEffect {
   price?: number;
   durationDays?: number;
   effectId?: string;
+  cssClass?: string; // Added to support existing code
 }
 
 export interface ProfileBoost {

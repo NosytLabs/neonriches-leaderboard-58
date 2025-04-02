@@ -1,5 +1,5 @@
 
-export type CosmeticType = 'avatar' | 'badge' | 'banner' | 'emote' | 'frame' | 'title' | 'nameplate';
+export type CosmeticType = 'avatar' | 'badge' | 'banner' | 'emote' | 'frame' | 'title' | 'nameplate' | 'border' | 'color' | 'font' | 'emoji' | 'background' | 'effect' | 'theme';
 
 export type CosmeticCategory = 
   | 'border'
@@ -10,7 +10,10 @@ export type CosmeticCategory =
   | 'background'
   | 'effect'
   | 'badge'
-  | 'theme';
+  | 'theme'
+  | 'appearance' // Added to support existing code
+  | 'profile' // Added to support existing code
+  | 'interaction'; // Added to support existing code
 
 export type CosmeticRarity = 
   | 'common'
@@ -32,9 +35,10 @@ export interface CosmeticItem {
   type: CosmeticType | string;
   enabled: boolean;
   cost: number;
-  price?: number; // Add price property to fix RoyalBoutique component
+  price?: number; // Added for RoyalBoutique component
   previewUrl?: string;
   image?: string;
+  imageSrc?: string; // Added to support existing code
 }
 
 export interface SocialLink {

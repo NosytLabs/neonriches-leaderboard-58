@@ -1,56 +1,81 @@
 
 /**
- * Format a number as currency
- * @param value The number to format
- * @param options Currency formatting options
- * @returns Formatted currency string
+ * Format a date string into a user-friendly format
  */
-export const formatCurrency = (
-  value: number,
-  options: { decimals?: number; symbol?: string } = {}
-): string => {
-  const { decimals = 2, symbol = "" } = options;
+export const formatDate = (dateString: string): string => {
+  if (!dateString) return 'Unknown date';
   
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  }).format(value);
-};
-
-/**
- * Format a large number in a compact way (e.g., 1.2k, 1.2M)
- * @param value The number to format
- * @returns Formatted compact number string
- */
-export const formatCompactNumber = (value: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    compactDisplay: 'short',
-  }).format(value);
-};
-
-/**
- * Format a date into a readable string
- * @param date The date to format
- * @param format The format style to use
- * @returns Formatted date string
- */
-export const formatDate = (
-  date: Date | string,
-  format: 'short' | 'medium' | 'long' = 'medium'
-): string => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return 'Invalid date';
   
-  const options: Intl.DateTimeFormatOptions = {
+  return date.toLocaleDateString('en-US', {
     year: 'numeric',
-    month: format === 'short' ? 'short' : 'long',
-    day: 'numeric',
-  };
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
+/**
+ * Format a number with commas for thousands
+ */
+export const formatNumber = (value: number): string => {
+  return new Intl.NumberFormat('en-US').format(value);
+};
+
+/**
+ * Format an amount as USD
+ */
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+};
+
+/**
+ * Format dollar amount
+ */
+export const formatDollarAmount = (amount: number): string => {
+  return `$${formatNumber(amount)}`;
+};
+
+/**
+ * Format file size from bytes to human-readable format
+ */
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
   
-  if (format === 'long') {
-    options.hour = 'numeric';
-    options.minute = 'numeric';
-  }
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
   
-  return new Intl.DateTimeFormat('en-US', options).format(dateObj);
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+/**
+ * Format a date as relative time (e.g., "2 hours ago")
+ */
+export const formatTimeAgo = (dateString: string): string => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  
+  if (diffSeconds < 60) return `${diffSeconds} seconds ago`;
+  if (diffSeconds < 3600) return `${Math.floor(diffSeconds / 60)} minutes ago`;
+  if (diffSeconds < 86400) return `${Math.floor(diffSeconds / 3600)} hours ago`;
+  if (diffSeconds < 2592000) return `${Math.floor(diffSeconds / 86400)} days ago`;
+  if (diffSeconds < 31536000) return `${Math.floor(diffSeconds / 2592000)} months ago`;
+  
+  return `${Math.floor(diffSeconds / 31536000)} years ago`;
+};
+
+export default {
+  formatDate,
+  formatNumber,
+  formatCurrency,
+  formatDollarAmount,
+  formatFileSize,
+  formatTimeAgo
 };
