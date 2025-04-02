@@ -8,7 +8,7 @@ export interface CosmeticItem {
   name: string;
   description: string;
   cost: number;
-  price?: number; // For backward compatibility
+  price?: number; // Alternative to cost, for backward compatibility
   category: CosmeticCategory;
   type: CosmeticType;
   rarity: CosmeticRarity;

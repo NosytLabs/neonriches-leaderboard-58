@@ -1,8 +1,12 @@
 
+export type UserTier = 'free' | 'basic' | 'premium' | 'gold' | 'silver' | 'bronze' | 'elite' | 'pro' | 'royal' | 'legendary' | 'diamond' | 'platinum' | 'founder' | 'vip' | 'whale' | 'standard';
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'silver' | 'bronze' | 'neutral' | 'none';
+export type Gender = 'male' | 'female' | 'other' | 'none';
+
 export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'followers';
+  profileVisibility: 'public' | 'private' | 'followers' | 'friends';
   allowProfileLinks: boolean;
-  theme: 'dark' | 'light' | 'system';
+  theme: 'dark' | 'light' | 'system' | 'royal';
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
@@ -101,11 +105,6 @@ export interface UserProfile {
   };
 }
 
-// Types used throughout the application
-export type UserTier = 'free' | 'basic' | 'premium' | 'gold' | 'silver' | 'bronze' | 'elite' | 'pro' | 'royal' | 'legendary';
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'silver' | 'bronze' | 'neutral' | 'none';
-export type Gender = 'male' | 'female' | 'other' | 'none';
-
-// Export these for backward compatibility 
-export type TeamType = TeamColor;
+// Export types for use elsewhere
+export type { UserTier, TeamColor, TeamColor as TeamType };
 export type User = UserProfile;

@@ -9,6 +9,20 @@ export * from './stringFormatters';
 export * from './currencyFormatters';
 export * from './addressFormatters';
 
-// Re-export dollarFormatters explicitly to avoid naming conflicts
-import { formatDollarAmount as formatDollarAmountFromDollar } from './dollarFormatters';
-export { formatDollarAmountFromDollar as formatDollarFromModule };
+// Re-export specific formatters for backward compatibility
+import { formatCurrency, formatDollarAmount, formatWithUnit, formatCompactNumber, formatPercent } from './currencyFormatters';
+import { formatNumber } from './numberFormatters';
+import { formatDate, formatTimeAgo } from './dateFormatters';
+import { formatFileSize } from './fileFormatters';
+
+export {
+  formatCurrency,
+  formatDollarAmount,
+  formatWithUnit,
+  formatCompactNumber,
+  formatPercent,
+  formatNumber,
+  formatDate,
+  formatTimeAgo,
+  formatFileSize
+};

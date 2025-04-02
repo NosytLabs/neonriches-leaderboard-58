@@ -9,7 +9,7 @@ interface MobileProfileViewProps {
 
 const MobileProfileView: React.FC<MobileProfileViewProps> = ({ user }) => {
   // Use joinedDate property which is the proper field from UserProfile
-  const joinDate = user.joinedDate || new Date().toISOString();
+  const joinDate = user.joinedDate || '';
 
   return (
     <div className="mobile-profile-view">

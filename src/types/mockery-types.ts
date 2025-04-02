@@ -18,9 +18,10 @@ export type MockeryAction =
   | 'challenge'
   | 'joust'
   | 'duel'
-  | 'fish'; // Add missing 'fish' action
+  | 'fish'
+  | 'thumbsDown'; // Add missing actions
 
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal' | 'basic';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal' | 'basic' | 'premium';
 
 export interface MockedUser {
   userId: string;
@@ -37,6 +38,7 @@ export interface MockedUser {
   appliedAt?: string; // For some components
   appliedBy?: string; // For some components
   expiresAt?: string; // For some components
+  reason?: string; // For some components
 }
 
 export interface MockeryEvent {
@@ -84,8 +86,8 @@ export interface TeamData {
   id: string;
   name: string;
   color: TeamColor;
-  totalContribution: number; // Add this property
-  members: number; // Add this property
+  totalContribution: number; 
+  members: number;
   memberIds: string[];
   rank: number;
   previousRank: number;
@@ -93,5 +95,5 @@ export interface TeamData {
   logoUrl: string;
 }
 
-// Re-export TeamColor for other modules
-export { TeamColor };
+// Export using explicit export type syntax for isolatedModules
+export type { TeamColor };
