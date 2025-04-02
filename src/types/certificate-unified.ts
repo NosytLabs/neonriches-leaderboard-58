@@ -11,7 +11,10 @@ export type CertificateType =
   | 'founder' 
   | 'royal' 
   | 'supporter' 
-  | 'special';
+  | 'special'
+  | 'nobility'
+  | 'custom'
+  | 'membership'; // Added for compatibility
 
 export type CertificateStyle = 
   | 'standard'
@@ -23,7 +26,9 @@ export type CertificateStyle =
   | 'platinum'
   | 'silver'
   | 'bronze'
-  | 'custom';
+  | 'custom'
+  | 'premium'  // Added for compatibility
+  | 'legendary'; // Added for compatibility
 
 export type CertificateTeam = 
   | 'red'
@@ -32,7 +37,8 @@ export type CertificateTeam =
   | 'gold'
   | 'purple'
   | 'neutral'
-  | 'none';
+  | 'none'
+  | 'all';  // Added for compatibility
 
 export interface Certificate {
   id: string;

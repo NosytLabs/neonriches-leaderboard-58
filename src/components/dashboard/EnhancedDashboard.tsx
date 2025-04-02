@@ -13,6 +13,8 @@ import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { toUserProfile } from '@/utils/userTypeConverter';
+import { UserProfile } from '@/types/user';
+import { toTeamColor } from '@/utils/typeConverters';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -73,9 +75,14 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Convert the user to the type needed by components
-  // This fixes the type compatibility issue
-  const userForComponents = toUserProfile(user);
+  // Convert the user to the type needed by components with proper type casting
+  const userForComponents: UserProfile = {
+    ...user,
+    team: toTeamColor(user.team),
+    // Ensure other required properties
+    displayName: user.displayName || user.username || '',
+    walletBalance: user.walletBalance || 0,
+  };
 
   const handleSpend = () => {
     toast({

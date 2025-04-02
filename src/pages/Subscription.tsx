@@ -35,9 +35,9 @@ const SubscriptionPage = () => {
     }
   }, [user]);
   
-  const handlePlanSelect = (plan: LocalSubscriptionPlan) => {
-    setSelectedPlan(plan.id);
-    console.log(`Selected plan: ${plan.id} with billing interval: ${billingInterval}`);
+  const handlePlanSelect = (planId: string) => {
+    setSelectedPlan(planId);
+    console.log(`Selected plan: ${planId} with billing interval: ${billingInterval}`);
   };
   
   const toggleBillingInterval = () => {

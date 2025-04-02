@@ -1,12 +1,11 @@
-
-import React, { useEffect } from 'react';
-import Shell from '@/components/Shell';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { shell as Shell } from '@/components/ui/shell'; // Use named import as workaround
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/auth';
 import PageSEO from '@/components/common/PageSEO';
 

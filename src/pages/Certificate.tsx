@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -8,15 +9,18 @@ import { Award, Download, Share2, ChevronLeft, AlertCircle } from 'lucide-react'
 import CertificateDisplay from '@/components/certificates/CertificateDisplay';
 import RoyalCertificate from '@/components/certificates/RoyalCertificate';
 import { useToast } from '@/hooks/use-toast';
-import { Certificate, adaptCertificate } from '@/types/certificate-unified';
+import { adaptCertificate } from '@/types/certificate-unified';
 import { formatDate } from '@/utils/formatters';
+import { Certificate } from '@/types/certificate-unified';
 
-interface RouteParams {
+// Define params as a proper record type
+interface Params extends Record<string, string> {
   certificateId: string;
 }
 
 const CertificatePage = () => {
-  const { certificateId } = useParams<RouteParams>();
+  const params = useParams<Params>();
+  const certificateId = params.certificateId;
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -61,40 +65,40 @@ const CertificatePage = () => {
     navigate('/dashboard');
   };
 
-  const handleMintCertificate = async (certificate: Certificate) => {
+  const handleMintCertificate = async (cert: Certificate): Promise<boolean> => {
     return new Promise<boolean>((resolve) => {
       setTimeout(() => {
         toast({
           title: 'Certificate Minted',
-          description: `Certificate "${certificate.title}" has been successfully minted.`,
+          description: `Certificate "${cert.title}" has been successfully minted.`,
         });
         resolve(true);
       }, 1500);
     });
   };
 
-  const handleShareCertificate = async (certificate: Certificate) => {
+  const handleShareCertificate = async (cert: Certificate): Promise<string> => {
     return new Promise<string>((resolve) => {
       setTimeout(() => {
-        const shareUrl = `https://example.com/certificates/${certificate.id}`;
+        const shareUrl = `https://example.com/certificates/${cert.id}`;
         toast({
           title: 'Certificate Shared',
-          description: `Certificate "${certificate.title}" has been shared.`,
+          description: `Certificate "${cert.title}" has been shared.`,
         });
         resolve(shareUrl);
       }, 1000);
     });
   };
 
-  const handleDownloadCertificate = (certificate: Certificate) => {
+  const handleDownloadCertificate = (cert: Certificate) => {
     toast({
       title: 'Certificate Downloaded',
-      description: `Certificate "${certificate.title}" has been downloaded.`,
+      description: `Certificate "${cert.title}" has been downloaded.`,
     });
   };
 
-  const handleCertificateDisplay = (certificate: any) => {
-    const adaptedCertificate = adaptCertificate(certificate);
+  const handleCertificateDisplay = (cert: any) => {
+    const adaptedCertificate = adaptCertificate(cert);
     
     return (
       <CertificateDisplay

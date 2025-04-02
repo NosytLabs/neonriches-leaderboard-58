@@ -1,10 +1,8 @@
-
 import { useState, useCallback } from 'react';
 import { MockeryAction, MockeryEvent, MockeryUser } from '@/types/mockery-types';
 import { useToast } from './use-toast';
 import { useSound } from './sounds/use-sound';
 
-// Interface for the return value of this hook
 interface UseMockeryResult {
   targetUser: MockeryUser | null;
   mockUser: (action: MockeryAction, targetUser: MockeryUser) => Promise<boolean>;
@@ -14,7 +12,6 @@ interface UseMockeryResult {
   resetMockery: () => void;
 }
 
-// Modify to use the updated MockeryEvent type
 export const useMockery = (): UseMockeryResult => {
   const [targetUser, setTargetUser] = useState<MockeryUser | null>(null);
   const [isMocking, setIsMocking] = useState<boolean>(false);
@@ -22,7 +19,6 @@ export const useMockery = (): UseMockeryResult => {
   const { toast } = useToast();
   const sound = useSound();
 
-  // Example mock users for demo purposes
   const mockUsers: { [key: string]: MockeryUser } = {
     "user1": {
       id: "1",
@@ -53,9 +49,7 @@ export const useMockery = (): UseMockeryResult => {
     }
   };
 
-  // Function to calculate cost for an action
   const costForAction = (action: MockeryAction): number => {
-    // Simple cost calculation
     const costs: Partial<Record<MockeryAction, number>> = {
       tomato: 10,
       egg: 15,
@@ -67,16 +61,13 @@ export const useMockery = (): UseMockeryResult => {
     return costs[action] || 20;
   };
 
-  // Function to mock a user with a specific action
   const mockUser = useCallback(async (action: MockeryAction, user: MockeryUser): Promise<boolean> => {
     setIsMocking(true);
     setTargetUser(user);
 
     try {
-      // In a real app, this would be an API call
       await new Promise(resolve => setTimeout(resolve, 800));
       
-      // Play a sound effect based on the action
       if (action === 'tomato') {
         sound.playSound('error');
       } else if (action === 'crown') {
@@ -87,7 +78,6 @@ export const useMockery = (): UseMockeryResult => {
         sound.playSound('notification');
       }
       
-      // Create a mock result
       const result: MockeryEvent = {
         id: `mock-${Date.now()}`,
         actionType: action,
@@ -134,3 +124,6 @@ export const useMockery = (): UseMockeryResult => {
     resetMockery
   };
 };
+
+export default useMockery;
+export { useMockery };

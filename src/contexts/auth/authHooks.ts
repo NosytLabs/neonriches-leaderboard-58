@@ -7,7 +7,7 @@ import { UserSubscription } from '@/types/user-consolidated';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { addProfileBoostWithDays, addCosmeticByCategoryString } from './authUtils';
-import { toUserProfile, toConsolidatedUserProfile, ensureUserProfile, ensureConsolidatedUserProfile } from '@/utils/userTypeConverter';
+import { ensureUserProfile, ensureConsolidatedUserProfile } from '@/utils/userTypeConverter';
 
 export const useAuthState = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -115,7 +115,8 @@ export const useAuthMethods = (
       // Make sure we have a correctly typed UserProfile
       const userProfileData = ensureUserProfile({
         ...user,
-        ...userData
+        ...userData,
+        displayName: userData.displayName || user.displayName || user.username
       });
       
       // Update user metadata in Supabase Auth
@@ -268,10 +269,15 @@ export const useAuthMethods = (
       };
       
       // Create a new user object with the updated subscription
-      const updatedUser = {
+      const updatedUser = ensureUserProfile({
         ...user,
-        subscription
-      };
+        subscription: {
+          planId: subscription.planId,
+          nextBillingDate: subscription.nextBillingDate,
+          status: subscription.status,
+          tier: subscription.tier
+        }
+      });
       
       setUser(updatedUser);
       

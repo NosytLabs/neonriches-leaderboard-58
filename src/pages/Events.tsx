@@ -1,7 +1,9 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Shell } from '@/components/ui/Shell';
+import { Button } from '@/components/ui/button';
+import { Shell } from '@/components/ui/shell';
+import EventList from '@/components/events/EventList';
+import { useEvents } from '@/hooks/useEvents';
 
 const Events = () => {
   const navigate = useNavigate();
@@ -15,12 +17,12 @@ const Events = () => {
         <p className="text-lg text-muted-foreground mb-6">
           Stay tuned for exciting events in the kingdom! Royal gatherings, spending competitions, and exclusive opportunities are in the works.
         </p>
-        <button 
+        <Button 
           onClick={() => navigate('/')}
           className="px-4 py-2 bg-royal-gold text-black rounded hover:bg-royal-gold/80 transition"
         >
           Return to Dashboard
-        </button>
+        </Button>
       </div>
     </Shell>
   );

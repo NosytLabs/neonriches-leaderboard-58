@@ -1,68 +1,34 @@
 
-export interface Subscription {
-  id: string;
-  userId: string;
-  planId: string;
-  planName: string;
-  status: 'active' | 'cancelled' | 'expired' | 'paused' | 'pending';
-  price: number;
-  interval: 'monthly' | 'yearly' | 'quarterly';
-  startDate: string;
-  nextBillingDate: string;
-  endDate?: string;
-  cancelledAt?: string;
-  paymentMethod?: string;
-  features?: string[];
-  autoRenew?: boolean;
-  trialEndDate?: string;
-  isInTrial?: boolean;
-}
-
-export type SubscriptionTier = 'free' | 'basic' | 'premium' | 'royal';
-
 export interface SubscriptionPlan {
   id: string;
   name: string;
-  price: number;
-  interval: string;
+  tier: string;
   description: string;
-  features: string[];
-  color: string;
-  maxLinks: number;
-  maxProfiles: number;
-  analyticsAccess: boolean;
-  customization: boolean;
-  protectionDuration: number;
-  priceMonthly: number;
-  priceYearly: number;
+  price: {
+    monthly: number;
+    yearly: number;
+  } | number;
+  features: (string | { name: string; included: boolean })[];
+  popular?: boolean; // Updated from isPopular to match component usage
+  cta?: string;
 }
 
-export interface Feature {
-  id: string;
-  name: string;
-  description: string;
-  isAvailable: boolean;
-  isUnlocked: boolean;
-  tier: SubscriptionTier;
-  price?: number;
-  category?: string;
+export type SubscriptionBillingInterval = 'monthly' | 'yearly';
+
+export interface SubscriptionDetails {
+  plan: SubscriptionPlan;
+  status: 'active' | 'cancelled' | 'expired' | 'pending';
+  startDate: string;
+  endDate?: string;
+  nextBillingDate?: string;
+  billingInterval: SubscriptionBillingInterval;
+  cancelAtPeriodEnd?: boolean;
 }
 
-export interface FeatureInfo {
-  name: string;
-  description: string;
-  limits: {
-    free: string;
-    basic: string;
-    premium: string;
-    royal: string;
-  };
-}
-
-export interface SubscriptionStatus {
-  isActive: boolean;
-  currentPlan: SubscriptionTier;
-  expiryDate?: string;
-  daysLeft?: number;
-  autoRenew?: boolean;
+export interface SubscriptionManagementProps {
+  user: any;
+  currentSubscription?: SubscriptionDetails | null;
+  onUpdateSubscription?: (planId: string, interval: SubscriptionBillingInterval) => Promise<void>;
+  onCancelSubscription?: () => Promise<void>;
+  onReactivateSubscription?: () => Promise<void>;
 }

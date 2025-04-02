@@ -1,5 +1,4 @@
-
-import { MockeryAction } from '@/types/mockery-types';
+import { MockeryAction, MockeryTier } from '@/types/mockery-types';
 
 /**
  * Map of legacy mockery actions to their standardized versions
@@ -93,3 +92,30 @@ export function getMockeryActionDisplayName(action: MockeryAction): string {
   
   return displayNames[action] || 'Unknown';
 }
+
+// Fix the icons record to include all required actions
+export const mockeryActionIcons: Record<string, string> = {
+  tomato: 'tomato',
+  egg: 'egg',
+  thumbsDown: 'thumbs-down',
+  thumbs_down: 'thumbs-down', // Added for compatibility
+  shame: 'shame',
+  jester: 'jester',
+  mock: 'mock',
+  challenge: 'challenge',
+  joust: 'joust',
+  duel: 'duel',
+  crown: 'crown',
+  stocks: 'stocks',
+  putridEgg: 'putrid-egg',
+  rotten_egg: 'rotten-egg', // Added for compatibility
+  silence: 'silence',
+  flame: 'flame', // Added for compatibility
+  heart: 'heart', // Added for compatibility
+  taunt: 'taunt',
+  protection: 'protection', // Added for compatibility
+  royal_decree: 'royal-decree', // Added for compatibility
+  shame_certificate: 'shame-certificate', // Added for compatibility
+  insult: 'insult', // Added for compatibility
+  humiliate: 'humiliate' // Added for compatibility
+};

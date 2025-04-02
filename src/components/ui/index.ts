@@ -37,9 +37,9 @@ export * from './textarea';
 export * from './tooltip';
 export { Shell } from './shell';
 
-// Export toast components explicitly to avoid duplicate exports
+// Export toast components - fixing the missing Toaster export
 export { 
-  Toaster, 
+  Toast, 
   ToastProvider, 
   ToastViewport 
 } from './toast';

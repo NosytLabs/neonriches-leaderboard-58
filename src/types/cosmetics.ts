@@ -1,7 +1,7 @@
 
 // Fix export type conflicts
 export interface SocialLinkInterface {
-  id?: string; // Change to string only
+  id: string; // Changed from optional to required
   platform: string;
   url: string;
   username?: string;
@@ -27,8 +27,9 @@ export interface ProfileLinkInterface {
 export type SocialLink = SocialLinkInterface;
 export type ProfileLink = ProfileLinkInterface;
 
-export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme' |
-  'premium' | 'standard' | 'exclusive' | 'profile' | 'appearance'; // Added for backward compatibility
+export type CosmeticType = 
+  'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme' |
+  'premium' | 'standard' | 'exclusive' | 'profile' | 'appearance' | 'interaction'; // Added 'interaction' for compatibility
 
 export type CosmeticCategory = 
   | 'border' 
