@@ -35,7 +35,7 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
     const iconProps = {
       ref,
       className: cn(sizeClass, colorClass, animatedClass, className),
-      'aria-hidden': true, // Changed from string to boolean
+      'aria-hidden': true, // Fix: Changed from string to boolean
       ...props
     };
 

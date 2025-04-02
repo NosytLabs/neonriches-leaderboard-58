@@ -1,4 +1,3 @@
-
 export interface LeaderboardUser {
   id: string;
   userId: string;
@@ -27,6 +26,7 @@ export interface LeaderboardUser {
   joinedDate?: string;
   settings?: any;
   carrot?: number;       // Add mockery action type
+  joinDate?: string;     // Add for compatibility
 }
 
 export interface LeaderboardFilter {

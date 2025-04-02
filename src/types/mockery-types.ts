@@ -1,4 +1,3 @@
-
 import { TeamColor, UserTier } from "./user-types";
 import { LeaderboardUser } from "./leaderboard";
 
@@ -10,7 +9,14 @@ export type MockeryAction =
   | 'fish'
   | 'carrot'
   | 'flowers'
-  | 'gold'; 
+  | 'gold'
+  | 'jester'
+  | 'crown'
+  | 'stocks'
+  | 'shame'
+  | 'protection'
+  | 'mock'
+  | 'denounce'; 
 
 export type MockeryTier = 
   | 'common'

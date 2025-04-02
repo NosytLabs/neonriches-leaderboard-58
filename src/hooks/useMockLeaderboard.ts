@@ -16,6 +16,7 @@ export const useMockLeaderboard = () => {
           
           return {
             id: `user-${i + 1}`,
+            userId: `user-${i + 1}`,
             username: `User${i + 1}`,
             displayName: `User ${i + 1}`,
             profileImage: `https://randomuser.me/api/portraits/men/${20 + i}.jpg`,
@@ -28,6 +29,7 @@ export const useMockLeaderboard = () => {
             spentAmount: totalSpent, // For backward compatibility
             amountSpent: totalSpent, // For backward compatibility
             isVerified: i < 10,
+            isProtected: i < 5, // Add isProtected property
             spendStreak: Math.floor(Math.random() * 20),
           } as LeaderboardUser;
         });

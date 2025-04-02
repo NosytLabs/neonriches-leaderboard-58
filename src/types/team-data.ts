@@ -1,51 +1,37 @@
 
-import { TeamColor } from './team';
+import { TeamColor } from './user-types';
 
 export interface TeamData {
   id: string;
   name: string;
   color: TeamColor;
-  description: string;
-  motto: string;
-  icon: string;
-  memberCount: number;
-  totalSpent: number;
-  position: number;
-  banner?: string;
-  founder?: string;
-  benefits?: string[];
-  history?: string;
+  logoUrl: string;
+  members: number;
+  totalContribution: number;
+  rank?: number;
+  previousRank?: number;
+  description?: string;
 }
 
-export interface TeamLeader {
-  id: string;
-  username: string;
-  displayName: string;
-  profileImage: string;
-  totalSpent: number;
-  rank: number;
-  tier: string;
-}
-
+// Additional team-related types
 export interface TeamMember {
   id: string;
+  userId: string;
   username: string;
-  displayName: string;
-  profileImage: string;
-  totalSpent: number;
-  rank: number;
-  tier: string;
-  joinedDate: string;
+  displayName?: string;
+  profileImage?: string;
+  joinedDate?: string;
+  contribution?: number;
+  role?: 'member' | 'captain' | 'leader' | 'admin';
 }
 
 export interface TeamStats {
-  totalSpent: number;
-  memberCount: number;
-  averageSpent: number;
-  position: number;
-  growthRate: number;
-  weeklyChange: number;
+  totalMembers: number;
+  totalContribution: number;
+  avgContributionPerMember: number;
+  weeklyGrowth: number;
+  monthlyGrowth: number;
 }
 
-// Export TeamData for use in other components
+// Export TeamData type to avoid conflicts
 export type { TeamData };

@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Egg, Lock } from 'lucide-react';
-import { MockeryAction, TeamColor } from '@/types/mockery';
+import { MockeryAction, TeamColor } from '@/types/mockery-types';
 import { cn } from '@/lib/utils';
 import MockeryIconRenderer from '@/components/mockery/components/MockeryIconRenderer';
 
