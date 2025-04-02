@@ -45,13 +45,15 @@ export interface TeamData {
   color: TeamColor;
   members: number;
   totalSpent: number;
+  totalContribution?: number;
   rank: number;
   previousRank: number;
   icon: string;
+  logoUrl?: string;
   description: string;
 }
 
-// Add MockedUser and MockeryEvent types
+// Define user interfaces for mockery system
 export interface MockedUser {
   id: string;
   username: string;

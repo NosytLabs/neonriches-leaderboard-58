@@ -1,4 +1,3 @@
-
 import { TeamColor } from './user';
 
 export interface LeaderboardFilter {

@@ -117,7 +117,7 @@ export const getMockeryActionDescription = (action: MockeryAction): string => {
  * @returns The color as a hex string
  */
 export const getMockeryTierColor = (tier: MockeryTier): string => {
-  const tierColors: Record<string, string> = {
+  const tierColors: Record<MockeryTier, string> = {
     common: '#9FA6B2',   // Gray
     uncommon: '#48BB78', // Green
     rare: '#4299E1',     // Blue

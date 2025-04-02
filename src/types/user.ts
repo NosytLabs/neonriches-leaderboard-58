@@ -1,27 +1,45 @@
-import { UserProfile as ConsolidatedUserProfile } from './user-consolidated';
 
-export type UserTier = 'free' | 'basic' | 'premium' | 'royal' | 'gold' | 'silver' | 'bronze' | 'elite' | 'pro' | 'legendary' | 'diamond' | 'platinum' | 'founder' | 'vip' | 'whale' | 'standard';
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'silver' | 'bronze' | 'neutral' | 'none' | null;
-export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'silver' | 'bronze' | 'neutral' | 'none';
-export type Gender = 'male' | 'female' | 'other' | 'none';
+import { TeamColor, UserTier } from './mockery-types';
 
-export type ProfileBoost = {
+// Base user profile interface
+export interface UserProfile {
   id: string;
-  type: string;
-  startDate: string;
-  endDate: string;
-  level: number;
-  isActive: boolean;
-  strength: number;
-  appliedBy: string;
-};
-
-export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'badge' | 'title' | 'background' | 'effect' | 'theme' | 'premium' | 'standard' | 'exclusive' | 'profile';
+  username: string;
+  displayName: string;
+  email?: string;
+  profileImage?: string;
+  bio?: string;
+  joinedDate: string;
+  isVerified?: boolean;
+  team: TeamColor | null;
+  tier: UserTier;
+  rank: number;
+  previousRank: number;
+  totalSpent: number;
+  amountSpent: number;
+  walletBalance: number;
+  spendStreak?: number;
+  isProtected?: boolean;
+  isVIP?: boolean;
+  isFounder?: boolean;
+  settings?: UserSettings;
+  cosmetics?: UserCosmetics;
+  following?: string[];
+  followers?: string[];
+  socialLinks?: SocialLink[];
+  profileBoosts?: ProfileBoost[];
+  certificateNFT?: {
+    mintAddress: string;
+    mintDate: string;
+  };
+  lastActive?: string;
+  gender?: string;
+}
 
 export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'followers' | 'friends';
+  profileVisibility: 'public' | 'private' | 'followers';
   allowProfileLinks: boolean;
-  theme: 'dark' | 'light' | 'system' | 'royal';
+  theme: 'light' | 'dark' | 'system';
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
@@ -31,8 +49,8 @@ export interface UserSettings {
   showBadges: boolean;
   showEmailOnProfile?: boolean;
   rankChangeAlerts?: boolean;
-  showTeam?: boolean;
-  showSpending?: boolean;
+  showTeam: boolean;
+  showSpending: boolean;
   newFollowerAlerts?: boolean;
   teamNotifications?: boolean;
 }
@@ -47,85 +65,27 @@ export interface UserCosmetics {
   effect: string[];
   badge: string[];
   theme: string[];
-  activeTitle?: string;
-  activeBorder?: string;
-  activeBackground?: string;
-  activeEffect?: string;
 }
 
 export interface SocialLink {
-  id?: string;
+  id: string;
   platform: string;
   url: string;
-  title?: string;
-  verified?: boolean;
   username?: string;
-  label?: string;
-  icon?: string;
-  display?: string;
+  verified?: boolean;
+  clicks?: number;
 }
 
-export interface UserProfile {
+export interface ProfileBoost {
   id: string;
-  username: string;
-  displayName: string;
-  email?: string;
-  profileImage: string;
-  bio?: string;
-  joinedDate: string;
-  joinDate?: string; // Added for compatibility with old code
-  isVerified?: boolean;
-  isFounder?: boolean;
-  isVIP?: boolean;
-  team: TeamColor;
-  tier: UserTier;
-  rank: number;
-  previousRank?: number;
-  totalSpent?: number;
-  amountSpent: number;
-  walletBalance?: number;
-  settings?: UserSettings;
-  followers?: string[];
-  following?: string[];
-  achievements?: any[];
-  badges?: string[];
-  cosmetics?: UserCosmetics;
-  socialLinks?: SocialLink[];
-  profileBoosts?: ProfileBoost[];
-  spendStreak?: number;
-  profileViews?: number;
-  profileClicks?: number;
-  subscription?: {
-    planId: string;
-    nextBillingDate: string;
-    status?: 'active' | 'cancelled' | 'paused';
-    tier?: string;
-  };
-  purchasedFeatures?: string[];
-  certificateNFT?: {
-    mintAddress: string;
-    mintDate: string;
-    dateIssued?: string;
-  };
-  activeTitle?: string;
-  lastActive?: string;
-  gender?: Gender;
-  teamRank?: number;
-  createdAt?: string; // Added for compatibility
+  type: string;
+  startDate: string;
+  endDate: string;
+  level: number;
+  isActive: boolean;
+  strength: number;
+  appliedBy: string;
 }
 
-export interface User extends UserProfile {
-  // Any additional fields specific to User vs UserProfile
-}
-
-// Add ProfileImage type for compatibility with ImagesEditor
-export interface ProfileImage {
-  id?: string;
-  url: string;
-  isPrimary: boolean;
-  caption?: string;
-  type?: string; // Added type property that was missing
-}
-
-// Add ProfileLink type for compatibility with LinksEditor
-export type ProfileLink = SocialLink;
+// Type alias for a simplified User type that matches UserProfile
+export type User = UserProfile;

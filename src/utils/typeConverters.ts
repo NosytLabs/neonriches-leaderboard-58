@@ -1,6 +1,6 @@
 
 import { LeaderboardUser } from '@/types/leaderboard';
-import { UserProfile } from '@/types/user-consolidated';
+import { UserProfile } from '@/types/user';
 import { TeamColor, UserTier } from '@/types/mockery-types';
 
 /**
@@ -41,10 +41,8 @@ export const toUserProfile = (user: LeaderboardUser): UserProfile => {
     id: user.id || user.userId,
     username: user.username,
     displayName: user.displayName || user.username,
-    email: '',  // LeaderboardUser doesn't have email
-    profileImage: user.profileImage || '',
-    bio: '',  // LeaderboardUser doesn't have bio
-    joinedDate: user.joinedDate || new Date().toISOString(), // Use fallback
+    profileImage: user.profileImage || user.avatarUrl || '',
+    joinedDate: user.joinedDate || new Date().toISOString(),
     isVerified: user.isVerified || false,
     team: toTeamColor(user.team),
     tier: toUserTier(user.tier),
@@ -52,22 +50,9 @@ export const toUserProfile = (user: LeaderboardUser): UserProfile => {
     previousRank: user.previousRank || user.rank || 0,
     walletBalance: user.walletBalance || 0,
     totalSpent: user.totalSpent || 0,
-    settings: {
-      theme: 'dark',
-      notifications: {
-        enabled: true,
-        leaderboardUpdates: true,
-        rankChanges: true,
-        teamUpdates: true,
-        spending: true,
-        mockery: true
-      },
-      privacy: {
-        showProfile: true,
-        showSpending: true,
-        showRank: true
-      }
-    }
+    amountSpent: user.totalSpent || 0,
+    isProtected: user.isProtected || false,
+    spendStreak: user.spendStreak || 0
   };
 };
 
@@ -78,11 +63,4 @@ export const toUserProfile = (user: LeaderboardUser): UserProfile => {
  */
 export const ensureStringId = (id: string | number): string => {
   return String(id);
-};
-
-export {
-  toTeamColor,
-  toUserTier,
-  toUserProfile,
-  ensureStringId
 };
