@@ -3,6 +3,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import { HelmetProvider } from 'react-helmet-async';
+import { AuthProvider } from '@/contexts/auth';
 import Leaderboard from '@/pages/Leaderboard';
 
 const App: React.FC = () => {
@@ -11,11 +12,13 @@ const App: React.FC = () => {
 
   return (
     <HelmetProvider context={helmetContext}>
-      <Routes>
-        <Route path="/" element={<Leaderboard />} />
-        <Route path="/leaderboard" element={<Leaderboard />} />
-      </Routes>
-      <Toaster />
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Leaderboard />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+        </Routes>
+        <Toaster />
+      </AuthProvider>
     </HelmetProvider>
   );
 };

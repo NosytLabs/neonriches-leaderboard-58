@@ -11,7 +11,8 @@ import { useNavigate } from 'react-router-dom';
 
 const Leaderboard = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const auth = useAuth?.() || { user: null }; // Safely access auth context
+  const { user } = auth;
   const { loading, mockLeaderboardData } = useMockLeaderboard?.() || { loading: true, mockLeaderboardData: [] };
   
   // Initialize filter state

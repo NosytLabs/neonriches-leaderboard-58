@@ -12,7 +12,17 @@ export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    console.warn('useAuth must be used within an AuthProvider');
+    // Return a default empty context instead of throwing an error
+    return {
+      user: null,
+      isAuthenticated: false,
+      isLoading: false,
+      login: async () => false,
+      register: async () => false,
+      logout: async () => {},
+      updateUser: async () => false
+    };
   }
   
   // Process the user's team property to ensure it's a valid TeamColor
