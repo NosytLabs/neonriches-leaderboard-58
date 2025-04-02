@@ -1,46 +1,25 @@
 
-import { TeamColor, MockeryAction, MockeryTier } from './mockery-types';
+import { MockeryAction, MockeryTier, TeamColor, TeamData, UserTier } from './mockery-types';
 
-export type { TeamColor, MockeryAction, MockeryTier };
+// Re-export types correctly
+export type { MockeryAction, MockeryTier, TeamColor, TeamData, UserTier };
 
-/**
- * Mockery target types
- */
-export interface MockeryTarget {
+// Add any other types needed
+export interface MockeryNotification {
   id: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  rank?: number;
-  tier?: string;
-}
-
-/**
- * Mockery event interface
- */
-export interface MockeryEvent {
-  id: string;
+  fromUserId: string;
+  toUserId: string;
   action: MockeryAction;
-  targetId: string;
-  fromId: string;
   timestamp: string;
-  isAnonymous: boolean;
-  message?: string;
-  duration?: number;
+  read: boolean;
 }
 
-/**
- * Available mockery effects
- */
-export interface MockeryEffect {
-  id: string;
-  name: string;
-  action: MockeryAction;
-  description: string;
-  price: number;
-  tier: string;
-  requiredRank?: number;
-  duration?: number;
-  icon?: string;
-  cssClass?: string;
+export interface MockerySettings {
+  allowMockery: boolean;
+  notifyOnMockery: boolean;
+  protectionEnabled: boolean;
+  protectionEndDate?: string;
 }
+
+// These are forward exports
+export * from './mockery-types';

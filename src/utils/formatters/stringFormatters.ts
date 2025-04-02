@@ -74,3 +74,14 @@ export const formatDollarAmount = (value: number): string => {
     maximumFractionDigits: 2
   }).format(value);
 };
+
+// Export explicitly to ensure these are available
+export {
+  formatUsername,
+  truncateString,
+  capitalizeFirstLetter,
+  toTitleCase,
+  stripHtmlTags,
+  getInitials,
+  formatDollarAmount
+};

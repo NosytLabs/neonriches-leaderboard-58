@@ -1,6 +1,6 @@
 
 import { useSound } from './use-sound';
-import { SoundOptions } from '@/types/user-types';
+import { SoundType, SoundOptions } from '@/types/sound-types';
 
 export const useNotificationSounds = () => {
   const { playSound } = useSound();
@@ -10,6 +10,9 @@ export const useNotificationSounds = () => {
       volume: 0.5,
       ...options
     };
+
+    // Make sure we only pass valid sound types
+    const validSoundType = (type as SoundType) || 'notification';
 
     switch (type) {
       case 'achievement':
@@ -29,6 +32,9 @@ export const useNotificationSounds = () => {
         break;
       case 'reward':
         playSound('reward', soundOptions);
+        break;
+      case 'chime':
+        playSound('chime', soundOptions);
         break;
       default:
         playSound('notification', soundOptions);

@@ -58,6 +58,7 @@ export interface SocialLink {
   username?: string;
   label?: string;
   icon?: string;
+  clicks?: number; // Added to fix the error in LinksEditor
 }
 
 export interface UserProfile {
@@ -94,6 +95,7 @@ export interface UserProfile {
   boostCount?: number;
   purchasedFeatures?: string[];
   teamRank?: number;
+  isProtected?: boolean; // Add missing property from the LeaderboardUser
   certificateNFT?: {
     mintAddress: string;
     mintDate: string;
@@ -105,8 +107,12 @@ export interface UserProfile {
     status?: 'active' | 'cancelled' | 'paused';
     tier?: string;
   };
+  // Compatibility fields
+  joinDate?: string;
+  joinedAt?: string;
+  createdAt?: string;
 }
 
-// Export types for use elsewhere - use 'export type' to avoid conflicts
-export type { UserTier, TeamColor, TeamColor as TeamType };
+// Use 'export' instead of 'export type' to avoid conflicts
+export { UserTier, TeamColor, TeamColor as TeamType };
 export type User = UserProfile;

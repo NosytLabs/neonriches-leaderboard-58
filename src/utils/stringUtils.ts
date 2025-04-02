@@ -61,3 +61,44 @@ export const slugify = (str: string): string => {
     .replace(/^-+/, '')
     .replace(/-+$/, '');
 };
+
+/**
+ * Get initials from a name or username
+ * @param name - The name to get initials from
+ * @param maxChars - Maximum number of characters to return
+ * @returns Initials from the name
+ */
+export const getInitials = (name: string, maxChars: number = 2): string => {
+  if (!name) return '';
+  
+  const parts = name.split(/[\s-_]+/);
+  if (parts.length === 1) {
+    // If single word, take first N characters
+    return name.substring(0, maxChars).toUpperCase();
+  }
+  
+  // Take first character of each word
+  return parts
+    .slice(0, maxChars)
+    .map(part => part.charAt(0))
+    .join('')
+    .toUpperCase();
+};
+
+/**
+ * Ensure a value is a string
+ * @param id - The ID value, could be number or string
+ * @returns The ID as a string
+ */
+export const ensureStringId = (id: string | number): string => {
+  return typeof id === 'number' ? String(id) : id;
+};
+
+// Export all functions
+export {
+  safeToString,
+  getStringValue,
+  slugify,
+  getInitials,
+  ensureStringId
+};

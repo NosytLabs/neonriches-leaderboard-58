@@ -68,3 +68,6 @@ export interface PremiumSoundPackDetails {
   features: string[];
   enabled: boolean;
 }
+
+// Export all types
+export { SoundType, SoundPackType, SoundOptions, SoundConfig, PremiumSoundPackDetails };

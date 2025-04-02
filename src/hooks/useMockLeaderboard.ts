@@ -31,6 +31,8 @@ export const useMockLeaderboard = () => {
             isVerified: i < 10,
             isProtected: i < 5,
             spendStreak: Math.floor(Math.random() * 20),
+            joinedDate: new Date(Date.now() - (Math.random() * 90 * 24 * 60 * 60 * 1000)).toISOString(),
+            joinDate: new Date(Date.now() - (Math.random() * 90 * 24 * 60 * 60 * 1000)).toISOString(),
           } as LeaderboardUser;
         });
         

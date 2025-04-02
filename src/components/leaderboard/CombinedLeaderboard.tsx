@@ -1,217 +1,146 @@
 
 import React, { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Trophy, Crown, Users, TrendingUp, Medal, Coins } from "lucide-react";
-import LeaderboardList from "./components/LeaderboardList";
-import { LeaderboardUser } from '@/types/leaderboard';
+import { useNavigate } from 'react-router-dom';
+import { useMockLeaderboard } from '@/hooks/useMockLeaderboard';
 import { useAuth } from '@/hooks/useAuth';
+import { LeaderboardFilter, LeaderboardUser } from '@/types/leaderboard';
+import { MockeryAction, TeamColor } from '@/types/mockery-types';
+import { useToast } from '@/hooks/use-toast';
 import { useSound } from '@/hooks/use-sound';
-import { MockeryAction } from '@/types/mockery-types';
-import ShameModalWrapper from './components/ShameModalWrapper';
+import { toTeamColor } from '@/utils/typeConverters';
+import {
+  LeaderboardHeader,
+  LeaderboardFilters,
+  LeaderboardList,
+  ShameModalWrapper
+} from './components';
 
-interface CombinedLeaderboardProps {
-  maxVisible?: number;
-  showFilters?: boolean;
-  showTabs?: boolean;
-  compact?: boolean;
-  hideOnMobile?: boolean;
-  currentUserId?: string;
-  className?: string;
-  initialTab?: string;
-}
-
-const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
-  maxVisible = 10,
-  showFilters = true,
-  showTabs = true,
-  compact = false,
-  hideOnMobile = false,
-  currentUserId = '',
-  className = '',
-  initialTab = 'all'
-}) => {
+const CombinedLeaderboard: React.FC = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
+  const { toast } = useToast();
   const sound = useSound();
-  const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [selectedLeaderboard, setSelectedLeaderboard] = useState<string>('weekly');
-  const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [shameAction, setShameAction] = useState<MockeryAction>('tomatoes');
-  const [activeTab, setActiveTab] = useState<string>(initialTab);
-  const [visibleCount, setVisibleCount] = useState<number>(maxVisible);
-
-  useEffect(() => {
-    const fetchLeaderboardData = async () => {
-      setLoading(true);
-      
-      try {
-        // In a real app, this would fetch from an API
-        setTimeout(() => {
-          const mockData = Array.from({ length: 10 }).map((_, index) => {
-            const leaderboardUser: LeaderboardUser = {
-              id: `user-${index + 1}`,
-              userId: `user-${index + 1}`,
-              username: `noble${index + 1}`,
-              displayName: `Noble User ${index + 1}`,
-              profileImage: `https://source.unsplash.com/random/?portrait&${index}`,
-              tier: index < 3 ? 'royal' : index < 6 ? 'silver' : 'basic',
-              team: (['red', 'blue', 'green', 'gold', 'purple'][index % 5]),
-              rank: index + 1,
-              totalSpent: Math.floor(10000 / (index + 1)), 
-              previousRank: index + 3 > 10 ? index - 2 : index + 3,
-              joinedAt: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
-              isVerified: index < 3,
-              walletBalance: Math.floor(Math.random() * 1000),
-              spendStreak: index < 5 ? index + 1 : 0,
-              isProtected: index % 2 === 0
-            };
-            
-            return leaderboardUser;
-          });
-          
-          setLeaderboardData(mockData);
-          setLoading(false);
-        }, 800);
-      } catch (error) {
-        console.error('Error fetching leaderboard data:', error);
-        setLoading(false);
-      }
-    };
-    
-    fetchLeaderboardData();
-  }, [selectedLeaderboard]);
+  const { loading, mockLeaderboardData } = useMockLeaderboard();
   
-  const handleLeaderboardChange = (value: string) => {
-    sound.playSound('click');
-    setSelectedLeaderboard(value);
+  const [filter, setFilter] = useState<LeaderboardFilter>({
+    team: 'all',
+    tier: 'all',
+    timeFrame: 'all',
+    search: '',
+    sortBy: 'rank',
+    sortDirection: 'asc'
+  });
+  
+  const [filteredUsers, setFilteredUsers] = useState<LeaderboardUser[]>([]);
+  const [showShameModal, setShowShameModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
+  const [shameAction, setShameAction] = useState<MockeryAction>('tomatoes');
+  
+  // Apply filters whenever the filter or data changes
+  useEffect(() => {
+    if (!mockLeaderboardData) return;
+    
+    let result = [...mockLeaderboardData];
+    
+    // Apply team filter
+    if (filter.team && filter.team !== 'all') {
+      result = result.filter(user => user.team === filter.team);
+    }
+    
+    // Apply tier filter
+    if (filter.tier && filter.tier !== 'all') {
+      result = result.filter(user => user.tier === filter.tier);
+    }
+    
+    // Apply search filter
+    if (filter.search) {
+      const searchTerm = filter.search.toLowerCase();
+      result = result.filter(user => 
+        user.username.toLowerCase().includes(searchTerm) || 
+        (user.displayName?.toLowerCase().includes(searchTerm))
+      );
+    }
+    
+    // Apply sorting
+    const sortField = filter.sortBy || 'rank';
+    const sortDir = filter.sortDirection || 'asc';
+    
+    result.sort((a, b) => {
+      if (sortField === 'rank') {
+        return sortDir === 'asc' ? a.rank - b.rank : b.rank - a.rank;
+      } else if (sortField === 'spent') {
+        return sortDir === 'asc' 
+          ? a.totalSpent - b.totalSpent 
+          : b.totalSpent - a.totalSpent;
+      } else if (sortField === 'username') {
+        return sortDir === 'asc'
+          ? a.username.localeCompare(b.username)
+          : b.username.localeCompare(a.username);
+      }
+      return 0;
+    });
+    
+    setFilteredUsers(result);
+  }, [filter, mockLeaderboardData]);
+  
+  const handleFilterChange = (newFilter: Partial<LeaderboardFilter>) => {
+    setFilter(prev => ({ ...prev, ...newFilter }));
   };
   
   const handleProfileClick = (userId: string, username: string) => {
-    console.log(`Clicked on ${username}`);
+    navigate(`/profile/${username}`);
   };
   
   const handleShameUser = (user: LeaderboardUser) => {
     setSelectedUser(user);
-    setShowModal(true);
-    sound.playSound('notification');
+    setShameAction('tomatoes'); // Default action
+    setShowShameModal(true);
   };
   
-  const handleConfirmShame = (userId: string) => {
-    setShowModal(false);
-    try {
-      // Use playSound with a string that matches SoundType
-      sound.playSound('notification');
-    } catch (error) {
-      console.error('Error playing sound:', error);
-    }
-    console.log(`Applied ${shameAction} to user ${userId}`);
+  const handleShameConfirm = (userId: string, action: MockeryAction) => {
+    // In a real app, we would call an API to apply the shame
+    sound.playSound('mockery');
+    
+    toast({
+      title: "Mockery Applied",
+      description: `You have applied ${action} mockery to ${selectedUser?.username}`,
+      variant: "success",
+    });
+    
+    setShowShameModal(false);
+    setSelectedUser(null);
   };
   
-  const sortLeaderboardData = () => {
-    // Sort by total spent, highest first
-    return [...leaderboardData].sort((a, b) => b.totalSpent - a.totalSpent);
-  };
-  
-  const loadMoreUsers = (count: number = 10) => {
-    setVisibleCount(prevCount => prevCount + count);
-  };
-
   return (
-    <div className={`${className} ${hideOnMobile ? 'hidden md:block' : ''}`}>
-      <Card className="glass-morphism border-white/10">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Trophy className="h-5 w-5 mr-2 text-royal-gold" />
-            Royal Leaderboard
-          </CardTitle>
-        </CardHeader>
-        
-        <CardContent>
-          <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
-            {showTabs && (
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="all" className="flex items-center gap-1.5">
-                  <Users className="h-4 w-4" />
-                  All
-                </TabsTrigger>
-                <TabsTrigger value="trending" className="flex items-center gap-1.5">
-                  <TrendingUp className="h-4 w-4" />
-                  Trending
-                </TabsTrigger>
-                <TabsTrigger value="top" className="flex items-center gap-1.5">
-                  <Medal className="h-4 w-4" />
-                  Top Rank
-                </TabsTrigger>
-                <TabsTrigger value="royal" className="flex items-center gap-1.5">
-                  <Crown className="h-4 w-4" />
-                  Royal
-                </TabsTrigger>
-              </TabsList>
-            )}
-            
-            <TabsContent value="all">
-              <LeaderboardList 
-                users={leaderboardData}
-                loading={loading}
-                currentUserId={user?.id || ''}
-                onProfileClick={handleProfileClick}
-                onShameUser={handleShameUser}
-              />
-            </TabsContent>
-            
-            <TabsContent value="trending">
-              <LeaderboardList 
-                users={leaderboardData}
-                loading={loading}
-                currentUserId={user?.id || ''}
-                onProfileClick={handleProfileClick}
-                onShameUser={handleShameUser}
-              />
-            </TabsContent>
-            
-            <TabsContent value="top">
-              <LeaderboardList 
-                users={leaderboardData}
-                loading={loading}
-                currentUserId={user?.id || ''}
-                onProfileClick={handleProfileClick}
-                onShameUser={handleShameUser}
-              />
-            </TabsContent>
-            
-            <TabsContent value="royal">
-              <LeaderboardList 
-                users={leaderboardData}
-                loading={loading}
-                currentUserId={user?.id || ''}
-                onProfileClick={handleProfileClick}
-                onShameUser={handleShameUser}
-              />
-            </TabsContent>
-          </Tabs>
-          
-          <div className="mt-4 flex justify-center">
-            <Button variant="outline" className="glass-morphism border-white/10">
-              <Coins className="h-4 w-4 mr-2" />
-              View Full Leaderboard
-            </Button>
-          </div>
-        </CardContent>
-        
-        {selectedUser && (
-          <ShameModalWrapper 
-            showModal={showModal}
-            selectedUser={selectedUser}
-            shameAction={shameAction}
-            onOpenChange={setShowModal}
-            onConfirm={(userId) => handleConfirmShame(userId)}
-          />
-        )}
-      </Card>
+    <div className="container mx-auto px-4 py-8">
+      <LeaderboardHeader title="Royal Throne Leaderboard" />
+      
+      <div className="mt-6">
+        <LeaderboardFilters 
+          filter={filter} 
+          onFilterChange={handleFilterChange} 
+        />
+      </div>
+      
+      <div className="mt-6">
+        <LeaderboardList 
+          users={filteredUsers} 
+          loading={loading} 
+          currentUserId={user?.id || ''}
+          onProfileClick={handleProfileClick}
+          onShameUser={handleShameUser}
+        />
+      </div>
+      
+      {showShameModal && selectedUser && (
+        <ShameModalWrapper
+          showModal={showShameModal}
+          selectedUser={selectedUser as any} // This is a hack for now, but we should fix the type conversion
+          shameAction={shameAction}
+          onOpenChange={setShowShameModal}
+          onConfirm={handleShameConfirm}
+        />
+      )}
     </div>
   );
 };

@@ -26,6 +26,7 @@ export const adaptToUserProfile = (
     amountSpent: consolidatedUser.amountSpent || consolidatedUser.totalSpent || 0,
     walletBalance: consolidatedUser.walletBalance || 0,
     isVerified: consolidatedUser.isVerified || false,
+    isProtected: consolidatedUser.isProtected || false,
     isFounder: consolidatedUser.isFounder || false,
     isVIP: consolidatedUser.isVIP || false,
     settings: consolidatedUser.settings || {
@@ -83,6 +84,7 @@ export const adaptToConsolidatedProfile = (
     amountSpent: standardUser.amountSpent || standardUser.totalSpent || 0,
     walletBalance: standardUser.walletBalance || 0,
     isVerified: standardUser.isVerified || false,
+    isProtected: standardUser.isProtected || false,
     isFounder: standardUser.isFounder || false,
     isVIP: standardUser.isVIP || false,
     settings: standardUser.settings || {

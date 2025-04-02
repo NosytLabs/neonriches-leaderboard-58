@@ -25,7 +25,8 @@ export type MockeryAction =
   | 'putridEggs'
   | 'silence'
   | 'courtJester'
-  | 'smokeBomb'; 
+  | 'smokeBomb'
+  | 'thumbsDown'; // Add the missing thumbsDown action
 
 export type MockeryTier = 
   | 'common'
@@ -104,6 +105,22 @@ export interface TeamMockeryStats {
   };
 }
 
+// For usage in mock components
+export interface MockedUser {
+  id: string;
+  username: string;
+  profileImage: string;
+}
+
+export interface MockeryEvent {
+  id: string;
+  fromUser: MockedUser;
+  toUser: MockedUser;
+  action: MockeryAction;
+  timestamp: string;
+  message?: string;
+}
+
 // Export TeamData type for compatibility with other code
 export interface TeamData {
   id: string;
@@ -119,3 +136,6 @@ export interface TeamData {
 
 // Re-export LeaderboardUser to avoid confusion
 export type { LeaderboardUser };
+
+// Export TeamColor to fix the missing export error
+export type { TeamColor, UserTier };

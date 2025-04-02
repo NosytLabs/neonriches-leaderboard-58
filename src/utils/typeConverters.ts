@@ -2,6 +2,7 @@
 import { LeaderboardUser } from '@/types/leaderboard';
 import { UserProfile } from '@/types/user';
 import { TeamColor } from '@/types/user-types';
+import { safeToString } from './stringUtils';
 
 /**
  * Convert a string to a valid TeamColor
@@ -49,7 +50,6 @@ export const leaderboardUserToProfile = (leaderboardUser: LeaderboardUser): User
     amountSpent: leaderboardUser.amountSpent || leaderboardUser.totalSpent,
     walletBalance: leaderboardUser.walletBalance || 0,
     isVerified: leaderboardUser.isVerified || false,
-    isProtected: leaderboardUser.isProtected,
     cosmetics: { border: [], color: [], font: [], emoji: [], title: [], background: [], effect: [], badge: [], theme: [] },
     settings: leaderboardUser.settings || {
       profileVisibility: 'public',
@@ -78,4 +78,22 @@ export const leaderboardUserToProfile = (leaderboardUser: LeaderboardUser): User
  */
 export const leaderboardUsersToProfiles = (leaderboardUsers: LeaderboardUser[]): UserProfile[] => {
   return leaderboardUsers.map(leaderboardUserToProfile);
+};
+
+/**
+ * Ensure a value is a string
+ * @param id - The ID value, could be number or string
+ * @returns The ID as a string
+ */
+export const ensureStringId = (id: string | number): string => {
+  return typeof id === 'number' ? String(id) : id;
+};
+
+// Export all utilities
+export {
+  toTeamColor,
+  leaderboardUserToProfile,
+  leaderboardUsersToProfiles,
+  ensureStringId,
+  safeToString
 };

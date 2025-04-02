@@ -134,4 +134,9 @@ export interface UserProfile {
     mintDate: string;
     dateIssued?: string;
   };
+  // Compatibility fields
+  joinDate?: string;
+  joinedAt?: string;
+  createdAt?: string;
 }
+
