@@ -1,8 +1,7 @@
-
 "use client" 
 
 import * as React from "react"
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/classNameUtils";
 import { motion, useAnimation } from "framer-motion";
 import { Magnet } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
@@ -69,9 +68,7 @@ function MagnetizeButton({
         }));
     }, [particlesControl, particles]);
 
-    // Get the appropriate color classes based on the team color
     const getColorClasses = () => {
-        // Default classes for violet theme
         if (color === 'purple' || !color) {
             return {
                 background: "bg-violet-100 dark:bg-violet-900",
@@ -82,12 +79,10 @@ function MagnetizeButton({
             };
         }
 
-        // Get team-specific classes
         const textColor = getTeamTextColor(color);
         const bgLight = getTeamBackgroundLightColor(color);
         const borderColor = getTeamBorderColor(color);
         
-        // Extract color base from the team text color (e.g. "text-red-500" -> "red")
         const baseColorMatch = textColor.match(/text-([a-z]+)-/);
         const baseColor = baseColorMatch ? baseColorMatch[1] : 'gray';
         
