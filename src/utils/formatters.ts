@@ -1,95 +1,102 @@
 
 /**
- * Utility functions for formatting values
+ * Utility functions for formatting various data types
  */
 
-// Format currency
-export const formatCurrency = (amount: number | undefined, locale = 'en-US', currency = 'USD'): string => {
-  if (amount === undefined || amount === null) return '$0.00';
-  
-  return new Intl.NumberFormat(locale, {
+/**
+ * Format a currency value with dollar sign and commas
+ */
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(amount);
 };
 
-// Format date
-export const formatDate = (dateString: string | undefined, locale = 'en-US'): string => {
-  if (!dateString) return '';
+/**
+ * Format a date into a readable string
+ */
+export const formatDate = (date: string | Date): string => {
+  if (!date) return '';
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  }).format(dateObj);
+};
+
+/**
+ * Format a file size in bytes to a human-readable format
+ */
+export const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
   
-  try {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat(locale, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    }).format(date);
-  } catch (error) {
-    console.error('Error formatting date:', error);
-    return dateString;
-  }
-};
-
-// Format relative time
-export const formatRelativeTime = (dateString: string | undefined): string => {
-  if (!dateString) return '';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
   
-  try {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    
-    // Convert to appropriate units
-    const diffSecs = Math.floor(diffMs / 1000);
-    if (diffSecs < 60) return `${diffSecs}s ago`;
-    
-    const diffMins = Math.floor(diffSecs / 60);
-    if (diffMins < 60) return `${diffMins}m ago`;
-    
-    const diffHours = Math.floor(diffMins / 60);
-    if (diffHours < 24) return `${diffHours}h ago`;
-    
-    const diffDays = Math.floor(diffHours / 24);
-    if (diffDays < 30) return `${diffDays}d ago`;
-    
-    const diffMonths = Math.floor(diffDays / 30);
-    if (diffMonths < 12) return `${diffMonths}mo ago`;
-    
-    const diffYears = Math.floor(diffMonths / 12);
-    return `${diffYears}y ago`;
-  } catch (error) {
-    console.error('Error formatting relative time:', error);
-    return dateString;
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+/**
+ * Format a dollar amount with optional decimal places
+ */
+export const formatDollarAmount = (amount: number, decimals: number = 0): string => {
+  return `$${amount.toLocaleString('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  })}`;
+};
+
+/**
+ * Format a time relative to now (e.g., "2 hours ago")
+ */
+export const formatTimeAgo = (date: string | Date): string => {
+  const now = new Date();
+  const pastDate = typeof date === 'string' ? new Date(date) : date;
+  const seconds = Math.floor((now.getTime() - pastDate.getTime()) / 1000);
+  
+  // Time intervals in seconds
+  const intervals = {
+    year: 31536000,
+    month: 2592000,
+    week: 604800,
+    day: 86400,
+    hour: 3600,
+    minute: 60,
+    second: 1
+  };
+  
+  // Check intervals
+  if (seconds < 60) return 'just now';
+  
+  for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+    const interval = Math.floor(seconds / secondsInUnit);
+    if (interval >= 1) {
+      return interval === 1 ? `1 ${unit} ago` : `${interval} ${unit}s ago`;
+    }
   }
+  
+  return 'just now';
 };
 
-// Truncate text with ellipsis
-export const truncateText = (text: string, maxLength: number): string => {
-  if (!text || text.length <= maxLength) return text;
-  return `${text.slice(0, maxLength)}...`;
-};
-
-// Format number with commas
-export const formatNumber = (number: number | undefined): string => {
-  if (number === undefined || number === null) return '0';
-  return number.toLocaleString();
-};
-
-// Truncate address (useful for blockchain addresses)
-export const truncateAddress = (address: string, startLength = 4, endLength = 4): string => {
+/**
+ * Truncate an address (like a blockchain address) with ellipsis
+ */
+export const truncateAddress = (address: string, chars: number = 4): string => {
   if (!address) return '';
-  if (address.length <= startLength + endLength) return address;
-  
-  return `${address.slice(0, startLength)}...${address.slice(-endLength)}`;
+  if (address.length <= chars * 2 + 2) return address;
+  return `${address.substring(0, chars)}...${address.substring(address.length - chars)}`;
 };
 
 export default {
   formatCurrency,
   formatDate,
-  formatRelativeTime,
-  truncateText,
-  formatNumber,
+  formatFileSize,
+  formatDollarAmount,
+  formatTimeAgo,
   truncateAddress
 };

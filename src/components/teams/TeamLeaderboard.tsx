@@ -1,101 +1,118 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Avatar } from '@/components/ui/avatar';
-import { TeamData } from '@/types/mockery-types';
-import { formatNumber } from '@/utils/formatters';
+import { ArrowDown, ArrowUp, Medal, Trophy, Users } from 'lucide-react';
+import { TeamData, TeamColor } from '@/types/mockery-types';
+import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/utils/formatters';
 
 interface TeamLeaderboardProps {
-  teams: TeamData[];
+  teams?: TeamData[];
+  title?: string;
+  limit?: number;
 }
 
-const TeamLeaderboard: React.FC<TeamLeaderboardProps> = ({ teams }) => {
-  // Sort teams by total contribution
-  const sortedTeams = [...teams].sort((a, b) => b.totalContribution - a.totalContribution);
-
-  // Get team badge color based on team color
-  const getTeamBadgeColor = (teamColor: string) => {
-    switch (teamColor) {
-      case 'red':
-        return 'bg-red-500 text-white';
-      case 'blue':
-        return 'bg-blue-500 text-white';
-      case 'green':
-        return 'bg-green-500 text-white';
-      case 'gold':
-        return 'bg-yellow-500 text-white';
-      case 'purple':
-        return 'bg-purple-500 text-white';
-      default:
-        return 'bg-gray-500 text-white';
-    }
-  };
-
-  // Calculate average contribution per member
-  const getAverageContribution = (team: TeamData) => {
-    if (!team.members || team.members === 0) return 0;
-    return Math.round(team.totalContribution / team.members);
-  };
-
-  // Get contribution trend indicator
-  const getContributionTrendIndicator = (team: TeamData) => {
-    const previousRank = team.previousRank || 0;
-    const currentRank = team.rank || 0;
+const TeamLeaderboard: React.FC<TeamLeaderboardProps> = ({ 
+  teams = [], 
+  title = "Team Leaderboard",
+  limit = 5
+}) => {
+  const [sortedTeams, setSortedTeams] = useState<TeamData[]>(
+    [...teams].sort((a, b) => (b.totalContribution || b.totalSpent) - (a.totalContribution || a.totalSpent))
+  );
+  
+  const getTeamColorClass = (color: TeamColor): string => {
+    const colorMap: Record<TeamColor, string> = {
+      'red': 'text-red-500',
+      'blue': 'text-blue-500',
+      'green': 'text-green-500',
+      'gold': 'text-yellow-500',
+      'purple': 'text-purple-500',
+      'silver': 'text-gray-400',
+      'bronze': 'text-amber-700',
+      'crimson': 'text-rose-600',
+      'none': 'text-gray-400',
+      'neutral': 'text-gray-400'
+    };
     
-    if (previousRank === 0 || currentRank === 0) return 'neutral';
+    return colorMap[color] || 'text-gray-400';
+  };
+  
+  const getRankChangeIcon = (team: TeamData) => {
+    if (!team.previousRank) return null;
     
-    if (currentRank < previousRank) {
-      return 'up';
-    } else if (currentRank > previousRank) {
-      return 'down';
+    const rankDiff = team.previousRank - team.rank;
+    
+    if (rankDiff > 0) {
+      return <ArrowUp className="h-4 w-4 text-green-500" />;
+    } else if (rankDiff < 0) {
+      return <ArrowDown className="h-4 w-4 text-red-500" />;
     } else {
-      return 'neutral';
+      return null;
     }
   };
-
+  
   return (
-    <Card className="w-full shadow-md bg-card">
-      <CardHeader className="border-b pb-3">
-        <CardTitle className="text-xl font-bold">Team Standings</CardTitle>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <Trophy className="mr-2 h-5 w-5 text-royal-gold" />
+          {title}
+        </CardTitle>
       </CardHeader>
-      <CardContent className="pt-4">
+      <CardContent>
         <div className="space-y-4">
-          {sortedTeams.map((team, index) => (
-            <div key={team.id} className="flex items-center justify-between p-3 rounded-md hover:bg-muted/50 transition-colors">
-              <div className="flex items-center space-x-4">
-                <div className="flex flex-col items-center justify-center min-w-8">
-                  <span className="text-lg font-bold">{index + 1}</span>
-                  {getContributionTrendIndicator(team) === 'up' && (
-                    <span className="text-green-500 text-xs">▲</span>
-                  )}
-                  {getContributionTrendIndicator(team) === 'down' && (
-                    <span className="text-red-500 text-xs">▼</span>
+          {sortedTeams.slice(0, limit).map((team, index) => (
+            <div 
+              key={team.id || team.name} 
+              className={cn(
+                "flex items-center justify-between p-3 rounded-lg border transition-colors",
+                index === 0 ? "bg-royal-gold/10 border-royal-gold/30" : "bg-background/50 border-border/50 hover:bg-background/80"
+              )}
+            >
+              <div className="flex items-center space-x-3">
+                <div className="flex-shrink-0 h-10 w-10 overflow-hidden rounded-full bg-background/80 flex items-center justify-center">
+                  {team.logoUrl ? (
+                    <img src={team.logoUrl} alt={team.name} className="h-full w-full object-cover" />
+                  ) : (
+                    <div className={cn("font-bold text-lg", getTeamColorClass(team.color))}>
+                      {team.name.charAt(0)}
+                    </div>
                   )}
                 </div>
                 
-                <Avatar className="h-10 w-10">
-                  <img src={team.logoUrl} alt={team.name} className="object-cover" />
-                </Avatar>
-                
                 <div>
-                  <div className="font-medium">{team.name}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {team.members} {team.members === 1 ? 'member' : 'members'}
+                  <div className="font-semibold flex items-center">
+                    {team.name}
+                    <Badge variant="outline" className="ml-2 text-xs">
+                      Rank #{team.rank}
+                    </Badge>
+                    {getRankChangeIcon(team)}
+                  </div>
+                  <div className="text-sm text-muted-foreground flex items-center space-x-2">
+                    <span><Users className="inline h-3 w-3 mr-1" />{team.members?.length || team.memberCount}</span>
+                    <span>•</span>
+                    <span>{formatCurrency(team.totalContribution || team.totalSpent)}</span>
                   </div>
                 </div>
               </div>
               
-              <div className="flex flex-col items-end">
-                <Badge className={getTeamBadgeColor(team.color)}>
-                  {team.color.charAt(0).toUpperCase() + team.color.slice(1)}
+              {index === 0 && (
+                <Badge className="bg-royal-gold text-black">
+                  <Medal className="h-3 w-3 mr-1" />
+                  Leader
                 </Badge>
-                <div className="text-sm mt-1">
-                  {formatNumber(team.totalContribution)} points
-                </div>
-              </div>
+              )}
             </div>
           ))}
+          
+          {sortedTeams.length === 0 && (
+            <div className="text-center py-4 text-muted-foreground">
+              No teams available
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -1,41 +1,48 @@
 
+/**
+ * Types for the sound system
+ */
+
 export type SoundType = 
-  | 'click' 
-  | 'success' 
-  | 'error' 
-  | 'notification' 
-  | 'achievement' 
-  | 'purchase' 
-  | 'coin' 
-  | 'level_up' 
-  | 'boost' 
-  | 'royal' 
-  | string;  // Allow string to be extensible
+  | 'click'
+  | 'success'
+  | 'error'
+  | 'notification'
+  | 'achievement'
+  | 'purchase'
+  | 'levelUp'
+  | 'transaction'
+  | 'warning'
+  | 'message'
+  | 'ui'
+  | 'transition'
+  | 'hover';
 
 export interface SoundOptions {
   volume?: number;
   loop?: boolean;
-  onEnd?: () => void;
-}
-
-export interface SoundConfig {
-  enabled: boolean;
-  volume: number;
-  muted: boolean;
+  delay?: number;
+  playbackRate?: number;
 }
 
 export interface SoundHook {
   playSound: (sound: SoundType, options?: SoundOptions) => void;
-  stopSound: (sound?: SoundType) => void;
-  pauseSound: (sound: SoundType) => void;
-  resumeSound: (sound: SoundType) => void;
+  stopSound: (fade?: boolean) => void;
+  pauseSound: () => void;
+  resumeSound: () => void;
   toggleMute: () => void;
   isMuted: boolean;
   setVolume: (volume: number) => void;
   getVolume: () => number;
   isEnabled: boolean;
   toggleEnabled: () => void;
+  
+  // Additional properties for compatibility
+  toggleMuted?: () => void;
+  soundConfig?: any;
+  mute?: () => void;
+  unmute?: () => void;
+  currentVolume?: number;
 }
 
-// Legacy compatibility for older code
-export interface UseSoundHook extends SoundHook {}
+export type UseSoundHook = SoundHook;

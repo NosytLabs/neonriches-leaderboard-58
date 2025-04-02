@@ -1,56 +1,59 @@
 
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useSound } from '@/hooks/use-sound';
+import { useSound } from '@/hooks/sounds/use-sound';
 import { MockeryAction, MockedUser, MockeryEvent } from '@/types/mockery-types';
 import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 
 export const useMockery = () => {
   const [mockedUsers, setMockedUsers] = useState<MockedUser[]>([
     {
-      id: "1",
       userId: "user1",
       username: "EliteSpender",
       displayName: "Elite Spender",
       profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
       tier: "royal",
       team: "red",
-      action: "tomato", // Fixed from "tomatoes"
+      action: "tomato",
       appliedBy: "system",
       appliedAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 3600000).toISOString(),
       totalSpent: 15000,
       rank: 1,
-      spendStreak: 7
+      spendStreak: 7,
+      mockeryCount: 5,
+      lastMockedAt: new Date().toISOString(),
+      recentActions: ['tomato', 'egg']
     },
     {
-      id: "2",
       userId: "user2",
       username: "MoneyThrone",
       displayName: "Money Throne",
       profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
       tier: "premium",
       team: "blue",
-      action: "egg", // Fixed from "eggs"
+      action: "egg",
       appliedBy: "user123",
       appliedAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 7200000).toISOString(),
       totalSpent: 12000,
       rank: 2,
-      spendStreak: 5
+      spendStreak: 5,
+      mockeryCount: 3,
+      lastMockedAt: new Date().toISOString(),
+      recentActions: ['egg', 'crown']
     }
   ]);
   
-  const [selectedAction, setSelectedAction] = useState<MockeryAction>("taunt");
+  const [selectedAction, setSelectedAction] = useState<MockeryAction>("crown");
   const { toast } = useToast();
   const sound = useSound();
   
   const applyMockery = useCallback((userId: string, action: MockeryAction, reason?: string) => {
     // Normalize action before storing
-    const normalizedAction = normalizeMockeryAction(action);
+    const normalizedAction = normalizeMockeryAction(action as string) as MockeryAction;
     
     const mockUser: MockedUser = {
-      id: userId,
       userId: userId,
       username: "MockedUser",
       displayName: "Mocked User",
@@ -64,7 +67,10 @@ export const useMockery = () => {
       reason: reason,
       totalSpent: 5000,
       rank: 15,
-      spendStreak: 3
+      spendStreak: 3,
+      mockeryCount: 1,
+      lastMockedAt: new Date().toISOString(),
+      recentActions: [normalizedAction]
     };
     
     setMockedUsers(prev => [...prev, mockUser]);
@@ -81,7 +87,7 @@ export const useMockery = () => {
   }, [toast, sound]);
   
   const removeMockery = useCallback((userId: string) => {
-    setMockedUsers(prev => prev.filter(user => user.id !== userId));
+    setMockedUsers(prev => prev.filter(user => user.userId !== userId));
     
     toast({
       title: "Mockery Removed",
@@ -94,12 +100,14 @@ export const useMockery = () => {
   const mockEvents: MockeryEvent[] = [
     {
       id: "event1",
-      fromUser: "currentUser", // Changed fromUserId to fromUser
-      toUser: "user1", // Changed toUserId to toUser
-      action: "tomatoes",
+      fromUserId: "currentUser",
+      toUserId: "user1",
+      action: "tomato",
+      timestamp: new Date().toISOString(),
+      cost: 10,
+      tier: "common",
       targetId: "user1",
       fromId: "currentUser",
-      timestamp: new Date().toISOString(),
       isAnonymous: false,
       message: "You got tomatoes!",
       appliedBy: "user123",
@@ -107,12 +115,14 @@ export const useMockery = () => {
     },
     {
       id: "event2",
-      fromUser: "currentUser", // Changed fromUserId to fromUser
-      toUser: "user2", // Changed toUserId to toUser
+      fromUserId: "currentUser",
+      toUserId: "user2",
       action: "crown",
+      timestamp: new Date(Date.now() - 86400000).toISOString(),
+      cost: 50,
+      tier: "epic",
       targetId: "user2",
       fromId: "currentUser",
-      timestamp: new Date(Date.now() - 86400000).toISOString(),
       isAnonymous: true,
       appliedBy: "user456",
       seen: false

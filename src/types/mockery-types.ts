@@ -9,7 +9,22 @@ export type MockeryAction =
   | 'thumbs_down'
   | 'laugh'
   | 'skull'
-  | 'crown';
+  | 'crown'
+  | 'putridEgg'
+  | 'stocks'
+  | 'jester'
+  | 'shame'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection'
+  | 'taunt'
+  | 'mock'
+  | 'challenge'
+  | 'joust'
+  | 'duel'
+  | 'fish'
+  | 'thumbsDown';
 
 // MockeryTier enum
 export type MockeryTier = 
@@ -17,7 +32,8 @@ export type MockeryTier =
   | 'uncommon'
   | 'rare'
   | 'epic'
-  | 'legendary';
+  | 'legendary'
+  | 'royal';
 
 // TeamColor enum
 export type TeamColor = 
@@ -77,6 +93,10 @@ export interface TeamData {
   rank: number;
   leaderUsername?: string;
   leaderAvatar?: string;
+  totalContribution?: number;
+  members?: any[];
+  previousRank?: number;
+  logoUrl?: string;
 }
 
 // LeaderboardUser interface
@@ -105,7 +125,7 @@ export interface LeaderboardUser {
 // LeaderboardFilter interface
 export interface LeaderboardFilter {
   team: TeamColor | 'all' | undefined;
-  tier: string | undefined;
+  tier: UserTier | 'all' | undefined;
   timeframe: string;
   search: string;
   sortBy: string;
@@ -126,6 +146,12 @@ export interface MockeryEvent {
   toUsername?: string;
   fromAvatar?: string;
   toAvatar?: string;
+  targetId?: string;
+  fromId?: string;
+  isAnonymous?: boolean;
+  message?: string;
+  appliedBy?: string;
+  seen?: boolean;
 }
 
 // MockedUser interface
@@ -137,4 +163,15 @@ export interface MockedUser {
   mockeryCount: number;
   lastMockedAt: string;
   recentActions: MockeryAction[];
+  id?: string;
+  tier?: string;
+  team?: string | TeamColor;
+  action?: MockeryAction;
+  appliedBy?: string;
+  appliedAt?: string;
+  expiresAt?: string;
+  reason?: string;
+  totalSpent?: number;
+  rank?: number;
+  spendStreak?: number;
 }

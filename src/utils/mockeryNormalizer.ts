@@ -2,77 +2,75 @@
 import { MockeryAction } from '@/types/mockery-types';
 
 /**
- * Normalizes legacy action strings to their standardized counterparts
+ * Mapping from legacy names to standardized MockeryAction names
  */
-export function normalizeMockeryAction(action: string): MockeryAction {
-  const legacyToStandard: Record<string, MockeryAction> = {
-    'tomatoes': 'tomato',
-    'eggs': 'egg',
-    'putridEggs': 'putridEgg',
-    'carrot': 'laugh'
-  };
-  
-  if (action in legacyToStandard) {
-    return legacyToStandard[action];
-  }
-  
-  return action as MockeryAction;
-}
-
-/**
- * Get a friendly display name for a mockery action
- */
-export const getMockeryActionDisplayName = (action: MockeryAction): string => {
-  const displayNames: Record<MockeryAction, string> = {
-    tomato: 'Tomato',
-    egg: 'Egg',
-    thumbsDown: 'Thumbs Down',
-    shame: 'Shame',
-    jester: 'Jester',
-    mock: 'Mock',
-    challenge: 'Challenge',
-    joust: 'Joust',
-    duel: 'Duel',
-    crown: 'Crown',
-    stocks: 'Stocks',
-    putridEgg: 'Putrid Egg',
-    silence: 'Silence',
-    courtJester: 'Court Jester',
-    smokeBomb: 'Smoke Bomb',
-    protection: 'Protection',
-    laugh: 'Laugh',
-    fish: 'Fish',
-    taunt: 'Taunt'
-  };
-  
-  return displayNames[action] || 'Unknown Action';
+const LEGACY_TO_STANDARD: Record<string, MockeryAction> = {
+  'tomatoes': 'tomato',
+  'eggs': 'egg',
+  'putridEggs': 'putridEgg',
+  'thumbs_down': 'thumbs_down',
+  'thumbsDown': 'thumbs_down',
+  'rotten_egg': 'rotten_egg',
 };
 
 /**
- * Check if an action is valid
+ * Normalize a string to a valid MockeryAction
+ * 
+ * This handles legacy action names and ensures consistency
+ * throughout the application.
  */
-export const isValidMockeryAction = (action: string): boolean => {
+export const normalizeMockeryAction = (action: string): MockeryAction => {
+  if (!action) return 'mock';
+  
+  // First check if it's a direct match with a standard action
+  if (isValidAction(action as MockeryAction)) {
+    return action as MockeryAction;
+  }
+  
+  // Then check if it's a legacy name that needs to be mapped
+  if (action in LEGACY_TO_STANDARD) {
+    return LEGACY_TO_STANDARD[action];
+  }
+  
+  // Default fallback
+  return 'mock';
+};
+
+/**
+ * Checks if an action string is a valid MockeryAction
+ */
+export const isValidAction = (action: string): action is MockeryAction => {
   const validActions: MockeryAction[] = [
     'tomato',
     'egg',
-    'thumbsDown',
-    'shame',
-    'jester',
-    'mock',
-    'challenge',
-    'joust',
-    'duel',
+    'rotten_egg',
+    'flame',
+    'heart',
+    'thumbs_down',
+    'laugh',
+    'skull',
     'crown',
-    'stocks',
     'putridEgg',
+    'stocks',
+    'jester',
+    'shame',
     'silence',
     'courtJester',
     'smokeBomb',
     'protection',
-    'laugh',
+    'taunt',
+    'mock',
+    'challenge',
+    'joust',
+    'duel',
     'fish',
-    'taunt'
+    'thumbsDown'
   ];
   
-  return validActions.includes(action as MockeryAction) || ['tomatoes', 'eggs', 'putridEggs', 'carrot'].includes(action);
+  return validActions.includes(action as MockeryAction);
+};
+
+export default {
+  normalizeMockeryAction,
+  isValidAction
 };

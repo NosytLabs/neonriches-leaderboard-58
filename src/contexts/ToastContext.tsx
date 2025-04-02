@@ -1,7 +1,7 @@
 
-import React, { createContext, useContext, useState, ReactNode, ReactElement } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Toast, ToastActionElement } from '@/components/ui/toast';
-import { Toaster } from '@/components/ui/toaster';
+import { useToast as useShadcnToast } from '@/hooks/use-toast';
 
 export type ToastType = 'default' | 'success' | 'error' | 'warning' | 'info';
 
@@ -11,7 +11,7 @@ export interface ToastProps {
   description?: string;
   type?: ToastType;
   duration?: number;
-  action?: ReactElement;
+  action?: React.ReactElement;
 }
 
 export interface ToastContextType {
@@ -24,9 +24,29 @@ const ToastContext = createContext<ToastContextType | null>(null);
 
 export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastProps[]>([]);
+  const shadcnToast = useShadcnToast();
   
   const toast = (props: ToastProps) => {
     const id = props.id || `toast-${Date.now()}`;
+    
+    // Map our ToastType to variant prop expected by shadcn/ui
+    const variantMap: Record<ToastType, any> = {
+      default: 'default',
+      success: 'success',
+      error: 'destructive',
+      warning: 'warning',
+      info: 'default'
+    };
+    
+    // Use the shadcn toast
+    shadcnToast.toast({
+      title: props.title,
+      description: props.description,
+      variant: variantMap[props.type || 'default'],
+      duration: props.duration,
+      action: props.action as ToastActionElement
+    });
+    
     setToasts((prev) => [...prev, { ...props, id }]);
     
     // Auto-dismiss after duration
@@ -39,6 +59,7 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   
   const dismiss = (id: string) => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
+    shadcnToast.dismiss(id);
   };
   
   const dismissAll = () => {
@@ -48,19 +69,14 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   return (
     <ToastContext.Provider value={{ toast, dismiss, dismissAll }}>
       {children}
-      <Toaster>
-        {toasts.map((t) => (
-          <Toast key={t.id} {...t} />
-        ))}
-      </Toaster>
     </ToastContext.Provider>
   );
 };
 
-export const useToast = () => {
+export const useToastContext = () => {
   const context = useContext(ToastContext);
   if (!context) {
-    throw new Error('useToast must be used within a ToastProvider');
+    throw new Error('useToastContext must be used within a ToastProvider');
   }
   return context;
 };

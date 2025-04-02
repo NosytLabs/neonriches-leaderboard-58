@@ -33,7 +33,20 @@ export const ensureStringId = (id: any): string => {
   return String(id);
 };
 
+/**
+ * Ensures proper type conversions for user profiles
+ */
+export const convertUserProfile = (user: any) => {
+  if (!user) return null;
+  
+  return {
+    ...user,
+    team: toTeamColor(user.team)
+  };
+};
+
 export default {
   toTeamColor,
-  ensureStringId
+  ensureStringId,
+  convertUserProfile
 };

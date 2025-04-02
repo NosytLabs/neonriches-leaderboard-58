@@ -1,40 +1,36 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { useSolana } from './SolanaContext';
+import { useSolanaContext } from '@/contexts/SolanaContext';
+import { truncateAddress } from '@/utils/formatters';
 
-// Helper function to truncate addresses
-const truncateAddress = (address: string): string => {
-  if (!address) return '';
-  return `${address.slice(0, 4)}...${address.slice(-4)}`;
-};
+interface SolanaWalletButtonProps {
+  variant?: 'default' | 'outline' | 'ghost' | 'link';
+  size?: 'default' | 'sm' | 'lg';
+}
 
-// Wallet button component
-const SolanaWalletButton: React.FC = () => {
-  const { connected, publicKey, connect, disconnect, isLoading } = useSolana();
-
-  const handleClick = async () => {
+const SolanaWalletButton: React.FC<SolanaWalletButtonProps> = ({ 
+  variant = 'default',
+  size = 'default'
+}) => {
+  const { connect, disconnect, connected, wallet } = useSolanaContext();
+  const publicKey = wallet?.publicKey?.toString() || '';
+  
+  const handleClick = () => {
     if (connected) {
-      await disconnect();
+      disconnect();
     } else {
-      await connect();
+      connect();
     }
   };
-
-  // Get wallet address from publicKey
-  const walletAddress = publicKey ? publicKey.toString() : null;
-
+  
   return (
-    <Button
-      variant={connected ? "outline" : "default"}
-      className="relative"
+    <Button 
+      variant={variant} 
+      size={size} 
       onClick={handleClick}
-      disabled={isLoading}
     >
-      {isLoading ? "Connecting..." : connected ? truncateAddress(walletAddress || '') : "Connect Wallet"}
-      {connected && (
-        <span className="absolute -top-1 -right-1 h-3 w-3 bg-green-500 rounded-full animate-pulse" />
-      )}
+      {connected ? truncateAddress(publicKey) : 'Connect Wallet'}
     </Button>
   );
 };

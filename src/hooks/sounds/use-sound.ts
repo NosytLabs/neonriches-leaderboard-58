@@ -23,11 +23,25 @@ export const useSound = (): SoundHook => {
       setVolume: () => {},
       getVolume: () => 0,
       isEnabled: false,
-      toggleEnabled: () => {}
+      toggleEnabled: () => {},
+      
+      // Compatibility methods
+      toggleMuted: () => {},
+      mute: () => {},
+      unmute: () => {},
+      currentVolume: 0,
+      soundConfig: {}
     };
   }
   
-  return context;
+  // Add compatibility methods
+  return {
+    ...context,
+    toggleMuted: context.toggleMute,
+    mute: context.toggleMute,
+    unmute: context.toggleMute,
+    currentVolume: context.getVolume()
+  };
 };
 
 /**
