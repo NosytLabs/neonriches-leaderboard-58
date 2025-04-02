@@ -9,8 +9,7 @@ if (!fs.existsSync('./tsconfig.build.json')) {
 }
 
 try {
-  // Run TypeScript compiler with the custom config, using -p instead of --project
-  // This avoids triggering the build mode that conflicts with noEmit
+  // Run TypeScript compiler with the custom config, avoiding the --build flag
   console.log('Building TypeScript project with custom config...');
   execSync('npx tsc -p tsconfig.build.json', { stdio: 'inherit' });
   console.log('TypeScript build completed successfully');
