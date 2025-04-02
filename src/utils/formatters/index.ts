@@ -9,8 +9,8 @@ export * from './fileFormatters';
 export * from './dollarFormatters';
 
 // Re-export common formatters for easier access
-export { formatDate, formatDateTime } from './dateFormatters';
-export { formatNumber, formatCurrency } from './numberFormatters';
+export { formatDate } from './dateFormatters';
+export { formatNumber } from './numberFormatters';
 export { 
   formatUsername, 
   truncateString, 

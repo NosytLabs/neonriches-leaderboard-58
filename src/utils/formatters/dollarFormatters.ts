@@ -1,48 +1,67 @@
 
 /**
- * Formatting functions for dollar amounts and monetary values
+ * Dollar amount formatting utility functions
  */
 
 /**
- * Formats a number as a dollar amount with $ symbol
- * @param value The number to format
- * @returns Formatted dollar amount with $ symbol
+ * Format a number as US dollars
  */
-export const formatDollarAmount = (value: number): string => {
+export const formatDollarAmount = (amount: number | string | undefined | null): string => {
+  if (amount === undefined || amount === null) return '$0.00';
+  
+  // Convert to number if it's a string
+  const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+  
+  // Handle NaN
+  if (isNaN(numAmount)) return '$0.00';
+  
+  // Format with dollar sign
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).format(value);
+  }).format(numAmount);
 };
 
 /**
- * Formats a dollar amount in a more compact way for display
- * @param value The number to format
- * @returns Formatted dollar amount in compact form
+ * Format a dollar amount without cents (whole dollars only)
  */
-export const formatCompactDollar = (value: number): string => {
-  const formatter = new Intl.NumberFormat('en-US', {
+export const formatWholeDollars = (amount: number | string | undefined | null): string => {
+  if (amount === undefined || amount === null) return '$0';
+  
+  // Convert to number if it's a string
+  const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+  
+  // Handle NaN
+  if (isNaN(numAmount)) return '$0';
+  
+  // Format with dollar sign but no cents
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(numAmount);
+};
+
+/**
+ * Format a dollar amount for compact display (e.g., $1.2k, $2.3M)
+ */
+export const formatCompactDollars = (amount: number | string | undefined | null): string => {
+  if (amount === undefined || amount === null) return '$0';
+  
+  // Convert to number if it's a string
+  const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+  
+  // Handle NaN
+  if (isNaN(numAmount)) return '$0';
+  
+  // Use compact notation for large numbers
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     notation: 'compact',
     maximumFractionDigits: 1
-  });
-  
-  return formatter.format(value);
-};
-
-/**
- * Formats a historical monetary value with appropriate context
- * @param value The value to format
- * @param year Optional year for historical context
- * @returns Formatted historical value
- */
-export const formatHistoricalValue = (value: number, year?: number): string => {
-  const formattedValue = formatDollarAmount(value);
-  if (year) {
-    return `${formattedValue} (${year})`;
-  }
-  return `${formattedValue} (historical)`;
+  }).format(numAmount);
 };
