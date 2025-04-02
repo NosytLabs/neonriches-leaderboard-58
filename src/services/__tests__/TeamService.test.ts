@@ -1,18 +1,16 @@
 
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { describe, test, expect } from 'vitest';
 import teamService from '../teamService';
 
-// Mock test to ensure TeamService exists
+// Tests for TeamService
 describe('TeamService', () => {
-  test('TeamService exists', () => {
-    // Render a test component
-    render(<div>Team Service Test</div>);
-    
-    // Check if the component rendered
-    expect(screen.getByText("Team Service Test")).toBeInTheDocument();
-    
+  test('TeamService exists and provides required methods', () => {
     // Verify that teamService is defined
     expect(teamService).toBeDefined();
+    
+    // Verify the required methods exist
+    expect(typeof teamService.getAllTeams).toBe('function');
+    expect(typeof teamService.getTeamById).toBe('function');
+    expect(typeof teamService.getTopTeam).toBe('function');
   });
 });
