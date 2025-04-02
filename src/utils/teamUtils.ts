@@ -74,4 +74,3 @@ export const getTeamTailwindBgColor = (team: TeamColor): string => {
     default: return 'border-white/20 bg-white/5';
   }
 };
-

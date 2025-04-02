@@ -35,8 +35,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
       // Create a partial update with strong type safety
       const updateData = {
         ...formData,
-        // If there's a subscription, adapt it to ensure type compatibility
-        subscription: user.subscription ? adaptSubscription(user.subscription) : undefined
+        // Don't include subscription in the update
       };
       
       await updateUserProfile(updateData);

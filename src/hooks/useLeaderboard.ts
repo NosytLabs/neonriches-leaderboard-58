@@ -10,8 +10,8 @@ export const useLeaderboard = () => {
     team: 'all',
     tier: 'all',
     timeframe: 'all',
-    // Remove 'sort' property as it doesn't exist in LeaderboardFilter
     sortBy: 'rank'
+    // Removed 'sort' property as it doesn't exist in LeaderboardFilter
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);

@@ -3,7 +3,7 @@ import { TeamColor } from "./team";
 
 export type CertificateType = 'nobility' | 'spending' | 'achievement' | 'membership' | 'rank' | 'team';
 export type CertificateStatus = 'pending' | 'minted' | 'verified' | 'revoked';
-export type CertificateTeam = TeamColor | 'none';
+export type CertificateTeam = TeamColor | 'none' | 'all';
 export type CertificateStyle = 'standard' | 'premium' | 'royal' | 'legendary' | 'classic';
 
 export interface Certificate {
@@ -22,7 +22,9 @@ export interface Certificate {
   team?: CertificateTeam;
   issuedAt?: string;
   mintAddress?: string;
+  mintDate?: string; // Added property
   tier?: string;
+  rarity?: string; // Added property
 }
 
 export interface CertificateTemplate {
@@ -38,6 +40,7 @@ export interface CertificateTemplate {
   availableForTier?: string | string[]; // Accept both string and string[]
   requiresFounder?: boolean;
   availableForRank?: string;
+  title?: string; // Added property
 }
 
 export interface CertificateService {

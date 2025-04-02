@@ -1,52 +1,67 @@
-
 import React, { useState } from 'react';
-import { Shell } from '@/components/ui/shell';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { TeamColor, TeamData } from '@/types/team';
-import teamService from '@/services/teamService';
-import { toTeamColor } from '@/utils/typeConverters';
-import TeamDetails from '@/components/teams/TeamDetails';
-import TeamLeaderboard from '@/components/teams/TeamLeaderboard';
+import { Container } from '@/components/ui/container';
+import { Shell } from '@/components/ui/Shell'; // Fixed casing
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import TeamSelector from '@/components/teams/TeamSelector';
+import TeamBenefitsDisplay from '@/components/teams/TeamBenefitsDisplay';
+import TeamMembersTable from '@/components/teams/TeamMembersTable';
+import TeamJoinButton from '@/components/teams/TeamJoinButton';
+import { useTeam } from '@/hooks/useTeam';
+import { Button } from '@/components/ui/button';
+import { TeamColor } from '@/types/team';
 
-const TeamsPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [selectedTeam, setSelectedTeam] = useState<TeamColor>('gold');
+const Teams = () => {
+  const { currentTeam, changeTeam, isLoading, error, getTeamName, getTeamBenefits, allTeams } = useTeam();
+  const [selectedTeam, setSelectedTeam] = useState<TeamColor>(currentTeam as TeamColor);
   
-  const handleTeamChange = (team: TeamColor) => {
-    setSelectedTeam(team);
+  const handleTeamChange = async (newTeam: TeamColor) => {
+    setSelectedTeam(newTeam);
+    const success = await changeTeam(newTeam);
+    if (success) {
+      console.log('Team changed successfully');
+    } else {
+      console.error('Failed to change team');
+    }
   };
   
   return (
     <Shell>
-      <div className="container mx-auto px-4 py-6">
-        <h1 className="text-3xl font-bold mb-6">Teams</h1>
+      <Container>
+        <Card className="glass-morphism border-white/10">
+          <CardHeader>
+            <CardTitle>Choose Your Allegiance</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <TeamSelector 
+              onTeamChange={handleTeamChange}
+            />
+            {error && <p className="text-red-500">{error}</p>}
+            {isLoading && <p>Loading...</p>}
+          </CardContent>
+        </Card>
         
-        <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-3 mb-6">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="selection">Selection</TabsTrigger>
-            <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="overview">
-            <TeamDetails team={selectedTeam} className="w-full" />
-          </TabsContent>
-          
-          <TabsContent value="selection">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-4">Choose Your Team</h2>
-              <TeamSelector team={selectedTeam} onTeamChange={handleTeamChange} />
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="leaderboard">
-            <TeamLeaderboard title="Team Rankings" />
-          </TabsContent>
-        </Tabs>
-      </div>
+        <Card className="glass-morphism border-white/10 mt-6">
+          <CardHeader>
+            <CardTitle>{getTeamName(selectedTeam)} Benefits</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <TeamBenefitsDisplay team={selectedTeam} />
+          </CardContent>
+        </Card>
+        
+        <Card className="glass-morphism border-white/10 mt-6">
+          <CardHeader>
+            <CardTitle>Team Members</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <TeamMembersTable team={selectedTeam} />
+          </CardContent>
+        </Card>
+        
+        <TeamJoinButton team={selectedTeam} />
+      </Container>
     </Shell>
   );
 };
 
-export default TeamsPage;
+export default Teams;

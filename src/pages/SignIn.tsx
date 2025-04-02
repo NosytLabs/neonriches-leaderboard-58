@@ -1,15 +1,14 @@
-
-import React, { useEffect } from 'react';
-import { useAuth } from '@/contexts/auth';
-import Shell from '@/components/Shell';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Shell } from '@/components/Shell';
 import PageSEO from '@/components/common/PageSEO';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Crown } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/auth';
 import { useToast } from '@/hooks/use-toast';
 import usePageTracking from '@/hooks/usePageTracking';
 
@@ -22,7 +21,6 @@ const SignIn = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated && user) {
       navigate('/dashboard');

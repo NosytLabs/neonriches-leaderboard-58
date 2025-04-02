@@ -35,7 +35,7 @@ export interface CountSavings {
   percentage: number;
 }
 
-// Missing ProjectMetrics type
+// Updated ProjectMetrics type with missing properties
 export interface ProjectMetrics {
   beforeCleanup: ProjectStat;
   afterCleanup: ProjectStat;

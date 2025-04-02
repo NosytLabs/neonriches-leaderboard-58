@@ -1,53 +1,54 @@
-
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import useTeam from '@/hooks/useTeam';
-import { TeamColor } from '@/types/team';
-import { Badge } from '@/components/ui/badge';
-import { UserCircle, Shield, Zap } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { Users, Trophy, Star } from 'lucide-react';
+import { Badge } from '@/components/ui/Badge'; // Fixed import casing
 
 interface TeamDetailsProps {
-  team: TeamColor;
-  className?: string;
+  teamName: string;
+  memberCount: number;
+  totalSpent: number;
+  rank: number;
+  joinProgress: number;
 }
 
-const TeamDetails: React.FC<TeamDetailsProps> = ({ team, className }) => {
-  const { getTeamName, getTeamMotto, getTeamBenefits, getTeamColor } = useTeam();
-  
+const TeamDetails: React.FC<TeamDetailsProps> = ({
+  teamName,
+  memberCount,
+  totalSpent,
+  rank,
+  joinProgress,
+}) => {
   return (
-    <Card className={`overflow-hidden ${className}`}>
-      <CardHeader className={`${getTeamColor(team).replace('text-', 'bg-').replace('500', '700/20')}`}>
-        <CardTitle className="flex items-center gap-2">
-          <UserCircle className={`h-5 w-5 ${getTeamColor(team)}`} />
-          {getTeamName(team)}
+    <Card className="glass-morphism border-white/10">
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <Users className="mr-2 h-4 w-4" />
+          {teamName}
         </CardTitle>
-        <CardDescription className="text-lg font-italic">
-          "{getTeamMotto(team)}"
-        </CardDescription>
       </CardHeader>
-      
-      <CardContent className="pt-4">
-        <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-          <Shield className="h-5 w-5" />
-          Team Benefits
-        </h3>
-        
-        <ul className="space-y-2">
-          {getTeamBenefits(team).map((benefit, index) => (
-            <li key={index} className="flex items-start gap-2">
-              <Zap className="h-4 w-4 mt-1 flex-shrink-0" />
-              <span>{benefit}</span>
-            </li>
-          ))}
-        </ul>
-        
-        <div className="flex flex-wrap gap-2 mt-4">
-          <Badge variant="outline" className={`${getTeamColor(team)}`}>
-            Team Bonus
-          </Badge>
-          <Badge variant="outline">
-            Faction Rewards
-          </Badge>
+      <CardContent>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Trophy className="mr-2 h-4 w-4 text-yellow-500" />
+              <span>Rank</span>
+            </div>
+            <Badge>{rank}</Badge>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Star className="mr-2 h-4 w-4 text-blue-500" />
+              <span>Total Spent</span>
+            </div>
+            <span>${totalSpent}</span>
+          </div>
+          <div>
+            <span>Join Progress</span>
+            <Progress value={joinProgress} />
+          </div>
+          <Button>View Team</Button>
         </div>
       </CardContent>
     </Card>

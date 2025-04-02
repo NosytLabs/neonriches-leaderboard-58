@@ -1,10 +1,12 @@
+
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { UserProfile } from '@/types/user';
-import { Crown, Zap, CreditCard, DollarSign } from 'lucide-react';
+import { Crown, Zap, CreditCard, DollarSign, CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
+import { formatCurrency } from '@/utils/formatters';
 
 interface PlanFeature {
   title: string;
