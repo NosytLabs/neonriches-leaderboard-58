@@ -1,10 +1,10 @@
-
 import { UserProfile as ConsolidatedUserProfile, UserSettings, UserSubscription } from '@/types/user-consolidated';
 import { UserProfile } from '@/types/user';
 import { LeaderboardUser } from '@/types/leaderboard';
 import { LeaderboardUser as MockeryLeaderboardUser } from '@/types/mockery-types';
 import { Certificate } from '@/types/certificate';
 import { SocialLink as SocialLinkInterface } from '@/types/user-types';
+import { socialLinksToRecord, recordToSocialLinks } from './socialLinkAdapter';
 
 /**
  * Adapts a user profile to ensure it has all required fields

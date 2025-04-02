@@ -45,22 +45,26 @@ export const toConsolidatedUserProfile = (user: UserProfile | null): Consolidate
 
 /**
  * Convert from ConsolidatedUserProfile to UserProfile
+ * This is a critical function to fix type compatibility issues
  */
 export const toUserProfile = (user: ConsolidatedUserProfile | null): UserProfile | null => {
   if (!user) return null;
   
   return {
     ...user,
-    // If team is a string, convert it to TeamColor
-    team: toTeamColor(user.team) as TeamColor,
+    // Convert team to TeamColor type
+    team: toTeamColor(user.team),
     tier: user.tier || 'basic',
     totalSpent: user.totalSpent || user.amountSpent || 0,
     amountSpent: user.amountSpent || user.totalSpent || 0,
     // Ensure settings has the correct type
     settings: {
       ...user.settings,
-      theme: (user.settings?.theme as any) || 'dark'
-    }
+      theme: (user.settings?.theme === 'royal' || user.settings?.theme === 'dark' || 
+              user.settings?.theme === 'light' || user.settings?.theme === 'system') 
+              ? user.settings.theme : 'dark'
+    },
+    displayName: user.displayName || user.username || '',
   };
 };
 
@@ -75,7 +79,7 @@ export const ensureUserProfile = (user: Partial<UserProfile>): UserProfile => {
     profileImage: user.profileImage || '/assets/default-avatar.png',
     bio: user.bio || '',
     joinedDate: user.joinedDate || new Date().toISOString(),
-    team: toTeamColor(user.team) as TeamColor,
+    team: toTeamColor(user.team),
     tier: user.tier || 'basic',
     rank: user.rank || 0,
     previousRank: user.previousRank || 0,
@@ -145,9 +149,21 @@ export const ensureConsolidatedUserProfile = (user: Partial<ConsolidatedUserProf
   };
 };
 
+// Add a helper function to convert between different certificate types
+export const convertCertificateTypes = (cert: any): any => {
+  return {
+    ...cert,
+    title: cert.title || cert.name || 'Certificate',
+    team: cert.team || 'neutral',
+    style: cert.style || 'standard',
+    type: cert.type || 'achievement',
+  };
+};
+
 export default {
   toConsolidatedUserProfile,
   toUserProfile,
   ensureUserProfile,
-  ensureConsolidatedUserProfile
+  ensureConsolidatedUserProfile,
+  convertCertificateTypes
 };

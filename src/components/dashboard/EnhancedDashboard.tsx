@@ -12,7 +12,7 @@ import { useSound } from '@/hooks/sounds/use-sound';
 import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
-import { toUserProfile, toConsolidatedUserProfile } from '@/utils/userTypeConverter';
+import { toUserProfile } from '@/utils/userTypeConverter';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -74,6 +74,7 @@ const EnhancedDashboard = () => {
   }
 
   // Convert the user to the type needed by components
+  // This fixes the type compatibility issue
   const userForComponents = toUserProfile(user);
 
   const handleSpend = () => {

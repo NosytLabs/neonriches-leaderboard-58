@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Shell } from '@/components/ui/Shell';
 import SubscriptionPlanCard from '@/components/subscription/SubscriptionPlanCard';
@@ -11,7 +10,6 @@ import { CreditCard, Crown, Gift, Sparkles, Users } from 'lucide-react';
 import { formatCurrency } from '@/utils/formatters';
 import { useAuth } from '@/hooks/useAuth';
 
-// Define the local SubscriptionPlan type to avoid conflicts
 interface LocalSubscriptionPlan {
   id: string;
   name: string;
@@ -39,7 +37,6 @@ const SubscriptionPage = () => {
   
   const handlePlanSelect = (plan: LocalSubscriptionPlan) => {
     setSelectedPlan(plan.id);
-    // In a real app, you would handle subscription changes here
     console.log(`Selected plan: ${plan.id} with billing interval: ${billingInterval}`);
   };
   
@@ -141,6 +138,18 @@ const SubscriptionPage = () => {
     return 'Basic';
   };
   
+  const formatPlansForDisplay = (plans) => {
+    return plans.map(plan => ({
+      ...plan,
+      price: typeof plan.price === 'object' ? plan.price : {
+        monthly: plan.price,
+        yearly: plan.price * 10
+      }
+    }));
+  };
+  
+  const formattedPlans = formatPlansForDisplay(subscriptionPlans);
+  
   return (
     <Shell className="container mx-auto px-4 py-8">
       <div className="max-w-6xl mx-auto">
@@ -160,12 +169,12 @@ const SubscriptionPage = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {subscriptionPlans.map((plan) => (
+          {formattedPlans.map((plan) => (
             <SubscriptionPlanCard
               key={plan.id}
               plan={plan}
-              onSelect={() => handlePlanSelect(plan)}
-              isActive={selectedPlan === plan.id}
+              onSelect={handlePlanSelect}
+              selected={selectedPlan === plan.id}
               billingInterval={billingInterval}
             />
           ))}

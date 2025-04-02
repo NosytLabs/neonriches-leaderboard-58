@@ -77,7 +77,7 @@ export interface LeaderboardUser {
   totalSpent: number;
   amountSpent: number;
   rank: number;
-  team: TeamColor;
+  team: TeamColor | string; // Accept string for compatibility
   tier: UserTier | string;
   spendStreak?: number;
   walletBalance?: number;
@@ -139,7 +139,7 @@ export interface MockeryUser {
   profileImage: string;
   rank: number;
   tier: UserTier;
-  team: TeamColor;
+  team: TeamColor | string;
   userId?: string; // Add required by some components
   totalSpent?: number; // Add required by some components
 }
