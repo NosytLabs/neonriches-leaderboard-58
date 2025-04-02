@@ -31,6 +31,13 @@ export interface RegisterResponse {
   error?: string;
 }
 
+export interface AuthState {
+  user: UserProfile | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
+
 export type AuthAction = 
   | { type: 'LOGIN_START' }
   | { type: 'LOGIN_SUCCESS'; payload: UserProfile }
@@ -53,6 +60,3 @@ export type AuthAction =
 export interface AuthProviderProps {
   children: React.ReactNode;
 }
-
-// Re-export UserProfile for convenience
-export type { UserProfile };

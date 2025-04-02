@@ -1,11 +1,10 @@
-import React, { createContext, useReducer, useEffect, useMemo } from 'react';
-import { AuthState, AuthAction, AuthContextType } from './types';
+
+import React, { useReducer, useEffect, useMemo } from 'react';
+import { AuthState, AuthAction, AuthContextType, AuthProviderProps } from '@/types/auth-context';
 import { UserProfile } from '@/types/user-consolidated';
-import { showSuccessToast, showErrorToast } from '@/utils/toastUtils';
-import { createDemoUserProfile } from './authUtils';
+import { AuthContext } from './index';
 
-export const AuthContext = createContext<AuthContextType | null>(null);
-
+// Initial state for the auth reducer
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
@@ -13,61 +12,20 @@ const initialState: AuthState = {
   error: null
 };
 
+// Auth reducer function
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
-    case 'AUTH_START':
-      return {
-        ...state,
-        isLoading: true,
-        error: null
-      };
-
-    case 'AUTH_SUCCESS':
-      return {
-        ...state,
-        user: action.payload,
-        isAuthenticated: true,
-        isLoading: false,
-        error: null
-      };
-
-    case 'AUTH_FAIL':
-      return {
-        ...state,
-        isLoading: false,
-        error: action.payload || 'Authentication check failed'
-      };
-
     case 'LOGIN_START':
-      return {
-        ...state,
-        isLoading: true,
-        error: null
-      };
-
-    case 'LOGIN_SUCCESS':
-      return {
-        ...state,
-        user: action.payload,
-        isAuthenticated: true,
-        isLoading: false,
-        error: null
-      };
-
-    case 'LOGIN_FAILURE':
-      return {
-        ...state,
-        isLoading: false,
-        error: action.payload || 'Login failed'
-      };
-
+    case 'AUTH_START':
     case 'REGISTER_START':
       return {
         ...state,
         isLoading: true,
         error: null
       };
-
+    
+    case 'LOGIN_SUCCESS':
+    case 'AUTH_SUCCESS':
     case 'REGISTER_SUCCESS':
       return {
         ...state,
@@ -76,15 +34,18 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
         isLoading: false,
         error: null
       };
-
+    
+    case 'LOGIN_FAILURE':
+    case 'AUTH_FAIL':
     case 'REGISTER_FAILURE':
       return {
         ...state,
         isLoading: false,
-        error: action.payload || 'Registration failed'
+        error: action.payload || 'Authentication failed'
       };
-
+    
     case 'LOGOUT':
+    case 'AUTH_LOGOUT':
       return {
         ...state,
         user: null,
@@ -92,21 +53,58 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
         isLoading: false,
         error: null
       };
-
+    
     case 'UPDATE_USER':
       return {
         ...state,
         user: action.payload
       };
-
+    
     default:
       return state;
   }
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+/**
+ * Mock function to create a demo user profile
+ */
+const createDemoUserProfile = (id: string, username: string): UserProfile => ({
+  id,
+  username,
+  displayName: username.charAt(0).toUpperCase() + username.slice(1),
+  email: `${username}@example.com`,
+  profileImage: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`,
+  bio: `Demo user account for ${username}`,
+  joinedDate: new Date().toISOString(),
+  isVerified: false,
+  team: 'blue',
+  tier: 'basic',
+  rank: Math.floor(Math.random() * 100) + 1,
+  previousRank: Math.floor(Math.random() * 100) + 1,
+  totalSpent: Math.floor(Math.random() * 1000),
+  amountSpent: Math.floor(Math.random() * 1000),
+  walletBalance: Math.floor(Math.random() * 500),
+  settings: {
+    profileVisibility: 'public',
+    allowProfileLinks: true,
+    theme: 'dark',
+    notifications: true,
+    emailNotifications: false,
+    marketingEmails: false,
+    showRank: true,
+    darkMode: true,
+    soundEffects: true,
+    showBadges: true
+  },
+  following: [],
+  followers: [],
+  spendStreak: Math.floor(Math.random() * 5)
+});
+
+const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
+  // Check for existing auth on mount
   useEffect(() => {
     const checkAuth = async () => {
       dispatch({ type: 'AUTH_START' });
@@ -118,40 +116,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const authData = JSON.parse(savedAuth);
           
           if (authData && authData.user) {
-            const demoUser: UserProfile = {
-              id: authData.user.id || 'demo-123',
-              username: authData.user.username || 'demouser',
-              displayName: authData.user.displayName || 'Demo User',
-              email: authData.user.email || 'demo@example.com',
-              profileImage: authData.user.profileImage || 'https://source.unsplash.com/random/300x300/?portrait',
-              bio: authData.user.bio || 'This is a demo user account.',
-              joinedDate: authData.user.joinedDate || new Date().toISOString(),
-              isVerified: authData.user.isVerified || false,
-              team: authData.user.team || 'blue',
-              tier: authData.user.tier || 'basic',
-              rank: authData.user.rank || 0,
-              previousRank: authData.user.previousRank || 0,
-              totalSpent: authData.user.totalSpent || 0,
-              amountSpent: authData.user.amountSpent || 0,
-              walletBalance: authData.user.walletBalance || 0,
-              settings: authData.user.settings || {
-                profileVisibility: 'public',
-                allowProfileLinks: true,
-                theme: 'dark',
-                notifications: true,
-                emailNotifications: false,
-                marketingEmails: false,
-                showRank: true,
-                darkMode: true,
-                soundEffects: true,
-                showBadges: true
-              },
-              following: authData.user.following || [],
-              followers: authData.user.followers || [],
-              spendStreak: authData.user.spendStreak || 0
-            };
-            
-            dispatch({ type: 'AUTH_SUCCESS', payload: demoUser });
+            dispatch({ type: 'AUTH_SUCCESS', payload: authData.user });
           } else {
             dispatch({ type: 'AUTH_FAIL' });
             localStorage.removeItem('auth');
@@ -161,7 +126,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       } catch (error) {
         console.error("Auth check error:", error);
-        dispatch({ type: 'AUTH_FAIL', payload: 'Authentication check failed' });
+        dispatch({ type: 'AUTH_FAIL' });
         localStorage.removeItem('auth');
       }
     };
@@ -169,10 +134,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     checkAuth();
   }, []);
 
+  // Login function
   const login = async (email: string, password: string): Promise<boolean> => {
     dispatch({ type: 'LOGIN_START' });
     
     try {
+      // Mock login - in a real app, this would call an API
       const demoUser = await new Promise<UserProfile>((resolve) => {
         setTimeout(() => {
           const user = createDemoUserProfile('user-123', email.split('@')[0]);
@@ -186,22 +153,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }));
       
       dispatch({ type: 'LOGIN_SUCCESS', payload: demoUser });
-      showSuccessToast('Login successful!');
       return true;
     } catch (error) {
       console.error("Login error:", error);
       dispatch({ type: 'LOGIN_FAILURE', payload: 'Login failed' });
-      showErrorToast('Login failed. Please try again.');
       return false;
     }
   };
 
+  // Alternative name for login
   const signIn = login;
 
+  // Register function
   const register = async (username: string, email: string, password: string): Promise<boolean> => {
     dispatch({ type: 'REGISTER_START' });
     
     try {
+      // Mock registration - in a real app, this would call an API
       const demoUser = await new Promise<UserProfile>((resolve) => {
         setTimeout(() => {
           const user = createDemoUserProfile('new-user-' + Date.now(), username);
@@ -215,33 +183,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }));
       
       dispatch({ type: 'REGISTER_SUCCESS', payload: demoUser });
-      showSuccessToast('Registration successful!');
       return true;
     } catch (error) {
       console.error("Registration error:", error);
       dispatch({ type: 'REGISTER_FAILURE', payload: 'Registration failed' });
-      showErrorToast('Registration failed. Please try again.');
       return false;
     }
   };
 
+  // Logout function
   const logout = async (): Promise<void> => {
     try {
       localStorage.removeItem('auth');
       dispatch({ type: 'LOGOUT' });
-      showSuccessToast('Logged out successfully');
     } catch (error) {
       console.error("Logout error:", error);
-      showErrorToast('Logout failed. Please try again.');
     }
   };
 
+  // Alternative name for logout
   const signOut = logout;
 
+  // Update user function
   const updateUser = async (updates: Partial<UserProfile>): Promise<boolean> => {
     try {
       if (!state.user) {
-        showErrorToast('User not found');
         return false;
       }
       
@@ -261,21 +227,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return true;
     } catch (error) {
       console.error("Update user error:", error);
-      showErrorToast('Failed to update user');
       return false;
     }
   };
 
+  // Alternative name for updateUser
   const updateUserProfile = updateUser;
 
+  // Award cosmetic function
   const awardCosmetic = async (category: string, itemId: string, notify: boolean = true): Promise<boolean> => {
     try {
       if (!state.user || !state.user.cosmetics) {
         return false;
       }
       
-      const categoryKey = category as keyof UserProfile['cosmetics'];
-      const items = state.user.cosmetics[categoryKey] as string[] || [];
+      const categoryKey = category as keyof typeof state.user.cosmetics;
+      const items = (state.user.cosmetics[categoryKey] as string[]) || [];
       
       if (items.includes(itemId)) {
         return false;
@@ -287,11 +254,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       
       await updateUser({ cosmetics: updatedCosmetics });
-      
-      if (notify) {
-        showSuccessToast(`New ${category} cosmetic unlocked!`);
-      }
-      
       return true;
     } catch (error) {
       console.error("Award cosmetic error:", error);
@@ -299,6 +261,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Create a memoized value of the context
   const contextValue = useMemo<AuthContextType>(() => ({
     user: state.user,
     isAuthenticated: state.isAuthenticated,

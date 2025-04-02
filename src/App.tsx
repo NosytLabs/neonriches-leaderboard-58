@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '@/contexts/auth';
-import Leaderboard from '@/pages/Leaderboard';
+import Leaderboard from '@/pages/LeaderboardPage';
 import MockeryPage from '@/pages/MockeryPage';
 
 const App: React.FC = () => {

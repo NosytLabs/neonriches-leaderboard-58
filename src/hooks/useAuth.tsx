@@ -8,7 +8,7 @@ import { toTeamColor } from '@/utils/typeConverters';
  * Custom hook for accessing the authentication context
  * @returns The auth context containing user data and authentication methods
  */
-export function useAuth(): AuthContextType {
+const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   
   if (!context) {
@@ -35,6 +35,6 @@ export function useAuth(): AuthContextType {
   }
   
   return context;
-}
+};
 
 export default useAuth;

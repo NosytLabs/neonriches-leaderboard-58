@@ -27,9 +27,10 @@ interface CombinedLeaderboardFilter {
 
 const CombinedLeaderboard: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth ? useAuth() : { user: null };
+  const auth = useAuth();
+  const user = auth?.user || null;
   const { toast } = useToast();
-  const sound = useSound ? useSound() : { playSound: () => {} };
+  const sound = useSound();
   const { loading, mockLeaderboardData } = useMockLeaderboard?.() || { loading: true, mockLeaderboardData: [] };
   
   const [filter, setFilter] = useState<CombinedLeaderboardFilter>({
@@ -112,7 +113,9 @@ const CombinedLeaderboard: React.FC = () => {
     if (!selectedUser) return;
     
     // In a real app, we would call an API to apply the shame
-    sound.playSound && sound.playSound('notification');
+    if (sound.playSound) {
+      sound.playSound('notification');
+    }
     
     toast({
       title: "Mockery Applied",
