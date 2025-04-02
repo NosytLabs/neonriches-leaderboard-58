@@ -21,14 +21,17 @@ export interface LeaderboardUser {
   isProtected?: boolean;
   joinDate?: string;
   bio?: string;
+  // Add these properties to fix errors in components
+  rankChange?: number;
+  spendChange?: number;
 }
 
 export interface LeaderboardFilter {
   team: TeamColor | 'all';
   tier: UserTier | 'all';
-  timeframe: 'year' | 'month' | 'week' | 'all-time' | 'today';
+  timeframe: 'year' | 'month' | 'week' | 'all-time' | 'today' | 'all'; // Added 'all' as valid option
   search: string;
-  sortBy: string;
+  sortBy: 'username' | 'rank' | 'spent'; // Restrict to these specific values
   sortDirection: 'asc' | 'desc';
   limit: number;
 }
@@ -51,4 +54,21 @@ export interface UseLeaderboardResult {
   page: number;
   setPage: (page: number) => void;
   hasMore: boolean;
+}
+
+// Add these interfaces to fix missing exports in types/index.ts
+export interface LeaderboardConfig {
+  showRankChange: boolean;
+  showSpendChange: boolean;
+  showActions: boolean;
+  showTeam: boolean;
+  compact: boolean;
+}
+
+export interface LeaderboardProps {
+  title?: string;
+  config?: Partial<LeaderboardConfig>;
+  initialFilter?: Partial<LeaderboardFilter>;
+  onUserClick?: (userId: string) => void;
+  maxItems?: number;
 }

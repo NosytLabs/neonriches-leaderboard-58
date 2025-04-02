@@ -1,9 +1,17 @@
 
-import { useSound } from './sounds/use-sound';
-import { SoundType, SoundOptions, UseNotificationSoundsReturn } from '@/types/sound-types';
+import { useSound } from './use-sound';
+import { SoundType, SoundOptions, UseNotificationSoundsReturn } from '@/hooks/sound-types';
 
 export const useNotificationSounds = (): UseNotificationSoundsReturn => {
-  const { playSound, toggleMuted, soundConfig, mute, unmute, setVolume, currentVolume } = useSound();
+  const { 
+    playSound, 
+    toggleMute,
+    isMuted, 
+    mute, 
+    unmute, 
+    setVolume, 
+    currentVolume 
+  } = useSound();
 
   const playNotificationSound = (type: string = 'notification', options?: SoundOptions) => {
     const soundOptions: SoundOptions = {
@@ -16,37 +24,58 @@ export const useNotificationSounds = (): UseNotificationSoundsReturn => {
       notification: 'notification',
       achievement: 'achievement',
       message: 'message',
-      alert: 'alert' as SoundType,
+      alert: 'alert',
       success: 'success',
       error: 'error',
       reward: 'reward',
-      chime: 'chime' as SoundType,
-      badge: 'badge' as SoundType,
-      toggle: 'toggle' as SoundType,
-      upgrade: 'upgrade' as SoundType,
-      down: 'down' as SoundType,
-      up: 'up' as SoundType,
-      withdraw: 'withdraw' as SoundType,
-      warning: 'warning' as SoundType,
+      chime: 'chime',
+      badge: 'badge',
+      toggle: 'toggle',
+      upgrade: 'upgrade',
+      down: 'down',
+      up: 'up',
+      withdraw: 'withdraw',
+      warning: 'warning',
       team: 'team',
       royalAnnouncement: 'royalAnnouncement',
       fanfare: 'fanfare',
       trumpet: 'trumpet',
-      medallion: 'medallion'
+      medallion: 'medallion',
+      protection: 'protection',
+      shame: 'shame',
+      coin: 'coin',
+      coinDrop: 'coinDrop',
+      crown: 'crown',
+      stocks: 'stocks',
+      putridEgg: 'putridEgg',
+      silence: 'silence',
+      courtJester: 'courtJester',
+      smokeBomb: 'smokeBomb',
+      taunt: 'taunt',
+      mock: 'mock',
+      challenge: 'challenge',
+      joust: 'joust',
+      duel: 'duel',
+      fish: 'fish'
     };
 
     // Use the mapped sound type or fallback to notification
     const soundType = soundTypeMap[type] || 'notification';
 
-    playSound(soundType, soundOptions);
+    playSound(soundType as SoundType, soundOptions);
+  };
+
+  // Return a slightly modified interface to match the expected UseNotificationSoundsReturn
+  const toggleMuted = () => {
+    return toggleMute();
   };
 
   return { 
     playSound, 
     mute, 
     unmute, 
-    isMuted: soundConfig?.muted || false, 
-    toggleMuted: toggleMuted || (() => false), 
+    isMuted, 
+    toggleMuted, 
     setVolume, 
     currentVolume,
     playNotificationSound 

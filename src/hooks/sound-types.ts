@@ -34,7 +34,20 @@ export type SoundType =
   | 'royalAnnouncement'
   | 'fanfare'
   | 'trumpet'
-  | 'medallion';
+  | 'medallion'
+  | 'protection'
+  | 'taunt'
+  | 'mock'
+  | 'challenge'
+  | 'joust'
+  | 'duel'
+  | 'crown'
+  | 'stocks'
+  | 'putridEgg'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'fish';
 
 export interface SoundOptions {
   volume?: number;
@@ -55,7 +68,7 @@ export interface SoundHook {
   stopSound: (fade?: boolean) => void;
   pauseSound: () => void;
   resumeSound: () => void;
-  toggleMute: () => void;
+  toggleMute: () => boolean;
   isMuted: boolean;
   setVolume: (volume: number) => void;
   getVolume: () => number;
@@ -63,11 +76,23 @@ export interface SoundHook {
   toggleEnabled: () => void;
   
   // Additional properties for compatibility
-  toggleMuted?: () => void;
+  toggleMuted?: () => boolean;
   soundConfig?: SoundConfig;
   mute?: () => void;
   unmute?: () => void;
   currentVolume?: number;
 }
 
-export type UseSoundHook = SoundHook;
+export type { SoundHook as UseSoundHook };
+
+// For compatibility with the notification sounds hook
+export interface UseNotificationSoundsReturn {
+  playSound: (sound: SoundType, options?: SoundOptions) => void;
+  mute: () => void;
+  unmute: () => void;
+  isMuted: boolean;
+  toggleMuted: () => boolean;
+  setVolume: (volume: number) => void;
+  currentVolume?: number;
+  playNotificationSound: (type?: string, options?: SoundOptions) => void;
+}

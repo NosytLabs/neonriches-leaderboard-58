@@ -1,19 +1,20 @@
 
 import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useSound } from '@/hooks/sounds/use-sound';
+import { useSound } from '@/hooks/use-sound';
 import { MockeryAction, MockedUser, MockeryEvent } from '@/types/mockery-types';
 import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 
 export const useMockery = () => {
   const [mockedUsers, setMockedUsers] = useState<MockedUser[]>([
     {
-      userId: "user1",
+      id: "user1",
       username: "EliteSpender",
       displayName: "Elite Spender",
       profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
       tier: "royal",
       team: "red",
+      // Additional properties
       action: "tomato",
       appliedBy: "system",
       appliedAt: new Date().toISOString(),
@@ -26,12 +27,13 @@ export const useMockery = () => {
       recentActions: ['tomato', 'egg']
     },
     {
-      userId: "user2",
+      id: "user2",
       username: "MoneyThrone",
       displayName: "Money Throne",
       profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
       tier: "premium",
       team: "blue",
+      // Additional properties
       action: "egg",
       appliedBy: "user123",
       appliedAt: new Date().toISOString(),
@@ -54,12 +56,13 @@ export const useMockery = () => {
     const normalizedAction = normalizeMockeryAction(action as string) as MockeryAction;
     
     const mockUser: MockedUser = {
-      userId: userId,
+      id: userId,
       username: "MockedUser",
       displayName: "Mocked User",
       profileImage: "https://randomuser.me/api/portraits/men/3.jpg",
       tier: "basic",
       team: "green",
+      // Additional properties
       action: normalizedAction,
       appliedBy: "current-user",
       appliedAt: new Date().toISOString(),
@@ -87,7 +90,7 @@ export const useMockery = () => {
   }, [toast, sound]);
   
   const removeMockery = useCallback((userId: string) => {
-    setMockedUsers(prev => prev.filter(user => user.userId !== userId));
+    setMockedUsers(prev => prev.filter(user => user.id !== userId));
     
     toast({
       title: "Mockery Removed",
@@ -104,12 +107,13 @@ export const useMockery = () => {
       toUserId: "user1",
       action: "tomato",
       timestamp: new Date().toISOString(),
-      cost: 10,
       tier: "common",
-      targetId: "user1",
-      fromId: "currentUser",
       isAnonymous: false,
       message: "You got tomatoes!",
+      // Additional properties for compatibility
+      cost: 10,
+      targetId: "user1",
+      fromId: "currentUser",
       appliedBy: "user123",
       seen: false
     },
@@ -119,11 +123,12 @@ export const useMockery = () => {
       toUserId: "user2",
       action: "crown",
       timestamp: new Date(Date.now() - 86400000).toISOString(),
-      cost: 50,
       tier: "epic",
+      isAnonymous: true,
+      // Additional properties for compatibility
+      cost: 50,
       targetId: "user2",
       fromId: "currentUser",
-      isAnonymous: true,
       appliedBy: "user456",
       seen: false
     }
