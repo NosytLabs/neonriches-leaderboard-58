@@ -17,13 +17,25 @@ export type SoundType =
   | 'leave'
   | 'badge'
   | 'boost'
-  | 'chime'; // Added 'chime' to match the imported type
+  | 'chime'
+  | 'coin'
+  | 'deposit'
+  | 'withdrawal'
+  | 'fanfare'
+  | 'royal'
+  | 'protection'
+  | 'sparkle'
+  | 'reward'
+  | 'rank_up'  // Alias for rank-up
+  | 'level_up'; // Alias for level-up
 
 export interface SoundOptions {
   volume?: number;
   loop?: boolean;
   interrupt?: boolean;
   onComplete?: () => void;
+  onEnd?: () => void;  // Alias for onComplete
+  playbackRate?: number;
 }
 
 export interface SoundState {
@@ -51,4 +63,18 @@ export interface SoundContextType {
   toggleSounds: () => void;
   setVolume: (volume: number) => void;
   isPlaying: (type?: SoundType) => boolean;
+}
+
+export interface UseSoundHook {
+  playSound: (type: SoundType, options?: SoundOptions) => void;
+  stopSound: (type?: SoundType) => void;
+  play: (type: SoundType, options?: SoundOptions) => void;
+  pauseSound: (type?: SoundType) => void;
+  resumeSound: (type?: SoundType) => void;
+  isPlaying: (type?: SoundType) => boolean;
+  isSoundEnabled: boolean;
+  currentVolume: number;
+  toggleMuted: () => boolean;
+  toggleSounds: () => boolean;
+  setVolume: (volume: number) => void;
 }

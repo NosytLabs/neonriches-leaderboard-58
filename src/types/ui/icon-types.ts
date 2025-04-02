@@ -61,8 +61,8 @@ export type MedievalIconName =
   | 'axe'
   | 'mace';
 
-// Use CSSProperties for the style properties when needed
-export interface IconProps extends LucideProps {
+// Updated IconProps to avoid extending LucideProps to prevent conflicts
+export interface IconProps {
   icon?: string;
   name?: string;
   size?: string | number;
@@ -70,6 +70,7 @@ export interface IconProps extends LucideProps {
   style?: IconStyle | CSSProperties;
   className?: string;
   animated?: boolean;
+  [key: string]: any; // To allow additional props to be passed through
 }
 
 export interface MedievalIconProps {

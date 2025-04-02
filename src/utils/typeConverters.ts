@@ -31,7 +31,9 @@ export const toUserTier = (tier: string | null | undefined): UserTier => {
   
   const validTiers: UserTier[] = [
     'free', 'basic', 'premium', 'elite', 'royal', 
-    'founder', 'pro', 'gold'
+    'founder', 'pro', 'gold', 'silver', 'bronze',
+    'platinum', 'diamond', 'vip', 'whale', 'shark',
+    'dolphin', 'noble', 'standard', 'legendary'
   ];
   
   if (validTiers.includes(tier as UserTier)) {

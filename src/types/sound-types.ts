@@ -17,6 +17,7 @@ export type SoundType =
   | 'reward'
   | 'fanfare'
   | 'rank_up'
+  | 'level_up'
   | 'transfer';
 
 export type SoundPackType = 
@@ -33,6 +34,7 @@ export interface SoundOptions {
   loop?: boolean;
   playbackRate?: number;
   onEnded?: () => void;
+  onEnd?: () => void; // Alias for onEnded
 }
 
 export interface SoundConfig {

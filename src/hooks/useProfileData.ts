@@ -12,5 +12,10 @@ const defaultSettings = {
   soundEffects: true,
   showBadges: true,
   showTeam: true,
-  showSpending: true
+  showSpending: true,
+  showEmailOnProfile: false,
+  rankChangeAlerts: false,
+  newFollowerAlerts: false,
+  teamNotifications: false,
+  language: 'en'
 };

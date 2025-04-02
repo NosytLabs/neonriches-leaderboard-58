@@ -75,7 +75,7 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Adapt consolidated user to standard user profile
+  // Create a user object that satisfies the UserProfile type requirements
   const userForComponents = {
     ...user,
     // Ensure required properties are present
@@ -108,7 +108,7 @@ const EnhancedDashboard = () => {
       badge: [],
       theme: []
     }
-  };
+  } as UserProfile;
 
   const handleSpend = () => {
     toast({

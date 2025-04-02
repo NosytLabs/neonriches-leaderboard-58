@@ -3,6 +3,7 @@ import React, { forwardRef } from 'react';
 import { IconProps } from '@/types/ui/icon-types';
 import * as LucideIcons from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { LucideProps } from 'lucide-react';
 
 // Define the size map here to avoid any type issues
 const iconSizeMap = {
@@ -33,7 +34,7 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
     const iconName = (icon || name) as keyof typeof LucideIcons;
     
     // Get the Lucide icon component
-    const LucideIcon = LucideIcons[iconName];
+    const LucideIcon = iconName in LucideIcons ? LucideIcons[iconName] : null;
 
     if (!LucideIcon) {
       console.warn(`Icon "${iconName}" not found`);
@@ -59,13 +60,15 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
     // Determine animation class
     const animatedClass = animated ? 'animate-pulse' : '';
 
-    return (
-      <LucideIcon
-        ref={ref}
-        className={cn(sizeClass, colorClass, animatedClass, className)}
-        aria-hidden="true"
-        {...props}
-      />
+    // Use React.createElement to avoid type errors with LucideIcon
+    return React.createElement(
+      LucideIcon,
+      {
+        ref,
+        className: cn(sizeClass, colorClass, animatedClass, className),
+        'aria-hidden': 'true',
+        ...props
+      }
     );
   }
 );
