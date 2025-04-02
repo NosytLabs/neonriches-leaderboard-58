@@ -1,6 +1,6 @@
 
 import { useContext } from 'react';
-import { AuthContext } from '@/contexts/auth';
+import AuthContext from '@/contexts/auth';
 import { AuthContextType } from '@/types/auth-context';
 
 /**

@@ -10,9 +10,9 @@ const FormError: React.FC<FormErrorProps> = ({ message }) => {
   if (!message) return null;
   
   return (
-    <div className="bg-red-500/10 border border-red-500/30 text-red-500 px-4 py-2 rounded flex items-start">
-      <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
-      <span>{message}</span>
+    <div className="bg-destructive/15 border border-destructive/30 rounded-md p-3 flex items-start">
+      <AlertCircle className="h-4 w-4 text-destructive mt-0.5 mr-2 flex-shrink-0" />
+      <span className="text-sm text-destructive">{message}</span>
     </div>
   );
 };

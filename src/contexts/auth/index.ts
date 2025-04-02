@@ -7,7 +7,6 @@ import AuthProvider from './AuthProvider';
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export { 
-  AuthContext,
   AuthProvider
 };
 

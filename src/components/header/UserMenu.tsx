@@ -22,9 +22,25 @@ import {
 import useAuth from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
-import UserBadge from '@/components/ui/user-badge';
-import { formatCurrency } from '@/utils/formatters';
-import { UserTier, TeamColor } from '@/types/user-consolidated';
+
+// UserBadge component for the dropdown
+const UserBadge = ({ type, value, size, className, showLabel = true }) => {
+  return (
+    <Badge variant="outline" className={className}>
+      {value}
+    </Badge>
+  );
+};
+
+// Format currency helper
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value);
+};
 
 interface UserMenuProps {
   // Add any props as needed
@@ -52,7 +68,6 @@ const UserMenu: React.FC<UserMenuProps> = () => {
   };
 
   // Create a safer wrapper around the user's tier to handle the potential type mismatch
-  // This function ensures we only pass a valid tier string to UserBadge
   const getTierForBadge = (): string => {
     // Only return tiers that match the expected types
     const validTiers: string[] = [
@@ -104,7 +119,7 @@ const UserMenu: React.FC<UserMenuProps> = () => {
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
           <UserBadge
             type="tier"
-            value={getTierForBadge() as any}
+            value={getTierForBadge()}
             size="sm"
             className="absolute -top-2 -right-2"
           />

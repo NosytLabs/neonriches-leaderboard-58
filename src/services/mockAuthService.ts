@@ -1,43 +1,46 @@
 
-// Mock auth service functions for the auth components
-// This centralizes all mock auth functions in one place
+import { UserProfile } from '@/types/user-consolidated';
 
-/**
- * Sign in with email (magic link)
- */
-export const signInWithEmail = async (email: string): Promise<boolean> => {
-  console.log('Mock: Sign in with email', email);
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 800));
-  return true;
-};
-
-/**
- * Verify MFA code
- */
-export const verifyMfaCode = async (code: string): Promise<boolean> => {
-  console.log('Mock: Verifying MFA code', code);
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return code.length === 6;
-};
-
-/**
- * Sign in with Google
- */
+// Mock implementation of Google sign-in
 export const signInWithGoogle = async (): Promise<boolean> => {
-  console.log('Mock: Sign in with Google');
-  // Simulate API call delay 
-  await new Promise(resolve => setTimeout(resolve, 700));
+  // In a real implementation, this would redirect to Google OAuth
+  console.log('Signing in with Google...');
+  
+  // Simulate a delay for the authentication process
+  await new Promise(resolve => setTimeout(resolve, 1500));
+  
+  // Return true to indicate successful authentication
   return true;
 };
 
-/**
- * Reset password
- */
-export const resetPassword = async (email: string): Promise<boolean> => {
-  console.log('Mock: Reset password', email);
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 600));
-  return true;
+// Function to create a mock user profile
+export const createMockUser = (username: string): UserProfile => {
+  return {
+    id: `user-${Date.now()}`,
+    username,
+    displayName: username.charAt(0).toUpperCase() + username.slice(1),
+    email: `${username}@example.com`,
+    profileImage: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`,
+    bio: `I am ${username}, a noble spender in the realm of SpendThrone.`,
+    joinedDate: new Date().toISOString(),
+    tier: 'basic',
+    team: 'blue',
+    rank: Math.floor(Math.random() * 100) + 1,
+    previousRank: Math.floor(Math.random() * 100) + 1,
+    totalSpent: Math.floor(Math.random() * 1000),
+    amountSpent: Math.floor(Math.random() * 1000),
+    walletBalance: Math.floor(Math.random() * 500),
+    settings: {
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'dark',
+      notifications: true,
+      emailNotifications: false,
+      marketingEmails: false,
+      showRank: true,
+      darkMode: true,
+      soundEffects: true,
+      showBadges: true
+    }
+  };
 };
