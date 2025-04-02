@@ -1,4 +1,9 @@
 
+/**
+ * Types for sound system
+ */
+
+// Basic sound types that can be played in the system
 export type SoundType = 
   | 'click'
   | 'success'
@@ -6,27 +11,44 @@ export type SoundType =
   | 'notification'
   | 'purchase'
   | 'transfer'
+  | 'message'
   | 'level_up'
-  | 'level-up'
   | 'rank_up'
-  | 'rank-up'
   | 'reward'
+  | 'achievement'
+  | 'royal'
   | 'coin'
   | 'chime'
-  | 'alert'
-  | 'fanfare'
-  | 'achievement'
-  | 'message'
-  | 'mockery'
-  | 'royal';
+  | 'alert';
 
+// Sound pack types for premium sounds
+export type SoundPackType = 
+  | 'default'
+  | 'premium'
+  | 'royal'
+  | 'minimal'
+  | 'medieval'
+  | 'gold';
+
+// Sound options when playing sounds
 export interface SoundOptions {
   volume?: number;
   playbackRate?: number;
-  onEnd?: () => void;
   loop?: boolean;
+  onEnd?: () => void;
 }
 
+// Sound configuration for a user
+export interface SoundConfig {
+  enabled: boolean;
+  volume: number;
+  pack: SoundPackType;
+  soundTypes: {
+    [key in SoundType]?: boolean;
+  };
+}
+
+// Details of a premium sound pack
 export interface PremiumSoundPackDetails {
   id: string;
   name: string;
@@ -34,10 +56,8 @@ export interface PremiumSoundPackDetails {
   price: number;
   icon: string;
   preview: string;
-  previewSound: SoundType;
-  sounds: SoundType[];
+  previewSound: SoundType | string;
+  sounds: (SoundType | string)[];
   features: string[];
   enabled: boolean;
 }
-
-export type SoundCategory = 'effects' | 'music' | 'ambient' | 'ui' | 'voice';

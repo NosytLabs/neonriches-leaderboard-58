@@ -1,102 +1,81 @@
 
 /**
- * Currency formatting utilities
- */
-
-/**
  * Format a number as currency with dollar sign
- * @param amount - Amount to format
- * @param options - Formatting options
- * @returns Formatted currency string
  */
-export const formatCurrency = (amount: number, options?: Intl.NumberFormatOptions): string => {
-  if (amount === null || amount === undefined) return '$0';
-  
-  const defaultOptions: Intl.NumberFormatOptions = {
+export const formatCurrency = (amount: number | undefined): string => {
+  if (amount === undefined || amount === null || isNaN(Number(amount))) return '$0.00';
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-    ...options
-  };
-  
-  return amount.toLocaleString('en-US', defaultOptions);
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
 };
 
 /**
- * Format a dollar amount with $ symbol and commas
- * @param amount - Amount to format
- * @returns Formatted dollar amount string
+ * Formats a dollar amount using a shorter notation
  */
-export const formatDollarAmount = (amount: number): string => {
-  if (amount === null || amount === undefined) return '$0';
-  return `$${amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+export const formatDollarAmount = (value: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
 };
 
 /**
- * Format a number with a specific unit (e.g. $, %, etc.)
- * @param value - Value to format
- * @param unit - Unit to append
- * @returns Formatted string with unit
+ * Formats a number with a unit suffix (like "5k" or "2.5M")
  */
-export const formatWithUnit = (value: number, unit: string): string => {
-  if (value === null || value === undefined) return `0${unit}`;
-  return `${value.toLocaleString('en-US')}${unit}`;
-};
-
-/**
- * Format a number in compact notation (e.g. 1K, 1M, etc.)
- * @param value - Value to format
- * @returns Formatted compact number string
- */
-export const formatCompactNumber = (value: number): string => {
-  if (value === null || value === undefined) return '0';
-  
-  const formatter = new Intl.NumberFormat('en-US', {
+export const formatWithUnit = (value: number, unit: string = ''): string => {
+  const formatted = new Intl.NumberFormat('en-US', {
     notation: 'compact',
-    compactDisplay: 'short'
-  });
+    maximumFractionDigits: 1
+  }).format(value);
   
-  return formatter.format(value);
+  return unit ? `${formatted}${unit}` : formatted;
 };
 
 /**
- * Format a number as a percentage
- * @param value - Value to format (e.g. 0.1 for 10%)
- * @returns Formatted percentage string
+ * Formats a number as a percentage
  */
 export const formatPercent = (value: number): string => {
-  if (value === null || value === undefined) return '0%';
-  
-  return `${(value * 100).toFixed(1)}%`;
+  return new Intl.NumberFormat('en-US', {
+    style: 'percent',
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1
+  }).format(value);
 };
 
 /**
- * Formats a dollar amount in a more compact way for display
- * @param value The number to format
- * @returns Formatted dollar amount in compact form
+ * Formats a number in compact notation (like "5k" or "2.5M")
+ */
+export const formatCompactNumber = (value: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumFractionDigits: 1
+  }).format(value);
+};
+
+/**
+ * Formats a dollar amount in compact notation
  */
 export const formatCompactDollar = (value: number): string => {
-  const formatter = new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     notation: 'compact',
     maximumFractionDigits: 1
-  });
-  
-  return formatter.format(value);
+  }).format(value);
 };
 
 /**
- * Formats a historical monetary value with appropriate context
- * @param value The value to format
- * @param year Optional year for historical context
- * @returns Formatted historical value
+ * Formats a historical value with the year
  */
 export const formatHistoricalValue = (value: number, year?: number): string => {
   const formattedValue = formatDollarAmount(value);
   if (year) {
     return `${formattedValue} (${year})`;
   }
-  return `${formattedValue} (historical)`;
+  return formattedValue;
 };

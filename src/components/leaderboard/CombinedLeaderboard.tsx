@@ -4,16 +4,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UserCircle, Users, TrendingUp, Medal, Crown, Trophy, Coins } from "lucide-react";
+import { Trophy, Crown, Users, TrendingUp, Medal, Coins } from "lucide-react";
 import LeaderboardList from "./components/LeaderboardList";
-import { UserProfile, TeamColor } from '@/types/user-consolidated';
+import { LeaderboardUser } from '@/types/leaderboard';
 import { useAuth } from '@/hooks/useAuth';
 import { useSound } from '@/hooks/use-sound';
 import { MockeryAction } from '@/types/mockery-types';
 import { toTeamColor } from '@/utils/typeConverters';
-import { adaptToConsolidatedProfile } from '@/utils/userAdapter';
 
 interface CombinedLeaderboardProps {
   maxVisible?: number;
@@ -38,10 +35,10 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
 }) => {
   const { user } = useAuth();
   const sound = useSound();
-  const [leaderboardData, setLeaderboardData] = useState<UserProfile[]>([]);
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedLeaderboard, setSelectedLeaderboard] = useState<string>('weekly');
-  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [shameAction, setShameAction] = useState<MockeryAction>('tomatoes');
   const [activeTab, setActiveTab] = useState<string>(initialTab);
@@ -55,56 +52,25 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
         // In a real app, this would fetch from an API
         setTimeout(() => {
           const mockData = Array.from({ length: 10 }).map((_, index) => {
-            const userData = {
+            const leaderboardUser: LeaderboardUser = {
               id: `user-${index + 1}`,
+              userId: `user-${index + 1}`,
               username: `noble${index + 1}`,
               displayName: `Noble User ${index + 1}`,
               profileImage: `https://source.unsplash.com/random/?portrait&${index}`,
-              tier: index < 3 ? 'royal' : index < 6 ? 'premium' : 'basic',
-              team: toTeamColor(['red', 'blue', 'green', 'gold', 'purple'][index % 5]),
+              tier: index < 3 ? 'royal' : index < 6 ? 'silver' : 'basic',
+              team: ['red', 'blue', 'green', 'gold', 'purple'][index % 5],
               rank: index + 1,
               totalSpent: Math.floor(10000 / (index + 1)), 
-              amountSpent: Math.floor(10000 / (index + 1)),
               previousRank: index + 3 > 10 ? index - 2 : index + 3,
-              joinedDate: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
+              joinedAt: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
               isVerified: index < 3,
               walletBalance: Math.floor(Math.random() * 1000),
               spendStreak: index < 5 ? index + 1 : 0,
-              badges: [],
-              achievements: [],
-              socialLinks: [],
-              followers: [],
-              following: [],
-              email: `user${index + 1}@example.com`, // Add required email for UserProfile
-              bio: `Bio for user ${index + 1}`,      // Add required bio for UserProfile
-              settings: {                           // Add required settings for UserProfile
-                profileVisibility: 'public',
-                allowProfileLinks: true,
-                theme: 'dark',
-                notifications: true,
-                emailNotifications: false,
-                marketingEmails: false,
-                showRank: true,
-                darkMode: true,
-                soundEffects: true,
-                showBadges: true,
-                showTeam: true,
-                showSpending: true
-              },
-              cosmetics: {                         // Add required cosmetics for UserProfile
-                border: [],
-                color: [],
-                font: [],
-                emoji: [],
-                title: [],
-                background: [],
-                effect: [],
-                badge: [],
-                theme: []
-              }
-            } as UserProfile;
+              isProtected: index % 2 === 0
+            };
             
-            return userData;
+            return leaderboardUser;
           });
           
           setLeaderboardData(mockData);
@@ -128,7 +94,7 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
     console.log(`Clicked on ${username}`);
   };
   
-  const handleShameUser = (user: UserProfile) => {
+  const handleShameUser = (user: LeaderboardUser) => {
     setSelectedUser(user);
     setShowModal(true);
     sound.playSound('notification');

@@ -1,50 +1,78 @@
 
 /**
- * Formatting functions for addresses, particularly crypto addresses
+ * Format a cryptocurrency address to show only the first and last few characters
  */
+export const formatAddress = (address: string, firstChars: number = 6, lastChars: number = 4): string => {
+  if (!address) return '';
+  if (address.length <= firstChars + lastChars) return address;
+  
+  return `${address.slice(0, firstChars)}...${address.slice(-lastChars)}`;
+};
 
 /**
- * Formats a blockchain address by truncating the middle part
- * @param address The full address to format
- * @param startChars Number of characters to show at the start
- * @param endChars Number of characters to show at the end
- * @returns Formatted address
+ * Format a physical address
  */
-export const formatAddress = (
-  address: string,
-  startChars: number = 4,
-  endChars: number = 4
+export const formatPhysicalAddress = (
+  street: string,
+  city: string,
+  state: string,
+  zipCode: string,
+  country?: string
 ): string => {
-  if (!address) return '';
-  if (address.length <= startChars + endChars) return address;
+  let formattedAddress = street;
   
-  const start = address.substring(0, startChars);
-  const end = address.substring(address.length - endChars);
+  if (city && state) {
+    formattedAddress += `, ${city}, ${state}`;
+  } else if (city) {
+    formattedAddress += `, ${city}`;
+  } else if (state) {
+    formattedAddress += `, ${state}`;
+  }
   
-  return `${start}...${end}`;
+  if (zipCode) {
+    formattedAddress += ` ${zipCode}`;
+  }
+  
+  if (country) {
+    formattedAddress += `, ${country}`;
+  }
+  
+  return formattedAddress;
 };
 
 /**
- * Formats an Ethereum address with 0x prefix
- * @param address The address to format
- * @returns Formatted Ethereum address
+ * Format a URL to display nicely
  */
-export const formatEthAddress = (address: string): string => {
-  if (!address) return '';
+export const formatUrl = (url: string): string => {
+  if (!url) return '';
   
-  // Ensure the address has the 0x prefix
-  const normalizedAddress = address.startsWith('0x') 
-    ? address 
-    : `0x${address}`;
-    
-  return formatAddress(normalizedAddress, 6, 4);
+  // Remove protocol
+  let formatted = url.replace(/^(https?:\/\/)?(www\.)?/, '');
+  
+  // Remove trailing slash
+  formatted = formatted.replace(/\/$/, '');
+  
+  return formatted;
 };
 
 /**
- * Formats a Solana address
- * @param address The address to format
- * @returns Formatted Solana address
+ * Format email address for display
  */
-export const formatSolanaAddress = (address: string): string => {
-  return formatAddress(address, 4, 4);
+export const formatEmail = (email: string, obfuscate: boolean = false): string => {
+  if (!email) return '';
+  
+  if (!obfuscate) return email;
+  
+  // Obfuscate the email address
+  const parts = email.split('@');
+  if (parts.length !== 2) return email;
+  
+  const name = parts[0];
+  const domain = parts[1];
+  
+  const obfuscatedName = name.length <= 2 
+    ? '*'.repeat(name.length) 
+    : name.charAt(0) + '*'.repeat(name.length - 2) + name.charAt(name.length - 1);
+  
+  return `${obfuscatedName}@${domain}`;
 };

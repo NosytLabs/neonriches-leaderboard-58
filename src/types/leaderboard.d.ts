@@ -20,16 +20,22 @@ export interface LeaderboardUser {
   joinedAt?: string;     // Add joinedAt as an optional property
   spendChange?: number;  // Add additional fields from error messages
   rankChange?: number;
+  // Add thumbsDown for compatibility
+  thumbsDown?: number;
 }
 
 export interface LeaderboardFilter {
   team?: string;
   tier?: string;
   timeFrame?: 'all' | 'day' | 'week' | 'month' | 'year';
+  timeframe?: string; // Added for compatibility
   search?: string;
+  sort?: string;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
 }
 
-// Re-export to avoid conflicts in index.ts
+// Re-export as type to avoid conflicts
 export type { LeaderboardUser, LeaderboardFilter };
 
 // Additional types used in the codebase

@@ -45,7 +45,7 @@ export interface CosmeticItem {
   price?: number;
   cost?: number;
   category: CosmeticCategory;
-  cssClass: string;
+  cssClass: string; // Required field
   rarity: CosmeticRarity | string;
   type: CosmeticType | string;
   enabled: boolean;

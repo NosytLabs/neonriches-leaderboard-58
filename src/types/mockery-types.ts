@@ -62,6 +62,7 @@ export interface MockeryStats {
   gifts: number;
   totalReceived: number;
   totalSent: number;
+  thumbsDown?: number; // Add for compatibility
 }
 
 export interface MockedUser {
@@ -93,7 +94,7 @@ export interface MockeryProfile {
 }
 
 // Fixed LeaderboardUser import to come from leaderboard.ts instead of redefining
-export { LeaderboardUser } from './leaderboard';
+export type { LeaderboardUser } from './leaderboard';
 
 export interface MockeryEvent {
   id: string;
