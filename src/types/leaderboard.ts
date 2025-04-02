@@ -7,6 +7,7 @@ export interface LeaderboardUser {
   username: string;
   displayName?: string;
   profileImage: string;
+  avatarUrl?: string; // Add avatarUrl as an optional property for backwards compatibility
   totalSpent: number;
   rank: number;
   team: TeamColor;
@@ -17,6 +18,8 @@ export interface LeaderboardUser {
   joinDate?: string;
   isVerified?: boolean;
   amountSpent?: number; // Add spentAmount as an alias
+  spendAmount?: number; // Add another variant for compatibility
+  spentAmount?: number; // Add another variant for compatibility 
   spendChange?: number;
   rankChange?: number;
   isProtected?: boolean;

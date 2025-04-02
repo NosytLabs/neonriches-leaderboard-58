@@ -2,7 +2,12 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useSolana } from './SolanaContext';
-import { truncateAddress } from '@/utils/formatters';
+
+// Helper function to truncate addresses
+const truncateAddress = (address: string): string => {
+  if (!address) return '';
+  return `${address.slice(0, 4)}...${address.slice(-4)}`;
+};
 
 // Wallet button component
 const SolanaWalletButton: React.FC = () => {

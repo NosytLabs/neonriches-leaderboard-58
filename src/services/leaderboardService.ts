@@ -1,109 +1,114 @@
 
 import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
-import { UserProfile } from '@/types/user';
-import { supabase } from '@/utils/mockSupabase';
-import { toTeamColor } from '@/utils/typeConverters';
+import { TeamColor } from '@/types/team';
 
 /**
- * Get the current leaderboard
+ * Fetch leaderboard data with optional filtering
  */
-export const getLeaderboard = async (filter: LeaderboardFilter = {}): Promise<LeaderboardUser[]> => {
-  const { timeframe = 'all', team = null, limit = 50 } = filter;
+export const fetchLeaderboard = async (filter: LeaderboardFilter = {
+  team: 'all',
+  tier: 'all',
+  timeframe: 'all',
+  search: '',
+  sortBy: 'totalSpent',
+  sortDirection: 'desc',
+  limit: 20
+}): Promise<LeaderboardUser[]> => {
+  // Mock data - in a real app this would be an API call
+  const mockUsers: LeaderboardUser[] = [
+    {
+      id: '1',
+      userId: '1', // Add userId field
+      username: 'royalking',
+      displayName: 'Royal King',
+      profileImage: '/assets/avatars/king.png',
+      tier: 'royal',
+      team: 'gold' as TeamColor,
+      rank: 1,
+      previousRank: 1,
+      walletBalance: 5000,
+      totalSpent: 25000,
+      amountSpent: 25000,
+      isVerified: true,
+      spendStreak: 30,
+      isProtected: true
+    },
+    {
+      id: '2',
+      userId: '2', // Add userId field
+      username: 'queenpins',
+      displayName: 'Queen of Pins',
+      profileImage: '/assets/avatars/queen.png',
+      tier: 'royal',
+      team: 'purple' as TeamColor,
+      rank: 2,
+      previousRank: 3,
+      walletBalance: 3500,
+      totalSpent: 18000,
+      amountSpent: 18000,
+      isVerified: true,
+      spendStreak: 25,
+      isProtected: false
+    },
+    {
+      id: '3',
+      userId: '3', // Add userId field
+      username: 'dukesilver',
+      displayName: 'Duke Silver',
+      profileImage: '/assets/avatars/duke.png',
+      tier: 'gold',
+      team: 'silver' as TeamColor,
+      rank: 3,
+      previousRank: 2,
+      walletBalance: 2800,
+      totalSpent: 15000,
+      amountSpent: 15000,
+      isVerified: true,
+      spendStreak: 20,
+      isProtected: false
+    }
+  ];
+
+  // Simulate API call delay
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  // Filter by team if specified
+  let filteredUsers = [...mockUsers];
   
-  try {
-    // Mock implementation for development
-    return [
-      {
-        id: '1',
-        username: 'RoyalSpender',
-        displayName: 'Royal Spender',
-        profileImage: '/images/avatars/royal1.jpg',
-        tier: 'royal',
-        team: toTeamColor('red'),
-        rank: 1,
-        previousRank: 2,
-        walletBalance: 5000,
-        totalSpent: 25000,
-        amountSpent: 25000,
-        isVerified: true,
-        spendStreak: 12,
-        isProtected: true
-      },
-      {
-        id: '2',
-        username: 'EliteNoble',
-        displayName: 'Elite Noble',
-        profileImage: '/images/avatars/royal2.jpg',
-        tier: 'premium',
-        team: toTeamColor('blue'),
-        rank: 2,
-        previousRank: 1,
-        walletBalance: 3000,
-        totalSpent: 18000,
-        amountSpent: 18000,
-        isVerified: true,
-        spendStreak: 8,
-        isProtected: false
-      },
-      // Add more mock data entries as needed
-    ];
-  } catch (error) {
-    console.error('Error fetching leaderboard:', error);
-    return [];
+  if (filter.team && filter.team !== 'all') {
+    filteredUsers = filteredUsers.filter(user => user.team === filter.team);
   }
+  
+  // Filter by tier if specified
+  if (filter.tier && filter.tier !== 'all') {
+    filteredUsers = filteredUsers.filter(user => user.tier === filter.tier);
+  }
+  
+  // Filter by search term
+  if (filter.search) {
+    const searchLower = filter.search.toLowerCase();
+    filteredUsers = filteredUsers.filter(user => 
+      user.username.toLowerCase().includes(searchLower) || 
+      (user.displayName && user.displayName.toLowerCase().includes(searchLower))
+    );
+  }
+  
+  // Sort users
+  filteredUsers.sort((a, b) => {
+    const aValue = a[filter.sortBy as keyof LeaderboardUser] as number;
+    const bValue = b[filter.sortBy as keyof LeaderboardUser] as number;
+    
+    if (filter.sortDirection === 'asc') {
+      return aValue - bValue;
+    } else {
+      return bValue - aValue;
+    }
+  });
+  
+  // Limit results
+  return filteredUsers.slice(0, filter.limit);
 };
 
-/**
- * Get a user's rank on the leaderboard
- */
-export const getUserRank = async (userId: string): Promise<number | null> => {
-  try {
-    // Mock implementation
-    return Math.floor(Math.random() * 100) + 1;
-  } catch (error) {
-    console.error('Error fetching user rank:', error);
-    return null;
-  }
-};
-
-/**
- * Add a user to the leaderboard
- */
-export const addUserToLeaderboard = async (user: UserProfile): Promise<boolean> => {
-  try {
-    // Mock implementation
-    console.log(`Adding user ${user.id} to leaderboard`);
-    return true;
-  } catch (error) {
-    console.error('Error adding user to leaderboard:', error);
-    return false;
-  }
-};
-
-/**
- * Update a user on the leaderboard
- */
-export const updateUserOnLeaderboard = async (user: UserProfile): Promise<boolean> => {
-  try {
-    // Mock implementation
-    console.log(`Updating user ${user.id} on leaderboard`);
-    return true;
-  } catch (error) {
-    console.error('Error updating user on leaderboard:', error);
-    return false;
-  }
-};
-
-/**
- * Remove a user from the leaderboard
- */
-export const removeUserFromLeaderboard = async (userId: string): Promise<boolean> => {
-  try {
-    // Mock implementation
-    console.log(`Removing user ${userId} from leaderboard`);
-    return true;
-  } catch (error) {
-    console.error('Error removing user from leaderboard:', error);
-    return false;
-  }
+export default {
+  fetchLeaderboard
 };

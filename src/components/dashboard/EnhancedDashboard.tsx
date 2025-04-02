@@ -22,11 +22,16 @@ import { toTeamColor } from '@/utils/typeConverters';
  * that expect the user.UserProfile type
  */
 function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfileType {
+  if (!user) return null as any;
+  
+  // Convert the team property to ensure it's a valid TeamColor
+  const teamColor = toTeamColor(user.team);
+  
   return {
     id: user.id,
     username: user.username,
-    displayName: user.displayName,
-    email: user.email,
+    displayName: user.displayName || '',
+    email: user.email || '',
     profileImage: user.profileImage,
     bio: user.bio || '',
     joinedDate: user.joinedDate,
@@ -35,8 +40,7 @@ function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfi
     isVIP: user.isVIP,
     isFounder: user.isFounder,
     isAdmin: user.isAdmin,
-    // Ensure team is a valid TeamColor instead of a string
-    team: toTeamColor(user.team),
+    team: teamColor,
     tier: user.tier,
     rank: user.rank,
     previousRank: user.previousRank,

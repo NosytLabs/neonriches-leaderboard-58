@@ -24,9 +24,11 @@ export interface SoundConfig {
   muted: boolean;
 }
 
-export interface UseSoundHook {
+export interface SoundHook {
   playSound: (sound: SoundType, options?: SoundOptions) => void;
-  stopSound: (sound: SoundType) => void;
+  stopSound: (sound?: SoundType) => void;
+  pauseSound: (sound: SoundType) => void;
+  resumeSound: (sound: SoundType) => void;
   toggleMute: () => void;
   isMuted: boolean;
   setVolume: (volume: number) => void;
@@ -35,14 +37,5 @@ export interface UseSoundHook {
   toggleEnabled: () => void;
 }
 
-// Create a compatible SoundHook interface
-export interface SoundHook {
-  playSound: (sound: SoundType, options?: SoundOptions) => void;
-  stopSound: (sound?: SoundType) => void;  // Make sound optional to fix type compatibility
-  toggleMute: () => void;
-  isMuted: boolean;
-  setVolume: (volume: number) => void;
-  getVolume: () => number;
-  isEnabled: boolean;
-  toggleEnabled: () => void;
-}
+// Legacy compatibility for older code
+export interface UseSoundHook extends SoundHook {}

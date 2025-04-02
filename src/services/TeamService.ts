@@ -77,6 +77,14 @@ export const getTeamDetails = (teamId: TeamColor) => {
       icon: 'user',
       memberCount: 450,
       totalSpent: 120000
+    },
+    crimson: {
+      name: 'Crimson Team',
+      description: 'The most ruthless and unforgiving team.',
+      color: 'crimson',
+      icon: 'skull',
+      memberCount: 666,
+      totalSpent: 1500000
     }
   };
   
@@ -112,9 +120,37 @@ export const switchTeam = async (userId: string, team: TeamColor) => {
   };
 };
 
+// Add missing functions required by imports.ts
+export const getAllTeams = (): TeamColor[] => {
+  return ['red', 'blue', 'green', 'gold', 'purple', 'silver', 'bronze', 'crimson', 'neutral', 'none'];
+};
+
+export const getTeamById = (id: string) => {
+  // Mock implementation
+  const teams = [
+    { id: 'team-1', color: 'red', name: 'Red Team' },
+    { id: 'team-2', color: 'blue', name: 'Blue Team' },
+    { id: 'team-3', color: 'green', name: 'Green Team' }
+  ];
+  return teams.find(team => team.id === id) || null;
+};
+
+export const getTeamByColor = (color: string) => {
+  // Mock implementation
+  const teams = [
+    { id: 'team-1', color: 'red', name: 'Red Team' },
+    { id: 'team-2', color: 'blue', name: 'Blue Team' },
+    { id: 'team-3', color: 'green', name: 'Green Team' }
+  ];
+  return teams.find(team => team.color === color) || null;
+};
+
 // Default export for compatibility with tests
 export default {
   getTeamDetails,
   getTeamRankings,
-  switchTeam
+  switchTeam,
+  getAllTeams,
+  getTeamById,
+  getTeamByColor
 };

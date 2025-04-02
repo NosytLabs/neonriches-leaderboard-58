@@ -1,53 +1,69 @@
 
-import { Egg, Lock, Target, Flame, Crown, User, Volume2, VolumeX, CloudFog, AlertCircle, Shield } from 'lucide-react';
-import { MockeryAction } from '@/types/mockery';
-import TomatoIcon from '@/components/icons/TomatoIcon';
+import { MockeryAction } from '@/types/mockery-types';
+import { convertLegacyMockeryAction } from '../mockeryConverter';
 
-export const getMockeryIcon = (action: MockeryAction) => {
-  switch (action) {
-    case 'tomatoes':
-      return { icon: TomatoIcon, color: 'text-red-500' };
-    case 'eggs':
-      return { icon: Egg, color: 'text-amber-300' };
-    case 'stocks':
-      return { icon: Lock, color: 'text-slate-400' };
-    case 'crown':
-      return { icon: Crown, color: 'text-royal-gold' };
-    case 'jester':
-      return { icon: User, color: 'text-purple-400' };
-    case 'putridEggs':
-      return { icon: Egg, color: 'text-green-400' };
-    case 'silence':
-      return { icon: VolumeX, color: 'text-blue-400' };
-    case 'courtJester':
-      return { icon: User, color: 'text-pink-400' };
-    case 'smokeBomb':
-      return { icon: CloudFog, color: 'text-gray-400' };
-    case 'shame':
-      return { icon: AlertCircle, color: 'text-red-400' };
-    case 'protection':
-      return { icon: Shield, color: 'text-emerald-400' };
-    case 'taunt':
-      return { icon: Volume2, color: 'text-yellow-400' };
-    case 'mock':
-      return { icon: User, color: 'text-teal-400' };
-    case 'challenge':
-      return { icon: Flame, color: 'text-orange-400' };
-    case 'joust':
-      return { icon: Target, color: 'text-indigo-400' };
-    case 'duel':
-      return { icon: Target, color: 'text-red-600' };
-    default:
-      return { icon: Target, color: 'text-gray-400' };
-  }
+/**
+ * Get icon for mockery action
+ */
+export const getMockeryActionIcon = (action: string): string => {
+  // Normalize the action using the converter
+  const normalizedAction = convertLegacyMockeryAction(action);
+  
+  const actionIcons: Record<MockeryAction, string> = {
+    'tomato': 'tomato',
+    'egg': 'egg',
+    'putridEgg': 'egg-rotten',
+    'taunt': 'message-circle',
+    'shame': 'frown',
+    'jester': 'hat',
+    'mock': 'laugh',
+    'challenge': 'sword',
+    'joust': 'lance',
+    'duel': 'swords',
+    'crown': 'crown',
+    'stocks': 'lock',
+    'silence': 'volume-x',
+    'courtJester': 'hat-court',
+    'smokeBomb': 'cloud',
+    'protection': 'shield',
+    'thumbsDown': 'thumbs-down',
+    'laugh': 'smile',
+    'fish': 'fish'
+  };
+
+  return actionIcons[normalizedAction] || 'help-circle';
 };
 
-export const getMockeryIconColor = (action: MockeryAction): string => {
-  const iconData = getMockeryIcon(action);
-  return iconData.color;
+/**
+ * Get mockery action from its icon
+ */
+export const getActionFromIcon = (icon: string): MockeryAction | null => {
+  const iconToAction: Record<string, MockeryAction> = {
+    'tomato': 'tomato',
+    'egg': 'egg',
+    'egg-rotten': 'putridEgg',
+    'message-circle': 'taunt',
+    'frown': 'shame',
+    'hat': 'jester',
+    'laugh': 'mock',
+    'sword': 'challenge',
+    'lance': 'joust',
+    'swords': 'duel',
+    'crown': 'crown',
+    'lock': 'stocks',
+    'volume-x': 'silence',
+    'hat-court': 'courtJester',
+    'cloud': 'smokeBomb',
+    'shield': 'protection',
+    'thumbs-down': 'thumbsDown',
+    'smile': 'laugh',
+    'fish': 'fish'
+  };
+
+  return iconToAction[icon] || null;
 };
 
-export const getMockeryIconComponent = (action: MockeryAction) => {
-  const iconData = getMockeryIcon(action);
-  return iconData.icon;
+export default {
+  getMockeryActionIcon,
+  getActionFromIcon
 };

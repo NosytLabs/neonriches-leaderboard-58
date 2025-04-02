@@ -1,16 +1,33 @@
 
 import { useContext } from 'react';
 import { SoundContext } from './SoundProvider';
-import { UseSoundHook } from './types';
+import { SoundHook } from '../sound-types';
 
-export const useSoundContext = (): UseSoundHook => {
+/**
+ * Hook to use the sound context
+ */
+export const useSoundsContext = (): SoundHook => {
   const context = useContext(SoundContext);
   
   if (!context) {
-    throw new Error('useSoundContext must be used within a SoundProvider');
+    console.error('useSoundsContext must be used within a SoundProvider');
+    
+    // Return a no-op implementation
+    return {
+      playSound: () => {},
+      stopSound: () => {},
+      pauseSound: () => {},
+      resumeSound: () => {},
+      toggleMute: () => {},
+      isMuted: false,
+      setVolume: () => {},
+      getVolume: () => 0,
+      isEnabled: false,
+      toggleEnabled: () => {}
+    };
   }
   
   return context;
 };
 
-export default useSoundContext;
+export default useSoundsContext;

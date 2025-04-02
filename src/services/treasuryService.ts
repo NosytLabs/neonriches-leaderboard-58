@@ -1,58 +1,66 @@
-import { SolanaTransaction } from '@/types/leaderboard';
 
-// Mock data for treasury stats
-export const getTreasuryStats = () => {
+import { SolanaTransaction } from '@/types/solana-types';
+
+/**
+ * Simulate fetching recent transactions from the treasury
+ */
+export const getRecentTransactions = async (): Promise<SolanaTransaction[]> => {
+  // Simulate API call delay
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  // Mock treasury transactions
+  const transactions = [
+    {
+      id: 'tx-1',
+      fromAddress: '5fM9SMAJPYBmwQk2PXyjLNJA1HMFAmvhvVPxUeY7Bxj4',
+      toAddress: 'Treasury9999999999999999999999999999999',
+      amount: 1000,
+      symbol: 'SOL',
+      timestamp: new Date(Date.now() - 3600000).toISOString(),
+      blockNumber: 123456789,
+      transactionHash: '4jST91rrWGnJqNP1vvCt7FFZcoB5FuVFiiDbx4CbTJbKWp3j42MPd4LqoSc9JhEGgNRdKXGwb2TVJLZE3TUNYnRw',
+      status: 'confirmed'
+    },
+    {
+      id: 'tx-2',
+      fromAddress: 'BvzKvn5UYYDZrKg7K7Nksr7VHgp4fxTPGNYQ8QHh6Pf6',
+      toAddress: 'Treasury9999999999999999999999999999999',
+      amount: 500,
+      symbol: 'SOL',
+      timestamp: new Date(Date.now() - 7200000).toISOString(),
+      blockNumber: 123456700,
+      transactionHash: '5kUT92rrWGnJqNP1vvCt7FFZcoB5FuVFiiDbx4CbTJbKWp3j42MPd4LqoSc9JhEGgNRdKXGwb2TVJLZE3TUNYnRw',
+      status: 'confirmed'
+    }
+  ] as SolanaTransaction[];
+  
+  return transactions;
+};
+
+/**
+ * Get treasury transaction analytics
+ */
+export const getTreasuryAnalytics = async () => {
+  // Simulate API call delay
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
   return {
-    totalDeposited: 1250000, // $1.25M
-    totalSpent: 950000, // $950K
-    totalWithdrawn: 50000, // $50K
-    transactionCount: 8500,
-    activeUsers: 1200,
-    averageSpend: 790, // Average spend per user
-    recentTransactions: [
-      {
-        signature: 'abcdef123456',
-        slot: 12345678,
-        timestamp: Date.now() - 3600000,
-        amount: 1000,
-        sender: 'user1',
-        receiver: 'treasury',
-        status: 'confirmed',
-        type: 'spend'
-      },
-      {
-        signature: 'ghijkl789012',
-        slot: 12345679,
-        timestamp: Date.now() - 7200000,
-        amount: 500,
-        sender: 'user2',
-        receiver: 'treasury',
-        status: 'confirmed',
-        type: 'spend'
-      }
-    ] as SolanaTransaction[],
-    dailyVolume: 25000, // $25K
-    weeklyVolume: 175000, // $175K
-    monthlyVolume: 650000, // $650K
+    totalVolume: 15000,
+    transactionCount: 156,
+    uniqueUsers: 87,
+    averageTransaction: 96.15,
+    largestTransaction: 1500,
+    volumeByDay: [
+      { day: '2023-05-01', volume: 1200 },
+      { day: '2023-05-02', volume: 980 },
+      { day: '2023-05-03', volume: 1350 },
+      { day: '2023-05-04', volume: 890 },
+      { day: '2023-05-05', volume: 1050 }
+    ]
   };
 };
 
-// Get the total amount in the treasury
-export const getTreasuryBalance = (): number => {
-  return 250000; // $250K
-};
-
-// Get the daily spending amount
-export const getDailySpending = (): number => {
-  return 25000; // $25K
-};
-
-// Get the weekly spending amount
-export const getWeeklySpending = (): number => {
-  return 175000; // $175K
-};
-
-// Get the monthly spending amount
-export const getMonthlySpending = (): number => {
-  return 650000; // $650K
+export default {
+  getRecentTransactions,
+  getTreasuryAnalytics
 };

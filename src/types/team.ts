@@ -49,3 +49,32 @@ export interface TeamStats {
   contributionChange: number;
   weeklyGrowth: number;
 }
+
+// Add these types for module imports
+export interface TeamRole {
+  id: string;
+  name: string;
+  color: string;
+  permissions: string[];
+  isDefault?: boolean;
+}
+
+export interface TeamBenefits {
+  id: string;
+  name: string;
+  description: string;
+  tier: string;
+  isActive: boolean;
+}
+
+export interface TeamInvite {
+  id: string;
+  teamId: string;
+  inviterId: string;
+  inviteeId?: string;
+  email?: string;
+  status: 'pending' | 'accepted' | 'rejected' | 'expired';
+  createdAt: string;
+  expiresAt: string;
+  code: string;
+}

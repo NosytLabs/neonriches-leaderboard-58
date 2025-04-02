@@ -23,6 +23,20 @@ export const convertLegacyMockeryAction = (action: string): MockeryAction => {
 };
 
 /**
+ * Updates all occurrences of legacy mockery actions in a string
+ */
+export const updateLegacyMockeryStrings = (source: string): string => {
+  let result = source;
+  
+  // Replace all occurrences of the legacy action strings
+  result = result.replace(/tomatoes/g, 'tomato');
+  result = result.replace(/eggs/g, 'egg');
+  result = result.replace(/putridEggs/g, 'putridEgg');
+  
+  return result;
+};
+
+/**
  * Updates an object that uses legacy mockery actions as keys
  */
 export const convertLegacyMockeryObject = <T>(obj: Record<string, T>): Record<MockeryAction, T> => {
@@ -38,5 +52,6 @@ export const convertLegacyMockeryObject = <T>(obj: Record<string, T>): Record<Mo
 
 export default {
   convertLegacyMockeryAction,
-  convertLegacyMockeryObject
+  convertLegacyMockeryObject,
+  updateLegacyMockeryStrings
 };
