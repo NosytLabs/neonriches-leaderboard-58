@@ -1,6 +1,6 @@
 
 import { useCallback } from 'react';
-import useSound from './useSound';
+import { useSound } from './useSound';
 import { UseNotificationSoundsReturn, SoundType } from '@/types/sound-types';
 
 /**
@@ -47,9 +47,24 @@ export const useNotificationSounds = (): UseNotificationSoundsReturn => {
     sound.playSound('notification');
   }, [sound]);
 
+  // Return a complete UseNotificationSoundsReturn object
   return {
     playSoundForNotification,
-    playNewNotificationSound
+    playNewNotificationSound,
+    playSound: sound.playSound,
+    playNotificationSound: (type?: string, options?: any) => {
+      if (type) {
+        playSoundForNotification(type);
+      } else {
+        playNewNotificationSound();
+      }
+    },
+    mute: sound.mute,
+    unmute: sound.unmute,
+    isMuted: sound.isMuted,
+    toggleMuted: sound.toggleMuted,
+    setVolume: sound.setVolume,
+    currentVolume: sound.currentVolume
   };
 };
 

@@ -1,6 +1,6 @@
 
 import { useCallback } from 'react';
-import { useSound } from './use-sound';
+import { useSound } from '../useSound';
 import { SoundType, SoundOptions, UseNotificationSoundsReturn } from '@/types/sound-types';
 
 /**

@@ -6,7 +6,7 @@ import { SoundType, SoundOptions, SoundHook } from '@/types/sound-types';
 /**
  * Hook for playing sounds in the application
  */
-export const useSound = (): SoundHook => {
+function useSoundHook(): SoundHook {
   const context = useContext(SoundContext);
   
   if (!context) {
@@ -40,6 +40,9 @@ export const useSound = (): SoundHook => {
   }
   
   return context;
-};
+}
 
-export default useSound;
+// Export the hook
+export const useSound = useSoundHook;
+
+export default useSoundHook;

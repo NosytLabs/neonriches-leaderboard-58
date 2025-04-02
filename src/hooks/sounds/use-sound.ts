@@ -8,7 +8,7 @@ import { SoundType, SoundOptions, SoundHook } from '@/types/sound-types';
  * Provides methods to play, control, and configure sounds in the application
  * @returns Sound control methods and state
  */
-export const useSound = (): SoundHook => {
+function useSoundFunction(): SoundHook {
   const context = useContext(SoundContext);
   
   if (!context) {
@@ -42,6 +42,9 @@ export const useSound = (): SoundHook => {
   }
   
   return context;
-};
+}
 
-export default useSound;
+// Export the hook
+export const useSound = useSoundFunction;
+
+export default useSoundFunction;
