@@ -1,7 +1,7 @@
 
 import { TeamColor } from './mockery-types';
 
-// Use TeamData interface here to avoid circular references
+// Updated TeamData interface with all necessary properties
 export interface TeamData {
   id: string;
   name: string;
@@ -12,6 +12,12 @@ export interface TeamData {
   leader: string;
   joinFee: number;
   icon: string;
+  // Additional properties for TeamLeaderboard component
+  logoUrl?: string;
+  totalContribution?: number;
+  totalSpent?: number;
+  rank?: number;
+  previousRank?: number;
 }
 
 export type TeamType = TeamColor;

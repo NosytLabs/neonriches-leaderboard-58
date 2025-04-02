@@ -7,7 +7,8 @@ export type CertificateType =
   | 'royal' 
   | 'team' 
   | 'special'
-  | 'nobility'; // Added for compatibility
+  | 'nobility'
+  | 'custom';
 
 export type CertificateStyle = 
   | 'standard' 
@@ -17,7 +18,8 @@ export type CertificateStyle =
   | 'premium' 
   | 'modern' 
   | 'classic'
-  | 'legendary'; // Added for compatibility 
+  | 'legendary'
+  | 'elite'; 
 
 export type CertificateTeam = 
   | 'red' 
@@ -26,7 +28,7 @@ export type CertificateTeam =
   | 'gold' 
   | 'purple' 
   | 'none'
-  | 'neutral' // Added for compatibility
+  | 'neutral' 
   | 'all';
 
 export type CertificateStatus = 
@@ -35,7 +37,7 @@ export type CertificateStatus =
   | 'revoked' 
   | 'expired' 
   | 'draft'
-  | 'minted'; // Added for compatibility
+  | 'minted'; 
 
 export interface Certificate {
   id: string;
@@ -45,6 +47,7 @@ export interface Certificate {
   userId: string;
   dateIssued: string;
   mintAddress?: string;
+  mintDate?: string;
   type: CertificateType;
   style: CertificateStyle;
   team: CertificateTeam;
@@ -53,7 +56,11 @@ export interface Certificate {
   issuerName: string;
   recipientName: string;
   recipientId: string;
-  tier?: string; // Added for compatibility
+  tier?: string;
+  name?: string;
+  isMinted?: boolean;
+  issuedAt?: string;
+  expiresAt?: string;
 }
 
 export interface CertificateTemplate {
@@ -68,11 +75,11 @@ export interface CertificateTemplate {
   dateIssued?: string;
   userId?: string;
   status?: CertificateStatus;
-  name?: string; // Added for compatibility
-  previewUrl?: string; // Added for compatibility
-  available?: boolean; // Added for compatibility
-  availableForTier?: string[]; // Added for compatibility
-  requiresFounder?: boolean; // Added for compatibility
+  name?: string; 
+  previewUrl?: string;
+  available?: boolean;
+  availableForTier?: string[];
+  requiresFounder?: boolean;
 }
 
 export interface UseCertificateResult {
@@ -83,7 +90,14 @@ export interface UseCertificateResult {
   createCertificate: (data: Partial<Certificate>) => Promise<Certificate>;
   fetchUserCertificates: (userId?: string) => Promise<Certificate[]>;
   fetchTemplates: () => Promise<CertificateTemplate[]>;
-  mint: (certificate: Certificate) => Promise<void>;
+  mintCertificateAsNFT: (certificateId: string) => Promise<void>;
+  issueCertificate: (userId: string, type: string, template: string) => Promise<void>;
+  downloadCertificate: (certificateId: string) => Promise<void>;
+  shareCertificate: (certificateId: string) => Promise<void>;
+  getUserCertificates: (userId: string) => Promise<Certificate[]>;
+  getAvailableTemplates: () => Promise<CertificateTemplate[]>;
+  // Add compatibility methods
+  mint: (certificate: Certificate) => Promise<{success: boolean; mintAddress?: string}>;
   download: (certificate: Certificate) => void;
-  share: (certificate: Certificate) => void;
+  share: (certificate: Certificate) => Promise<string>;
 }

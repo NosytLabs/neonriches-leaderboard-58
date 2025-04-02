@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 export interface ShellProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  variant?: string; // Added for compatibility
+  variant?: string;
 }
 
 export const Shell = ({ children, className, variant, ...props }: ShellProps) => {
@@ -14,3 +14,5 @@ export const Shell = ({ children, className, variant, ...props }: ShellProps) =>
     </div>
   );
 };
+
+export default Shell;

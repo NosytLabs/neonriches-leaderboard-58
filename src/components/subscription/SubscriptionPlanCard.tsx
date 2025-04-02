@@ -24,7 +24,7 @@ export interface SubscriptionPlanCardProps {
   plan: SubscriptionPlan;
   onSelect: (plan: SubscriptionPlan) => void;
   isActive?: boolean;
-  billingInterval?: 'monthly' | 'yearly'; // Added for compatibility
+  billingInterval?: 'monthly' | 'yearly';
 }
 
 const SubscriptionPlanCard: React.FC<SubscriptionPlanCardProps> = ({

@@ -1,138 +1,155 @@
+
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Container } from '@/components/ui/container';
-import Shell from '@/components/Shell';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Shell } from '@/components/ui/Shell';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useAuth } from '@/hooks/useAuth';
-import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import { AlertCircle } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { PageSEO } from '@/components/SEO/PageSEO';
-import RoyalDivider from '@/components/ui/royal-divider';
-import { Crown } from 'lucide-react';
-import usePageTracking from '@/hooks/usePageTracking';
 
-const SignIn = () => {
-  usePageTracking();
-  const { login, isAuthenticated, user } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+const formSchema = z.object({
+  email: z.string().email({ message: 'Please enter a valid email address.' }),
+  password: z.string().min(6, {
+    message: 'Password must be at least 6 characters.',
+  }),
+});
+
+export default function SignInPage() {
+  const { login, isAuthenticated } = useAuth();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-
+  
   useEffect(() => {
-    if (isAuthenticated && user) {
+    if (isAuthenticated) {
       navigate('/dashboard');
     }
-  }, [isAuthenticated, user, navigate]);
+  }, [isAuthenticated, navigate]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email || !password) {
-      toast({
-        title: "Missing credentials",
-        description: "Please provide both email and password to enter the royal court.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
+    setError(null);
     
     try {
-      await login(email, password);
+      await login(values.email, values.password);
       toast({
-        title: "Welcome back, noble!",
-        description: "The court welcomes your return.",
+        title: 'Welcome back!',
+        description: 'You have successfully signed in.',
       });
       navigate('/dashboard');
-    } catch (error) {
+    } catch (err) {
+      let errorMessage = 'Failed to sign in. Please check your credentials.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
       toast({
-        title: "Access denied",
-        description: "The royal guards do not recognize your credentials.",
-        variant: "destructive",
+        variant: 'destructive',
+        title: 'Authentication failed',
+        description: errorMessage,
       });
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   return (
-    <Shell>
+    <Shell className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-background to-background/80 p-4">
       <PageSEO 
-        title="Sign In to Your Noble Account" 
-        description="Return to the royal court and continue your ascension through the ranks. Your throne awaits."
+        title="Sign In | SpendThrone" 
+        description="Sign in to SpendThrone to flaunt your spending power and climb the social hierarchy."
       />
-      
-      <Container className="container mx-auto px-4 py-12">
-        <div className="max-w-md mx-auto">
-          <div className="text-center mb-8">
-            <Crown className="h-12 w-12 text-royal-gold mx-auto mb-4" />
-            <h1 className="text-3xl font-bold royal-gradient">Return to Court</h1>
-            <p className="text-white/70 mt-2">Resume your noble ascension</p>
-          </div>
-          
-          <Card className="glass-morphism border-white/10">
-            <CardHeader>
-              <CardTitle>Royal Authentication</CardTitle>
-              <CardDescription>Enter your credentials to access your throne</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit}>
-                <div className="grid gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="noble@example.com"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Your secret royal code"
-                    />
-                  </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Verifying..." : "Enter the Court"}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-            <CardFooter className="flex flex-col space-y-4">
-              <RoyalDivider variant="line" />
-              <div className="text-center text-sm text-white/70">
-                <p>Not yet a member of the nobility?</p>
-                <Link to="/auth/signup" className="text-royal-gold hover:underline">
-                  Purchase Your Title
-                </Link>
-              </div>
-            </CardFooter>
-          </Card>
-          
-          <div className="text-center mt-8 text-sm text-white/50">
-            <p>By signing in, you agree to our ridiculous</p>
-            <div className="flex justify-center space-x-2">
-              <Link to="/terms" className="text-royal-gold/70 hover:text-royal-gold">Terms of Service</Link>
-              <span>and</span>
-              <Link to="/privacy" className="text-royal-gold/70 hover:text-royal-gold">Privacy Policy</Link>
-            </div>
-          </div>
+      <div className="flex flex-col items-center space-y-4 w-full max-w-md">
+        <div className="text-center mb-4">
+          <h1 className="text-3xl font-bold">SpendThrone</h1>
+          <CardDescription className="text-muted-foreground mt-1">Sign in to your account</CardDescription>
         </div>
-      </Container>
+
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle>Sign In</CardTitle>
+            <CardDescription>Enter your credentials to access your royal account</CardDescription>
+          </CardHeader>
+          
+          <CardContent>
+            {error && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="john@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" placeholder="••••••••" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? 'Signing in...' : 'Sign In'}
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+          
+          <CardFooter className="flex flex-col space-y-2">
+            <div className="text-center text-sm">
+              <span className="text-muted-foreground">Don't have an account? </span>
+              <Link to="/signup" className="text-primary hover:underline">Sign up</Link>
+            </div>
+            <div className="text-center text-sm">
+              <Link to="/forgot-password" className="text-primary hover:underline">Forgot password?</Link>
+            </div>
+          </CardFooter>
+        </Card>
+        
+        <div className="text-center text-xs text-muted-foreground mt-8">
+          <div className="mb-1">By signing in, you agree to our <Link to="/terms" className="hover:underline">Terms of Service</Link> and <Link to="/privacy" className="hover:underline">Privacy Policy</Link></div>
+          <div>© {new Date().getFullYear()} SpendThrone. All rights reserved.</div>
+        </div>
+      </div>
     </Shell>
   );
-};
-
-export default SignIn;
+}

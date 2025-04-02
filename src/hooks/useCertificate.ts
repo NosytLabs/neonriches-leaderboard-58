@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -22,6 +23,10 @@ interface UseCertificateResult {
   shareCertificate: (certificateId: string) => Promise<void>;
   getUserCertificates: (userId: string) => Promise<Certificate[]>;
   getAvailableTemplates: () => Promise<CertificateTemplate[]>;
+  // Add compatibility methods
+  mint: (certificateId: string) => Promise<{success: boolean; mintAddress?: string}>;
+  download: (certificate: Certificate) => void;
+  share: (certificate: Certificate) => Promise<string>;
 }
 
 /**
@@ -54,11 +59,14 @@ export const useCertificate = (): UseCertificateResult => {
           userId: user?.id || '',
           dateIssued: new Date().toISOString(),
           mintAddress: `mock_${id}_${Date.now()}`,
-          type: 'achievement',
-          style: 'royal',
-          team: 'gold',
-          status: 'issued' as CertificateStatus, // Cast to the correct type
-          rarity: 'legendary' // As an extra property that doesn't conflict
+          type: 'achievement' as CertificateType,
+          style: 'royal' as CertificateStyle,
+          team: 'gold' as CertificateTeam,
+          status: 'issued' as CertificateStatus,
+          rarity: 'legendary',
+          issuerName: 'SpendThrone',
+          recipientName: user?.displayName || 'User',
+          recipientId: user?.id || ''
         });
 
         // Mock certificates
@@ -174,13 +182,16 @@ export const useCertificate = (): UseCertificateResult => {
         title: 'Royal Spending',
         description: 'Awarded for spending like royalty',
         imageUrl: '/images/certificates/royal-spending.png',
-        type: 'spending',
-        style: 'royal',
-        team: 'gold',
+        type: 'spending' as CertificateType,
+        style: 'royal' as CertificateStyle,
+        team: 'gold' as CertificateTeam,
         dateIssued: new Date().toISOString(),
         mintAddress: '0x123abc',
         status: 'issued' as CertificateStatus,
-        rarity: 'legendary'
+        rarity: 'legendary',
+        issuerName: 'SpendThrone',
+        recipientName: 'Royal Spender',
+        recipientId: userId
       }
     ];
     return mockCertificates;
@@ -194,19 +205,39 @@ export const useCertificate = (): UseCertificateResult => {
     const mockTemplates: CertificateTemplate[] = [
       {
         id: 'template1',
-        name: 'Royal Spending',
+        title: 'Royal Spending',
         description: 'Template for royal spending certificates',
         previewUrl: '/images/certificates/royal-spending.png',
         imageUrl: '/images/certificates/royal-spending.png',
-        type: 'spending',
-        team: 'all',
-        style: 'royal',
+        type: 'spending' as CertificateType,
+        team: 'all' as CertificateTeam,
+        style: 'royal' as CertificateStyle,
         available: true,
-        title: 'Royal Spending'
+        name: 'Royal Spending'
       }
     ];
     return mockTemplates;
   }, []);
+
+  // Compatibility methods
+  const mint = useCallback(async (certificate: Certificate): Promise<{success: boolean; mintAddress?: string}> => {
+    try {
+      await mintCertificateAsNFT(certificate.id);
+      return { success: true, mintAddress: `mint_${certificate.id}_${Date.now()}` };
+    } catch (error) {
+      console.error("Error minting certificate:", error);
+      return { success: false };
+    }
+  }, [mintCertificateAsNFT]);
+
+  const download = useCallback((certificate: Certificate): void => {
+    downloadCertificate(certificate.id);
+  }, [downloadCertificate]);
+
+  const share = useCallback(async (certificate: Certificate): Promise<string> => {
+    await shareCertificate(certificate.id);
+    return `https://example.com/certificates/share/${certificate.id}`;
+  }, [shareCertificate]);
 
   useEffect(() => {
     if (user) {
@@ -225,7 +256,11 @@ export const useCertificate = (): UseCertificateResult => {
     downloadCertificate,
     shareCertificate,
     getUserCertificates,
-    getAvailableTemplates
+    getAvailableTemplates,
+    // Add compatibility methods
+    mint,
+    download,
+    share
   };
 };
 

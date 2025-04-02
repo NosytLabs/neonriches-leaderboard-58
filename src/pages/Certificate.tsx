@@ -10,7 +10,7 @@ import { Award, Crown, Medal, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CertificateDisplay from '@/components/certificates/CertificateDisplay';
 import { useCertificate } from '@/hooks/useCertificate';
-import { Certificate } from '@/types/certificates';
+import { Certificate } from '@/types/certificate';
 
 const CertificatePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,32 +20,28 @@ const CertificatePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>(user?.team || 'default');
   
   const { 
-    mint, 
-    download, 
-    share, 
-    getUserCertificates, 
-    getAvailableTemplates 
+    getUserCertificates,
+    getAvailableTemplates,
+    mint,
+    download,
+    share
   } = useCertificate();
 
-  // New state variables to match the hook API
   const [certificate, setCertificate] = useState<Certificate | null>(null);
   const [templates, setTemplates] = useState<Certificate[]>([]);
   const [userCertificates, setUserCertificates] = useState<Certificate[]>([]);
   const [loading, setLoading] = useState(true);
   const [isMinting, setIsMinting] = useState(false);
   
-  // Load certificates and templates
   useEffect(() => {
     if (user) {
       setLoading(true);
       
-      // If we have a specific certificate ID, fetch that certificate
       if (id) {
-        // This would be an API call in a real app
-        getUserCertificates().then(certs => {
+        getUserCertificates(user.id).then(certs => {
           const foundCert = certs.find(cert => cert.id === id);
           if (foundCert) {
-            setCertificate(foundCert);
+            setCertificate(foundCert as Certificate);
           }
           setLoading(false);
         }).catch(error => {
@@ -53,14 +49,12 @@ const CertificatePage: React.FC = () => {
           setLoading(false);
         });
       } else {
-        // Load user certificates
-        getUserCertificates().then(certs => {
-          setUserCertificates(certs);
+        getUserCertificates(user.id).then(certs => {
+          setUserCertificates(certs as unknown as Certificate[]);
           
-          // Load available templates
           return getAvailableTemplates();
         }).then(availableTemplates => {
-          setTemplates(availableTemplates);
+          setTemplates(availableTemplates as unknown as Certificate[]);
           setLoading(false);
         }).catch(error => {
           console.error("Error loading certificates:", error);
@@ -75,7 +69,7 @@ const CertificatePage: React.FC = () => {
     
     setIsMinting(true);
     try {
-      const result = await mint(cert.id);
+      const result = await mint(cert);
       setIsMinting(false);
       return result.success;
     } catch (error) {
@@ -89,13 +83,13 @@ const CertificatePage: React.FC = () => {
     if (!cert) return '';
     
     try {
-      return await share(cert.id);
+      return await share(cert);
     } catch (error) {
       console.error("Error generating shareable image:", error);
       return '';
     }
   };
-  
+
   if (!user) {
     return (
       <div className="min-h-screen bg-background text-foreground">
@@ -199,12 +193,12 @@ const CertificatePage: React.FC = () => {
                           <div className="aspect-video relative overflow-hidden rounded-md mb-2">
                             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 z-10"></div>
                             <img 
-                              src={template.previewUrl} 
-                              alt={template.name} 
+                              src={template.previewUrl || template.imageUrl} 
+                              alt={template.name || template.title} 
                               className="object-cover w-full h-full"
                             />
                           </div>
-                          <h3 className="font-semibold text-sm">{template.name}</h3>
+                          <h3 className="font-semibold text-sm">{template.name || template.title}</h3>
                           <p className="text-xs text-muted-foreground">{template.description}</p>
                         </CardContent>
                       </Card>
@@ -222,11 +216,9 @@ const CertificatePage: React.FC = () => {
   );
 };
 
-// Helper function to handle downloading certificates
 const handleDownload = (certificate: Certificate) => {
   if (!certificate) return;
   
-  // Implementation would depend on how downloading works in the app
   console.log('Download certificate:', certificate);
 };
 

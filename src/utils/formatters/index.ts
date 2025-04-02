@@ -37,6 +37,7 @@ export const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
+// Format dollar amount (alias for formatCurrency for backward compatibility)
 export const formatDollarAmount = (amount: number): string => {
   return formatCurrency(amount);
 };
@@ -50,6 +51,7 @@ export const formatDate = (date: string | Date): string => {
   }).format(dateObj);
 };
 
+// Format time ago
 export const formatTimeAgo = (date: string | Date): string => {
   const now = new Date();
   const pastDate = typeof date === 'string' ? new Date(date) : date;
@@ -70,6 +72,7 @@ export const formatTimeAgo = (date: string | Date): string => {
   return `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
 };
 
+// Truncate address for wallet displays
 export const truncateAddress = (address: string, startLength = 4, endLength = 4): string => {
   if (!address) return '';
   if (address.length <= startLength + endLength) return address;

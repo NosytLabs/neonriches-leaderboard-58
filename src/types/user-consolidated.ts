@@ -1,6 +1,9 @@
 
 import { UserTier, TeamColor } from './mockery-types';
-export { TeamColor, UserTier, Gender } from './mockery-types';
+
+// Re-export types with proper syntax for isolatedModules
+export type { TeamColor, UserTier } from './mockery-types';
+export type { Gender } from './mockery-types';
 
 // Export TeamType alias for TeamColor for backward compatibility
 export type TeamType = TeamColor;

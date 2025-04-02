@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/button';
-import { Crown, CreditCard, ChevronRight, Check, Zap, DollarSign } from 'lucide-react'; // Added Zap and DollarSign
+import { Crown, CreditCard, ChevronRight, Check, Zap, DollarSign } from 'lucide-react';
 import { UserProfile } from '@/types/user';
 import { formatCurrency } from '@/utils/formatters';
 
@@ -117,9 +116,9 @@ const CashThroneUpgrade: React.FC<CashThroneUpgradeProps> = ({ user }) => {
                     {plan.features.map((feature, index) => (
                       <li key={index} className="flex items-center">
                         {feature.included ? (
-                          <CheckCircle className="h-4 w-4 text-green-500 mr-2 shrink-0" />
+                          <Check className="h-4 w-4 text-green-500 mr-2 shrink-0" />
                         ) : (
-                          <CheckCircle className="h-4 w-4 text-white/20 mr-2 shrink-0" />
+                          <Check className="h-4 w-4 text-white/20 mr-2 shrink-0" />
                         )}
                         <span className={feature.included ? '' : 'text-white/40'}>
                           {feature.title}

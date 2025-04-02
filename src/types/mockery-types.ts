@@ -1,45 +1,5 @@
 
-// Add or update the mockery-types.ts file
-export type MockeryAction = 
-  | 'tomato'
-  | 'egg'
-  | 'putridEgg'
-  | 'rotten_egg'
-  | 'jester'
-  | 'crown'
-  | 'stocks'
-  | 'shame'
-  | 'silence'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'protection'
-  | 'flame'
-  | 'thumbs_down'
-  | 'thumbsDown'
-  | 'heart'
-  | 'skull'
-  | 'mock'
-  | 'challenge'
-  | 'joust'
-  | 'duel'
-  | 'trumpet'
-  | 'confetti'
-  | 'taunt'
-  | 'laugh'  // Added
-  | 'fish';  // Added
-
-export type MockeryTier = 
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'epic'
-  | 'legendary'
-  | 'royal'
-  | 'silver'
-  | 'bronze'
-  | 'basic'
-  | 'premium'
-  | 'standard';
+// Add missing MockeryAction and MockeryTier values
 
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze' | 'crimson';
 
@@ -64,32 +24,78 @@ export type UserTier =
   | 'elite'
   | 'legendary';
 
-// Missing types that are referenced in other files
 export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
 
-export interface MockeryEvent {
-  id: string;
-  type: MockeryAction;
-  fromUserId: string;
-  toUserId: string;
-  timestamp: string;
-  fromUser: MockeryUser;
-  toUser: MockeryUser;
-  cost: number;
-}
+export type MockeryAction = 
+  | 'tomato'
+  | 'egg'
+  | 'rotten_egg'
+  | 'flame'
+  | 'heart'
+  | 'thumbs_down'
+  | 'skull'
+  | 'crown'
+  | 'putridEgg'
+  | 'stocks'
+  | 'jester'
+  | 'mock'
+  | 'challenge'
+  | 'joust'
+  | 'duel'
+  | 'silence'
+  | 'laugh'
+  | 'fish'
+  | 'taunt'
+  | 'thumbsDown'
+  | 'trumpet'
+  | 'confetti';
 
-export interface MockeryUser {
+export type MockeryTier = 
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
+  | 'legendary'
+  | 'royal'
+  | 'silver'
+  | 'bronze'
+  | 'basic'
+  | 'premium'
+  | 'standard';
+
+export interface LeaderboardUser {
   id: string;
   userId: string;
   username: string;
   displayName: string;
-  profileImage?: string;
-  team?: TeamColor | string;
-  tier?: string;
-  rank: number;
+  profileImage: string;
+  avatarUrl?: string; // For backward compatibility
   totalSpent: number;
+  amountSpent: number;
+  rank: number;
+  team: TeamColor;
+  tier: UserTier | string;
+  spendStreak?: number;
+  walletBalance?: number;
+  previousRank?: number;
+  joinDate?: string;
+  isVerified?: boolean;
+  rankChange?: number;
+  spendChange?: number;
+  isProtected?: boolean;
 }
 
+export interface LeaderboardFilter {
+  team: string | TeamColor | 'all';
+  tier: string;
+  timeframe: string;
+  sortBy: string;
+  sortDirection?: 'asc' | 'desc';
+  search?: string;
+  limit?: number;
+}
+
+// Add the TeamData and MockeryEvent interfaces for imports
 export interface TeamData {
   id: string;
   name: string;
@@ -100,37 +106,31 @@ export interface TeamData {
   leader: string;
   joinFee: number;
   icon: string;
-}
-
-export interface LeaderboardUser {
-  id: string;
-  userId: string;
-  username: string;
-  displayName: string;
-  profileImage?: string;
-  avatarUrl?: string;  // For backward compatibility
-  rank: number;
-  previousRank?: number;
+  logoUrl?: string;
+  totalContribution?: number;
   totalSpent?: number;
-  amountSpent?: number;
-  tier?: string;
-  team?: TeamColor | string;
-  isVerified?: boolean;
-  isProtected?: boolean;
-  spendStreak?: number;
-  rankChange?: number;
-  spendChange?: number;
-  walletBalance?: number;
-  joinDate?: string; // Added for compatibility
+  rank?: number;
+  previousRank?: number;
 }
 
-export interface LeaderboardFilter {
-  team?: string;
-  tier?: string;
-  timeframe?: string;
-  search?: string;
-  sortBy?: string;
-  sortDirection?: string;
-  limit?: number;
-  sort?: string; // For compatibility with leaderboardService
+export interface MockeryEvent {
+  id: string;
+  actionType: MockeryAction;
+  senderId: string;
+  senderName: string;
+  targetId: string;
+  targetName: string;
+  timestamp: string;
+  message?: string;
+  tier: MockeryTier;
+  cost?: number;
+}
+
+export interface MockeryUser {
+  id: string;
+  username: string;
+  profileImage: string;
+  rank: number;
+  tier: UserTier;
+  team: TeamColor;
 }
