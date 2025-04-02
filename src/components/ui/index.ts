@@ -45,7 +45,7 @@ export {
 } from './toast';
 
 // Create and export a Toaster component directly
-export { Toaster } from '../ui/toaster';
+export { Toaster } from './toaster';
 
 // Export the remaining functionality from toast
 export type { 

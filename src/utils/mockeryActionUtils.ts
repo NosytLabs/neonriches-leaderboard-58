@@ -1,95 +1,39 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery-types';
+import { 
+  Egg, 
+  ThumbsDown, 
+  Crown, 
+  Flame, 
+  Skull, 
+  Heart, 
+  Music, 
+  Confetti, 
+  AlertTriangle,
+  ShieldAlert,
+  Laugh,
+  Feather,
+  MessageCircle 
+} from 'lucide-react';
 
-/**
- * Map of legacy mockery actions to their standardized versions
- */
-export const LEGACY_TO_STANDARD_MAPPING: Record<string, MockeryAction> = {
-  'tomatoes': 'tomato',
-  'eggs': 'egg',
-  'putridEggs': 'putridEgg',
-  'carrot': 'laugh'
-};
-
-/**
- * List of valid mockery actions
- */
-export const VALID_MOCKERY_ACTIONS: MockeryAction[] = [
-  'tomato',
-  'egg',
-  'thumbsDown',
-  'shame',
-  'jester',
-  'mock',
-  'challenge',
-  'joust',
-  'duel',
-  'crown',
-  'stocks',
-  'putridEgg',
-  'silence',
-  'courtJester',
-  'smokeBomb',
-  'protection',
-  'laugh',
-  'fish',
-  'taunt',
-  'rotten_egg',
-  'flame',
-  'heart',
-  'thumbs_down',
-  'royal_decree',
-  'shame_certificate',
-  'insult',
-  'humiliate'
-];
-
-// Re-export MockeryAction type for components that import from this file
-export type { MockeryAction } from '@/types/mockery-types';
-
-/**
- * Normalize a string to a valid MockeryAction
- */
-export function normalizeMockeryAction(action: string): MockeryAction {
-  // Check if this is a legacy action that needs to be mapped
-  if (action in LEGACY_TO_STANDARD_MAPPING) {
-    return LEGACY_TO_STANDARD_MAPPING[action];
-  }
-  
-  // Check if it's already a valid action
-  if (VALID_MOCKERY_ACTIONS.includes(action as MockeryAction)) {
-    return action as MockeryAction;
-  }
-  
-  // Default fallback
-  return 'mock';
-}
-
-/**
- * Check if a string is a valid mockery action
- */
-export function isValidMockeryAction(action: string): boolean {
-  return VALID_MOCKERY_ACTIONS.includes(action as MockeryAction) || 
-         Object.keys(LEGACY_TO_STANDARD_MAPPING).includes(action);
-}
-
-/**
- * Get a friendly display name for a mockery action
- */
-export function getMockeryActionDisplayName(action: MockeryAction): string {
+// Define mockery action display names
+export const getMockeryActionDisplayName = (action: MockeryAction): string => {
   const displayNames: Record<MockeryAction, string> = {
     tomato: 'Tomato',
     egg: 'Egg',
-    thumbsDown: 'Thumbs Down',
-    shame: 'Shame',
+    rotten_egg: 'Rotten Egg',
+    flame: 'Flame',
+    heart: 'Heart',
+    thumbs_down: 'Thumbs Down',
+    skull: 'Skull',
+    crown: 'Mock Crown',
+    putridEgg: 'Putrid Egg',
+    stocks: 'Stocks',
     jester: 'Jester',
     mock: 'Mock',
     challenge: 'Challenge',
     joust: 'Joust',
     duel: 'Duel',
-    crown: 'Crown',
-    stocks: 'Stocks',
-    putridEgg: 'Putrid Egg',
     silence: 'Silence',
     courtJester: 'Court Jester',
     smokeBomb: 'Smoke Bomb',
@@ -97,10 +41,10 @@ export function getMockeryActionDisplayName(action: MockeryAction): string {
     laugh: 'Laugh',
     fish: 'Fish',
     taunt: 'Taunt',
-    rotten_egg: 'Rotten Egg',
-    flame: 'Flame',
-    heart: 'Heart',
-    thumbs_down: 'Thumbs Down',
+    thumbsDown: 'Thumbs Down',
+    trumpet: 'Trumpet',
+    confetti: 'Confetti',
+    shame: 'Shame',
     royal_decree: 'Royal Decree',
     shame_certificate: 'Shame Certificate',
     insult: 'Insult',
@@ -108,35 +52,114 @@ export function getMockeryActionDisplayName(action: MockeryAction): string {
   };
   
   return displayNames[action] || 'Unknown';
-}
+};
 
-// Fix the icons record to include all required actions
-export const mockeryActionIcons: Record<MockeryAction, string> = {
-  tomato: 'tomato',
-  egg: 'egg',
-  thumbsDown: 'thumbs-down',
-  thumbs_down: 'thumbs-down',
-  shame: 'shame',
-  jester: 'jester',
-  mock: 'mock',
-  challenge: 'challenge',
-  joust: 'joust',
-  duel: 'duel',
-  crown: 'crown',
-  stocks: 'stocks',
-  putridEgg: 'putrid-egg',
-  rotten_egg: 'rotten-egg',
-  silence: 'silence',
-  flame: 'flame',
-  heart: 'heart',
-  taunt: 'taunt',
-  protection: 'protection',
-  royal_decree: 'royal-decree',
-  shame_certificate: 'shame-certificate',
-  insult: 'insult',
-  humiliate: 'humiliate',
-  courtJester: 'court-jester',
-  smokeBomb: 'smoke-bomb',
-  laugh: 'laugh',
-  fish: 'fish'
+// Define mockery action icons (mapping to Lucide icons)
+export const mockeryActionIcons: Record<MockeryAction, any> = {
+  tomato: AlertTriangle,
+  egg: Egg,
+  rotten_egg: Egg,
+  flame: Flame,
+  heart: Heart,
+  thumbs_down: ThumbsDown,
+  skull: Skull,
+  crown: Crown,
+  putridEgg: Egg,
+  stocks: ShieldAlert,
+  jester: Laugh,
+  mock: MessageCircle,
+  challenge: AlertTriangle,
+  joust: AlertTriangle,
+  duel: AlertTriangle,
+  silence: AlertTriangle,
+  courtJester: Laugh,
+  smokeBomb: AlertTriangle,
+  protection: ShieldAlert,
+  laugh: Laugh,
+  fish: Feather,
+  taunt: MessageCircle,
+  thumbsDown: ThumbsDown,
+  trumpet: Music,
+  confetti: Confetti,
+  shame: AlertTriangle,
+  royal_decree: Crown,
+  shame_certificate: AlertTriangle,
+  insult: MessageCircle,
+  humiliate: AlertTriangle
+};
+
+// Define mockery action descriptions
+export const getMockeryActionDescription = (action: MockeryAction): string => {
+  const descriptions: Record<MockeryAction, string> = {
+    tomato: 'Throw a tomato at the user',
+    egg: 'Throw an egg at the user',
+    rotten_egg: 'Throw a rotten egg at the user',
+    flame: 'Flame the user with a hot take',
+    heart: 'Show some ironic love',
+    thumbs_down: 'Give a thumbs down',
+    skull: 'Mark as defeated',
+    crown: 'Crown them mockingly',
+    putridEgg: 'Throw a putrid egg at the user',
+    stocks: 'Put the user in stocks for public mockery',
+    jester: 'Mark as a jester',
+    mock: 'Mock the user',
+    challenge: 'Challenge the user',
+    joust: 'Joust with the user',
+    duel: 'Challenge to a duel',
+    silence: 'Silence the user temporarily',
+    courtJester: 'Designate as court jester',
+    smokeBomb: 'Leave a smoke bomb',
+    protection: 'Add protection from mockery',
+    laugh: 'Laugh at the user',
+    fish: 'Slap with a fish',
+    taunt: 'Taunt the user',
+    thumbsDown: 'Give a thumbs down gesture',
+    trumpet: 'Play a mocking tune',
+    confetti: 'Throw ironic confetti',
+    shame: 'Public shaming',
+    royal_decree: 'Issue a royal decree of shame',
+    shame_certificate: 'Issue a certificate of shame',
+    insult: 'Insult the user',
+    humiliate: 'Publicly humiliate'
+  };
+  
+  return descriptions[action] || 'Mock the user';
+};
+
+// Define mockery action tiers
+export const getMockeryActionTier = (action: MockeryAction): string => {
+  const tiers: Record<MockeryAction, string> = {
+    tomato: 'common',
+    egg: 'common',
+    rotten_egg: 'uncommon',
+    flame: 'uncommon',
+    heart: 'common',
+    thumbs_down: 'common',
+    skull: 'uncommon',
+    crown: 'rare',
+    putridEgg: 'uncommon',
+    stocks: 'rare',
+    jester: 'uncommon',
+    mock: 'common',
+    challenge: 'uncommon',
+    joust: 'rare',
+    duel: 'rare',
+    silence: 'epic',
+    courtJester: 'rare',
+    smokeBomb: 'epic',
+    protection: 'legendary',
+    laugh: 'common',
+    fish: 'uncommon',
+    taunt: 'common',
+    thumbsDown: 'common',
+    trumpet: 'uncommon',
+    confetti: 'uncommon',
+    shame: 'rare',
+    royal_decree: 'legendary',
+    shame_certificate: 'rare',
+    insult: 'common',
+    humiliate: 'rare'
+  };
+  
+  return tiers[action] || 'common';
 };

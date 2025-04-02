@@ -7,10 +7,10 @@ import { Crown, Shield, AlertTriangle } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
 
-// Import mockery utility functions
+// Import mockery utility functions - fixed import name
 import { 
   getMockeryActionDisplayName as getMockeryName, 
-  getMockeryActionIcons as getMockeryActionIcon
+  mockeryActionIcons 
 } from '@/utils/mockeryActionUtils';
 
 // Add mock utility functions that can be implemented later properly

@@ -49,11 +49,17 @@ export const useMockery = () => {
       laugh: 25,
       fish: 35,
       taunt: 40,
-      // Required for complete Record type
       rotten_egg: 300, 
       flame: 75,
       heart: 100,
-      thumbs_down: 15
+      thumbs_down: 15,
+      skull: 20,
+      trumpet: 45,
+      confetti: 50,
+      royal_decree: 500,
+      shame_certificate: 200,
+      insult: 50,
+      humiliate: 150
     };
     
     return costs[action] || 50;

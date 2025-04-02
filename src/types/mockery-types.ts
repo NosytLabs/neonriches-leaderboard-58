@@ -52,7 +52,11 @@ export type MockeryAction =
   | 'shame'
   | 'courtJester'
   | 'smokeBomb'
-  | 'protection';
+  | 'protection'
+  | 'royal_decree'
+  | 'shame_certificate'
+  | 'insult'
+  | 'humiliate';
 
 export type MockeryTier = 
   | 'common'

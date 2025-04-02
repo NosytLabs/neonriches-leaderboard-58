@@ -11,6 +11,8 @@ export interface SubscriptionPlan {
   features: (string | { name: string; included: boolean })[];
   popular?: boolean; // Updated from isPopular to match component usage
   cta?: string;
+  // Add billingInterval for compatibility
+  billingInterval?: 'monthly' | 'yearly';
 }
 
 export type SubscriptionBillingInterval = 'monthly' | 'yearly';
@@ -44,4 +46,8 @@ export type Feature =
   | 'profile-protection'
   | 'visibility-enhanced'
   | 'mockery-access'
-  | 'boost-effects';
+  | 'boost-effects'
+  | 'royal-profiles'
+  | 'custom-certificates'
+  | 'premium-badges'
+  | 'throne-access';
