@@ -1,60 +1,69 @@
 
 import { useState, useCallback } from 'react';
-import { UseSoundHook, SoundType, SoundOptions } from '@/types/sound-types';
+import { SoundType, SoundOptions, SoundHook } from '@/types/sound-types';
 
-export const useSound = (): UseSoundHook => {
-  const [muted, setMuted] = useState(false);
-  const [volume, setVolumeState] = useState(0.5);
-  const [enabled, setEnabled] = useState(true);
-  const [isPlaying, setIsPlaying] = useState(false);
+/**
+ * Hook for playing sounds without the context
+ */
+export const useSound = (): SoundHook => {
+  const [muted, setMuted] = useState<boolean>(false);
+  const [volume, setVolume] = useState<number>(0.5);
+  const [isEnabled, setIsEnabled] = useState<boolean>(true);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   
-  const play = useCallback((sound: SoundType, options?: SoundOptions) => {
-    if (muted || !enabled) return;
-    console.log(`Playing sound: ${sound} with options:`, options);
+  const playSound = useCallback((sound: SoundType, options?: SoundOptions) => {
+    if (!isEnabled || muted) return;
+    
+    console.log(`Playing sound: ${sound}`);
+    
+    // For mock purposes, we just log the sound instead of playing it
     setIsPlaying(true);
     
-    // Simulate sound ending
+    // Simulate ending after a short time
     setTimeout(() => {
       setIsPlaying(false);
       options?.onEnd?.();
     }, 1000);
-  }, [muted, enabled]);
+  }, [isEnabled, muted]);
   
-  const playSound = play;
+  // Alias for compatibility
+  const play = playSound;
   
   const stopSound = useCallback((fade?: boolean) => {
-    setIsPlaying(false);
     console.log(`Stopping sound${fade ? ' with fade' : ''}`);
+    setIsPlaying(false);
   }, []);
   
   const pauseSound = useCallback(() => {
-    if (isPlaying) {
-      console.log('Pausing sound');
-      setIsPlaying(false);
-    }
-  }, [isPlaying]);
+    console.log('Pausing sound');
+    setIsPlaying(false);
+  }, []);
   
   const resumeSound = useCallback(() => {
-    if (!isPlaying && !muted && enabled) {
-      console.log('Resuming sound');
-      setIsPlaying(true);
-    }
-  }, [isPlaying, muted, enabled]);
+    if (!isEnabled || muted) return;
+    console.log('Resuming sound');
+    setIsPlaying(true);
+  }, [isEnabled, muted]);
   
-  const toggleMute = useCallback((): boolean => {
+  const toggleMute = useCallback(() => {
     setMuted(prev => !prev);
     return !muted;
   }, [muted]);
   
+  // Alias for compatibility
   const toggleMuted = toggleMute;
   
-  const toggleEnabled = useCallback((): void => {
-    setEnabled(prev => !prev);
+  const setVolumeLevel = useCallback((newVolume: number) => {
+    setVolume(newVolume);
   }, []);
   
-  const getVolume = useCallback((): number => {
+  const getVolumeLevel = useCallback(() => {
     return volume;
   }, [volume]);
+  
+  const toggleSoundEnabled = useCallback(() => {
+    setIsEnabled(prev => !prev);
+  }, []);
   
   return {
     playSound,
@@ -62,21 +71,23 @@ export const useSound = (): UseSoundHook => {
     stopSound,
     pauseSound,
     resumeSound,
-    isMuted: muted,
     toggleMute,
-    setVolume: setVolumeState,
-    getVolume,
-    isEnabled: enabled,
-    toggleEnabled,
-    currentVolume: volume,
+    isMuted: muted,
+    setVolume: setVolumeLevel,
+    getVolume: getVolumeLevel,
+    isEnabled,
+    toggleEnabled: toggleSoundEnabled,
     mute: () => setMuted(true),
     unmute: () => setMuted(false),
     toggleMuted,
+    currentVolume: volume,
     soundConfig: {
-      muted,
-      enabled,
-      volume
-    }
+      enabled: isEnabled,
+      volume,
+      muted
+    },
+    isPlaying,
+    isSoundEnabled: isEnabled && !muted
   };
 };
 

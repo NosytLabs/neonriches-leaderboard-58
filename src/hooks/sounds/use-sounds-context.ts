@@ -1,17 +1,18 @@
 
-// Update imports to the correct path
-import { createContext, useContext } from 'react';
+import { useContext } from 'react';
+import { SoundContext } from '../../contexts/SoundContext';
 import { SoundHook } from '@/types/sound-types';
 
-export const SoundsContext = createContext<SoundHook | null>(null);
-
+/**
+ * Hook for accessing the sound context
+ */
 export const useSoundsContext = (): SoundHook => {
-  const context = useContext(SoundsContext);
+  const context = useContext(SoundContext);
   
   if (!context) {
-    console.warn('useSoundsContext must be used within a SoundsProvider');
+    console.warn('useSoundsContext must be used within a SoundProvider');
     
-    // Return a fallback implementation
+    // Return a fallback implementation when used outside of context
     return {
       playSound: () => {},
       stopSound: () => {},
@@ -31,7 +32,10 @@ export const useSoundsContext = (): SoundHook => {
       mute: () => {},
       unmute: () => {},
       toggleMuted: () => false,
-      currentVolume: 0
+      currentVolume: 0,
+      play: () => {},
+      isPlaying: false,
+      isSoundEnabled: false
     };
   }
   

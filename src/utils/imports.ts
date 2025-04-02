@@ -2,7 +2,8 @@
 // This file is used to re-export components with consistent casing to avoid errors
 
 // UI Components with proper casing
-export { Badge } from "@/components/ui/badge";
+// Fixed import with correct casing
+export { Badge } from "@/components/ui/Badge";
 export { Button } from "@/components/ui/button";
 export { Input } from "@/components/ui/input";
 export { Label } from "@/components/ui/label";

@@ -1,6 +1,27 @@
 
 import { UserProfile } from '@/types/user-consolidated';
 
+// Export the individual functions that are being imported elsewhere
+export const signInWithEmail = async (email: string): Promise<boolean> => {
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+  return email.includes('@'); // Basic validation for mock purposes
+};
+
+export const verifyMfaCode = async (code: string): Promise<boolean> => {
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+  return code.length === 6; // Basic validation for mock purposes
+};
+
+export const signInWithGoogle = async (): Promise<boolean> => {
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+  return true; // Always succeed for mock
+};
+
+export const resetPassword = async (email: string): Promise<boolean> => {
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+  return email.includes('@'); // Basic validation for mock purposes
+};
+
 // Simulate authentication service for testing without backend
 const mockAuthService = {
   login: async (email: string, password: string): Promise<{ success: boolean; user?: UserProfile; error?: string }> => {
@@ -130,7 +151,11 @@ const mockAuthService = {
   resetPassword: async (email: string): Promise<{ success: boolean; error?: string }> => {
     await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
     return { success: true };
-  }
+  },
+  
+  signInWithEmail,
+  verifyMfaCode,
+  signInWithGoogle
 };
 
 export default mockAuthService;

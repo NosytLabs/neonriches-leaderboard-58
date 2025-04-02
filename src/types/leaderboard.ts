@@ -5,54 +5,64 @@ export interface LeaderboardUser {
   id: string;
   userId: string;
   username: string;
-  displayName: string; // Required field
-  profileImage?: string;
-  avatarUrl?: string; // Some components use this alternative
+  displayName: string;
+  profileImage: string;
   tier: string;
-  team: TeamColor | string;
+  team: string;
   rank: number;
   previousRank: number;
   totalSpent: number;
   amountSpent: number;
-  walletBalance?: number;
+  walletBalance: number;
   isVerified?: boolean;
   spendStreak?: number;
-  isProtected?: boolean;
-  rankChange?: number;
-  spendChange?: number;
   joinDate?: string;
 }
 
 export interface LeaderboardFilter {
-  timeframe: 'day' | 'week' | 'month' | 'all' | 'year' | 'all-time' | 'today';
-  team?: TeamColor | 'all';
-  limit?: number;
-  page?: number;
+  timeframe: 'day' | 'week' | 'month' | 'year' | 'all-time' | 'today';
+  team: string;
   tier?: string;
   search?: string;
-  sortBy?: string;
+  sortBy?: 'rank' | 'amountSpent' | 'username' | 'spendStreak';
   sortDirection?: 'asc' | 'desc';
 }
 
 export interface LeaderboardConfig {
-  title?: string;
-  showFilter?: boolean;
-  showSearch?: boolean;
-  showTeamFilter?: boolean;
-  variant?: 'default' | 'compact' | 'royal' | 'minimal';
   maxItems?: number;
-  hideRankChange?: boolean;
-  highlightUser?: boolean;
-  currentUserId?: string;
+  variant?: 'default' | 'compact' | 'extended';
+  showTeam?: boolean;
+  showTier?: boolean;
+  showRank?: boolean;
+  showAmountSpent?: boolean;
+  showSpendStreak?: boolean;
+  highlightCurrentUser?: boolean;
 }
 
 export interface LeaderboardProps {
   users: LeaderboardUser[];
   filter?: LeaderboardFilter;
   onFilterChange?: (filter: Partial<LeaderboardFilter>) => void;
-  config?: LeaderboardConfig;
-  isLoading?: boolean;
-  showActions?: boolean;
   onUserClick?: (userId: string) => void;
-  onShameUser?: (user: LeaderboardUser) => void;
+  config?: LeaderboardConfig;
+  currentUserId?: string;
+}
+
+export interface LeaderboardResponse {
+  users: LeaderboardUser[];
+  total: number;
+  page: number;
+  pageSize: number;
+  hasMore: boolean;
+}
+
+export interface UseLeaderboardResult {
+  leaderboardUsers: LeaderboardUser[];
+  loading: boolean;
+  error: Error | null;
+  filter: LeaderboardFilter;
+  setFilter: (newFilter: Partial<LeaderboardFilter>) => void;
+  refreshLeaderboard: () => Promise<void>;
+  hasMore: boolean;
+  loadMore: () => Promise<void>;
 }

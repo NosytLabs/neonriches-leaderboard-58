@@ -1,6 +1,5 @@
-
 import React from 'react';
-import Shell from '@/components/Shell';
+import { Shell } from '@/components/Shell';
 import PageSEO from '@/components/common/PageSEO';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';

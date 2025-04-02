@@ -24,13 +24,13 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({
   className = ''
 }) => {
   const [users, setUsers] = useState<LeaderboardUser[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   
   useEffect(() => {
     const fetchLeaderboardData = async () => {
       try {
-        setIsLoading(true);
+        setLoading(true);
         // Simulate API fetch
         await new Promise(resolve => setTimeout(resolve, 1500));
         
@@ -58,7 +58,7 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({
         const errorObj = err instanceof Error ? err : new Error(String(err));
         setError(errorObj);
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
     
@@ -66,14 +66,14 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({
   }, [team]);
   
   const handleRefresh = () => {
-    setIsLoading(true);
+    setLoading(true);
     setError(null);
     
     // Simulated refresh with new data
     setTimeout(() => {
       const newData = [...users].sort(() => Math.random() - 0.5);
       setUsers(newData);
-      setIsLoading(false);
+      setLoading(false);
     }, 1000);
   };
   
@@ -86,7 +86,7 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({
             variant="ghost" 
             size="sm" 
             onClick={handleRefresh} 
-            disabled={isLoading}
+            disabled={loading}
           >
             Refresh
           </Button>
@@ -95,14 +95,8 @@ const PersistentLeaderboard: React.FC<PersistentLeaderboardProps> = ({
       <CardContent className="p-0">
         <LeaderboardList 
           users={users} 
-          isLoading={isLoading} 
+          loading={loading} 
           error={error}
-          onUserClick={onUserClick}
-          onShameUser={onShameUser}
-          config={{
-            maxItems: limit,
-            variant: 'compact'
-          }}
         />
       </CardContent>
     </Card>

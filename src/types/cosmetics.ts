@@ -1,56 +1,4 @@
-export interface CosmeticType {
-  id: string;
-  name: string;
-  description: string;
-  thumbnail: string;
-  price: number;
-  category: CosmeticCategory;
-  rarity: CosmeticRarity;
-  unlockRequirement?: string;
-  isDefault?: boolean;
-}
-
-export type CosmeticCategory = 
-  | 'border' 
-  | 'color' 
-  | 'font' 
-  | 'emoji' 
-  | 'background' 
-  | 'effect' 
-  | 'title' 
-  | 'badge' 
-  | 'theme'
-  | 'appearance'  // Add missing values
-  | 'profile'
-  | 'interaction';
-
-export type CosmeticRarity = 
-  | 'common' 
-  | 'uncommon' 
-  | 'rare' 
-  | 'epic' 
-  | 'legendary'
-  | 'mythic'   // Add missing values
-  | 'unique'
-  | 'royal';
-
-export interface CosmeticItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  type: string;
-  rarity: CosmeticRarity;
-  category: CosmeticCategory;
-  enabled: boolean;
-  cssClass: string;
-  previewUrl?: string;
-  icon?: string;
-  cost?: number; // Make this optional
-  imageSrc?: string;
-  image?: string;
-}
-
+// Fix export type conflicts
 export interface SocialLinkInterface {
   id?: string | number;
   platform: string;
@@ -69,12 +17,56 @@ export interface ProfileLinkInterface {
   platform: string;
   url: string;
   title?: string;
+  displayText?: string;
   icon?: string;
   label?: string;
 }
 
-export { SocialLinkInterface as SocialLink };
-export { ProfileLinkInterface as ProfileLink };
+// Re-export with proper syntax to avoid conflicts
+export type SocialLink = SocialLinkInterface;
+export type ProfileLink = ProfileLinkInterface;
+
+export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme';
+
+export type CosmeticCategory = 
+  | 'border' 
+  | 'color' 
+  | 'font' 
+  | 'emoji' 
+  | 'title' 
+  | 'background' 
+  | 'effect' 
+  | 'badge' 
+  | 'theme';
+
+export type CosmeticRarity = 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary' 
+  | 'royal' 
+  | 'exclusive' 
+  | 'limited';
+
+export interface CosmeticItem {
+  id: string;
+  name: string;
+  description: string;
+  category: CosmeticCategory;
+  rarity: CosmeticRarity;
+  imageUrl?: string;
+  previewUrl?: string;
+  price: number;
+  currency: 'coins' | 'cash' | 'free';
+  isOwned?: boolean;
+  isActive?: boolean;
+  isAvailable?: boolean;
+  isLimited?: boolean;
+  endsAt?: string;
+  cssClass?: string;
+  attributes?: Record<string, string | number | boolean>;
+}
 
 export interface UserCosmetics {
   border?: string[];
@@ -86,6 +78,7 @@ export interface UserCosmetics {
   effect?: string[];
   badge?: string[];
   theme?: string[];
+  [key: string]: string[] | string | undefined;
   activeTitle?: string;
   activeBorder?: string;
   activeBackground?: string;
@@ -95,31 +88,31 @@ export interface UserCosmetics {
   activeEmoji?: string;
   activeBadge?: string;
   activeTheme?: string;
-  [key: string]: string[] | string | undefined;
 }
 
 export interface UserCosmeticState {
   cosmetics: UserCosmetics;
-  activeBorder: string | null;
-  activeColor: string | null;
-  activeFont: string | null;
-  activeEmoji: string | null;
-  activeTitle: string | null;
+  activeBorder?: string;
+  activeBackground?: string;
+  activeColor?: string;
+  activeTitle?: string;
 }
 
 export interface CosmeticStoreSection {
-  id: string;
   title: string;
-  description: string;
   items: CosmeticItem[];
+  description?: string;
+  imageUrl?: string;
+  category: CosmeticCategory;
+  isNew?: boolean;
+  isLimited?: boolean;
+  endsAt?: string;
 }
 
 export interface CosmeticPurchaseResult {
   success: boolean;
-  message: string;
-  itemId: string;
-  category: CosmeticCategory;
+  item?: CosmeticItem;
+  error?: string;
+  newBalance?: number;
+  transactionId?: string;
 }
-
-// Re-export specific types
-export type { SocialLink, ProfileLink };
