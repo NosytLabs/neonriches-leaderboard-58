@@ -3,16 +3,6 @@
  * Format utility functions
  */
 
-// Import and re-export individual formatters
-import { formatCurrency } from '../formatters';
-import { formatDate } from '../formatters';
-
-// Re-export all formatters
-export { 
-  formatCurrency,
-  formatDate
-};
-
 // Basic formatters
 export const formatNumber = (number: number, decimals = 0): string => {
   return new Intl.NumberFormat('en-US', {
@@ -38,8 +28,26 @@ export const formatFileSize = (bytes: number): string => {
   return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
 };
 
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
+};
+
 export const formatDollarAmount = (amount: number): string => {
   return formatCurrency(amount);
+};
+
+export const formatDate = (date: string | Date): string => {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).format(dateObj);
 };
 
 export const formatTimeAgo = (date: string | Date): string => {

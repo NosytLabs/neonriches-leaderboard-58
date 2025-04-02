@@ -1,6 +1,6 @@
-// Update the subscription plan interface to include "recommended" property
-import { useEffect, useState } from 'react';
-import { SubscriptionPlanCard } from '@/components/subscription/SubscriptionPlanCard';
+import React, { useState } from 'react';
+import { Shell } from '@/components/ui/Shell';
+import SubscriptionPlanCard, { SubscriptionPlan } from '@/components/subscription/SubscriptionPlanCard';
 import { useAuth } from '@/hooks/useAuth';
 import { UserProfile } from '@/types/user-consolidated';
 
@@ -28,7 +28,6 @@ export default function Subscription() {
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);
   
   useEffect(() => {
-    // In a real app, these would be fetched from an API
     const subscriptionPlans: SubscriptionPlan[] = [
       {
         id: 'basic',
@@ -132,33 +131,35 @@ export default function Subscription() {
   }, []);
   
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-8">Subscription Plans</h1>
-      
-      <div className="flex justify-center mb-8">
-        <button
-          className={`px-4 py-2 rounded-l-md ${billingInterval === 'monthly' ? 'bg-royal-gold text-black' : 'bg-gray-700 text-white'}`}
-          onClick={() => setBillingInterval('monthly')}
-        >
-          Monthly
-        </button>
-        <button
-          className={`px-4 py-2 rounded-r-md ${billingInterval === 'yearly' ? 'bg-royal-gold text-black' : 'bg-gray-700 text-white'}`}
-          onClick={() => setBillingInterval('yearly')}
-        >
-          Yearly
-        </button>
+    <Shell>
+      <div className="container mx-auto px-4 py-12">
+        <h1 className="text-3xl font-bold mb-8">Subscription Plans</h1>
+        
+        <div className="flex justify-center mb-8">
+          <button
+            className={`px-4 py-2 rounded-l-md ${billingInterval === 'monthly' ? 'bg-royal-gold text-black' : 'bg-gray-700 text-white'}`}
+            onClick={() => setBillingInterval('monthly')}
+          >
+            Monthly
+          </button>
+          <button
+            className={`px-4 py-2 rounded-r-md ${billingInterval === 'yearly' ? 'bg-royal-gold text-black' : 'bg-gray-700 text-white'}`}
+            onClick={() => setBillingInterval('yearly')}
+          >
+            Yearly
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {plans.map((plan) => (
+            <SubscriptionPlanCard
+              key={plan.id}
+              plan={plan}
+              billingInterval={billingInterval}
+            />
+          ))}
+        </div>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {plans.map((plan) => (
-          <SubscriptionPlanCard
-            key={plan.id}
-            plan={plan}
-            billingInterval={billingInterval}
-          />
-        ))}
-      </div>
-    </div>
+    </Shell>
   );
 }

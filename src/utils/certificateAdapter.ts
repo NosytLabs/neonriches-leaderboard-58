@@ -10,7 +10,8 @@ export const adaptCertificateToTemplate = (certificate: Certificate): Certificat
     type: certificate.type,
     style: certificate.style,
     team: certificate.team,
-    rarity: certificate.rarity
+    rarity: certificate.rarity,
+    name: certificate.title // For compatibility
   };
 };
 
@@ -63,6 +64,17 @@ export const createDefaultTemplate = (): CertificateTemplate => {
     type: 'achievement',
     style: 'standard',
     team: 'none',
-    rarity: 'common'
+    rarity: 'common',
+    name: 'Template' // For compatibility
+  };
+};
+
+// Added for compatibility
+export const adaptCertificate = (cert: any): Certificate => {
+  return {
+    ...cert,
+    issuerName: cert.issuerName || 'SpendThrone',
+    recipientName: cert.recipientName || cert.username || 'User',
+    recipientId: cert.recipientId || cert.userId || ''
   };
 };

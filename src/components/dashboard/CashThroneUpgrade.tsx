@@ -1,8 +1,9 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
+
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/Badge';
-import { Crown, CheckCircle, DollarSign } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Crown, CreditCard, ChevronRight, Check, Zap, DollarSign } from 'lucide-react'; // Added Zap and DollarSign
 import { UserProfile } from '@/types/user';
 import { formatCurrency } from '@/utils/formatters';
 

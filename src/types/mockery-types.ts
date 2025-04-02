@@ -24,7 +24,9 @@ export type MockeryAction =
   | 'duel'
   | 'trumpet'
   | 'confetti'
-  | 'taunt';
+  | 'taunt'
+  | 'laugh'  // Added
+  | 'fish';  // Added
 
 export type MockeryTier = 
   | 'common'
@@ -62,13 +64,51 @@ export type UserTier =
   | 'elite'
   | 'legendary';
 
-export interface LeaderboardUser {
+// Missing types that are referenced in other files
+export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
+
+export interface MockeryEvent {
   id: string;
-  userId?: string;
+  type: MockeryAction;
+  fromUserId: string;
+  toUserId: string;
+  timestamp: string;
+  fromUser: MockeryUser;
+  toUser: MockeryUser;
+  cost: number;
+}
+
+export interface MockeryUser {
+  id: string;
+  userId: string;
   username: string;
   displayName: string;
   profileImage?: string;
-  avatarUrl?: string;
+  team?: TeamColor | string;
+  tier?: string;
+  rank: number;
+  totalSpent: number;
+}
+
+export interface TeamData {
+  id: string;
+  name: string;
+  color: TeamColor;
+  description: string;
+  members: number;
+  benefits: string[];
+  leader: string;
+  joinFee: number;
+  icon: string;
+}
+
+export interface LeaderboardUser {
+  id: string;
+  userId: string;
+  username: string;
+  displayName: string;
+  profileImage?: string;
+  avatarUrl?: string;  // For backward compatibility
   rank: number;
   previousRank?: number;
   totalSpent?: number;
@@ -81,6 +121,7 @@ export interface LeaderboardUser {
   rankChange?: number;
   spendChange?: number;
   walletBalance?: number;
+  joinDate?: string; // Added for compatibility
 }
 
 export interface LeaderboardFilter {
@@ -91,5 +132,5 @@ export interface LeaderboardFilter {
   sortBy?: string;
   sortDirection?: string;
   limit?: number;
-  sort?: string;
+  sort?: string; // For compatibility with leaderboardService
 }

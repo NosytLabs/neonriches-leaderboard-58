@@ -1,8 +1,6 @@
 
-import { UserTier, TeamColor, Gender } from './mockery-types';
-
-// Use export type instead of just export to fix isolatedModules issue
-export type { TeamColor, UserTier, Gender };
+import { UserTier, TeamColor } from './mockery-types';
+export { TeamColor, UserTier, Gender } from './mockery-types';
 
 // Export TeamType alias for TeamColor for backward compatibility
 export type TeamType = TeamColor;
@@ -94,7 +92,7 @@ export interface UserProfile {
     dateIssued?: string;
   };
   socialLinks?: SocialLink[] | Record<string, string>;
-  gender?: Gender | string;
+  gender?: string;
   lastActive?: string;
   followers?: string[];
   following?: string[];

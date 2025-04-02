@@ -3,7 +3,7 @@ import React from 'react';
 import { Trophy, CrownIcon, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/Badge'; // Fixed casing
 import { UserProfile } from '@/types/user-consolidated';
 import { formatCurrency } from '@/utils/formatters';
 

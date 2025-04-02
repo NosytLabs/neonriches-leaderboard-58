@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { Container } from '@/components/ui/container';
 import Shell from '@/components/Shell';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { Link } from 'react-router-dom';
+import { PageSEO } from '@/components/SEO/PageSEO';
 import RoyalDivider from '@/components/ui/royal-divider';
 import { Crown } from 'lucide-react';
-import { useAuth } from '@/contexts/auth';
-import { useToast } from '@/hooks/use-toast';
 import usePageTracking from '@/hooks/usePageTracking';
 
 const SignIn = () => {
@@ -65,7 +68,7 @@ const SignIn = () => {
         description="Return to the royal court and continue your ascension through the ranks. Your throne awaits."
       />
       
-      <div className="container mx-auto px-4 py-12">
+      <Container className="container mx-auto px-4 py-12">
         <div className="max-w-md mx-auto">
           <div className="text-center mb-8">
             <Crown className="h-12 w-12 text-royal-gold mx-auto mb-4" />
@@ -127,7 +130,7 @@ const SignIn = () => {
             </div>
           </div>
         </div>
-      </div>
+      </Container>
     </Shell>
   );
 };

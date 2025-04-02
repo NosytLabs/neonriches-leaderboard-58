@@ -6,7 +6,8 @@ export type CertificateType =
   | 'membership' 
   | 'royal' 
   | 'team' 
-  | 'special';
+  | 'special'
+  | 'nobility'; // Added for compatibility
 
 export type CertificateStyle = 
   | 'standard' 
@@ -15,7 +16,8 @@ export type CertificateStyle =
   | 'royal' 
   | 'premium' 
   | 'modern' 
-  | 'classic';
+  | 'classic'
+  | 'legendary'; // Added for compatibility 
 
 export type CertificateTeam = 
   | 'red' 
@@ -24,6 +26,7 @@ export type CertificateTeam =
   | 'gold' 
   | 'purple' 
   | 'none'
+  | 'neutral' // Added for compatibility
   | 'all';
 
 export type CertificateStatus = 
@@ -31,7 +34,8 @@ export type CertificateStatus =
   | 'issued' 
   | 'revoked' 
   | 'expired' 
-  | 'draft';
+  | 'draft'
+  | 'minted'; // Added for compatibility
 
 export interface Certificate {
   id: string;
@@ -49,6 +53,7 @@ export interface Certificate {
   issuerName: string;
   recipientName: string;
   recipientId: string;
+  tier?: string; // Added for compatibility
 }
 
 export interface CertificateTemplate {
@@ -63,6 +68,11 @@ export interface CertificateTemplate {
   dateIssued?: string;
   userId?: string;
   status?: CertificateStatus;
+  name?: string; // Added for compatibility
+  previewUrl?: string; // Added for compatibility
+  available?: boolean; // Added for compatibility
+  availableForTier?: string[]; // Added for compatibility
+  requiresFounder?: boolean; // Added for compatibility
 }
 
 export interface UseCertificateResult {
@@ -71,7 +81,7 @@ export interface UseCertificateResult {
   loading: boolean;
   error: Error | null;
   createCertificate: (data: Partial<Certificate>) => Promise<Certificate>;
-  fetchUserCertificates: () => Promise<Certificate[]>;
+  fetchUserCertificates: (userId?: string) => Promise<Certificate[]>;
   fetchTemplates: () => Promise<CertificateTemplate[]>;
   mint: (certificate: Certificate) => Promise<void>;
   download: (certificate: Certificate) => void;
