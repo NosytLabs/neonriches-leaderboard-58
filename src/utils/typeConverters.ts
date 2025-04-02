@@ -1,99 +1,88 @@
 
 import { LeaderboardUser } from '@/types/leaderboard';
-import { UserProfile } from '@/types/user';
-import { TeamColor } from '@/types/user-types';
-import { safeToString } from './stringUtils';
+import { UserProfile } from '@/types/user-consolidated';
+import { TeamColor, UserTier } from '@/types/mockery-types';
 
 /**
- * Convert a string to a valid TeamColor
- * @param team - The team string to convert
- * @returns A valid TeamColor
+ * Safely converts any string to TeamColor type
  */
 export const toTeamColor = (team: string | null | undefined): TeamColor => {
   if (!team) return 'none';
   
-  const validTeamColors: Record<string, TeamColor> = {
-    'red': 'red',
-    'blue': 'blue',
-    'green': 'green',
-    'gold': 'gold',
-    'purple': 'purple',
-    'silver': 'silver',
-    'bronze': 'bronze',
-    'neutral': 'neutral',
-    'none': 'none'
-  };
+  // Check if the string is a valid TeamColor
+  const validTeamColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
+  if (validTeamColors.includes(team as TeamColor)) {
+    return team as TeamColor;
+  }
   
-  return validTeamColors[team.toLowerCase()] || 'none';
+  // Default to 'none' if not valid
+  return 'none';
 };
 
 /**
- * Convert a LeaderboardUser to a UserProfile
- * @param leaderboardUser - The LeaderboardUser to convert
- * @returns A UserProfile object
+ * Safely converts string to UserTier
  */
-export const leaderboardUserToProfile = (leaderboardUser: LeaderboardUser): UserProfile => {
-  // Create a base UserProfile with required fields
+export const toUserTier = (tier: string | null | undefined): UserTier => {
+  if (!tier) return 'free';
+  
+  const validTiers: UserTier[] = ['free', 'basic', 'premium', 'elite', 'royal', 'founder'];
+  if (validTiers.includes(tier as UserTier)) {
+    return tier as UserTier;
+  }
+  
+  return 'free';
+};
+
+/**
+ * Convert LeaderboardUser to UserProfile
+ */
+export const toUserProfile = (user: LeaderboardUser): UserProfile => {
   return {
-    id: leaderboardUser.userId || leaderboardUser.id,
-    username: leaderboardUser.username,
-    displayName: leaderboardUser.displayName || leaderboardUser.username,
-    email: leaderboardUser.email || '',
-    profileImage: leaderboardUser.profileImage || leaderboardUser.avatarUrl || '',
-    bio: leaderboardUser.bio || '',
-    joinedDate: leaderboardUser.joinedDate || leaderboardUser.joinedAt || leaderboardUser.joinDate || new Date().toISOString(),
-    tier: leaderboardUser.tier as any,
-    team: toTeamColor(leaderboardUser.team),
-    rank: leaderboardUser.rank,
-    previousRank: leaderboardUser.previousRank || 0,
-    totalSpent: leaderboardUser.totalSpent,
-    amountSpent: leaderboardUser.amountSpent || leaderboardUser.totalSpent,
-    walletBalance: leaderboardUser.walletBalance || 0,
-    isVerified: leaderboardUser.isVerified || false,
-    cosmetics: { border: [], color: [], font: [], emoji: [], title: [], background: [], effect: [], badge: [], theme: [] },
-    settings: leaderboardUser.settings || {
-      profileVisibility: 'public',
-      allowProfileLinks: true,
+    id: user.id || user.userId,
+    username: user.username,
+    displayName: user.displayName || user.username,
+    email: '',  // LeaderboardUser doesn't have email
+    profileImage: user.profileImage || '',
+    bio: '',  // LeaderboardUser doesn't have bio
+    joinedDate: user.joinedDate || new Date().toISOString(), // Use fallback
+    isVerified: user.isVerified || false,
+    team: toTeamColor(user.team),
+    tier: toUserTier(user.tier),
+    rank: user.rank || 0,
+    previousRank: user.previousRank || user.rank || 0,
+    walletBalance: user.walletBalance || 0,
+    totalSpent: user.totalSpent || 0,
+    settings: {
       theme: 'dark',
-      notifications: true,
-      emailNotifications: false,
-      marketingEmails: false,
-      showRank: true,
-      darkMode: true,
-      soundEffects: true,
-      showBadges: true,
-      showEmailOnProfile: false,
-      rankChangeAlerts: false,
-      showTeam: true,
-      showSpending: true
-    },
-    spendStreak: leaderboardUser.spendStreak || 0
+      notifications: {
+        enabled: true,
+        leaderboardUpdates: true,
+        rankChanges: true,
+        teamUpdates: true,
+        spending: true,
+        mockery: true
+      },
+      privacy: {
+        showProfile: true,
+        showSpending: true,
+        showRank: true
+      }
+    }
   };
 };
 
 /**
- * Convert an array of LeaderboardUsers to UserProfiles
- * @param leaderboardUsers - Array of LeaderboardUser objects
- * @returns Array of UserProfile objects
- */
-export const leaderboardUsersToProfiles = (leaderboardUsers: LeaderboardUser[]): UserProfile[] => {
-  return leaderboardUsers.map(leaderboardUserToProfile);
-};
-
-/**
- * Ensure a value is a string
- * @param id - The ID value, could be number or string
- * @returns The ID as a string
+ * Ensure a value is a string ID
+ * @param id - The ID (could be number or string)
+ * @returns A string ID
  */
 export const ensureStringId = (id: string | number): string => {
-  return typeof id === 'number' ? String(id) : id;
+  return String(id);
 };
 
-// Export all utilities
 export {
   toTeamColor,
-  leaderboardUserToProfile,
-  leaderboardUsersToProfiles,
-  ensureStringId,
-  safeToString
+  toUserTier,
+  toUserProfile,
+  ensureStringId
 };

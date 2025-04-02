@@ -15,15 +15,15 @@ export const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
-// Add the formatDollarAmount that's being referenced
-export const formatDollarAmount = (value: number): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(value);
-};
+// Use the existing formatDollarAmount function from currency formatters
+// export const formatDollarAmount = (value: number): string => {
+//   return new Intl.NumberFormat('en-US', {
+//     style: 'currency',
+//     currency: 'USD',
+//     minimumFractionDigits: 2,
+//     maximumFractionDigits: 2
+//   }).format(value);
+// };
 
 export const formatNumber = (num: number): string => {
   return new Intl.NumberFormat('en-US').format(num);

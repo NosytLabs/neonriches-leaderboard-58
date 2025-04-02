@@ -1,33 +1,21 @@
 
-import { TeamColor, UserTier } from "./user-types";
-import { LeaderboardUser } from "./leaderboard";
+// Define the available team colors
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
 
-// Add or update the action type
+// Define the available mockery actions
 export type MockeryAction = 
-  | 'tomatoes' 
-  | 'eggs' 
-  | 'pie'
-  | 'fish'
-  | 'carrot'
+  | 'tomatoes'
+  | 'eggs'
+  | 'confetti'
   | 'flowers'
-  | 'gold'
-  | 'jester'
-  | 'crown'
-  | 'stocks'
   | 'shame'
-  | 'protection'
+  | 'crown'
   | 'mock'
-  | 'denounce'
-  | 'taunt'
-  | 'challenge'
-  | 'joust'
-  | 'duel'
-  | 'putridEggs'
-  | 'silence'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'thumbsDown'; // Add the missing thumbsDown action
+  | 'jester'
+  | 'praise'
+  | 'thumbsDown';
 
+// Define the mockery tiers
 export type MockeryTier = 
   | 'common'
   | 'uncommon'
@@ -41,101 +29,43 @@ export type MockeryTier =
   | 'silver'
   | 'bronze';
 
-export interface MockeryOptions {
-  userId: string;
-  action: MockeryAction;
-  amount?: number;
-  message?: string;
-  anonymous?: boolean;
-}
+// Define user tiers
+export type UserTier = 
+  | 'free'
+  | 'basic'
+  | 'premium'
+  | 'elite'
+  | 'royal'
+  | 'founder';
 
-export interface MockeryResult {
-  success: boolean;
-  message: string;
-  transaction?: MockeryTransaction;
-  error?: string;
-}
-
-export interface MockeryTransaction {
-  id: string;
-  fromUserId: string;
-  toUserId: string;
-  action: MockeryAction;
-  amount: number;
-  timestamp: string;
-  message?: string;
-  anonymous: boolean;
-}
-
-export interface MockeryStats {
-  totalReceived: {
-    [key in MockeryAction]?: number;
-  };
-  totalSent: {
-    [key in MockeryAction]?: number;
-  };
-  mostReceivedFrom: string[];
-  mostSentTo: string[];
-  rank?: number;
-}
-
-export interface MockeryLeaderboardEntry {
-  userId: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  totalReceived: number;
-  totalSent: number;
-  mostReceivedAction?: MockeryAction;
-  stats: {
-    [key in MockeryAction]?: number;
-  };
-}
-
-export interface TeamMockeryStats {
-  teamId: string;
-  teamName: string;
-  teamColor: TeamColor;
-  totalReceived: number;
-  totalSent: number;
-  memberCount: number;
-  perMemberAverage: number;
-  stats: {
-    [key in MockeryAction]?: number;
-  };
-}
-
-// For usage in mock components
-export interface MockedUser {
-  id: string;
-  username: string;
-  profileImage: string;
-}
-
-export interface MockeryEvent {
-  id: string;
-  fromUser: MockedUser;
-  toUser: MockedUser;
-  action: MockeryAction;
-  timestamp: string;
-  message?: string;
-}
-
-// Export TeamData type for compatibility with other code
+// Define team data interface
 export interface TeamData {
   id: string;
   name: string;
   color: TeamColor;
-  logoUrl: string;
   members: number;
-  totalContribution: number;
-  rank?: number;
-  previousRank?: number;
-  description?: string;
+  totalSpent: number;
+  rank: number;
+  previousRank: number;
+  icon: string;
+  description: string;
 }
 
-// Re-export LeaderboardUser to avoid confusion
-export type { LeaderboardUser };
+// Add MockedUser and MockeryEvent types
+export interface MockedUser {
+  id: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  team: TeamColor;
+  tier: UserTier;
+}
 
-// Export TeamColor to fix the missing export error
-export type { TeamColor, UserTier };
+export interface MockeryEvent {
+  id: string;
+  actionType: MockeryAction;
+  fromUserId: string;
+  toUserId: string;
+  timestamp: string;
+  seen: boolean;
+}

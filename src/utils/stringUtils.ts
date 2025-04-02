@@ -1,104 +1,75 @@
 
 /**
- * Safely convert any value to a string
- * @param value - The value to convert to a string
- * @returns A string representation of the value
+ * Convert any value to a string safely
+ * @param value - The value to convert
+ * @returns The string representation or empty string if null/undefined
  */
 export const safeToString = (value: any): string => {
   if (value === null || value === undefined) {
     return '';
   }
-  
-  if (typeof value === 'object') {
-    try {
-      return JSON.stringify(value);
-    } catch {
-      return String(value);
-    }
-  }
-  
   return String(value);
 };
 
 /**
- * Safe way to extract string from object
- * @param obj - The object to extract from
- * @param path - The dot notation path to extract
- * @param defaultValue - Default value if path not found
- * @returns The extracted value or default
- */
-export const getStringValue = (obj: any, path: string, defaultValue: string = ''): string => {
-  try {
-    const parts = path.split('.');
-    let current = obj;
-    
-    for (const part of parts) {
-      if (current === null || current === undefined) {
-        return defaultValue;
-      }
-      current = current[part];
-    }
-    
-    return safeToString(current) || defaultValue;
-  } catch {
-    return defaultValue;
-  }
-};
-
-/**
- * Format a string for use in URLs (slug)
- * @param str - The string to slugify
- * @returns A URL-friendly version of the string
- */
-export const slugify = (str: string): string => {
-  if (!str) return '';
-  
-  return str
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^\w-]+/g, '')
-    .replace(/--+/g, '-')
-    .replace(/^-+/, '')
-    .replace(/-+$/, '');
-};
-
-/**
- * Get initials from a name or username
- * @param name - The name to get initials from
- * @param maxChars - Maximum number of characters to return
- * @returns Initials from the name
- */
-export const getInitials = (name: string, maxChars: number = 2): string => {
-  if (!name) return '';
-  
-  const parts = name.split(/[\s-_]+/);
-  if (parts.length === 1) {
-    // If single word, take first N characters
-    return name.substring(0, maxChars).toUpperCase();
-  }
-  
-  // Take first character of each word
-  return parts
-    .slice(0, maxChars)
-    .map(part => part.charAt(0))
-    .join('')
-    .toUpperCase();
-};
-
-/**
- * Ensure a value is a string
- * @param id - The ID value, could be number or string
- * @returns The ID as a string
+ * Ensure a value is a string ID
+ * @param id - The ID (could be number or string)
+ * @returns A string ID
  */
 export const ensureStringId = (id: string | number): string => {
-  return typeof id === 'number' ? String(id) : id;
+  return safeToString(id);
 };
 
-// Export all functions
-export {
-  safeToString,
-  getStringValue,
-  slugify,
-  getInitials,
-  ensureStringId
+/**
+ * Truncate a string if it exceeds a certain length
+ * @param str - The string to truncate
+ * @param maxLength - Maximum length before truncation
+ * @returns The truncated string with ellipsis if needed
+ */
+export const truncateString = (str: string, maxLength: number = 30): string => {
+  if (!str) return '';
+  if (str.length <= maxLength) return str;
+  return `${str.substring(0, maxLength)}...`;
 };
+
+/**
+ * Get the initials from a name
+ * @param name - The name to extract initials from
+ * @returns The initials (up to 2 characters)
+ */
+export const getInitials = (name: string): string => {
+  if (!name) return '';
+  
+  const parts = name.trim().split(/\s+/);
+  
+  if (parts.length === 1) {
+    return parts[0].substring(0, 2).toUpperCase();
+  }
+  
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+};
+
+/**
+ * Convert a string to title case
+ * @param str - The string to convert
+ * @returns The title cased string
+ */
+export const toTitleCase = (str: string): string => {
+  if (!str) return '';
+  return str.replace(
+    /\w\S*/g,
+    txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+  );
+};
+
+/**
+ * Generate a random username
+ * @param prefix - Optional prefix for the username
+ * @returns A random username
+ */
+export const generateRandomUsername = (prefix: string = 'user'): string => {
+  const randomId = Math.floor(Math.random() * 10000);
+  return `${prefix}${randomId}`;
+};
+
+export { safeToString, ensureStringId, truncateString, getInitials, toTitleCase, generateRandomUsername };
