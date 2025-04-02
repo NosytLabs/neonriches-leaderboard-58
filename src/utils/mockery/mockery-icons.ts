@@ -16,12 +16,10 @@ export const mockeryIcons: Partial<Record<string, string>> = {
   taunt: "taunt",
   smokeBomb: "smoke-bomb",
   protection: "shield",
-  shame: "shame",
-  challenge: "challenge",
-  joust: "joust",
-  duel: "duel",
-  royal_decree: "royal-decree",
-  // Remove any that aren't defined in MockeryAction
+  flame: "flame",
+  heart: "heart",
+  skull: "skull",
+  laugh: "laugh"
 };
 
 // Icon colors for mockery actions
@@ -39,12 +37,10 @@ export const mockeryIconColors: Partial<Record<string, string>> = {
   taunt: "text-orange-500",
   smokeBomb: "text-zinc-600",
   protection: "text-green-500",
-  shame: "text-red-600",
-  challenge: "text-teal-500",
-  joust: "text-indigo-500",
-  duel: "text-red-700",
-  royal_decree: "text-royal-purple",
-  // Add any new ones that are in MockeryAction
+  flame: "text-amber-500",
+  heart: "text-pink-500",
+  skull: "text-gray-800",
+  laugh: "text-indigo-400"
 };
 
 // Get the appropriate icon for a mockery action
