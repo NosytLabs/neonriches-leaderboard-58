@@ -12,7 +12,8 @@ const useTeam = () => {
   const currentTeam = user?.team || 'none';
   
   // Define mock team data for the Teams page
-  const allTeams: TeamColor[] = teamService.getAllTeams();
+  const allTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 
+    'neutral', 'silver', 'bronze', 'crimson'];
   
   const changeTeam = async (newTeam: TeamColor): Promise<boolean> => {
     if (!user) {

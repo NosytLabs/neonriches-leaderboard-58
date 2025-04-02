@@ -1,36 +1,63 @@
-export interface CodeMetrics {
-  loc: number;
-  sloc: number;
-  comments: number;
-  complexity: number;
-  maintainability: number;
+
+/**
+ * Types for code analysis
+ */
+
+export interface FileStat {
+  path: string;
+  size: number;
+  lineCount: number;
+  lastModified: string;
+  imports: string[];
+  exports: string[];
+  dependencies: string[];
 }
 
-export interface ProjectMetricsData {
-  totalFiles: number;
-  totalSize: number;
-  totalLoc: number;
-  totalSloc: number;
-  averageComplexity: number;
-  averageMaintainability: number;
-  fileTypes: Record<string, number>;
-  largestFiles: { path: string; size: number }[];
-  mostComplexFiles: { path: string; complexity: number }[];
-  leastMaintainableFiles: { path: string; maintainability: number }[];
+export interface ProjectStat {
+  projectSize: number;
+  fileCount: number;
+  dependencyCount: number;
+  totalLines: number;
+  avgFileSize: number;
+  files?: FileStat[];
+  largestFiles?: FileStat[];
+  mostImported?: { module: string; count: number }[];
+  mostDependentFiles?: { file: string; dependencyCount: number }[];
 }
 
-// Rename ProjectMetricsInterface to avoid conflicts while maintaining the export
-export type ProjectMetrics = ProjectMetricsData & {
-  timestamp: string;
-  repository?: string;
-  branch?: string;
-  commit?: string;
-};
+export interface SizeSavings {
+  bytes: number;
+  percentage: number;
+}
 
-// Keeping the old name with alias for backward compatibility
-export interface ProjectMetricsInterface extends ProjectMetricsData {
+export interface CountSavings {
+  count: number;
+  percentage: number;
+}
+
+// Missing ProjectMetrics type
+export interface ProjectMetrics {
+  beforeCleanup: ProjectStat;
+  afterCleanup: ProjectStat;
+  sizeSavings: SizeSavings;
+  fileSavings: CountSavings;
+  dependencySavings: CountSavings;
+  sizePercentage: number;
+  unusedFiles?: FileStat[];
+  duplicates?: { paths: string[]; similarity: number }[];
+  recommendations?: string[];
+}
+
+export interface AnalysisOptions {
+  includeDependencies: boolean;
+  includeNodeModules: boolean;
+  includeTests: boolean;
+  minFileSize: number;
+  minSimilarity: number;
+}
+
+export interface CodeAnalysisResult {
+  metrics: ProjectMetrics;
+  options: AnalysisOptions;
   timestamp: string;
-  repository?: string;
-  branch?: string;
-  commit?: string;
 }

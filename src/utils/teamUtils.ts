@@ -55,3 +55,23 @@ export const getTeamName = (team: TeamColor): string => {
     default: return 'No Team';
   }
 };
+
+/**
+ * Get the Tailwind background color class for a team
+ */
+export const getTeamTailwindBgColor = (team: TeamColor): string => {
+  switch(team) {
+    case 'red': return 'border-red-500 bg-red-500/10';
+    case 'green': return 'border-green-500 bg-green-500/10';
+    case 'blue': return 'border-blue-500 bg-blue-500/10';
+    case 'gold': return 'border-amber-500 bg-amber-500/10';
+    case 'purple': return 'border-purple-500 bg-purple-500/10';
+    case 'silver': return 'border-gray-300 bg-gray-300/10';
+    case 'bronze': return 'border-amber-700 bg-amber-700/10';
+    case 'crimson': return 'border-rose-600 bg-rose-600/10';
+    case 'none': return 'border-white/20 bg-white/5';
+    case 'neutral': return 'border-white/20 bg-white/5';
+    default: return 'border-white/20 bg-white/5';
+  }
+};
+

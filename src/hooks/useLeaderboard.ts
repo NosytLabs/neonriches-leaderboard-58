@@ -9,8 +9,9 @@ export const useLeaderboard = () => {
   const [filter, setFilter] = useState<LeaderboardFilter>({
     team: 'all',
     tier: 'all',
-    sort: 'rank',
-    timeframe: 'all'
+    timeframe: 'all',
+    // Remove 'sort' property as it doesn't exist in LeaderboardFilter
+    sortBy: 'rank'
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
