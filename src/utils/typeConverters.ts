@@ -3,7 +3,7 @@
  * Utility functions for type conversion and validation
  */
 
-import { TeamColor } from '@/types/team';
+import { TeamColor } from '@/types/mockery-types';
 
 /**
  * Convert a string to a valid TeamColor or return a default value

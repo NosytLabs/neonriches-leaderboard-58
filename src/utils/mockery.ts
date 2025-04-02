@@ -1,105 +1,131 @@
 
 import { MockeryAction } from '@/types/mockery-types';
-import { convertLegacyMockeryAction } from './mockeryConverter';
+import { Egg, Tomato, Flame, Heart, ThumbsDown, Laugh, Skull, Crown } from 'lucide-react';
 
-/**
- * Get display name for mockery action
- */
-export const getMockeryActionName = (action: string): string => {
-  // Normalize the action using the converter
-  const normalizedAction = convertLegacyMockeryAction(action);
-  
-  const actionNames: Record<MockeryAction, string> = {
-    'tomato': 'Throw Tomatoes',
-    'egg': 'Throw Eggs',
-    'putridEgg': 'Throw Putrid Eggs',
-    'taunt': 'Taunt',
-    'shame': 'Public Shame',
-    'jester': 'Make a Jester',
-    'mock': 'Mock',
-    'challenge': 'Challenge',
-    'joust': 'Challenge to a Joust',
-    'duel': 'Challenge to a Duel',
-    'crown': 'Crown',
-    'stocks': 'Put in Stocks',
-    'silence': 'Silence',
-    'courtJester': 'Appoint as Court Jester',
-    'smokeBomb': 'Throw Smoke Bomb',
-    'protection': 'Grant Protection',
-    'thumbsDown': 'Thumbs Down',
-    'laugh': 'Laugh At',
-    'fish': 'Slap with Fish'
-  };
-
-  return actionNames[normalizedAction] || 'Unknown Action';
+// Export the mockery name getter function
+export const getMockeryName = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomato':
+      return 'Throw Tomato';
+    case 'egg':
+      return 'Throw Egg';
+    case 'rotten_egg':
+      return 'Throw Rotten Egg';
+    case 'flame':
+      return 'Roast Publicly';
+    case 'heart':
+      return 'Love Bombing';
+    case 'thumbs_down':
+      return 'Disapproval';
+    case 'laugh':
+      return 'Public Ridicule';
+    case 'skull':
+      return 'Death Stare';
+    case 'crown':
+      return 'Royal Mockery';
+    default:
+      return 'Unknown Action';
+  }
 };
 
-/**
- * Get cost for mockery action
- */
-export const getMockeryActionCost = (action: string): number => {
-  // Normalize the action using the converter
-  const normalizedAction = convertLegacyMockeryAction(action);
-  
-  const actionCosts: Record<MockeryAction, number> = {
-    'tomato': 50,
-    'egg': 100,
-    'putridEgg': 150,
-    'taunt': 25,
-    'shame': 250,
-    'jester': 300,
-    'mock': 75,
-    'challenge': 200,
-    'joust': 500,
-    'duel': 750,
-    'crown': 1000,
-    'stocks': 400,
-    'silence': 350,
-    'courtJester': 850,
-    'smokeBomb': 200,
-    'protection': 500,
-    'thumbsDown': 50,
-    'laugh': 25,
-    'fish': 150
-  };
-
-  return actionCosts[normalizedAction] || 100;
+// Export the mockery description getter function
+export const getMockeryDescription = (action: MockeryAction): string => {
+  switch (action) {
+    case 'tomato':
+      return 'Throw a ripe tomato at this user. Messy but harmless.';
+    case 'egg':
+      return 'Throw an egg at this user. A classic mockery move.';
+    case 'rotten_egg':
+      return 'Throw a rotten egg. The smell will linger for days.';
+    case 'flame':
+      return 'Publicly roast this user with a scathing critique.';
+    case 'heart':
+      return 'Overwhelm with fake affection to create confusion.';
+    case 'thumbs_down':
+      return 'Show your strong disapproval for this user.';
+    case 'laugh':
+      return 'Subject this user to public ridicule.';
+    case 'skull':
+      return 'Give this user the death stare. Intimidating.';
+    case 'crown':
+      return 'The ultimate royal mockery. Reserved for the most deserving.';
+    default:
+      return 'No description available for this action.';
+  }
 };
 
-/**
- * Get color for mockery action
- */
-export const getMockeryActionColor = (action: string): string => {
-  // Normalize the action using the converter
-  const normalizedAction = convertLegacyMockeryAction(action);
-  
-  const actionColors: Record<MockeryAction, string> = {
-    'tomato': 'red',
-    'egg': 'yellow',
-    'putridEgg': 'green',
-    'taunt': 'blue',
-    'shame': 'purple',
-    'jester': 'orange',
-    'mock': 'pink',
-    'challenge': 'teal',
-    'joust': 'indigo',
-    'duel': 'crimson',
-    'crown': 'gold',
-    'stocks': 'brown',
-    'silence': 'gray',
-    'courtJester': 'purple',
-    'smokeBomb': 'slate',
-    'protection': 'cyan',
-    'thumbsDown': 'red',
-    'laugh': 'amber',
-    'fish': 'blue'
-  };
+// Export mockery icon getter function
+export const getMockeryActionIcon = (action: MockeryAction) => {
+  switch (action) {
+    case 'tomato':
+      return Tomato;
+    case 'egg':
+      return Egg;
+    case 'rotten_egg':
+      return Egg;
+    case 'flame':
+      return Flame;
+    case 'heart':
+      return Heart;
+    case 'thumbs_down':
+      return ThumbsDown;
+    case 'laugh':
+      return Laugh;
+    case 'skull':
+      return Skull;
+    case 'crown':
+      return Crown;
+    default:
+      return Laugh;
+  }
+};
 
-  return actionColors[normalizedAction] || 'gray';
+// Export mockery tier getter function
+export const getMockeryTier = (action: MockeryAction): string => {
+  switch (action) {
+    case 'crown':
+      return 'legendary';
+    case 'skull':
+      return 'epic';
+    case 'flame':
+    case 'rotten_egg':
+      return 'rare';
+    case 'laugh':
+    case 'thumbs_down':
+    case 'heart':
+      return 'uncommon';
+    case 'tomato':
+    case 'egg':
+    default:
+      return 'common';
+  }
+};
+
+// Export mockery cost function
+export const getMockeryCost = (action: MockeryAction): number => {
+  switch (action) {
+    case 'crown':
+      return 500;
+    case 'skull':
+      return 250;
+    case 'flame':
+    case 'rotten_egg':
+      return 100;
+    case 'laugh':
+    case 'thumbs_down':
+    case 'heart':
+      return 50;
+    case 'tomato':
+    case 'egg':
+    default:
+      return 10;
+  }
 };
 
 export default {
-  getMockeryActionName,
-  getMockeryActionCost,
-  getMockeryActionColor
+  getMockeryName,
+  getMockeryDescription,
+  getMockeryActionIcon,
+  getMockeryTier,
+  getMockeryCost
 };

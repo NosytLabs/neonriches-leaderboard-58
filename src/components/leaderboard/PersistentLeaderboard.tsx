@@ -1,11 +1,12 @@
+
 import { useState, useEffect } from 'react';
 import { useLeaderboard } from '@/hooks/useLeaderboard';
 import LeaderboardList from './LeaderboardList';
-import { LeaderboardFilter, LeaderboardUser } from '@/types/leaderboard';
+import { LeaderboardFilter } from '@/types/leaderboard';
 import { Loader } from 'lucide-react';
 
 const PersistentLeaderboard = () => {
-  const [filter, setFilter] = useState<LeaderboardFilter>({
+  const [filter, setFilter] = useState<Partial<LeaderboardFilter>>({
     tier: undefined,
     sortBy: 'totalSpent',
     team: undefined,
@@ -15,8 +16,14 @@ const PersistentLeaderboard = () => {
     limit: 10
   });
   
-  const { users, loading, error } = useLeaderboard(filter);
+  const { users, loading, error } = useLeaderboard(filter as LeaderboardFilter);
   const [errorMessage, setErrorMessage] = useState('');
+  
+  useEffect(() => {
+    if (error) {
+      setErrorMessage(error);
+    }
+  }, [error]);
   
   return (
     <div className="relative">

@@ -1,6 +1,13 @@
 
 import { AuthState, AuthAction } from './types';
 
+export const initialState: AuthState = {
+  user: null,
+  isAuthenticated: false,
+  isLoading: false,
+  error: null
+};
+
 export const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
     case 'LOGIN_START':
@@ -64,3 +71,6 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
       return state;
   }
 };
+
+// Add default export for backward compatibility
+export default authReducer;

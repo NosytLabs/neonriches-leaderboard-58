@@ -1,8 +1,8 @@
+
 import { useState } from 'react';
 import { useToast } from './use-toast';
 import { useAuth } from './useAuth';
-// Fix imports to use available modules
-import useSound from './useSound';
+import { useSound } from './sounds/use-sound';
 import { formatCurrency } from '@/utils/formatters';
 
 interface AscensionResult {
@@ -15,7 +15,7 @@ const useQuickAscension = (): [(amount: number) => Promise<AscensionResult>, boo
   const { user, updateUserProfile } = useAuth();
   const { toast } = useToast();
   const [isAscending, setIsAscending] = useState(false);
-  const playSound = useSound();
+  const sound = useSound();
 
   const quickAscend = async (amount: number): Promise<AscensionResult> => {
     if (!user) {
@@ -59,7 +59,7 @@ const useQuickAscension = (): [(amount: number) => Promise<AscensionResult>, boo
       const newBalance = user.walletBalance - amount;
 
       // Play sound
-      playSound('coinDrop', { volume: 0.5 });
+      sound.playSound('coinDrop', { volume: 0.5 });
 
       // Update user profile
       const success = await updateUserProfile({ walletBalance: newBalance });
@@ -70,7 +70,7 @@ const useQuickAscension = (): [(amount: number) => Promise<AscensionResult>, boo
           description: 'There was an error during the ascension process.',
           variant: 'destructive',
         });
-        playSound('error', { volume: 0.5 });
+        sound.playSound('error', { volume: 0.5 });
         return { success: false, message: 'Ascension failed' };
       }
 
@@ -79,7 +79,7 @@ const useQuickAscension = (): [(amount: number) => Promise<AscensionResult>, boo
         description: `You have ascended for ${formatCurrency(amount)}!`,
       });
 
-      playSound('success', { volume: 0.5 });
+      sound.playSound('success', { volume: 0.5 });
 
       return { success: true, message: 'Ascension successful', newBalance: newBalance };
     } catch (error: any) {
@@ -89,7 +89,7 @@ const useQuickAscension = (): [(amount: number) => Promise<AscensionResult>, boo
         description: error.message || 'Failed to ascend. Please try again.',
         variant: 'destructive',
       });
-      playSound('error', { volume: 0.5 });
+      sound.playSound('error', { volume: 0.5 });
       return { success: false, message: 'Ascension failed' };
     } finally {
       setIsAscending(false);

@@ -1,50 +1,34 @@
 
-/**
- * This file provides alias exports to handle case-sensitivity issues in imports
- * and provides safe versions of commonly used imports that may have casing conflicts
- */
+// This file is used to re-export components with consistent casing to avoid errors
 
-// Badge component export (handles badge.tsx vs Badge.tsx casing issues)
-// Use explicit path to avoid casing issues
-import { Badge } from '@/components/ui/badge'; // Use lowercase to ensure compatibility
+// UI Components with proper casing
+export { Badge } from "@/components/ui/badge";
+export { Button } from "@/components/ui/button";
+export { Input } from "@/components/ui/input";
+export { Label } from "@/components/ui/label";
+export { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+export { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+export { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+export { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+export { Switch } from "@/components/ui/switch";
+export { Skeleton } from "@/components/ui/skeleton";
+export { Separator } from "@/components/ui/separator";
 
-// Import Shell and UIShell with casing that works cross-platform
-import ShellComponent from '@/components/Shell'; // Use correct case in import
-import UIShellComponent from '@/components/ui/Shell'; // Use correct case in import
+// Hooks
+export { useToast, useToastContext } from "@/hooks/use-toast";
+export { useAuth } from "@/hooks/useAuth";
+export { useSound } from "@/hooks/sounds/use-sound";
+export { useLeaderboard } from "@/hooks/useLeaderboard";
 
-// Re-export with consistent names
-export const Shell = ShellComponent;
-export const UIShell = UIShellComponent;
-export { Badge };
+// Utils
+export { cn } from "@/lib/utils";
+export { toTeamColor } from "@/utils/typeConverters";
+export { formatCurrency, formatDate } from "@/utils/formatters";
+export { getMockeryName, getMockeryDescription, getMockeryActionIcon, getMockeryTier, getMockeryCost } from "@/utils/mockery";
 
-// Import teamService and re-export it with proper casing
-import teamServiceModule from '@/services/TeamService'; // Use correct case in import
-
-// Re-export the service
-export const teamService = teamServiceModule;
-
-// Utility function to safely get required exports from teamService to handle missing exports
-export const getTeams = () => {
-  if (teamService && typeof teamService.getAllTeams === 'function') {
-    return teamService.getAllTeams();
-  }
-  return [];
-};
-
-export const getTeamById = (id: string) => {
-  if (teamService && typeof teamService.getTeamById === 'function') {
-    return teamService.getTeamById(id);
-  }
-  return null;
-};
-
-export const getTeamByColor = (color: string) => {
-  if (teamService && typeof teamService.getTeamByColor === 'function') {
-    return teamService.getTeamByColor(color);
-  }
-  return null;
-};
-
-// Re-export TeamColor type
-export type { TeamColor } from '@/types/team';
-export type { MockeryAction } from '@/types/mockery-types';
+// Types
+export type { TeamColor, UserTier, MockeryAction, MockeryTier } from "@/types/mockery-types";
+export type { LeaderboardUser, LeaderboardFilter } from "@/types/leaderboard";
+export type { UserProfile } from "@/types/user-consolidated";
