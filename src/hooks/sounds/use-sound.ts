@@ -1,51 +1,55 @@
 
 import { useCallback } from 'react';
+import { SoundType, SoundOptions, UseSoundHook } from '@/types/sound-types';
+import { useSoundsConfig } from './use-sounds-config';
 
-interface SoundOptions {
-  volume?: number;
-  playbackRate?: number;
-  interrupt?: boolean;
-  soundEnabled?: boolean;
-}
+export const useSound = (): UseSoundHook => {
+  const { soundConfig, toggleSounds, toggleMuted, setVolume } = useSoundsConfig();
 
-interface UseSoundReturn {
-  play: (options?: SoundOptions) => void;
-  stop: () => void;
-  pause: () => void;
-  isPlaying: boolean;
-  duration: number;
-}
+  const playSound = useCallback((type: SoundType, options?: SoundOptions) => {
+    console.log(`Playing sound: ${type} with options:`, options);
+    // Actual sound implementation would go here
+  }, []);
 
-/**
- * Hook for playing sounds
- * @param url URL of the sound file to play
- * @param options Sound playback options
- */
-export const useSound = (
-  url: string,
-  options: SoundOptions = {}
-): UseSoundReturn => {
-  // Mock implementation
-  const play = useCallback((options?: SoundOptions) => {
-    console.log(`Playing sound: ${url}`, options);
-    // In a real implementation, we would play the sound here
-  }, [url]);
-  
-  const stop = useCallback(() => {
-    console.log(`Stopping sound: ${url}`);
-    // In a real implementation, we would stop the sound here
-  }, [url]);
-  
-  const pause = useCallback(() => {
-    console.log(`Pausing sound: ${url}`);
-    // In a real implementation, we would pause the sound here
-  }, [url]);
-  
+  const stopSound = useCallback((type?: SoundType) => {
+    console.log(`Stopping sound: ${type || 'all'}`);
+    // Actual sound stopping implementation would go here
+  }, []);
+
+  const pauseSound = useCallback((type?: SoundType) => {
+    console.log(`Pausing sound: ${type || 'all'}`);
+    // Pause implementation
+  }, []);
+
+  const resumeSound = useCallback((type?: SoundType) => {
+    console.log(`Resuming sound: ${type || 'all'}`);
+    // Resume implementation
+  }, []);
+
+  const isPlaying = useCallback((type: SoundType) => {
+    // Mock implementation
+    return false;
+  }, []);
+
+  const play = useCallback((type: SoundType, options?: SoundOptions) => {
+    playSound(type, options);
+  }, [playSound]);
+
   return {
+    playSound,
+    stopSound,
+    pauseSound,
+    resumeSound,
+    isPlaying,
     play,
-    stop,
-    pause,
-    isPlaying: false,
-    duration: 0
+    isSoundEnabled: soundConfig?.enabled || true,
+    currentVolume: soundConfig?.volume || 1.0,
+    toggleSounds,
+    toggleMuted,
+    setVolume,
+    soundConfig
   };
 };
+
+// Also export default as a function that returns the hook result
+export default useSound;

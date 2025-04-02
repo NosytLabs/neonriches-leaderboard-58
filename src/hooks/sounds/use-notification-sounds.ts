@@ -27,13 +27,13 @@ const useNotificationSounds = (): UseNotificationSoundsReturn => {
   }, [playSoundFn]);
   
   const mute = useCallback(() => {
-    if (soundConfig.muted === false) {
+    if (soundConfig?.muted === false) {
       toggleMuted();
     }
   }, [toggleMuted, soundConfig?.muted]);
   
   const unmute = useCallback(() => {
-    if (soundConfig.muted === true) {
+    if (soundConfig?.muted === true) {
       toggleMuted();
     }
   }, [toggleMuted, soundConfig?.muted]);

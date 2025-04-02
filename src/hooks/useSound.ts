@@ -1,5 +1,6 @@
 
 import { useCallback } from 'react';
+import { useSound as useBaseSound } from './sounds/use-sound';
 
 export type SoundType = 
   | 'coin' 
@@ -54,33 +55,22 @@ export interface SoundHook {
 }
 
 export const useSound = (): SoundHook => {
-  const playSound = useCallback((type: SoundType, options?: SoundOptions) => {
-    console.log(`Playing sound: ${type} with options:`, options);
-    // Actual sound implementation would go here
-  }, []);
-
-  const stopSound = useCallback((type?: SoundType) => {
-    console.log(`Stopping sound: ${type || 'all'}`);
-    // Actual sound stopping implementation would go here
-  }, []);
-
-  const play = useCallback((type: SoundType, options?: SoundOptions) => {
-    playSound(type, options);
-  }, [playSound]);
-
+  // Use the base sound hook
+  const baseSound = useBaseSound();
+  
+  // Forward the methods
   return {
-    playSound,
-    stopSound,
-    play,
-    isSoundEnabled: true,
-    currentVolume: 1.0
+    playSound: baseSound.playSound,
+    stopSound: baseSound.stopSound,
+    play: baseSound.play,
+    isSoundEnabled: baseSound.isSoundEnabled,
+    currentVolume: baseSound.currentVolume
   };
 };
 
 // Also export default as a function that returns the hook result
-const defaultUseSound = (): SoundFunction => {
-  const { play } = useSound();
-  return play;
+const defaultUseSound = (): SoundHook => {
+  return useSound();
 };
 
 export default defaultUseSound;

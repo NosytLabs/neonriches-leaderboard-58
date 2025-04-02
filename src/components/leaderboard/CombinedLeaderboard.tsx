@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMockLeaderboard } from '@/hooks/useMockLeaderboard';
-import { useAuth } from '@/hooks/useAuth';
+import useAuth from '@/hooks/useAuth';
 import { LeaderboardUser } from '@/types/leaderboard';
 import { MockeryAction, TeamColor } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
