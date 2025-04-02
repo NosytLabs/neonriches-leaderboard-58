@@ -1,95 +1,44 @@
 
-import {
-  Toast,
-  ToastActionElement,
-  ToastProps,
-} from "@/components/ui/toast";
-import { ReactNode } from "react";
+import { useState } from 'react';
 
-import {
-  useToast as useToastOriginal,
-} from "@/components/ui/use-toast";
+interface Toast {
+  id: string;
+  title?: string;
+  description?: string;
+  variant?: 'default' | 'destructive' | 'success';
+}
 
-type ExtendedToastProps = Omit<ToastProps, 'title' | 'description'> & {
-  title?: ReactNode;
-  description?: ReactNode;
-  variant?: 'default' | 'destructive' | 'success' | 'outline' | 'secondary' | 'royal';
+interface ToastHook {
+  toast: (props: Omit<Toast, 'id'>) => void;
+  toasts: Toast[];
+  dismiss: (id: string) => void;
+  dismissAll: () => void;
+}
+
+export const useToast = (): ToastHook => {
+  const [toasts, setToasts] = useState<Toast[]>([]);
+
+  const toast = (props: Omit<Toast, 'id'>) => {
+    const id = Math.random().toString(36).slice(2, 9);
+    const newToast: Toast = { id, ...props };
+    
+    setToasts((prevToasts) => [...prevToasts, newToast]);
+
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => {
+      dismiss(id);
+    }, 5000);
+
+    return id;
+  };
+
+  const dismiss = (id: string) => {
+    setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
+  };
+
+  const dismissAll = () => {
+    setToasts([]);
+  };
+
+  return { toast, toasts, dismiss, dismissAll };
 };
-
-export const useToast = () => {
-  const { toast: originalToast, ...rest } = useToastOriginal();
-  
-  // Create wrapped functions for common toast types
-  const toast = (props: ExtendedToastProps) => {
-    return originalToast(props as any);
-  };
-
-  const default_toast = (props: Omit<ExtendedToastProps, 'variant'>) => {
-    return originalToast({
-      ...props,
-      variant: 'default',
-    } as any);
-  };
-
-  const success = (props: Omit<ExtendedToastProps, 'variant'>) => {
-    return originalToast({
-      ...props,
-      variant: 'success',
-    } as any);
-  };
-
-  const error = (props: Omit<ExtendedToastProps, 'variant'>) => {
-    return originalToast({
-      ...props,
-      variant: 'destructive',
-    } as any);
-  };
-
-  const warning = (props: Omit<ExtendedToastProps, 'variant'>) => {
-    return originalToast({
-      ...props,
-      variant: 'outline',
-    } as any);
-  };
-
-  const info = (props: Omit<ExtendedToastProps, 'variant'>) => {
-    return originalToast({
-      ...props,
-      variant: 'secondary',
-    } as any);
-  };
-
-  const royal = (props: Omit<ExtendedToastProps, 'variant'>) => {
-    return originalToast({
-      ...props,
-      variant: 'royal',
-    } as any);
-  };
-
-  // Add missing methods that are referenced in other components
-  const stopSound = () => {
-    // Placeholder function to prevent the TS error
-    console.log('stopSound called (placeholder)');
-  };
-  
-  const playSuccess = () => {
-    // Placeholder function to prevent the TS error
-    console.log('playSuccess called (placeholder)');
-  };
-
-  return {
-    ...rest,
-    toast,
-    default: default_toast,
-    success,
-    error,
-    warning,
-    info,
-    royal,
-    stopSound,
-    playSuccess,
-  };
-};
-
-export type { ExtendedToastProps };
-export { toast } from "@/components/ui/use-toast";

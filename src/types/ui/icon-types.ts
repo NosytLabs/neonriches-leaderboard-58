@@ -1,95 +1,39 @@
 
-import { ReactNode } from 'react';
+import { LucideProps } from 'lucide-react';
+import { ElementType } from 'react';
 
-// Define the standard icon sizes
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | number;
+export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+export type IconColor = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'muted' | 'royal' | 'default';
+export type IconStyle = 'default' | 'solid' | 'outline' | 'duo';
 
-// Define the standard icon colors
-export type IconColor = 
-  | 'default' 
-  | 'primary' 
-  | 'secondary' 
-  | 'muted' 
-  | 'accent' 
-  | 'destructive' 
-  | 'gold' 
-  | 'white' 
-  | 'black' 
-  | string;
+export interface IconProps extends LucideProps {
+  name?: string;
+  size?: IconSize | number;
+  color?: IconColor | string;
+  className?: string;
+}
 
-// Define the standard icon styles
-export type IconStyle = 'default' | 'medieval' | 'outline' | 'filled' | 'duotone';
+export interface LucideIcon extends ElementType<LucideProps> {}
 
-// Define the icon name type for medieval icons
-export type MedievalIconName = 
-  | 'crown'
-  | 'sword'
-  | 'shield'
-  | 'scroll'
-  | 'potion'
-  | 'key'
-  | 'chest'
-  | 'coin'
-  | 'gem'
-  | 'throne'
-  | 'castle'
-  | 'dragon'
-  | 'knight'
-  | 'goblet'
-  | 'banner'
-  | 'helmet'
-  | 'quill'
-  | 'book'
-  | 'map'
-  | 'compass'
-  | string;
-
-// Define the icon name type for regular icons
-export type IconName = string;
-
-// Define the icon color type for medieval icons
-export type MedievalIconColor = IconColor;
-
-// Export the size and color maps for reference
-export const iconSizeMap = {
+export const iconSizeMap: Record<IconSize, string> = {
   'xs': 'h-3 w-3',
   'sm': 'h-4 w-4',
-  'md': 'h-6 w-6',
-  'lg': 'h-8 w-8',
-  'xl': 'h-10 w-10',
-  '2xl': 'h-12 w-12',
+  'md': 'h-5 w-5',
+  'lg': 'h-6 w-6',
+  'xl': 'h-8 w-8',
+  '2xl': 'h-10 w-10',
+  '3xl': 'h-12 w-12',
+  '4xl': 'h-16 w-16'
 };
 
-export const iconColorMap = {
-  'default': 'text-foreground',
+export const iconColorMap: Record<IconColor, string> = {
   'primary': 'text-primary',
   'secondary': 'text-secondary',
+  'success': 'text-green-500',
+  'danger': 'text-red-500',
+  'warning': 'text-amber-500',
+  'info': 'text-blue-500',
   'muted': 'text-muted-foreground',
-  'accent': 'text-accent',
-  'destructive': 'text-destructive',
-  'gold': 'text-royal-gold',
-  'white': 'text-white',
-  'black': 'text-black',
+  'royal': 'text-royal-gold',
+  'default': 'text-foreground'
 };
-
-// Props for the Icon component
-export interface IconProps {
-  icon?: string;
-  name?: string;
-  size?: IconSize;
-  color?: IconColor;
-  className?: string;
-  animated?: boolean;
-  style?: IconStyle | React.CSSProperties;
-  [key: string]: any;
-}
-
-// Props for the MedievalIcon component
-export interface MedievalIconProps {
-  name: MedievalIconName;
-  size?: IconSize;
-  color?: MedievalIconColor;
-  className?: string;
-  animated?: boolean;
-  [key: string]: any;
-}

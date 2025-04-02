@@ -1,58 +1,11 @@
 
-import { TeamColor, UserTier } from './mockery-types';
-
-// Base user profile interface
-export interface UserProfile {
-  id: string;
-  username: string;
-  displayName: string;
-  email?: string;
-  profileImage?: string;
-  bio?: string;
-  joinedDate: string;
-  isVerified?: boolean;
-  team: TeamColor | null;
-  tier: UserTier;
-  rank: number;
-  previousRank?: number; // Make this optional to match user-consolidated
-  totalSpent: number;
-  amountSpent: number;
-  walletBalance: number;
-  spendStreak?: number;
-  isProtected?: boolean;
-  isVIP?: boolean;
-  isFounder?: boolean;
-  settings?: UserSettings;
-  cosmetics?: UserCosmetics;
-  following?: string[];
-  followers?: string[];
-  socialLinks?: SocialLink[];
-  profileBoosts?: ProfileBoost[];
-  certificateNFT?: {
-    mintAddress: string;
-    mintDate: string;
-  };
-  lastActive?: string;
-  gender?: Gender;
-  // Additional fields from errors
-  activeTitle?: string;
-  profileViews?: number;
-  profileClicks?: number;
-  purchasedFeatures?: string[];
-  subscription?: {
-    planId: string;
-    nextBillingDate: string;
-    status?: 'active' | 'cancelled' | 'paused';
-    tier?: string;
-  };
-  achievements?: any[];
-  badges?: string[];
-}
+import { TeamColor } from './mockery-types';
+import { SocialLink } from './cosmetics';
 
 export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'followers' | 'friends'; // Added 'friends' to match user-consolidated
+  profileVisibility: 'public' | 'private' | 'followers' | 'friends';
   allowProfileLinks: boolean;
-  theme: 'light' | 'dark' | 'system' | 'royal'; // Added 'royal' to match user-consolidated
+  theme: 'light' | 'dark' | 'system' | 'royal';
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
@@ -68,6 +21,22 @@ export interface UserSettings {
   teamNotifications?: boolean;
 }
 
+export interface ProfileBoost {
+  id: string;
+  type: string;
+  startDate: string;
+  endDate: string;
+  level: number;
+  isActive: boolean;
+  strength: number;
+  appliedBy: string;
+  name?: string;
+  description?: string;
+  duration?: number;
+  price?: number;
+  icon?: string;
+}
+
 export interface UserCosmetics {
   border: string[];
   color: string[];
@@ -78,10 +47,9 @@ export interface UserCosmetics {
   effect: string[];
   badge: string[];
   theme: string[];
-  [key: string]: string[] | string | undefined; // Add index signature to match cosmetics.ts
-  // Add compatibility fields
-  activeBorder?: string;
+  [key: string]: string[] | string | undefined;
   activeTitle?: string;
+  activeBorder?: string;
   activeBackground?: string;
   activeEffect?: string;
   activeColor?: string;
@@ -91,62 +59,38 @@ export interface UserCosmetics {
   activeTheme?: string;
 }
 
-export interface SocialLink {
-  id?: string; // Make id optional to match user-consolidated
-  platform: string;
-  url: string;
-  username?: string;
-  verified?: boolean;
-  clicks?: number;
-  title?: string;
-  label?: string;
-}
-
-export interface ProfileBoost {
+export interface UserProfile {
   id: string;
-  type: string;
-  startDate?: string; // Make optional to match boost.ts
-  endDate?: string; // Make optional to match boost.ts
-  level: number;
-  isActive: boolean;
-  strength: number;
-  appliedBy: string;
-  // Add fields from boost.ts for compatibility
-  name?: string;
-  description?: string;
-  duration?: number;
-  price?: number;
-  icon?: string;
+  username: string;
+  displayName?: string;
+  email?: string;
+  profileImage: string;
+  bio?: string;
+  joinedDate: string;
+  joinDate?: string;
+  createdAt?: string;
+  isVerified?: boolean;
+  isProtected?: boolean;
+  isFounder?: boolean;
+  isVIP?: boolean;
+  isAdmin?: boolean;
+  team: TeamColor;
+  tier: string;
+  rank: number;
+  previousRank: number;
+  totalSpent?: number;
+  amountSpent: number;
+  walletBalance?: number;
+  settings?: UserSettings;
+  cosmetics?: UserCosmetics;
+  following?: string[];
+  followers?: string[];
+  achievements?: string[];
+  badges?: string[];
+  profileBoosts?: ProfileBoost[];
+  socialLinks?: SocialLink[];
+  spendStreak?: number;
+  gender?: string;
 }
 
-// Interface for profile images
-export interface ProfileImage {
-  id: string;
-  url: string;
-  isPrimary: boolean;
-  caption?: string;
-  type?: string;
-}
-
-// Interface for profile links
-export interface ProfileLink {
-  id: string;
-  platform: string;
-  url: string;
-  title?: string;
-  icon?: string;
-  label?: string;
-  clicks?: number;
-}
-
-// Type alias for a simplified User type that matches UserProfile
 export type User = UserProfile;
-
-// Explicitly export TeamType to fix errors
-export type TeamType = TeamColor;
-
-// Re-export TeamColor and UserTier for easier access
-export type { TeamColor, UserTier };
-
-// Gender type to fix type conversion errors
-export type Gender = 'male' | 'female' | 'other' | 'none' | 'king' | 'queen' | 'jester' | 'noble' | 'prefer-not-to-say';

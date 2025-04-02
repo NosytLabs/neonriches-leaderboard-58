@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { useAuth } from '@/contexts/auth';
+import useAuth from '@/hooks/useAuth';
 import { formatCurrency } from '@/utils/formatters';
 import { MenuIcon, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';

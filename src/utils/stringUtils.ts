@@ -1,36 +1,64 @@
 
 /**
- * String utility functions
- */
-
-/**
- * Gets initials from a string (usually a name)
- * @param name The name to extract initials from
- * @param maxLength Maximum number of initials to return
- * @returns The initials
- */
-export const getInitials = (name: string, maxLength = 2): string => {
-  if (!name) return '';
-  
-  return name
-    .split(' ')
-    .map(part => part.charAt(0).toUpperCase())
-    .slice(0, maxLength)
-    .join('');
-};
-
-/**
- * Safely converts a value to string
- * @param value The value to convert
- * @returns The string representation
+ * Safely converts any value to a string
+ * @param value The value to convert to a string
+ * @returns The string representation of the value
  */
 export const safeToString = (value: any): string => {
-  if (value === null || value === undefined) return '';
+  if (value === null || value === undefined) {
+    return '';
+  }
+  
+  if (typeof value === 'object') {
+    try {
+      return JSON.stringify(value);
+    } catch (e) {
+      return String(value);
+    }
+  }
+  
   return String(value);
 };
 
-// Export functions individually and as default object
-export default {
-  getInitials,
-  safeToString
+/**
+ * Truncates a string to a specified length
+ * @param str The string to truncate
+ * @param maxLength The maximum length of the string
+ * @param ellipsis Whether to add ellipsis at the end
+ * @returns The truncated string
+ */
+export const truncateString = (
+  str: string, 
+  maxLength: number = 50, 
+  ellipsis: boolean = true
+): string => {
+  if (!str || str.length <= maxLength) {
+    return str;
+  }
+  
+  return ellipsis 
+    ? `${str.slice(0, maxLength)}...` 
+    : str.slice(0, maxLength);
+};
+
+/**
+ * Ensures a string starts with a specific prefix
+ * @param str The string to check
+ * @param prefix The prefix to ensure
+ * @returns The string with the prefix
+ */
+export const ensurePrefix = (str: string, prefix: string): string => {
+  if (!str) return prefix;
+  if (str.startsWith(prefix)) return str;
+  return `${prefix}${str}`;
+};
+
+/**
+ * Strips HTML tags from a string
+ * @param html The string with HTML to strip
+ * @returns The string without HTML tags
+ */
+export const stripHtml = (html: string): string => {
+  if (!html) return '';
+  return html.replace(/<[^>]*>?/gm, '');
 };

@@ -1,62 +1,54 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import { MedievalIconProps } from '@/types/ui/icon-types';
+import { 
+  Crown, 
+  Sword, 
+  Shield, 
+  Scroll, 
+  Key, 
+  Flag, 
+  Gem, 
+  Trophy,
+  Castle 
+} from 'lucide-react';
 
-const MedievalIcon: React.FC<MedievalIconProps> = ({
-  name,
-  size = 'md',
-  color = 'default',
-  className,
-  animated = false,
-  ...props
+interface MedievalIconProps {
+  name: string;
+  className?: string;
+  size?: number;
+}
+
+const MedievalIcon: React.FC<MedievalIconProps> = ({ 
+  name, 
+  className = "", 
+  size = 24 
 }) => {
-  // Map of size values to CSS classes
-  const sizeMap = {
-    'xs': 'h-3 w-3',
-    'sm': 'h-4 w-4',
-    'md': 'h-6 w-6',
-    'lg': 'h-8 w-8',
-    'xl': 'h-10 w-10',
-    '2xl': 'h-12 w-12',
+  const getIcon = () => {
+    switch (name.toLowerCase()) {
+      case 'crown':
+        return <Crown size={size} className={className} />;
+      case 'sword':
+        return <Sword size={size} className={className} />;
+      case 'shield':
+        return <Shield size={size} className={className} />;
+      case 'scroll':
+        return <Scroll size={size} className={className} />;
+      case 'key':
+        return <Key size={size} className={className} />;
+      case 'flag':
+        return <Flag size={size} className={className} />;
+      case 'gem':
+        return <Gem size={size} className={className} />;
+      case 'trophy':
+        return <Trophy size={size} className={className} />;
+      case 'castle':
+        return <Castle size={size} className={className} />;
+      default:
+        return <Crown size={size} className={className} />;
+    }
   };
 
-  // Map of color values to CSS classes
-  const colorMap = {
-    'default': 'text-foreground',
-    'primary': 'text-primary',
-    'secondary': 'text-secondary',
-    'muted': 'text-muted-foreground',
-    'accent': 'text-accent',
-    'destructive': 'text-destructive',
-    'gold': 'text-royal-gold',
-    'white': 'text-white',
-    'black': 'text-black',
-  };
-
-  // Determine the correct size and color classes
-  const sizeClass = sizeMap[size as keyof typeof sizeMap] || sizeMap.md;
-  const colorClass = colorMap[color as keyof typeof colorMap] || colorMap.default;
-  const animatedClass = animated ? 'animate-pulse' : '';
-
-  // Get the icon path
-  const iconPath = `/assets/icons/medieval/${name}.svg`;
-
-  return (
-    <span 
-      className={cn(
-        "inline-block medieval-icon", 
-        sizeClass, 
-        colorClass, 
-        animatedClass, 
-        className
-      )} 
-      {...props}
-    >
-      {/* Use an img tag for the medieval icon */}
-      <img src={iconPath} alt={`${name} icon`} className="w-full h-full" />
-    </span>
-  );
+  return getIcon();
 };
 
 export default MedievalIcon;

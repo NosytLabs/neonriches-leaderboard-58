@@ -1,68 +1,51 @@
 
-import { useCallback, useContext } from 'react';
-import { SoundType, SoundOptions } from '@/types/sound-types';
-import { SoundContext } from '@/contexts/sound';
+import { useCallback } from 'react';
 
-export interface UseSoundHook {
-  playSound: (type: SoundType, options?: SoundOptions) => void;
-  stopSound: (type?: SoundType) => void;
-  pauseSound: (type?: SoundType) => void;
-  resumeSound: (type?: SoundType) => void;
-  play: (type: SoundType, options?: SoundOptions) => void;
-  isMuted: boolean;
-  setMuted: (muted: boolean) => void;
-  volume: number;
-  setVolume: (volume: number) => void;
-  isPremium: boolean;
-  setPremium: (premium: boolean) => void;
-  isEnabled: boolean;
-  setEnabled: (enabled: boolean) => void;
+interface SoundOptions {
+  volume?: number;
+  playbackRate?: number;
+  interrupt?: boolean;
+  soundEnabled?: boolean;
 }
 
-// Main hook implementation
-export const useSound = (): UseSoundHook => {
-  const context = useContext(SoundContext);
+interface UseSoundReturn {
+  play: (options?: SoundOptions) => void;
+  stop: () => void;
+  pause: () => void;
+  isPlaying: boolean;
+  duration: number;
+}
 
-  // Provide fallback if context is not available
-  if (!context) {
-    console.warn('SoundContext not found. Using fallback sound implementation.');
-    
-    const noopFn = () => {};
-    
-    return {
-      playSound: (type, options) => {
-        console.log(`[Sound Fallback] Playing sound: ${type}`, options);
-      },
-      stopSound: noopFn,
-      pauseSound: noopFn,
-      resumeSound: noopFn,
-      play: (type, options) => {
-        console.log(`[Sound Fallback] Playing sound: ${type}`, options);
-      },
-      isMuted: false,
-      setMuted: noopFn,
-      volume: 0.5,
-      setVolume: noopFn,
-      isPremium: false,
-      setPremium: noopFn,
-      isEnabled: true,
-      setEnabled: noopFn
-    };
-  }
-
-  // Add the play alias for playSound
-  const play = useCallback((type: SoundType, options?: SoundOptions) => {
-    context.playSound(type, options);
-  }, [context]);
-
+/**
+ * Hook for playing sounds
+ * @param url URL of the sound file to play
+ * @param options Sound playback options
+ */
+export const useSound = (
+  url: string,
+  options: SoundOptions = {}
+): UseSoundReturn => {
+  // Mock implementation
+  const play = useCallback((options?: SoundOptions) => {
+    console.log(`Playing sound: ${url}`, options);
+    // In a real implementation, we would play the sound here
+  }, [url]);
+  
+  const stop = useCallback(() => {
+    console.log(`Stopping sound: ${url}`);
+    // In a real implementation, we would stop the sound here
+  }, [url]);
+  
+  const pause = useCallback(() => {
+    console.log(`Pausing sound: ${url}`);
+    // In a real implementation, we would pause the sound here
+  }, [url]);
+  
   return {
-    ...context,
-    play
+    play,
+    stop,
+    pause,
+    isPlaying: false,
+    duration: 0
   };
 };
-
-// Default export as a function that returns just the play function
-export default function useDefaultSound(): (type: SoundType, options?: SoundOptions) => void {
-  const { play } = useSound();
-  return play;
-}
