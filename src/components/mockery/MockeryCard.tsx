@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,11 +10,10 @@ import { MockeryAction } from '@/types/mockery-types';
 
 interface MockeryCardProps {
   action: MockeryAction;
+  onClick?: () => void;
 }
 
-const MockeryCard: React.FC<MockeryCardProps> = ({ action }) => {
-  const navigate = useNavigate();
-  
+const MockeryCard: React.FC<MockeryCardProps> = ({ action, onClick }) => {
   return (
     <Card className="overflow-hidden">
       <CardHeader className="pb-2">
@@ -37,7 +35,7 @@ const MockeryCard: React.FC<MockeryCardProps> = ({ action }) => {
         <Button 
           variant="outline" 
           className="w-full" 
-          onClick={() => navigate(`/mockery/${action}`)}
+          onClick={onClick}
         >
           Select
         </Button>

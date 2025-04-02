@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Shell } from '@/components/ui/Shell';
 import { Separator } from '@/components/ui/separator';
 import MockeryCard from '@/components/mockery/MockeryCard';
@@ -8,6 +8,7 @@ import { MockeryAction } from '@/types/mockery-types';
 
 const MockeryPage = () => {
   const { action: routeAction } = useParams();
+  const navigate = useNavigate();
   
   const mockeryActions: MockeryAction[] = [
     'tomato',
@@ -41,7 +42,11 @@ const MockeryPage = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {mockeryActions.map(action => (
-            <MockeryCard key={action} action={action} />
+            <MockeryCard 
+              key={action} 
+              action={action} 
+              onClick={() => navigate(`/mockery/${action}`)}
+            />
           ))}
         </div>
       </div>
