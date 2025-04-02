@@ -1,3 +1,4 @@
+
 import { TeamColor } from './mockery-types';
 
 // Re-export TeamColor to make it available from this module

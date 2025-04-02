@@ -6,10 +6,12 @@ export type {
   MockeryAction, 
   MockeryTier, 
   MockeryResult,
-  MockeryEvent, // Correct export instead of MockeryEffect
+  MockeryEvent, 
   TeamColor,
   UserTier,
-  Gender
+  Gender,
+  LeaderboardFilter,
+  LeaderboardUser
 } from './mockery-types';
 
 // Export user-related types
@@ -20,7 +22,7 @@ export type {
   User,
   ProfileImage,
   ProfileLink,
-  SocialLink // Export SocialLink from user
+  SocialLink
 } from './user';
 
 // Re-export SocialLink from user-consolidated also
@@ -36,7 +38,7 @@ export type {
 // Export team types
 export type {
   TeamData,
-  TeamTheme, // Make sure this is exported from team.d.ts
+  TeamTheme,
   TeamStats,
   TeamBenefits,
   TeamInvite,
@@ -55,8 +57,8 @@ export type {
   Certificate,
   CertificateStyle,
   CertificateTeam,
-  CertificateType, // Add this export
-  CertificateStatus // Add this export
+  CertificateType,
+  CertificateStatus
 } from './certificates';
 
 // Export cosmetics

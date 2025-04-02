@@ -1,168 +1,116 @@
 
-// Team colors
-export type TeamColor = 
-  | 'red' 
-  | 'blue' 
-  | 'green' 
-  | 'gold' 
-  | 'purple' 
-  | 'neutral' 
-  | 'none'
-  | 'silver'
-  | 'bronze'
-  | 'crimson';
+// Define the available mockery actions
+export type MockeryAction = 
+  | 'tomato' 
+  | 'egg' 
+  | 'putridEgg' 
+  | 'rotten_egg' 
+  | 'crown' 
+  | 'thumbs_down' 
+  | 'thumbsDown'
+  | 'mock' 
+  | 'stocks' 
+  | 'jester' 
+  | 'courtJester' 
+  | 'silence' 
+  | 'taunt' 
+  | 'smokeBomb' 
+  | 'protection' 
+  | 'shame' 
+  | 'challenge' 
+  | 'joust' 
+  | 'duel'
+  | 'royal_decree'
+  | 'flame'
+  | 'heart'
+  | 'skull'
+  | 'laugh';
 
-// User tiers
-export type UserTier = 
-  | 'basic' 
-  | 'premium' 
-  | 'royal' 
-  | 'founder'
-  | 'free'
-  | 'pro'
-  | 'platinum'
-  | 'diamond'
-  | 'gold'
-  | 'silver'
-  | 'bronze'
-  | 'vip'
-  | 'whale'
-  | 'shark'
-  | 'dolphin'
-  | 'noble'
-  | 'standard'
-  | 'elite'
-  | 'legendary';
-
-// Mockery tiers
+// Define mockery tiers (rarity levels)
 export type MockeryTier = 
   | 'common' 
   | 'uncommon' 
   | 'rare' 
   | 'epic' 
   | 'legendary'
-  | 'royal'
-  | 'basic'
-  | 'premium'
-  | 'silver'
   | 'gold'
-  | 'bronze';
+  | 'silver'
+  | 'bronze'
+  | 'royal'
+  | 'noble';
 
-// Gender types
-export type Gender = 
-  | 'male' 
-  | 'female' 
-  | 'nonbinary' 
-  | 'other' 
-  | 'prefer-not-to-say'
-  | 'none';
-
-// Mockery actions
-export type MockeryAction = 
-  | 'tomato'
-  | 'egg'
-  | 'putridEgg'
-  | 'crown'
-  | 'thumbsDown'
-  | 'mock'
-  | 'stocks'
-  | 'jester'
-  | 'courtJester'
-  | 'silence'
-  | 'taunt'
-  | 'smokeBomb'
-  | 'protection'
-  | 'shame'
-  | 'challenge'
-  | 'joust'
-  | 'duel'
-  | 'royal_decree'
-  | 'flame'
-  | 'heart'
-  | 'skull'
-  | 'thumbs_down'
-  | 'laugh'
-  | 'rotten_egg';
-
-// Team data
-export interface TeamData {
-  color: TeamColor;
-  name: string;
-  ranking?: number;
-  memberCount?: number;
-  teamId?: string;
-}
-
-// Mockery user
-export interface MockeryUser {
-  id: string;
-  username: string;
-  displayName: string;
-  avatarUrl?: string;
-  profileImage?: string;
-  team?: TeamColor;
-  tier?: UserTier;
-  rank?: number;
-  mockedCount?: number;
-  isMockable?: boolean;
-  isProtected?: boolean;
-}
-
-// Mockery event
-export interface MockeryEvent {
-  id: string;
-  action: MockeryAction;
-  fromUserId: string;
-  fromUsername: string;
-  toUserId: string;
-  toUsername: string;
-  timestamp: string;
-  cost: number;
-  public: boolean;
-}
-
-// Mockery result
+// Define the result of a mockery action
 export interface MockeryResult {
   success: boolean;
   message: string;
   cost?: number;
-  actionType?: MockeryAction;
-  targetId?: string;
-  error?: string;
+  remainingBalance?: number;
+  target?: {
+    userId: string;
+    username: string;
+  };
+  action?: MockeryAction;
+  timestamp?: string;
 }
 
-// Leaderboard user
+// Define a mockery event that happened
+export interface MockeryEvent {
+  id: string;
+  action: MockeryAction;
+  tier: MockeryTier;
+  cost: number;
+  targetId: string;
+  targetUsername: string;
+  senderId: string;
+  senderUsername: string;
+  timestamp: string;
+  isPublic: boolean;
+  message?: string;
+}
+
+// Define team colors
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none';
+
+// Define user tiers
+export type UserTier = 'basic' | 'premium' | 'pro' | 'noble' | 'royal' | 'legendary';
+
+// Define gender for user profile
+export type Gender = 'male' | 'female' | 'other' | 'prefer_not_to_say';
+
+// Define leaderboard filter options
+export interface LeaderboardFilter {
+  limit: number;
+  page?: number;
+  team?: string;
+  tier?: string;
+  timeframe?: 'all' | 'week' | 'month' | 'year' | 'today' | 'all-time';
+  search?: string;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+  sort?: string; // Added for compatibility
+  period?: string; // Added for compatibility
+}
+
+// Define leaderboard user item
 export interface LeaderboardUser {
   id: string;
-  userId?: string;
+  userId: string;
   username: string;
   displayName: string;
   profileImage: string;
-  avatarUrl?: string;
-  totalSpent: number;
-  amountSpent: number;
   rank: number;
   previousRank: number;
+  tier: string;
   team: TeamColor | string;
-  tier: UserTier | string;
-  spendStreak?: number;
-  walletBalance?: number;
+  totalSpent: number;
+  amountSpent: number;
+  walletBalance: number;
+  spendStreak: number;
+  
+  // Add missing properties used in components
+  isVerified?: boolean;
+  isProtected?: boolean;
   rankChange?: number;
   spendChange?: number;
-  isProtected?: boolean;
-  isVerified?: boolean;
-}
-
-// Leaderboard filter
-export interface LeaderboardFilter {
-  timeframe: 'all' | 'week' | 'month' | 'year' | 'today' | 'all-time';
-  team: TeamColor | 'all' | string;
-  tier: string;
-  sortDirection: 'asc' | 'desc';
-  sortBy: 'totalSpent' | 'joinDate' | 'username' | 'rank' | 'spendStreak';
-  limit?: number;
-  page?: number;
-  sort?: string;
-  period?: string;
-  search?: string;
+  avatarUrl?: string;
 }

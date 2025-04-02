@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Shell } from '@/components/ui/Shell';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -9,7 +8,7 @@ import { LeaderboardUser } from '@/types/leaderboard';
 import LeaderboardList from '@/components/leaderboard/LeaderboardList';
 import { useToast } from '@/hooks/use-toast';
 import { toTeamColor } from '@/utils/teamUtils';
-import { useSoundEffect } from '@/hooks/useSoundEffect';
+import useSoundEffect from '@/hooks/useSoundEffect';
 import { useLeaderboard } from '@/hooks/useLeaderboard';
 import ShameModal from '@/components/leaderboard/ShameModal';
 import { UserProfile } from '@/types/user-consolidated'; 

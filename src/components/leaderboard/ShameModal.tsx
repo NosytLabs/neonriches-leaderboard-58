@@ -1,127 +1,117 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/Badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Laugh, Skull, Target, AlertTriangle } from 'lucide-react';
-import { LeaderboardUser } from '@/types/leaderboard';
+import { AlertTriangle, Flame } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
+import { getMockeryName, getMockeryDescription } from '@/utils/mockeryUtils';
 import { MockeryAction } from '@/types/mockery-types';
-import { getMockeryName, getMockeryDescription, getMockeryTier, getMockeryCost } from '@/utils/mockeryUtils';
-import { mockeryTierBadgeColors } from '@/utils/mockeryActionUtils';
 
-interface ShameModalProps {
+export interface ShameModalProps {
   isOpen: boolean;
   onClose: () => void;
-  target: LeaderboardUser | null;
-  onMockery: (action: MockeryAction) => void;
+  onConfirm: () => void;
+  targetUser?: {
+    userId: string;
+    username: string;
+    profileImage: string;
+    totalSpent: number;
+    rank: number;
+    team: string;
+    tier: string;
+    spendStreak: number;
+  };
+  shameType?: MockeryAction;
+  hasDiscount?: boolean;
+  userId?: string; // For backward compatibility
+  onComplete?: () => void;
 }
 
 const ShameModal: React.FC<ShameModalProps> = ({
   isOpen,
   onClose,
-  target,
-  onMockery
+  onConfirm,
+  targetUser,
+  shameType = 'mock',
+  hasDiscount = false,
+  onComplete
 }) => {
-  const [selectedAction, setSelectedAction] = useState<MockeryAction | null>(null);
-  
-  const mockeryActions: MockeryAction[] = [
-    'tomato',
-    'egg',
-    'crown',
-    'mock',
-    'laugh',
-    'shame',
-  ];
-  
-  const handleMockery = () => {
-    if (selectedAction && target) {
-      onMockery(selectedAction);
-      onClose();
+  const handleConfirm = () => {
+    onConfirm();
+    if (onComplete) {
+      onComplete();
     }
   };
-  
-  if (!target) return null;
+
+  if (!targetUser && isOpen) {
+    console.error('ShameModal: targetUser is required when modal is open');
+    return null;
+  }
   
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Skull className="h-5 w-5 text-royal-crimson" />
-            Mock User
+            <Flame className="text-red-500 h-5 w-5" />
+            <span>Confirm Mockery Action</span>
           </DialogTitle>
         </DialogHeader>
         
-        <div className="flex items-center p-3 rounded-lg bg-black/20 border border-white/10 mb-4">
-          <Avatar className="h-10 w-10 mr-3 border border-white/20">
-            <AvatarImage src={target.profileImage} alt={target.username} />
-            <AvatarFallback>{target.displayName?.charAt(0) || target.username.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div className="flex-1">
-            <p className="font-medium">{target.displayName || target.username}</p>
-            <p className="text-xs text-white/60">Rank #{target.rank} • ${target.totalSpent.toLocaleString()}</p>
-          </div>
-        </div>
-        
-        <div className="space-y-2 mb-4">
-          <h3 className="font-medium mb-2 flex items-center">
-            <Target className="h-4 w-4 mr-2 text-royal-crimson" />
-            Select Mockery
-          </h3>
-          <div className="grid grid-cols-2 gap-2">
-            {mockeryActions.map((action) => {
-              const tier = getMockeryTier(action);
-              const tierColorClass = mockeryTierBadgeColors[tier];
-              
-              return (
-                <div 
-                  key={action}
-                  className={`p-3 rounded-md border cursor-pointer transition-colors ${
-                    selectedAction === action 
-                      ? 'bg-royal-crimson/20 border-royal-crimson/40' 
-                      : 'bg-black/20 border-white/10 hover:bg-royal-crimson/10 hover:border-royal-crimson/20'
-                  }`}
-                  onClick={() => setSelectedAction(action)}
-                >
-                  <div className="flex items-center mb-2">
-                    <Laugh className="h-4 w-4 mr-2" />
-                    <p className="font-medium text-sm">{getMockeryName(action)}</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <Badge variant="outline" className={tierColorClass}>
-                      {tier}
-                    </Badge>
-                    <span className="text-sm font-medium">${getMockeryCost(action)}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        
-        {selectedAction && (
-          <div className="p-4 rounded-lg bg-black/20 border border-white/10 mb-4">
-            <h3 className="font-medium mb-2 flex items-center">
-              <AlertTriangle className="h-4 w-4 mr-2 text-yellow-500" />
-              Preview
-            </h3>
-            <p className="text-sm text-white/80">{getMockeryDescription(selectedAction)}</p>
-            <p className="text-xs text-white/60 mt-2">Cost: ${getMockeryCost(selectedAction)}</p>
+        {targetUser && (
+          <div className="py-4">
+            <div className="flex items-center gap-3 mb-4 p-3 rounded-lg bg-background/50">
+              <Avatar className="h-10 w-10 border-2 border-primary/20">
+                <AvatarImage src={targetUser.profileImage} alt={targetUser.username} />
+                <AvatarFallback>{targetUser.username.charAt(0).toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="font-semibold">{targetUser.username}</p>
+                <p className="text-sm text-muted-foreground">Rank #{targetUser.rank}</p>
+              </div>
+            </div>
+            
+            <div className="mb-4">
+              <h3 className="font-semibold mb-2">
+                <span className="mr-2">{getMockeryName(shameType)}</span>
+                <Badge variant="outline" className="bg-red-500/10 text-red-400">
+                  Cost: 50 coins
+                </Badge>
+              </h3>
+              <p className="text-muted-foreground text-sm">
+                {getMockeryDescription(shameType)}
+              </p>
+            </div>
+            
+            {hasDiscount && (
+              <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 mb-4">
+                <p className="text-green-400 flex items-center">
+                  <AlertTriangle className="h-4 w-4 mr-2" />
+                  <span>Special discount: 50% off this mockery action!</span>
+                </p>
+              </div>
+            )}
+            
+            <div className="text-amber-400 text-sm mb-4">
+              <p>This action will be visible to other users.</p>
+            </div>
           </div>
         )}
         
-        <DialogFooter>
-          <Button variant="outline" className="flex-1" onClick={onClose}>
+        <DialogFooter className="gap-2 sm:gap-0">
+          <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
           <Button 
-            variant="default" 
-            className="flex-1 bg-royal-crimson hover:bg-royal-crimson/90"
-            onClick={handleMockery}
-            disabled={!selectedAction}
+            variant="destructive" 
+            onClick={handleConfirm} 
+            className={cn(
+              "bg-red-600 hover:bg-red-700"
+            )}
           >
-            Deploy Mockery
+            Confirm Mockery
           </Button>
         </DialogFooter>
       </DialogContent>
