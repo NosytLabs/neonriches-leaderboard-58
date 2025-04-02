@@ -37,27 +37,84 @@ export type MockeryAction =
   | 'crown'
   | 'stocks'
   | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection'
   | 'thumbs_down'
+  | 'thumbsDown'
   | 'taunt'
   | 'heart'
-  | 'skull';
+  | 'skull'
+  | 'laugh'
+  | 'fish';
+
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal' | 'basic' | 'premium' | 'silver' | 'bronze' | 'standard';
 
 export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
 
-export interface MockeryTier {
+export interface TeamData {
   id: string;
   name: string;
+  color: TeamColor;
   description: string;
-  price: number;
-  currency: string; 
-  features: string[];
-  popular?: boolean;
-  image?: string;
-  ctaLabel?: string;
+  logoUrl: string;
+  benefits: string[];
+  members: number;
+  memberCount?: number; // Added for backwards compatibility
+  totalContribution: number;
+  totalSpent: number; // Ensure this is required
+  rank: number;
+  previousRank: number;
+}
+
+export interface LeaderboardUser {
+  id: string;
+  userId: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  tier: string | UserTier;
+  team: string | TeamColor;
+  rank: number;
+  previousRank?: number;
+  totalSpent: number;
+  amountSpent: number;
+  walletBalance?: number;
+  isVerified?: boolean;
+  spendStreak?: number;
+  isProtected?: boolean;
+  rankChange?: number;
+  spendChange?: number;
+}
+
+export interface LeaderboardFilter {
+  timeframe: 'day' | 'week' | 'month' | 'all';
+  team?: TeamColor | 'all';
+  limit?: number;
+  page?: number;
+}
+
+export interface MockeryEvent {
+  id: string;
+  type?: MockeryAction;
+  action?: MockeryAction; // For backwards compatibility
+  timestamp: string;
+  fromUserId: string;
+  toUserId: string;
+  fromUser?: MockeryUser;
+  toUser?: MockeryUser;
+  fromUsername?: string;
+  toUsername?: string;
+  amount?: number;
+  message?: string;
+  publicDisplay?: boolean;
+  cost?: number;
+  tier?: MockeryTier;
 }
 
 export interface MockeryUser {
   id: string;
+  userId?: string; // For compatibility
   username: string;
   displayName?: string;
   profileImage?: string;
@@ -66,19 +123,6 @@ export interface MockeryUser {
   team: TeamColor;
   tier: UserTier;
   spendStreak?: number;
-}
-
-export interface MockeryEvent {
-  id: string;
-  type: MockeryAction;
-  timestamp: string;
-  fromUserId: string;
-  toUserId: string;
-  fromUsername: string;
-  toUsername: string;
-  amount?: number;
-  message?: string;
-  publicDisplay: boolean;
 }
 
 export interface MockeryStats {
@@ -91,22 +135,8 @@ export interface MockeryStats {
   lastMockedAt?: string;
 }
 
-// Gender represents the user's chosen gender display
-export interface UserProfile {
-  userId: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  bio?: string;
-  team?: TeamColor;
-  tier?: UserTier;
-  totalSpent?: number;
-  rank?: number;
-  spendStreak?: number;
-  isProtected?: boolean;
-  mockeryStats?: MockeryStats;
-  gender?: Gender;
-}
+// For compatibility
+export type MockedUser = MockeryUser;
 
 // Re-export types for convenience and backward compatibility
 export type { TeamColor as TeamColorType };

@@ -1,5 +1,5 @@
 
-import { MockeryTier } from '@/types/mockery';
+import { MockeryTier } from '@/types/mockery-types';
 
 export const getMockeryTierLabel = (tier: MockeryTier): string => {
   switch (tier) {
@@ -8,6 +8,12 @@ export const getMockeryTierLabel = (tier: MockeryTier): string => {
     case 'rare': return 'Rare';
     case 'epic': return 'Epic';
     case 'legendary': return 'Legendary';
+    case 'royal': return 'Royal';
+    case 'basic': return 'Basic';
+    case 'premium': return 'Premium';
+    case 'silver': return 'Silver';
+    case 'bronze': return 'Bronze';
+    case 'standard': return 'Standard';
     default: return 'Unknown';
   }
 };
@@ -44,6 +50,12 @@ export const getMockeryTierColor = (tier: MockeryTier): { text: string, bg: stri
         bg: 'bg-amber-900/20',
         border: 'border-royal-gold/30'
       };
+    case 'royal':
+      return {
+        text: 'text-royal-gold',
+        bg: 'bg-amber-900/20',
+        border: 'border-royal-gold/30'
+      };
     default:
       return {
         text: 'text-gray-200',
@@ -60,6 +72,12 @@ export const getMockeryPrice = (tier: MockeryTier): number => {
     case 'rare': return 0.75;
     case 'epic': return 1.5;
     case 'legendary': return 3.0;
+    case 'royal': return 5.0;
+    case 'premium': return 2.0;
+    case 'basic': return 0.5;
+    case 'silver': return 1.0;
+    case 'bronze': return 0.75;
+    case 'standard': return 0.25;
     default: return 0.25;
   }
 };
@@ -72,6 +90,12 @@ export const getMockeryDuration = (tier: MockeryTier): number => {
     case 'rare': return 72;
     case 'epic': return 96;
     case 'legendary': return 168; // 7 days
+    case 'royal': return 240; // 10 days
+    case 'premium': return 120; // 5 days
+    case 'basic': return 24;
+    case 'silver': return 48;
+    case 'bronze': return 24;
+    case 'standard': return 24;
     default: return 24;
   }
 };

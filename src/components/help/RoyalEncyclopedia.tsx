@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { getMockeryTierColor, getMockeryTierLabel } from './mockeryHelpers';
-import { MockeryTier } from '@/types/mockery';
+import { MockeryTier } from '@/types/mockery-types';
 
 const RoyalEncyclopedia = () => {
   // Map of valid MockeryTier values
@@ -40,7 +40,7 @@ const RoyalEncyclopedia = () => {
                   const tierColors = getMockeryTierColor(tier);
                   return (
                     <div 
-                      key={tier}
+                      key={tier.toString()}
                       className={`p-3 rounded-lg ${safeAccess(tierColors, 'bg', 'bg-gray-800/60')} ${safeAccess(tierColors, 'border', 'border-gray-600')} border`}
                     >
                       <span className={`font-semibold ${safeAccess(tierColors, 'text', 'text-white/80')}`}>

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowUp, ArrowDown, Search, Trophy, Users, Medal } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { TeamData, TeamColor } from '@/types/team-data';
+import { TeamData, TeamColor } from '@/types/mockery-types';
 import { toTeamColor } from '@/utils/typeConverters';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/utils/formatters';
