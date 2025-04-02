@@ -5,23 +5,26 @@ import useAuth from '@/hooks/useAuth';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  redirectTo?: string;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
+  children, 
+  redirectTo = '/login' 
+}) => {
   const { isAuthenticated, isLoading } = useAuth();
 
+  // If authentication is still loading, show loading state or nothing
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin h-8 w-8 border-4 border-royal-gold border-t-transparent rounded-full"></div>
-      </div>
-    );
+    return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
   }
 
+  // If not authenticated, redirect to login
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={redirectTo} replace />;
   }
 
+  // If authenticated, render the children
   return <>{children}</>;
 };
 

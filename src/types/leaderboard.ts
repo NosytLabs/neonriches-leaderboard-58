@@ -1,79 +1,55 @@
 
-import { TeamColor, UserTier } from './mockery-types';
+import { TeamColor } from './mockery-types';
 
 export interface LeaderboardUser {
   id: string;
-  userId: string; // Required field
+  userId?: string;
   username: string;
-  displayName: string;
+  displayName?: string;
   profileImage: string;
   tier: string;
   team: TeamColor;
   rank: number;
   previousRank: number;
-  walletBalance: number;
   totalSpent: number;
-  amountSpent: number;
+  amountSpent?: number;
   isVerified?: boolean;
-  spendStreak?: number;
   isProtected?: boolean;
+  spendStreak?: number;
   joinDate?: string;
-  createdAt?: string;
-  joinedDate?: string; // Added for compatibility
-}
-
-export interface LeaderboardFilter {
-  team: TeamColor | 'all';
-  tier: UserTier | 'all';
-  timeframe: 'day' | 'week' | 'month' | 'all';
-  sortBy: 'rank' | 'spent' | 'streak';
-}
-
-export interface LeaderboardEntry extends LeaderboardUser {
-  change?: number;
+  rankChange?: number;
+  spendChange?: number;
   avatarUrl?: string;
-  amount?: number;
-  totalAmount?: number;
 }
 
-export interface LeaderboardState {
-  users: LeaderboardUser[];
-  loading: boolean;
-  error: string | null;
-  filters: LeaderboardFilter;
+export type LeaderboardFilter = 
+  | 'all'
+  | 'team-red'
+  | 'team-blue'
+  | 'team-green'
+  | 'team-gold'
+  | 'team-purple'
+  | 'friends'
+  | 'following'
+  | 'followers'
+  | 'vip'
+  | 'new';
+
+export interface LeaderboardConfig {
+  timeframe?: 'daily' | 'weekly' | 'monthly' | 'all-time';
+  filter?: LeaderboardFilter;
+  limit?: number;
+  includeProtected?: boolean;
+  includeTeams?: boolean;
 }
 
-export type SortDirection = 'asc' | 'desc';
-
-export interface SortOptions {
-  field: keyof LeaderboardUser;
-  direction: SortDirection;
-}
-
-// Added missing types from imports
-export interface OnChainLeaderboardEntry {
-  address: string;
-  username: string;
-  displayName: string;
-  profileImage: string;
-  rank: number;
-  totalSpent: number;
-  signature: string;
-  timestamp: number;
-}
-
-export interface SolanaTransaction {
-  id: string;
-  signature: string;
-  sender: string;
-  recipient?: string;
-  receiver?: string; // Add this property for compatibility
-  amount: number;
-  status: 'confirmed' | 'pending' | 'failed';
-  timestamp: string;
-  type: 'transfer' | 'spend' | 'deposit' | 'mint' | 'burn' | 'swap' | 'trade';
-  blockHeight?: number;
-  confirmations?: number;
-  memo?: string;
-  fee?: number;
+export interface LeaderboardProps {
+  config?: LeaderboardConfig;
+  className?: string;
+  showHeader?: boolean;
+  showFilters?: boolean;
+  showTimeframe?: boolean;
+  showSearch?: boolean;
+  initialFilter?: LeaderboardFilter;
+  initialTimeframe?: 'daily' | 'weekly' | 'monthly' | 'all-time';
 }

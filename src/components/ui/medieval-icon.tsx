@@ -1,62 +1,62 @@
 
 import React from 'react';
-import { Crown, Key, Scroll, Shield, Award, Swords } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { MedievalIconProps } from '@/types/ui/icon-types';
 
-type IconName = 'crown' | 'key' | 'scroll' | 'shield' | 'award' | 'swords';
-type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-type IconColor = 'gold' | 'silver' | 'bronze' | 'default';
-
-interface MedievalIconProps {
-  name: IconName;
-  size?: IconSize;
-  color?: IconColor;
-  className?: string;
-}
-
-const MedievalIcon: React.FC<MedievalIconProps> = ({ 
-  name, 
-  size = 'md', 
+const MedievalIcon: React.FC<MedievalIconProps> = ({
+  name,
+  size = 'md',
   color = 'default',
-  className = ''
+  className,
+  animated = false,
+  ...props
 }) => {
-  // Size mapping
+  // Map of size values to CSS classes
   const sizeMap = {
-    xs: 14,
-    sm: 16,
-    md: 20,
-    lg: 24,
-    xl: 32
+    'xs': 'h-3 w-3',
+    'sm': 'h-4 w-4',
+    'md': 'h-6 w-6',
+    'lg': 'h-8 w-8',
+    'xl': 'h-10 w-10',
+    '2xl': 'h-12 w-12',
   };
-  
-  // Color mapping
+
+  // Map of color values to CSS classes
   const colorMap = {
-    gold: 'text-royal-gold',
-    silver: 'text-zinc-300',
-    bronze: 'text-amber-600',
-    default: ''
+    'default': 'text-foreground',
+    'primary': 'text-primary',
+    'secondary': 'text-secondary',
+    'muted': 'text-muted-foreground',
+    'accent': 'text-accent',
+    'destructive': 'text-destructive',
+    'gold': 'text-royal-gold',
+    'white': 'text-white',
+    'black': 'text-black',
   };
-  
-  // Select the appropriate icon component
-  const getIcon = () => {
-    switch (name) {
-      case 'crown':
-        return <Crown size={sizeMap[size]} className={`${colorMap[color]} ${className}`} />;
-      case 'key':
-        return <Key size={sizeMap[size]} className={`${colorMap[color]} ${className}`} />;
-      case 'scroll':
-        return <Scroll size={sizeMap[size]} className={`${colorMap[color]} ${className}`} />;
-      case 'shield':
-        return <Shield size={sizeMap[size]} className={`${colorMap[color]} ${className}`} />;
-      case 'award':
-        return <Award size={sizeMap[size]} className={`${colorMap[color]} ${className}`} />;
-      case 'swords':
-        return <Swords size={sizeMap[size]} className={`${colorMap[color]} ${className}`} />;
-      default:
-        return <Crown size={sizeMap[size]} className={`${colorMap[color]} ${className}`} />;
-    }
-  };
-  
-  return getIcon();
+
+  // Determine the correct size and color classes
+  const sizeClass = sizeMap[size as keyof typeof sizeMap] || sizeMap.md;
+  const colorClass = colorMap[color as keyof typeof colorMap] || colorMap.default;
+  const animatedClass = animated ? 'animate-pulse' : '';
+
+  // Get the icon path
+  const iconPath = `/assets/icons/medieval/${name}.svg`;
+
+  return (
+    <span 
+      className={cn(
+        "inline-block medieval-icon", 
+        sizeClass, 
+        colorClass, 
+        animatedClass, 
+        className
+      )} 
+      {...props}
+    >
+      {/* Use an img tag for the medieval icon */}
+      <img src={iconPath} alt={`${name} icon`} className="w-full h-full" />
+    </span>
+  );
 };
 
 export default MedievalIcon;

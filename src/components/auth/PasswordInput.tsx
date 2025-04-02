@@ -1,51 +1,47 @@
 
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Eye, EyeOff } from 'lucide-react';
 
-export interface PasswordInputProps {
-  placeholder?: string;
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  name?: string;
-  id?: string;
+interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
-  [x: string]: any; // Allow any other props
 }
 
-const PasswordInput: React.FC<PasswordInputProps> = ({ 
-  placeholder = "Password",
-  className = "",
-  ...props
-}) => {
-  const [showPassword, setShowPassword] = useState(false);
+const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
+  ({ className, ...props }, ref) => {
+    const [showPassword, setShowPassword] = useState(false);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+    return (
+      <div className="relative">
+        <Input
+          type={showPassword ? "text" : "password"}
+          className={className}
+          ref={ref}
+          {...props}
+        />
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+          onClick={() => setShowPassword(!showPassword)}
+          tabIndex={-1}
+        >
+          {showPassword ? (
+            <EyeOff className="h-4 w-4 text-muted-foreground" />
+          ) : (
+            <Eye className="h-4 w-4 text-muted-foreground" />
+          )}
+          <span className="sr-only">
+            {showPassword ? "Hide password" : "Show password"}
+          </span>
+        </Button>
+      </div>
+    );
+  }
+);
 
-  return (
-    <div className="relative">
-      <Input
-        type={showPassword ? "text" : "password"}
-        placeholder={placeholder}
-        className={`pr-10 ${className}`}
-        {...props}
-      />
-      <button
-        type="button"
-        onClick={togglePasswordVisibility}
-        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-500"
-        tabIndex={-1}
-      >
-        {showPassword ? (
-          <EyeOff className="h-4 w-4" />
-        ) : (
-          <Eye className="h-4 w-4" />
-        )}
-      </button>
-    </div>
-  );
-};
+PasswordInput.displayName = "PasswordInput";
 
 export default PasswordInput;

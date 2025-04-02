@@ -1,88 +1,36 @@
 
-/**
- * Boost related type definitions
- */
-
-import { UserTier } from './mockery-types';
-
 export type BoostEffectType = 
-  | 'rank'
   | 'visibility'
-  | 'protection'
-  | 'spotlight'
-  | 'discount'
-  | 'multiplier'
-  | 'feature'
+  | 'rank'
+  | 'profile'
   | 'cosmetic'
-  | 'effect'
-  | 'animation'
-  | 'appearance'
-  | 'badge'
-  | 'aura'
-  | 'enhancement'
-  | 'general'
-  | 'profile'      // Added for compatibility with cosmetics.ts
-  | 'theme'        // Added for compatibility with cosmetics.ts
-  | 'border'       // Added for compatibility with cosmetics.ts
-  | 'color'        // Added for compatibility with cosmetics.ts
-  | 'font'         // Added for compatibility with cosmetics.ts
-  | 'emoji'        // Added for compatibility with cosmetics.ts
-  | 'title'        // Added for compatibility with cosmetics.ts
-  | 'background';  // Added for compatibility with cosmetics.ts
+  | 'special'
+  | 'monetary';
 
 export interface BoostEffect {
-  id: string;
-  name: string;
-  description: string;
   type: BoostEffectType;
-  icon: string;
-  duration: number; // Duration in hours
-  price: number;
-  discount?: number;
-  tier?: UserTier;
-  color?: string;
-  effectValue?: number | string;
-  requiredTier?: UserTier;
-  stackable?: boolean;
-  effectId?: string; // Added for compatibility with ProfileBoostDisplay
-  cssClass?: string; // Added for styling support
-  // Additional fields for compatibility
-  durationDays?: number;
-  previewImage?: string;
-  strength?: number;
-  allowStacking?: boolean;
-  minTier?: string;
-  iconName?: string;
+  strength: number;
+  description: string;
 }
 
 export interface ProfileBoost {
   id: string;
-  userId?: string;
-  effectId?: string; // Used by ProfileBoostDisplay
-  type: BoostEffectType | string; // Allow string for backward compatibility
-  startTime?: string;
-  endTime?: string;
-  active?: boolean;
-  value?: number | string;
-  metadata?: Record<string, any>;
-  level?: number;
-  // For compatibility with user-consolidated
-  startDate?: string;
-  endDate?: string; 
-  isActive?: boolean;
-  strength?: number;
-  appliedBy?: string;
+  type: string;
+  startDate: string;
+  endDate: string;
+  level: number;
+  isActive: boolean;
+  strength: number;
+  appliedBy: string;
   name?: string;
-  icon?: string;
+  description?: string;
   duration?: number;
   price?: number;
+  icon?: string;
 }
 
 export interface BoostService {
-  getAvailableBoosts: () => Promise<BoostEffect[]>;
-  getUserBoosts: (userId: string) => Promise<ProfileBoost[]>;
-  purchaseBoost: (userId: string, boostId: string) => Promise<ProfileBoost>;
-  activateBoost: (boostId: string) => Promise<boolean>;
-  deactivateBoost: (boostId: string) => Promise<boolean>;
+  applyBoost: (userId: string, boostType: string, level: number, days: number) => Promise<boolean>;
   getActiveBoosts: (userId: string) => Promise<ProfileBoost[]>;
+  calculateBoostEffect: (boost: ProfileBoost) => BoostEffect;
 }

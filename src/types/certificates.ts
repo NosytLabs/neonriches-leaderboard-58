@@ -1,58 +1,21 @@
 
-export interface Certificate {
-  id: string;
-  userId: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-  mintAddress?: string;
-  dateIssued?: string;
-  issuedAt: string; // Added for compatibility
-  status: string; // Added for compatibility
-  type: CertificateType | string; // Allow strings for flexibility
-  tier: string;
-  createdAt?: string; // Added for compatibility
-  isMinted?: boolean; // Added for compatibility
-  mintedAt?: string;
-  team?: string;
-  style?: string;
-  // Compatibility fields
-  issueDate?: string;
-  nftAddress?: string;
-  thumbnailUrl?: string;
-  isPublic?: boolean;
-  dateExpires?: string;
-  nftId?: string;
-  isVerified?: boolean;
-  templateId?: string;
-  keywords?: string[];
-  metadata?: Record<string, any>;
-  signature?: string;
-}
-
 export type CertificateType = 
-  | 'achievement' 
-  | 'rank' 
-  | 'spending' 
-  | 'team' 
-  | 'founder' 
-  | 'event' 
-  | 'royal'
-  | 'nobility'
-  | 'custom'
-  | 'medal'         // Added for compatibility with certificate.d.ts
-  | 'title'         // Added for compatibility with certificate.d.ts
-  | 'competition';  // Added for compatibility with certificate.d.ts
+  | 'spending'
+  | 'rank'
+  | 'achievement'
+  | 'membership'
+  | 'founder'
+  | 'vip'
+  | 'team';
 
 export type CertificateStyle = 
-  | 'modern'
-  | 'vintage'
   | 'royal'
-  | 'minimalist'
+  | 'gold'
+  | 'silver'
+  | 'bronze'
+  | 'simple'
   | 'ornate'
-  | 'classic'
-  | 'medieval'
-  | 'elegant';  // Added for compatibility with certificate.d.ts
+  | 'modern';
 
 export type CertificateTeam = 
   | 'red'
@@ -60,32 +23,39 @@ export type CertificateTeam =
   | 'green'
   | 'gold'
   | 'purple'
-  | 'neutral'; // Added neutral as valid team
+  | 'none';
+
+export interface Certificate {
+  id: string;
+  type: CertificateType;
+  style: CertificateStyle;
+  title: string;
+  description: string;
+  recipientId: string;
+  recipientName: string;
+  issuerId: string;
+  issuerName: string;
+  dateIssued: string;
+  imageUrl?: string;
+  data?: Record<string, any>;
+  team?: CertificateTeam;
+  mintAddress?: string;
+  mintDate?: string;
+}
 
 export interface CertificateTemplate {
   id: string;
-  name: string;
-  type: CertificateType | string; // Allow string to accommodate more types
-  style: CertificateStyle | string; // Allow string for flexibility
-  team: CertificateTeam | string; // Allow string for more teams
-  previewUrl: string;
-  imageUrl: string;
+  type: CertificateType;
+  style: CertificateStyle;
+  title: string;
   description: string;
-  availableForTier: string[];
-  availableForRank?: number[];
-  requiresFounder?: boolean;
-  // Compatibility fields
-  title?: string;
-  available?: boolean | string[];
-  thumbnailUrl?: string;
-  isPublic?: boolean;
+  imageUrl?: string;
+  team?: CertificateTeam;
 }
 
 export interface CertificateRepository {
   getCertificate: (id: string) => Promise<Certificate | null>;
-  getCertificateByUserId: (userId: string) => Promise<Certificate[]>;
-  createCertificate: (certificate: Certificate) => Promise<Certificate>;
-  updateCertificate: (id: string, updates: Partial<Certificate>) => Promise<Certificate>;
-  deleteCertificate: (id: string) => Promise<boolean>;
-  getCertificates: () => Promise<Certificate[]>;
+  getUserCertificates: (userId: string) => Promise<Certificate[]>;
+  createCertificate: (certificateData: Omit<Certificate, 'id'>) => Promise<Certificate>;
+  verifyCertificate: (id: string) => Promise<boolean>;
 }
