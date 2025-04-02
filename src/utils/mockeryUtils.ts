@@ -1,4 +1,3 @@
-
 import { MockeryAction, MockeryTier } from '@/types/mockery-types';
 import { Egg, Crown, Target, Shield, MessageSquare, Flame, ThumbsDown, Frown, Laugh, Music, Droplet, ThumbsUp, Gift } from 'lucide-react';
 
