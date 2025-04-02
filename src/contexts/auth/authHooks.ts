@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
@@ -7,7 +8,7 @@ import { UserSubscription } from '@/types/user-consolidated';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { addProfileBoostWithDays, addCosmeticByCategoryString } from './authUtils';
-import { toStandardUserProfile, toUserProfile } from '@/utils/typeUnifier';
+import { toStandardUserProfile, toUserProfile, ensureUserProfile } from '@/utils/typeUnifier';
 
 export const useAuthState = () => {
   const [user, setUser] = useState<UserProfile | null>(null);

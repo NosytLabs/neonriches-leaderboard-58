@@ -17,7 +17,7 @@ const TeamsPage: React.FC = () => {
   // Create a standard user profile
   const standardUser = user ? toStandardUserProfile(user) : null;
 
-  const handleUpdateTeam = async (team: string): Promise<boolean> => {
+  const handleUpdateTeam = async (team: TeamColor | string): Promise<boolean> => {
     if (user && updateUser) {
       const teamColor = ensureTeamColor(team);
       await updateUser({ team: teamColor });
@@ -26,8 +26,8 @@ const TeamsPage: React.FC = () => {
     return false;
   };
 
-  const handleTeamSelect = (team: string) => {
-    setSelectedTeam(team);
+  const handleTeamSelect = (team: TeamColor | string) => {
+    setSelectedTeam(team as string);
   };
 
   return (

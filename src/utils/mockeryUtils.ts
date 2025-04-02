@@ -1,167 +1,147 @@
 
 import { MockeryAction, MockeryTier } from '@/types/mockery-types';
-import { getMockeryActionIcon } from './mockeryActionUtils';
+import { AlertCircle, Crown, Egg, Award, MessageCircle, Flame, Heart, Skull, ThumbsDown, Shield, UserX, CloudOff } from 'lucide-react';
 
-// Mock Cost Configuration
-export const mockeryActionCosts: Partial<Record<MockeryAction, number>> = {
-  tomato: 10,
-  egg: 15,
-  putridEgg: 25,
-  crown: 50,
-  thumbsDown: 5,
-  mock: 10,
-  stocks: 35,
-  jester: 30,
-  courtJester: 30,
-  silence: 40,
-  taunt: 10,
-  smokeBomb: 45,
-  protection: 75,
-  shame: 20,
-  challenge: 30,
-  joust: 40,
-  duel: 50,
-  royal_decree: 100,
-  flame: 15,
-  heart: 20,
-  skull: 25,
-  thumbs_down: 10,
-  rotten_egg: 20
-};
-
-// Map mockery actions to tiers
-export const mockeryActionTiers: Partial<Record<MockeryAction, MockeryTier>> = {
-  tomato: 'common',
-  egg: 'common',
-  putridEgg: 'uncommon',
-  crown: 'epic',
-  thumbsDown: 'common',
-  mock: 'common',
-  stocks: 'rare',
-  jester: 'rare',
-  courtJester: 'rare',
-  silence: 'epic',
-  taunt: 'common',
-  smokeBomb: 'epic',
-  protection: 'legendary',
-  shame: 'uncommon',
-  challenge: 'rare',
-  joust: 'epic',
-  duel: 'epic',
-  royal_decree: 'legendary',
-  flame: 'common',
-  heart: 'uncommon',
-  skull: 'rare',
-  thumbs_down: 'common',
-  rotten_egg: 'uncommon'
-};
-
-// Mockery action descriptions
-export const mockeryDescriptions: Partial<Record<MockeryAction, string>> = {
-  tomato: 'Throw a rotten tomato at the target, causing public embarrassment.',
-  egg: 'Throw an egg at the target, making them a laughingstock in the royal court.',
-  putridEgg: 'Throw a particularly smelly, putrid egg at the target. Extra humiliating!',
-  crown: 'Temporarily topple the target\'s crown, reducing their perceived status.',
-  thumbsDown: 'Express your royal disapproval with a simple gesture.',
-  mock: 'Publicly mock the target with cutting words.',
-  stocks: 'Put the target in the stocks for public ridicule.',
-  jester: 'Force the target to wear a jester\'s hat for all to see.',
-  courtJester: 'Designate the target as the court jester, subject to ridicule.',
-  silence: 'Temporarily prevent the target from participating in court discussions.',
-  taunt: 'Unleash a series of taunts at the target.',
-  smokeBomb: 'Drop a smoke bomb on the target\'s profile, obscuring their presence.',
-  protection: 'Shield yourself from mockery for a period of time.',
-  shame: 'Ring the bell of shame to publicly humiliate the target.',
-  challenge: 'Issue a formal challenge to the target.',
-  joust: 'Challenge the target to a royal joust for all to see.',
-  duel: 'Challenge the target to a duel of honor.',
-  royal_decree: 'Issue a royal decree against the target, the ultimate form of mockery.',
-  flame: 'Send a flame emoji to symbolize burning criticism.',
-  heart: 'Send a sarcastic heart to the target.',
-  skull: 'Send a skull emoji to symbolize the death of their dignity.',
-  thumbs_down: 'Send a simple thumbs down to express disapproval.',
-  rotten_egg: 'Throw a particularly rotten egg at the target.'
-};
-
-// Get the display name for a mockery action
-export const getMockeryName = (action: MockeryAction): string => {
+// Get readable name for mockery action
+export const getMockeryName = (action: MockeryAction | string): string => {
   switch (action) {
-    case 'tomato': return 'Rotten Tomato';
-    case 'egg': return 'Egg Splat';
+    case 'tomato': return 'Tomatoes';
+    case 'egg': return 'Eggs';
     case 'putridEgg': return 'Putrid Egg';
-    case 'crown': return 'Topple Crown';
-    case 'thumbsDown': return 'Royal Disapproval';
-    case 'mock': return 'Public Mockery';
-    case 'stocks': return 'In the Stocks';
-    case 'jester': 
+    case 'crown': return 'Crown Flip';
+    case 'thumbsDown': return 'Thumbs Down';
+    case 'mock': return 'Mock';
+    case 'stocks': return 'Stocks';
+    case 'jester': return 'Jester Hat';
     case 'courtJester': return 'Court Jester';
-    case 'silence': return 'Royal Silence';
+    case 'silence': return 'Silence';
     case 'taunt': return 'Royal Taunt';
     case 'smokeBomb': return 'Smoke Bomb';
     case 'protection': return 'Royal Protection';
-    case 'shame': return 'Public Shaming';
-    case 'challenge': return 'Royal Challenge';
-    case 'joust': return 'Royal Joust';
+    case 'shame': return 'Public Shame';
+    case 'challenge': return 'Challenge';
+    case 'joust': return 'Joust';
     case 'duel': return 'Royal Duel';
-    case 'royal_decree': return 'Royal Decree';
     case 'flame': return 'Flame';
     case 'heart': return 'Heart';
     case 'skull': return 'Skull';
     case 'thumbs_down': return 'Thumbs Down';
-    case 'rotten_egg': return 'Rotten Egg';
-    default: return 'Unknown Action';
+    case 'royal_decree': return 'Royal Decree';
+    default: return action;
   }
 };
 
-// Get the cost for a mockery action
-export const getMockeryCost = (action: MockeryAction): number => {
-  return mockeryActionCosts[action] || 10;
+// Get mockery tier
+export const getMockeryTier = (action: MockeryAction | string): MockeryTier => {
+  switch (action) {
+    case 'tomato':
+    case 'egg':
+    case 'mock':
+    case 'thumbsDown':
+    case 'taunt':
+      return 'common';
+    case 'putridEgg':
+    case 'jester':
+    case 'flame':
+    case 'heart':
+      return 'uncommon';
+    case 'crown':
+    case 'stocks':
+    case 'skull':
+    case 'shame':
+      return 'rare';
+    case 'courtJester':
+    case 'silence':
+      return 'epic';
+    case 'smokeBomb':
+    case 'protection':
+    case 'joust':
+    case 'duel':
+    case 'royal_decree':
+      return 'legendary';
+    default:
+      return 'common';
+  }
 };
 
-// Get the tier for a mockery action
-export const getMockeryTier = (action: MockeryAction): MockeryTier => {
-  return mockeryActionTiers[action] || 'common';
+// Get mockery cost
+export const getMockeryCost = (action: MockeryAction | string): number => {
+  switch (action) {
+    case 'tomato': return 10;
+    case 'egg': return 15;
+    case 'putridEgg': return 25;
+    case 'crown': return 50;
+    case 'thumbsDown': return 5;
+    case 'mock': return 10;
+    case 'stocks': return 35;
+    case 'jester': return 30;
+    case 'courtJester': return 30;
+    case 'silence': return 40;
+    case 'taunt': return 10;
+    case 'smokeBomb': return 45;
+    case 'protection': return 75;
+    case 'shame': return 20;
+    case 'challenge': return 30;
+    case 'joust': return 40;
+    case 'duel': return 50;
+    case 'royal_decree': return 100;
+    case 'flame': return 15;
+    case 'heart': return 20;
+    case 'skull': return 25;
+    case 'thumbs_down': return 10;
+    default: return 10;
+  }
 };
 
-// Get a description for a mockery action
-export const getMockeryDescription = (action: MockeryAction): string => {
-  return mockeryDescriptions[action] || 'Mock the target';
+// Mockery descriptions
+export const mockeryDescriptions: Record<string, string> = {
+  tomato: "Throw a tomato at the target, causing temporary embarrassment.",
+  egg: "Pelt the target with eggs, creating a messy situation.",
+  putridEgg: "Throw a rotten egg that leaves a lingering unpleasant odor.",
+  crown: "Topple the target's crown, reducing their royal status temporarily.",
+  thumbsDown: "Express your disapproval of the target's actions.",
+  mock: "Openly mock the target with jeering and ridicule.",
+  stocks: "Place the target in the public stocks for all to see.",
+  jester: "Assign the target a jester hat, making them the butt of jokes.",
+  courtJester: "Demote the target to court jester, requiring them to entertain the court.",
+  silence: "Temporarily prevent the target from speaking in royal discussions.",
+  taunt: "Taunt the target with insulting words and gestures.",
+  smokeBomb: "Throw a smoke bomb that temporarily obscures the target's visibility.",
+  protection: "Shield yourself from mockery with royal protection.",
+  shame: "Publicly shame the target for their dishonorable behavior.",
+  challenge: "Challenge the target to prove their worth.",
+  joust: "Challenge the target to a virtual jousting match.",
+  duel: "Engage the target in a prestigious royal duel.",
+  royal_decree: "Issue a royal decree declaring the target's embarrassment.",
+  laugh: "Laugh at the target's expense, diminishing their social standing."
 };
 
-// Helper function to check if the mockery action exists
-export const isMockeryAction = (action: string): action is MockeryAction => {
-  return Object.keys(mockeryActionCosts).includes(action);
-};
-
-// Helper function for basic normalization of action types
-export const normalizeMockeryAction = (action: string): string => {
-  if (!action) return 'mock';
-  
-  // Normalize common action name variations
-  switch (action.toLowerCase()) {
-    case 'tomatoe': 
-    case 'tomatoes': return 'tomato';
-    case 'eggs': return 'egg';
-    case 'rotten egg': 
-    case 'rotten-egg': 
-    case 'rottenegg': return 'putridEgg';
-    case 'putrid egg': 
-    case 'putrid-egg': return 'putridEgg';
-    case 'crown flip': 
-    case 'topple': 
-    case 'topplecrown': return 'crown';
-    case 'thumbs down': 
-    case 'thumbs-down': 
-    case 'thumbsdown': return 'thumbsDown';
-    case 'court jester': 
-    case 'court-jester': return 'courtJester';
-    case 'silence user': 
-    case 'royal silence': return 'silence';
-    case 'smoke': 
-    case 'smoke bomb': 
-    case 'smokebomb': return 'smokeBomb';
-    case 'protect': 
-    case 'royal protection': return 'protection';
-    default: return action;
+// Get icon component for mockery action
+export const getMockeryActionIcon = (action: MockeryAction | string) => {
+  switch (action) {
+    case 'tomato': return AlertCircle;
+    case 'egg': return Egg;
+    case 'putridEgg': return Egg;
+    case 'crown': return Crown;
+    case 'thumbsDown': return ThumbsDown;
+    case 'mock': return MessageCircle;
+    case 'stocks': return Award;
+    case 'jester': return Award;
+    case 'courtJester': return Award;
+    case 'silence': return UserX;
+    case 'taunt': return MessageCircle;
+    case 'smokeBomb': return CloudOff;
+    case 'protection': return Shield;
+    case 'shame': return UserX;
+    case 'challenge': return Award;
+    case 'joust': return Award;
+    case 'duel': return Award;
+    case 'flame': return Flame;
+    case 'heart': return Heart;
+    case 'skull': return Skull;
+    case 'thumbs_down': return ThumbsDown;
+    case 'royal_decree': return Crown;
+    case 'laugh': return MessageCircle;
+    default: return AlertCircle;
   }
 };

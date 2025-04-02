@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shell } from '@/components/ui/shell';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,10 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import useAuth from '@/hooks/useAuth';
 import { SubscriptionPlanCardProps } from './SubscriptionPlanCard';
+import SubscriptionPlanCard from './SubscriptionPlanCard';
 import { UserSubscription } from '@/types/user-consolidated';
+import { ensureUserTier } from '@/utils/typeUnifier';
+import { Crown, AlertTriangle, CheckCircle, CreditCard, Wallet } from 'lucide-react';
 
 const ensureValidStatus = (status: string): "active" | "cancelled" | "expired" | "pending" | "paused" => {
   const validStatuses = ["active", "cancelled", "expired", "pending", "paused"];
@@ -29,13 +33,29 @@ const createSubscription = (planId: any, nextBillingDate: string, tier: any) => 
   };
 };
 
+const adaptSubscription = (subscription: any): UserSubscription => {
+  if (!subscription) return null as unknown as UserSubscription;
+  
+  return {
+    id: subscription.id || `sub_${Math.random().toString(36).substring(2, 9)}`,
+    planId: subscription.planId || 'default',
+    status: ensureValidStatus(subscription.status || 'active'),
+    startDate: subscription.startDate || new Date().toISOString(),
+    tier: subscription.tier || 'basic',
+    nextBillingDate: subscription.nextBillingDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    endDate: subscription.endDate,
+    autoRenew: subscription.autoRenew ?? true,
+    cancelAtPeriodEnd: subscription.cancelAtPeriodEnd ?? false
+  };
+};
+
 const SubscriptionManagement = () => {
   const { user, updateUserProfile } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const buttonRef = useRef<HTMLButtonElement>(null);
   
-  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlanProps | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlanCardProps | null>(null);
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'wallet'>('card');
   const [isSubscribing, setIsSubscribing] = useState(false);
@@ -53,7 +73,7 @@ const SubscriptionManagement = () => {
     }
   }, [user]);
   
-  const plans: SubscriptionPlanProps[] = [
+  const plans: SubscriptionPlanCardProps[] = [
     {
       id: 'basic',
       name: 'Basic',

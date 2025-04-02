@@ -1,73 +1,91 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Shell } from '@/components/ui/shell';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import MockeryComponent from '@/components/mockery/MockeryComponent';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge'; 
 import { useMockery } from '@/hooks/use-mockery';
-import { MockeryAction } from '@/types/mockery-types';
-import { toTeamColor } from '@/utils/typeConverter';
+import MockeryComponent from '@/components/mockery/MockeryComponent';
+import HallOfShame from '@/components/mockery/components/HallOfShame';
+import { UserProfile } from '@/types/user';
+import { MockeryResult } from '@/types/mockery-types';
+
+// Mock data for the Hall of Shame
+const mockShameUsers = [
+  {
+    username: "richSpender123",
+    displayName: "Rich Spender",
+    avatarUrl: "https://randomuser.me/api/portraits/men/1.jpg",
+    mockedReason: "Flaunting wealth in the town square",
+    mockedTimestamp: new Date(Date.now() - 3600000).toISOString(),
+    mockedBy: "kingmaker",
+    mockedTier: "rare",
+    mockeryCount: 3
+  },
+  {
+    username: "royalWannabe",
+    displayName: "Royal Wannabe",
+    avatarUrl: "https://randomuser.me/api/portraits/women/2.jpg",
+    mockedReason: "Pretended to be of royal blood",
+    mockedTimestamp: new Date(Date.now() - 86400000).toISOString(),
+    mockedBy: "truthSeeker",
+    mockedTier: "common",
+    mockeryCount: 1
+  }
+];
 
 const MockeryPage = () => {
-  const [activeTab, setActiveTab] = useState('mockery');
-  const { mockUser, costForAction } = useMockery();
+  const navigate = useNavigate();
+  const { targetUser, mockUser, isMocking, mockeryResult, costForAction, resetMockery } = useMockery();
 
-  const handleMockUser = async (actionType: string, targetUserId: string) => {
-    // In a real implementation, this would fetch the target user data
-    // and then call mockUser
-    console.log(`Mocking user ${targetUserId} with action ${actionType}`);
-    
-    // Mock user data for demonstration
-    const mockTargetUser = {
+  const handleMockUser = async (actionType: string, targetUserId: string): Promise<void> => {
+    // Mock implementation: Replace with actual user retrieval logic
+    const mockTargetUser: UserProfile = {
       id: targetUserId,
       username: `user_${targetUserId}`,
       displayName: `User ${targetUserId}`,
       profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
-      team: toTeamColor("gold"),
+      team: "gold",
       tier: "royal",
       rank: 1,
       previousRank: 2,
-      amountSpent: 500,
-      joinedDate: new Date().toISOString()
+      amountSpent: 1000,
+      joinedDate: new Date().toISOString(),
+      totalSpent: 1000,
+      walletBalance: 500
     };
-    
-    return mockUser(actionType as MockeryAction, mockTargetUser);
+
+    // Call mockUser but ignore the result
+    const result = await mockUser(actionType, mockTargetUser);
+    // We're ignoring the result to match the expected Promise<void> return type
+  };
+
+  const handleGoBack = () => {
+    navigate('/dashboard');
   };
 
   return (
     <Shell>
       <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-semibold mb-4">Royal Mockery</h1>
-        
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-3 mb-6">
-            <TabsTrigger value="mockery">Mockery Actions</TabsTrigger>
-            <TabsTrigger value="hall-of-shame">Hall of Shame</TabsTrigger>
-            <TabsTrigger value="my-mockery">My Mockery</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="mockery">
-            <MockeryComponent 
-              onMockUser={handleMockUser} 
-              costForAction={costForAction} 
-            />
-          </TabsContent>
-          
-          <TabsContent value="hall-of-shame">
-            <div className="text-center p-8">
-              <p className="text-white/60">
-                The Hall of Shame will display users who have been mocked the most.
-              </p>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="my-mockery">
-            <div className="text-center p-8">
-              <p className="text-white/60">
-                Your mockery history and status will appear here.
-              </p>
-            </div>
-          </TabsContent>
-        </Tabs>
+        <h1 className="text-2xl font-semibold mb-4">Royal Mockery Festival</h1>
+        <p className="text-white/70 mb-4">
+          Welcome to the Royal Mockery Festival, where nobles can playfully tease each other.
+        </p>
+
+        <div className="mb-4">
+          <Button onClick={handleGoBack} variant="ghost">
+            Back to Dashboard
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <MockeryComponent onMockUser={handleMockUser} costForAction={costForAction} />
+          </div>
+          <div>
+            <HallOfShame mockedUsers={mockShameUsers} />
+          </div>
+        </div>
       </div>
     </Shell>
   );

@@ -10,7 +10,15 @@ interface TeamLeaderboardProps {
 
 const TeamLeaderboard: React.FC<TeamLeaderboardProps> = ({ teams, activeTeam }) => {
   // Sort teams by ranking if available, or by name
-  const sortedTeams = [...teams].sort((a, b) => {
+  const sortedTeams = [...teams].map(team => {
+    if (!team.teamId) {
+      return {
+        ...team,
+        teamId: addTeamId(team.color)
+      };
+    }
+    return team;
+  }).sort((a, b) => {
     if (a.ranking !== undefined && b.ranking !== undefined) {
       return a.ranking - b.ranking;
     }

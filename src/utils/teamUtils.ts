@@ -20,27 +20,27 @@ export const getTeamTailwindColor = (team: TeamColor | string | null): string =>
   }
 };
 
-// Function to convert a team color to a Tailwind background color class with gradient
-export const getTeamTailwindBgColor = (team: TeamColor | string | null): string => {
-  if (!team) return 'bg-gradient-to-r from-gray-800 to-gray-700';
+// Function to get team display name
+export const getTeamName = (team: TeamColor | string | null): string => {
+  if (!team) return 'Neutral';
   
   switch (team) {
-    case 'red': return 'bg-gradient-to-r from-red-700 to-red-600';
-    case 'blue': return 'bg-gradient-to-r from-blue-700 to-blue-600';
-    case 'green': return 'bg-gradient-to-r from-green-700 to-green-600';
-    case 'gold': return 'bg-gradient-to-r from-amber-600 to-amber-500';
-    case 'purple': return 'bg-gradient-to-r from-purple-700 to-purple-600';
-    case 'silver': return 'bg-gradient-to-r from-gray-500 to-gray-400';
-    case 'bronze': return 'bg-gradient-to-r from-amber-800 to-amber-700';
-    case 'crimson': return 'bg-gradient-to-r from-red-900 to-red-800';
-    case 'neutral': 
-    case 'none': 
-    default: return 'bg-gradient-to-r from-gray-800 to-gray-700';
+    case 'red': return 'Red Crown';
+    case 'blue': return 'Blue Legion';
+    case 'green': return 'Green Order';
+    case 'gold': return 'Gold Dynasty';
+    case 'purple': return 'Purple Realm';
+    case 'silver': return 'Silver Alliance';
+    case 'bronze': return 'Bronze Brigade';
+    case 'crimson': return 'Crimson Court';
+    case 'neutral': return 'Neutral';
+    case 'none': return 'Unaffiliated';
+    default: return team.charAt(0).toUpperCase() + team.slice(1);
   }
 };
 
-// Function to convert a team color to a Tailwind text color class
-export const getTeamTailwindTextColor = (team: TeamColor | string | null): string => {
+// Function to get team color class
+export const getTeamColor = (team: TeamColor | string | null): string => {
   if (!team) return 'text-gray-400';
   
   switch (team) {
@@ -55,25 +55,6 @@ export const getTeamTailwindTextColor = (team: TeamColor | string | null): strin
     case 'neutral': 
     case 'none': 
     default: return 'text-gray-400';
-  }
-};
-
-// Function to convert a team color to a Tailwind border color class
-export const getTeamTailwindBorderColor = (team: TeamColor | string | null): string => {
-  if (!team) return 'border-gray-700';
-  
-  switch (team) {
-    case 'red': return 'border-red-600';
-    case 'blue': return 'border-blue-600';
-    case 'green': return 'border-green-600';
-    case 'gold': return 'border-amber-500';
-    case 'purple': return 'border-purple-600';
-    case 'silver': return 'border-gray-400';
-    case 'bronze': return 'border-amber-700';
-    case 'crimson': return 'border-red-800';
-    case 'neutral': 
-    case 'none': 
-    default: return 'border-gray-700';
   }
 };
 
@@ -94,6 +75,11 @@ export const toTeamColor = (team?: string | null): TeamColor => {
     case 'none': return 'none';
     default: return 'none';
   }
+};
+
+// Function alias for asTeamColor
+export const asTeamColor = (team: string | null | undefined): TeamColor => {
+  return toTeamColor(team);
 };
 
 // Add an ID property to TeamData for use with TeamDetails component

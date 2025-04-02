@@ -1,296 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
 import { MockeryAction } from '@/types/mockery-types';
-import { cn } from '@/lib/utils';
-import { getMockeryDescription } from '@/utils/mockeryUtils';
-import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
-import { mockeryDescriptions } from '@/utils/mockeryUtils';
 
-export interface MockeryEffectProps {
-  username?: string;
-  action?: MockeryAction;
-  isActive?: boolean;
-  onComplete?: () => void;
-  actionType?: MockeryAction;
+interface MockeryEffectProps {
+  action: MockeryAction;
+  username: string;
 }
 
-const MockeryEffect: React.FC<MockeryEffectProps> = ({
-  username = 'User',
-  action,
-  actionType,
-  isActive = true,
-  onComplete
-}) => {
-  const effectAction = action || actionType || 'mock';
-  
-  const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, rotation: number, velocity: number, delay: number}>>([]);
-  const [showImpactEffect, setShowImpactEffect] = useState(false);
-  
-  const getEffectContent = () => {
-    const normalizedAction = normalizeMockeryAction(effectAction as string);
-    
-    switch (normalizedAction) {
-      case 'tomato':
-        return {
-          emoji: '🍅',
-          text: 'Splat!',
-          color: 'text-red-500',
-          className: 'tomato-effect',
-          sound: 'splat',
-          impact: 'splatter'
-        };
-      case 'egg':
-        return {
-          emoji: '🥚',
-          text: 'Crack!',
-          color: 'text-yellow-200',
-          className: 'egg-effect',
-          sound: 'crack',
-          impact: 'shell-fragments'
-        };
-      case 'putridEgg':
-        return {
-          emoji: '🥚',
-          text: 'Crack!',
-          color: 'text-yellow-200',
-          className: 'putrid-egg-effect',
-          sound: 'crack',
-          impact: 'shell-fragments'
-        };
-      case 'stocks':
-        return {
-          emoji: '🪵',
-          text: 'Locked!',
-          color: 'text-brown-500',
-          className: 'stocks-effect',
-          sound: 'wood',
-          impact: 'wood-fragments'
-        };
-      case 'silence':
-        return {
-          emoji: '🤐',
-          text: 'Silenced!',
-          color: 'text-gray-400',
-          className: 'silence-effect',
-          sound: 'mute',
-          impact: 'muted'
-        };
-      case 'courtJester':
-        return {
-          emoji: '🃏',
-          text: 'Jester!',
-          color: 'text-purple-400',
-          className: 'jester-effect',
-          sound: 'jingle',
-          impact: 'confetti'
-        };
-      case 'smokeBomb':
-        return {
-          emoji: '💨',
-          text: 'Smoke Bomb!',
-          color: 'text-gray-300',
-          className: 'smoke-bomb-effect',
-          sound: 'explosion',
-          impact: 'smoke'
-        };
-      default:
-        return {
-          emoji: '😯',
-          text: 'Mocked!',
-          color: 'text-white',
-          className: 'mock-effect',
-          sound: 'general',
-          impact: 'default'
-        };
-    }
-  };
-  
-  const effectContent = getEffectContent();
-  
-  useEffect(() => {
-    if (!isActive) return;
-    
-    let particleCount = 20;
-    const normalizedAction = normalizeMockeryAction(effectAction as string);
-    
-    switch (normalizedAction) {
-      case 'tomato':
-        particleCount = 25;
-        break;
-      case 'egg':
-      case 'putridEgg':
-        particleCount = 15;
-        break;
-      case 'smokeBomb':
-        particleCount = 40;
-        break;
-      case 'courtJester':
-        particleCount = 30;
-        break;
-      default:
-        particleCount = 20;
-    }
-    
-    const newParticles = Array.from({ length: particleCount }, (_, i) => ({
-      id: i,
-      x: normalizedAction === 'silence' ? 50 + (Math.random() * 30 - 15) : Math.random() * 100,
-      y: normalizedAction === 'silence' ? 50 + (Math.random() * 30 - 15) : Math.random() * 100,
-      rotation: Math.random() * 360,
-      velocity: 1 + Math.random() * 2,
-      delay: Math.random() * 0.5
-    }));
-    
-    setParticles(newParticles);
-    
-    setTimeout(() => {
-      setShowImpactEffect(true);
-      
-      if (typeof window !== 'undefined' && 'AudioContext' in window) {
-        try {
-          console.log(`Playing ${effectContent.sound} sound effect`);
-        } catch (error) {
-          console.error('Error playing sound effect:', error);
-        }
-      }
-    }, 500);
-    
-    const timer = setTimeout(() => {
-      setParticles([]);
-      setShowImpactEffect(false);
-      if (onComplete) onComplete();
-    }, 2500);
-    
-    return () => clearTimeout(timer);
-  }, [isActive, effectAction, onComplete, effectContent.sound]);
-  
-  if (!isActive) {
-    return null;
+const MockeryEffect: React.FC<MockeryEffectProps> = ({ action, username }) => {
+  switch (action) {
+    case 'tomato':
+      return <div className="text-red-500">Throwing tomatoes at {username}!</div>;
+    case 'egg':
+      return <div className="text-yellow-500">Pelting {username} with eggs!</div>;
+    case 'putridEgg':
+      return <div className="text-green-500">Covering {username} in putrid eggs!</div>;
+    case 'crown':
+      return <div className="text-yellow-600">Flipping {username}'s crown!</div>;
+    case 'thumbsDown':
+      return <div className="text-gray-500">Giving {username} a thumbs down!</div>;
+    case 'mock':
+      return <div>Mocking {username}!</div>;
+    case 'stocks':
+      return <div>Putting {username} in the stocks!</div>;
+    case 'jester':
+      return <div>Making {username} wear a jester hat!</div>;
+    case 'courtJester':
+      return <div>Demoting {username} to court jester!</div>;
+    case 'silence':
+      return <div>Silencing {username}!</div>;
+    case 'taunt':
+      return <div>Taunting {username}!</div>;
+    case 'smokeBomb':
+      return <div>Throwing a smoke bomb at {username}!</div>;
+    case 'protection':
+      return <div>Protecting {username} from mockery!</div>;
+    case 'shame':
+      return <div>Shaming {username}!</div>;
+    case 'challenge':
+      return <div>Challenging {username}!</div>;
+    case 'joust':
+      return <div>Jousting with {username}!</div>;
+    case 'duel':
+      return <div>Duelling with {username}!</div>;
+    default:
+      return <div>Performing a generic mockery on {username}!</div>;
   }
-  
-  if (isActive && normalizeMockeryAction(effectAction as string) === 'smokeBomb') {
-    return (
-      <AnimatePresence>
-        <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden perspective">
-          <motion.div 
-            className="absolute inset-0 bg-black/50 backdrop-blur-md"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          />
-          
-          <motion.div 
-            className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
-            initial={{ scale: 0.5, opacity: 0, rotateX: -20 }}
-            animate={{ scale: 1, opacity: 1, rotateX: 0 }}
-            exit={{ scale: 1.5, opacity: 0, rotateX: 20 }}
-            transition={{ duration: 0.5, type: "spring", damping: 15 }}
-          >
-            <div className="text-8xl mb-4">
-              💣 💨
-            </div>
-            <div className="text-4xl font-bold text-gray-300">
-              Smoke Bomb!
-            </div>
-            <motion.div 
-              className="text-xl text-white/80 mt-2"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              {username}'s profile is engulfed in smoke!
-            </motion.div>
-            <motion.div 
-              className="text-sm text-white/60 mt-4 max-w-md"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-            >
-              {getMockeryDescription(normalizeMockeryAction(effectAction as string) as MockeryAction)}
-            </motion.div>
-          </motion.div>
-          
-          {particles.map((particle) => (
-            <motion.div
-              key={particle.id}
-              className="absolute"
-              initial={{ 
-                left: '50%',
-                top: '50%',
-                scale: 0.5,
-                opacity: 0
-              }}
-              animate={{ 
-                left: `${particle.x}%`,
-                top: `${particle.y}%`,
-                scale: 1,
-                opacity: [0, 0.7, 0]
-              }}
-              exit={{
-                opacity: 0
-              }}
-              transition={{
-                duration: particle.velocity,
-                delay: particle.delay,
-                ease: "easeOut"
-              }}
-            >
-              <div className="text-4xl">💨</div>
-            </motion.div>
-          ))}
-        </div>
-      </AnimatePresence>
-    );
-  }
-  
-  return (
-    <AnimatePresence>
-      <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
-        {particles.map((particle) => (
-          <motion.div
-            key={particle.id}
-            className="absolute"
-            initial={{ 
-              left: '50%',
-              top: '-10%',
-              rotate: particle.rotation,
-              opacity: 0
-            }}
-            animate={{ 
-              left: `${particle.x}%`,
-              top: '110%',
-              rotate: particle.rotation + 360,
-              opacity: [0, 1, 1, 0]
-            }}
-            transition={{
-              duration: particle.velocity,
-              delay: particle.delay,
-              times: [0, 0.1, 0.8, 1],
-              ease: "easeIn"
-            }}
-          >
-            <div className="text-4xl">{effectContent.emoji}</div>
-          </motion.div>
-        ))}
-        
-        {showImpactEffect && (
-          <motion.div 
-            className="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1.2, opacity: 1 }}
-            exit={{ scale: 2, opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className={cn("text-6xl font-bold", effectContent.color)}>
-              {effectContent.text}
-            </div>
-            <div className="text-2xl text-white/80 mt-2">
-              {username} has been mocked!
-            </div>
-          </motion.div>
-        )}
-      </div>
-    </AnimatePresence>
-  );
 };
 
 export default MockeryEffect;

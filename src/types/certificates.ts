@@ -1,33 +1,44 @@
 
+// Certificate types
 export type CertificateType = 
+  | 'royal' 
+  | 'noble' 
   | 'achievement' 
   | 'rank' 
-  | 'team' 
-  | 'spending' 
-  | 'royal' 
-  | 'special' 
-  | 'founder' 
-  | 'nobility'
-  | 'custom'
-  | 'membership'; // Added for compatibility
+  | 'spender' 
+  | 'founder'
+  | 'supporter'
+  | 'special';
 
+// Certificate styles
 export type CertificateStyle = 
+  | 'ornate' 
+  | 'minimal' 
   | 'classic' 
-  | 'modern' 
-  | 'royal' 
-  | 'gold' 
-  | 'premium'
-  | 'elite';
+  | 'modern'
+  | 'standard';
 
+// Certificate team designation
 export type CertificateTeam = 
   | 'red' 
   | 'blue' 
   | 'green' 
   | 'gold' 
   | 'purple' 
+  | 'neutral' 
   | 'none'
-  | 'all'
-  | 'neutral'; // Added for compatibility
+  | 'silver'
+  | 'bronze'
+  | 'crimson';
+
+// Certificate status
+export type CertificateStatus = 
+  | 'issued' 
+  | 'revoked' 
+  | 'minted' 
+  | 'pending'
+  | 'draft'
+  | 'expired';
 
 export interface Certificate {
   id: string;
@@ -36,45 +47,42 @@ export interface Certificate {
   imageUrl: string;
   type: CertificateType;
   style: CertificateStyle;
-  dateIssued: string;
-  expiresAt?: string;
+  team: CertificateTeam;
   userId: string;
-  team?: CertificateTeam;
-  status: 'draft' | 'issued' | 'expired' | 'revoked' | 'minted' | 'pending';
+  username: string;
+  issuedAt: string;
+  dateIssued?: string;
+  expiresAt?: string;
+  isMinted: boolean;
   mintAddress?: string;
-  isMinted?: boolean;
-  issuedAt?: string;
-  // Add properties that were missing
-  issuerName?: string;
-  recipientName?: string;
-  recipientId?: string;
-  tier?: string;
-  rarity?: string;
-  name?: string;
-  previewUrl?: string;
-  mintDate?: string; // Added for compatibility
+  mintDate?: string;
+  previewUrl: string;
+  status: CertificateStatus;
+  metadataUrl?: string;
+  name: string;
+  achievementId?: string;
+  achievement?: any;
+  mintTransaction?: string;
+  background?: string;
+  border?: string;
 }
 
 export interface CertificateTemplate {
   id: string;
+  name: string;
   type: CertificateType;
   style: CertificateStyle;
-  imageUrl: string;
   description: string;
-  title: string;
-  team?: CertificateTeam;
-  // Add properties that were missing
-  name?: string;
-  previewUrl?: string;
-  available?: boolean;
+  imageUrl: string;
+  previewUrl: string;
+  background?: string;
+  border?: string;
 }
 
 export interface CertificateRepository {
-  getCertificates: (userId: string) => Promise<Certificate[]>;
-  getCertificateById: (id: string) => Promise<Certificate | null>;
-  createCertificate: (certificate: Partial<Certificate>) => Promise<Certificate>;
-  updateCertificate: (id: string, updates: Partial<Certificate>) => Promise<Certificate>;
+  getUserCertificates: (userId: string) => Promise<Certificate[]>;
+  getCertificate: (id: string) => Promise<Certificate | null>;
+  createCertificate: (data: Partial<Certificate>) => Promise<Certificate>;
   mintCertificate: (id: string) => Promise<{ success: boolean; mintAddress?: string }>;
-  getTemplates: () => Promise<CertificateTemplate[]>;
-  generateCertificate: (templateId: string, userId: string) => Promise<Certificate>;
+  revokeCertificate: (id: string) => Promise<boolean>;
 }

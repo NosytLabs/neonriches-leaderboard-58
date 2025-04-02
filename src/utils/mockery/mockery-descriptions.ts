@@ -1,70 +1,60 @@
 
-import { MockeryAction } from "@/types/mockery-types";
+import { MockeryAction } from '@/types/mockery-types';
 
-// Full descriptions for all mockery actions
-export const mockeryDescriptions: Record<MockeryAction, string> = {
-  tomato: "Throw a tomato at the user",
-  egg: "Throw an egg at the user",
-  rotten_egg: "Throw a rotten egg for extra stench",
-  flame: "Flame the user in public",
-  heart: "Ironically heart their profile",
-  thumbs_down: "Show disapproval",
-  skull: "Mark them as digitally deceased",
-  crown: "Crown them as the fool",
-  putridEgg: "A specialty item that really stinks",
-  stocks: "Place them in the digital stocks for public mockery",
-  jester: "Declare them the court jester",
-  mock: "Simple mockery for simple folk",
-  challenge: "Challenge them to prove their worth",
-  joust: "Challenge them to a spending joust",
-  duel: "Declare a spending duel",
-  silence: "Temporarily silence them",
-  laugh: "Publicly laugh at their status",
-  fish: "Slap them with a digital fish",
-  taunt: "Taunt them mercilessly",
-  thumbsDown: "Express your disapproval",
-  trumpet: "Announce their failure",
-  confetti: "Ironically celebrate their spending",
-  shame: "Publicly shame them",
-  courtJester: "Name them the court's fool",
-  smokeBomb: "Leave them in a cloud of confusion",
-  protection: "Protect yourself from their mockery",
-  royal_decree: "Issue a royal decree of shame",
-  shame_certificate: "Award a certificate of shame",
-  insult: "Deliver a royal insult",
-  humiliate: "Publicly humiliate them"
-};
-
-// Short descriptions for mockery action tooltips
-export const mockeryShortDescriptions: Record<MockeryAction, string> = {
+// Descriptions for mockery actions (short format)
+export const mockeryShortDescriptions: Record<string, string> = {
   tomato: "Throw a tomato",
-  egg: "Throw an egg",
-  rotten_egg: "Throw a rotten egg",
-  flame: "Flame publicly",
-  heart: "Ironically heart",
-  thumbs_down: "Show disapproval",
-  skull: "Mark as deceased",
-  crown: "Crown as fool",
-  putridEgg: "Throw putrid egg",
-  stocks: "Put in stocks",
-  jester: "Name as jester",
-  mock: "Simple mockery",
-  challenge: "Challenge worth",
-  joust: "Spending joust",
-  duel: "Spending duel",
-  silence: "Temporary silence",
-  laugh: "Public laughter",
-  fish: "Slap with fish",
-  taunt: "Merciless taunt",
-  thumbsDown: "Disapproval",
-  trumpet: "Announce failure",
-  confetti: "Ironic celebration",
-  shame: "Public shame",
-  courtJester: "Court fool",
-  smokeBomb: "Confusion cloud",
-  protection: "Self-protection",
-  royal_decree: "Royal shame decree",
-  shame_certificate: "Shame certificate",
-  insult: "Royal insult",
-  humiliate: "Public humiliation"
+  egg: "Pelt with eggs",
+  putridEgg: "Throw a rotten egg",
+  crown: "Topple royal status",
+  thumbsDown: "Express disapproval",
+  mock: "Openly mock",
+  stocks: "Place in public stocks",
+  jester: "Assign a jester hat",
+  courtJester: "Demote to court jester",
+  silence: "Temporarily silence",
+  taunt: "Taunt with insults",
+  smokeBomb: "Throw a smoke bomb",
+  protection: "Shield from mockery",
+  shame: "Publicly shame",
+  challenge: "Challenge their worth",
+  joust: "Challenge to joust",
+  duel: "Engage in a duel",
+  royal_decree: "Issue a royal decree",
+  // Ensure these are defined in MockeryAction
+  mock: "Mock mercilessly"
 };
+
+// Descriptions for mockery actions (full format)
+export const mockeryDescriptions: Record<string, string> = {
+  tomato: "Throw a tomato at the target, causing temporary embarrassment.",
+  egg: "Pelt the target with eggs, creating a messy situation.",
+  putridEgg: "Throw a rotten egg that leaves a lingering unpleasant odor.",
+  crown: "Topple the target's crown, reducing their royal status temporarily.",
+  thumbsDown: "Express your disapproval of the target's actions.",
+  mock: "Openly mock the target with jeering and ridicule.",
+  stocks: "Place the target in the public stocks for all to see.",
+  jester: "Assign the target a jester hat, making them the butt of jokes.",
+  courtJester: "Demote the target to court jester, requiring them to entertain the court.",
+  silence: "Temporarily prevent the target from speaking in royal discussions.",
+  taunt: "Taunt the target with insulting words and gestures.",
+  smokeBomb: "Throw a smoke bomb that temporarily obscures the target's visibility.",
+  protection: "Shield yourself from mockery with royal protection.",
+  shame: "Publicly shame the target for their dishonorable behavior.",
+  challenge: "Challenge the target to prove their worth.",
+  joust: "Challenge the target to a virtual jousting match.",
+  duel: "Engage the target in a prestigious royal duel.",
+  royal_decree: "Issue a royal decree declaring the target's embarrassment.",
+  // Ensure these are defined in MockeryAction
+  rotten_egg: "Assault with an egg that has far exceeded its shelf life."
+};
+
+// Get the appropriate description based on action
+export function getMockeryDescription(action: MockeryAction | string, isShort: boolean = false): string {
+  const descriptions = isShort ? mockeryShortDescriptions : mockeryDescriptions;
+  
+  return descriptions[action] || (isShort ? 
+    "Mock the target" : 
+    "Use a mockery action against the target."
+  );
+}

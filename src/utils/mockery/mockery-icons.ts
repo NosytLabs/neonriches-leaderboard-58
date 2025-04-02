@@ -1,66 +1,58 @@
 
 import { MockeryAction } from '@/types/mockery-types';
 
-/**
- * This utility maps mockery actions to their icon names
- * For use with various icon libraries or CSS classes
- */
-
-// Map of mockery actions to icon paths
-const mockeryIcons: Partial<Record<MockeryAction, string>> = {
-  tomato: 'food',
-  egg: 'egg',
-  putridEgg: 'egg-fried',
-  taunt: 'message-square',
-  shame: 'thumbs-down',
-  jester: 'crown',
-  mock: 'message',
-  challenge: 'flag',
-  joust: 'swords',
-  duel: 'sword',
-  crown: 'crown',
-  stocks: 'lock',
-  silence: 'message-square-off',
-  courtJester: 'sparkles',
-  smokeBomb: 'cloud-fog',
-  protection: 'shield',
-  thumbs_down: 'thumbs-down',
-  laugh: 'smile',
-  fish: 'fish',
-  // Add the remaining MockeryAction types
-  rotten_egg: 'egg',
-  flame: 'flame',
-  heart: 'heart',
-  skull: 'skull',
-  thumbsDown: 'thumbs-down',
+// Icon names for mockery actions
+export const mockeryIcons: Partial<Record<string, string>> = {
+  tomato: "tomato",
+  egg: "egg",
+  putridEgg: "putrid-egg",
+  crown: "crown",
+  thumbsDown: "thumbs-down",
+  mock: "mock",
+  stocks: "stocks",
+  jester: "jester",
+  courtJester: "court-jester",
+  silence: "silence",
+  taunt: "taunt",
+  smokeBomb: "smoke-bomb",
+  protection: "shield",
+  shame: "shame",
+  challenge: "challenge",
+  joust: "joust",
+  duel: "duel",
+  royal_decree: "royal-decree",
+  // Remove any that aren't defined in MockeryAction
 };
 
-// Define a more comprehensive set of mockery actions with associated icons
-export const mockeryIconMap: Record<string, string> = {
-  'tomato': 'tomato',
-  'egg': 'egg',
-  'rotten_egg': 'egg-off',
-  'putridEgg': 'egg-off',
-  'shame': 'thumbs-down',
-  'mock': 'message-square',
-  'challenge': 'flag',
-  'joust': 'swords',
-  'duel': 'swords-x',
-  'flame': 'flame',
-  'jester': 'crown',
-  'crown': 'crown',
-  'stocks': 'lock',
-  'silence': 'message-square-off',
-  'courtJester': 'sparkles',
-  'smokeBomb': 'cloud-fog',
-  'protection': 'shield',
-  'thumbs_down': 'thumbs-down',
-  'thumbsDown': 'thumbs-down',
-  'taunt': 'message-circle',
-  'heart': 'heart',
-  'skull': 'skull',
-  'laugh': 'smile',
-  'fish': 'fish',
+// Icon colors for mockery actions
+export const mockeryIconColors: Partial<Record<string, string>> = {
+  tomato: "text-red-500",
+  egg: "text-yellow-400",
+  putridEgg: "text-green-600",
+  crown: "text-royal-gold",
+  thumbsDown: "text-zinc-400",
+  mock: "text-blue-400",
+  stocks: "text-amber-700",
+  jester: "text-purple-400",
+  courtJester: "text-purple-600",
+  silence: "text-gray-400",
+  taunt: "text-orange-500",
+  smokeBomb: "text-zinc-600",
+  protection: "text-green-500",
+  shame: "text-red-600",
+  challenge: "text-teal-500",
+  joust: "text-indigo-500",
+  duel: "text-red-700",
+  royal_decree: "text-royal-purple",
+  // Add any new ones that are in MockeryAction
 };
 
-export default mockeryIcons;
+// Get the appropriate icon for a mockery action
+export function getMockeryIcon(action: MockeryAction | string): string {
+  return mockeryIcons[action] || "mock";
+}
+
+// Get the color class for a mockery action
+export function getMockeryIconColor(action: MockeryAction | string): string {
+  return mockeryIconColors[action] || "text-gray-400";
+}
