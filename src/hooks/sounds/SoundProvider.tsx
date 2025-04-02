@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { SoundContext } from '@/contexts/SoundContext';
+import { SoundContext } from '../../contexts/SoundContext';
 import { SoundType, SoundOptions } from '@/types/sound-types';
 import { premiumSoundAssets, defaultSoundAssets } from './premium-sound-assets';
 

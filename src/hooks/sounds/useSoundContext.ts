@@ -1,6 +1,6 @@
 
 import { useContext } from 'react';
-import { SoundContext } from '@/contexts/SoundContext';
+import { SoundContext } from '../../contexts/SoundContext';
 import { SoundHook } from '@/types/sound-types';
 
 /**
