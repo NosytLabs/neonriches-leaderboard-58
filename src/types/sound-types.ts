@@ -1,111 +1,97 @@
 
-// Create this file to include all needed sound types
 export type SoundType =
   | 'click'
   | 'success'
   | 'error'
   | 'notification'
-  | 'coins'
-  | 'purchase'
-  | 'levelUp'
   | 'achievement'
-  | 'transition'
-  | 'hover'
-  | 'select'
-  | 'warning'
-  | 'celebration'
-  | 'welcome'
-  | 'boost'
-  | 'shame'
-  | 'reward'
-  | 'chime'
-  | 'fanfare'
-  | 'coinDrop'
   | 'coin'
+  | 'purchase'
   | 'deposit'
   | 'withdrawal'
-  | 'rank_up'
-  | 'mockery'
-  | 'royal'
-  | 'message'
+  | 'levelUp'
   | 'level_up'
-  | 'unlock'
-  | 'withdraw'
-  | 'team'
+  | 'boost'
+  | 'message'
+  | 'mockery'
+  | 'coinDrop'
+  | 'shame'
+  | 'fanfare'
+  | 'royal'
+  | 'protection'
+  | 'sparkle'
+  | 'royalAnnouncement'
   | 'trumpet'
   | 'medallion'
-  | 'royalAnnouncement'
-  | 'royal_announcement'
-  | 'throne'
-  | 'toggle'
+  | 'seal'
+  | 'transfer'
+  | 'unlock'
+  | 'team'
+  | 'rank_up'
+  | 'reward'
+  | 'swordClash'
+  | 'noblesLaugh'
+  | 'parchmentUnfurl'
+  | 'pageChange'
+  | 'wish'
+  | 'inkScribble'
+  | 'hover'
+  | 'advertisement'
   | 'alert'
   | 'badge'
+  | 'toggle'
   | 'upgrade'
   | 'down'
-  | 'up';
+  | 'up'
+  | 'throne';
+
+export interface SoundOptions {
+  volume?: number;
+  loop?: boolean;
+  playbackRate?: number;
+  onEnd?: () => void;
+  interrupt?: boolean;
+  fadeIn?: boolean;
+  fadeOut?: boolean;
+  onStart?: () => void;
+  onPause?: () => void;
+  onResume?: () => void;
+}
 
 export interface SoundConfig {
   enabled: boolean;
-  volume: number;
   muted: boolean;
-  effects: Record<string, boolean>;
-  premium: boolean;
-  theme: string;
+  volume: number;
+  effects?: Record<string, boolean>;
+  premium?: boolean;
+  theme?: string;
+}
+
+export interface UseNotificationSoundsReturn {
+  playSound: (sound: SoundType, options?: SoundOptions) => void;
+  mute: () => void;
+  unmute: () => void;
+  isMuted: boolean;
+  toggleMuted: () => boolean;
+  setVolume: (volume: number) => void;
+  currentVolume: number;
 }
 
 export interface PremiumSoundPackDetails {
   id: string;
   name: string;
   description: string;
-  price: number;
-  previews: Record<SoundType, string>;
-  purchasable: boolean;
+  cost: number;
+  sounds: Record<string, string>;
+  previews: string[];
   icon?: string;
 }
 
-export interface SoundHook {
-  playSound: (type: SoundType) => void;
-  stopSound: (fade?: boolean) => void;
-  setVolume: (volume: number) => void;
-  toggleMute: () => boolean;
-  isMuted: boolean;
-  isPlaying: boolean;
-  pauseSound?: () => void;
-  resumeSound?: () => void;
-  currentSound?: string | null;
-  soundConfig?: SoundConfig;
-}
-
-export interface UseSoundHook {
-  playSound: (type: SoundType) => void;
-  stopSound: (type?: SoundType) => void;
-  setVolume: (volume: number) => void;
-  toggleMute: () => boolean;
-  isMuted: boolean;
-  isPlaying: (type: SoundType) => boolean;
-  soundConfig?: SoundConfig;
-  toggleMuted?: () => boolean;
-  pauseSound?: () => void;
-  resumeSound?: () => void;
-  currentSound?: string | null;
-  play?: (type: SoundType) => void;
-}
-
-export type SoundEffectMap = Record<SoundType, HTMLAudioElement>;
-
-export interface SoundOptions {
-  volume?: number;
-  loop?: boolean;
-  rate?: number;
-  detune?: number;
-  muted?: boolean;
-  onEnd?: () => void;
-  playbackRate?: number;
-}
-
-export interface UseNotificationSoundsReturn {
-  playNotificationSound: (type: SoundType) => void;
-  isSoundEnabled: boolean;
-  toggleSound: () => void;
-  playSound?: (type: SoundType) => void;
-}
+// Export sound types
+export type {
+  SoundType,
+  SoundOptions,
+  SoundConfig,
+  UseNotificationSoundsReturn,
+  PremiumSoundPackDetails
+};

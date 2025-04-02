@@ -27,6 +27,7 @@ export interface BoostEffect {
   strength?: number;
   allowStacking?: boolean;
   minTier?: string;
+  iconName?: string;
 }
 
 export interface ProfileBoost {

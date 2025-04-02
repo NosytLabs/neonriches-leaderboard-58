@@ -1,6 +1,6 @@
 
 /**
- * Convert a string to be safe for display
+ * Convert a value to a safe string representation
  */
 export function safeToString(value: any): string {
   if (value === null || value === undefined) {
@@ -17,6 +17,20 @@ export function safeToString(value: any): string {
     console.error('Error converting value to string:', e);
     return '';
   }
+}
+
+/**
+ * Get initials from a name string
+ */
+export function getInitials(name: string): string {
+  if (!name) return '';
+  
+  return name
+    .split(' ')
+    .map(part => part.charAt(0))
+    .join('')
+    .toUpperCase()
+    .substring(0, 2);
 }
 
 export default safeToString;

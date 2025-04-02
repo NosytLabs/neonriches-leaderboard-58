@@ -1,5 +1,20 @@
 
-import { TeamColor } from "./mockery-types";
+/**
+ * Team related types
+ */
+
+// Define core TeamColor type
+export type TeamColor = 
+  | 'red' 
+  | 'blue' 
+  | 'green' 
+  | 'gold' 
+  | 'purple'
+  | 'none'
+  | 'neutral'
+  | 'silver'
+  | 'bronze'
+  | 'crimson';
 
 export type TeamRole = 'member' | 'moderator' | 'leader' | 'founder';
 
@@ -38,12 +53,12 @@ export interface TeamInvite {
   status: 'pending' | 'accepted' | 'declined';
 }
 
-export interface TeamDataCompat {
+export interface TeamData {
+  id: string;
   color: TeamColor;
   name: string;
   description: string;
   members: number;
-  id: string;
   logoUrl: string;
   totalContribution: number;
   rank: number;

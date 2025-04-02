@@ -36,6 +36,8 @@ export interface CertificateTemplate {
   style: CertificateStyle;
   available: boolean;
   availableForTier?: string | string[]; // Accept both string and string[]
+  requiresFounder?: boolean;
+  availableForRank?: string;
 }
 
 export interface CertificateService {
