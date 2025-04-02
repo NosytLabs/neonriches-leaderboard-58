@@ -34,7 +34,7 @@ const LeaderboardRow: React.FC<LeaderboardRowProps> = ({ user, position, isCurre
       </div>
       
       <Avatar className="h-10 w-10 mx-3 border border-white/20">
-        <AvatarImage src={user.profileImage || user.avatarUrl} alt={user.username} />
+        <AvatarImage src={user.profileImage} alt={user.username} />
         <AvatarFallback>
           {user.displayName?.substring(0, 2) || user.username.substring(0, 2)}
         </AvatarFallback>

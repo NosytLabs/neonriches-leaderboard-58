@@ -1,12 +1,19 @@
-
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { UserProfile } from '@/types/user';
-import { Crown, Zap, CreditCard, DollarSign, CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
-import { formatCurrency } from '@/utils/formatters';
+import { UserProfile } from '@/types/user';
+import { Crown, CreditCard, Zap, Shield, CheckCircle } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+
+const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+};
 
 interface PlanFeature {
   title: string;

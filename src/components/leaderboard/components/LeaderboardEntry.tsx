@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -52,7 +53,7 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
             )}
           >
             <AvatarImage 
-              src={user.profileImage || user.avatarUrl || ''} 
+              src={user.profileImage} 
               alt={user.username} 
             />
             <AvatarFallback>

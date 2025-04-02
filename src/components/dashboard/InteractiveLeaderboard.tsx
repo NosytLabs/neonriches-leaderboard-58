@@ -4,8 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowUp, ArrowDown, Minus } from 'lucide-react';
-import { LeaderboardUser } from '@/types/mockery-types';
+import { LeaderboardUser } from '@/types/leaderboard';
 import LeaderboardActions from './leaderboard/LeaderboardActions';
+import { adaptLeaderboardUser } from '@/utils/typeAdapters';
 
 // Update to include spendChange, rankChange, and other required properties
 const mockLeaderboardData: LeaderboardUser[] = [

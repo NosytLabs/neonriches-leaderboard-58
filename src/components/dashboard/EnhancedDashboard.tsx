@@ -16,6 +16,7 @@ import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidate
 import { UserProfile as UserProfileType } from '@/types/user';
 import { TeamColor } from '@/types/mockery-types';
 import { toTeamColor } from '@/utils/typeConverters';
+import { adaptUserProfile } from '@/utils/typeAdapters';
 
 /**
  * Converts a consolidated user profile to a format compatible with components
@@ -24,57 +25,7 @@ import { toTeamColor } from '@/utils/typeConverters';
 function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfileType {
   if (!user) return null as any;
   
-  // Convert the team property to ensure it's a valid TeamColor
-  const teamColor = toTeamColor(user.team as string) as TeamColor;
-  
-  return {
-    id: user.id,
-    username: user.username,
-    displayName: user.displayName || '',
-    email: user.email || '',
-    profileImage: user.profileImage || '',
-    bio: user.bio || '',
-    joinedDate: user.joinedDate || '',
-    isVerified: user.isVerified || false,
-    isProtected: user.isProtected || false,
-    isVIP: user.isVIP || false,
-    isFounder: user.isFounder || false,
-    isAdmin: user.isAdmin || false,
-    team: teamColor,
-    tier: user.tier || 'basic',
-    rank: user.rank || 0,
-    previousRank: user.previousRank || 0,
-    totalSpent: user.totalSpent || 0, // Ensure totalSpent is set
-    amountSpent: user.amountSpent || 0,
-    walletBalance: user.walletBalance || 0,
-    settings: {
-      profileVisibility: (user.settings?.profileVisibility as "public" | "private" | "followers" | "friends") || 'public',
-      allowProfileLinks: Boolean(user.settings?.allowProfileLinks),
-      theme: (user.settings?.theme as "light" | "dark" | "royal" | "system") || 'dark',
-      notifications: Boolean(user.settings?.notifications),
-      emailNotifications: Boolean(user.settings?.emailNotifications),
-      marketingEmails: Boolean(user.settings?.marketingEmails),
-      showRank: Boolean(user.settings?.showRank),
-      darkMode: Boolean(user.settings?.darkMode),
-      soundEffects: Boolean(user.settings?.soundEffects),
-      showBadges: Boolean(user.settings?.showBadges),
-      showTeam: Boolean(user.settings?.showTeam || true),
-      showSpending: Boolean(user.settings?.showSpending || true)
-    },
-    profileBoosts: user.profileBoosts || [],
-    cosmetics: user.cosmetics || {
-      border: [],
-      color: [],
-      font: [],
-      emoji: [],
-      title: [],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    },
-    spendStreak: user.spendStreak || 0
-  };
+  return adaptUserProfile(user);
 }
 
 const EnhancedDashboard = () => {

@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { addProfileBoostWithDays, addCosmeticByCategoryString } from './authUtils';
 import { ensureTotalSpent } from '@/utils/userTypes';
+import { adaptUserProfile, createUserSubscription } from '@/utils/typeAdapters';
 
 export const useAuthState = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -106,27 +107,42 @@ export const useAuthMethods = (
     }
   };
 
-  const updateUserProfile = async (updatedUser: Partial<UserProfile>): Promise<void> => {
+  const updateUserProfile = async (userData: Partial<UserProfile>): Promise<boolean> => {
     try {
-      if (!user) throw new Error('No user to update');
-      
-      // Ensure displayName and required fields are not undefined
-      const userWithRequiredFields = {
+      // Ensure all required fields are present
+      const adaptedUserData = adaptUserProfile({
         ...user,
-        displayName: user.displayName || user.username,
-        totalSpent: user.totalSpent || user.amountSpent || 0,
-        walletBalance: user.walletBalance || 0 // Ensure walletBalance is set
-      };
+        ...userData,
+        // Make sure settings is provided since it's required
+        settings: userData.settings || user?.settings || {
+          profileVisibility: 'public',
+          allowProfileLinks: true,
+          theme: 'dark',
+          notifications: true,
+          emailNotifications: false,
+          marketingEmails: false,
+          showRank: true,
+          darkMode: true,
+          soundEffects: true,
+          showBadges: true,
+          showTeam: true,
+          showSpending: true
+        },
+        // Make sure displayName is provided
+        displayName: userData.displayName || user?.displayName || userData.username || user?.username || '',
+        // Make sure totalSpent is provided
+        totalSpent: userData.totalSpent || user?.totalSpent || 0
+      });
       
       // Update user metadata in Supabase Auth
       const { error: authUpdateError } = await supabase.auth.updateUser({
         data: {
-          username: updatedUser.username || userWithRequiredFields.username,
-          display_name: updatedUser.displayName || userWithRequiredFields.displayName,
-          avatar_url: updatedUser.profileImage,
-          team: updatedUser.team,
-          tier: updatedUser.tier,
-          gender: updatedUser.gender,
+          username: adaptedUserData.username,
+          display_name: adaptedUserData.displayName,
+          avatar_url: adaptedUserData.profileImage,
+          team: adaptedUserData.team,
+          tier: adaptedUserData.tier,
+          gender: adaptedUserData.gender,
         }
       });
       
@@ -136,24 +152,24 @@ export const useAuthMethods = (
       const { error: profileUpdateError } = await supabase
         .from('users')
         .update({
-          username: updatedUser.username || userWithRequiredFields.username,
-          display_name: updatedUser.displayName || userWithRequiredFields.displayName,
-          profile_image: updatedUser.profileImage,
-          bio: updatedUser.bio,
-          team: updatedUser.team,
-          tier: updatedUser.tier,
-          gender: updatedUser.gender,
+          username: adaptedUserData.username,
+          display_name: adaptedUserData.displayName,
+          profile_image: adaptedUserData.profileImage,
+          bio: adaptedUserData.bio,
+          team: adaptedUserData.team,
+          tier: adaptedUserData.tier,
+          gender: adaptedUserData.gender,
         })
-        .eq('id', userWithRequiredFields.id);
+        .eq('id', user.id);
       
       if (profileUpdateError) throw profileUpdateError;
       
       // Update local state with ensured displayName and totalSpent
       const newUser = { 
-        ...userWithRequiredFields, 
-        ...updatedUser, 
-        totalSpent: userWithRequiredFields.totalSpent || userWithRequiredFields.amountSpent || 0,
-        displayName: updatedUser.displayName || userWithRequiredFields.displayName || userWithRequiredFields.username
+        ...adaptedUserData, 
+        ...userData, 
+        totalSpent: adaptedUserData.totalSpent || adaptedUserData.amountSpent || 0,
+        displayName: adaptedUserData.displayName || adaptedUserData.username
       };
       
       setUser(newUser);
@@ -273,6 +289,51 @@ export const useAuthMethods = (
     }
   };
 
+  const updateSubscription = async (subscriptionData: Partial<UserSubscription>): Promise<boolean> => {
+    try {
+      // Create a full UserSubscription with required fields
+      const subscription = createUserSubscription(
+        subscriptionData.planId || 'default',
+        subscriptionData.nextBillingDate || new Date().toISOString(),
+        subscriptionData.status || 'active',
+        subscriptionData.tier || 'basic'
+      );
+      
+      // Use adaptUserProfile to ensure all required fields are present
+      const updatedUser = adaptUserProfile({
+        ...user,
+        subscription,
+        // Make sure required fields are always set
+        displayName: user?.displayName || user?.username || '',
+        totalSpent: user?.totalSpent || 0
+      });
+      
+      setUser(updatedUser);
+      
+      // Update subscription in database
+      const { error } = await supabase
+        .from('subscriptions')
+        .update({
+          plan_id: subscription.planId,
+          next_billing_date: subscription.nextBillingDate,
+          status: subscription.status,
+          tier: subscription.tier
+        })
+        .eq('user_id', user.id);
+      
+      if (error) {
+        console.error('Error updating subscription:', error);
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Update subscription error:', error);
+      setError(error as Error);
+      return false;
+    }
+  };
+
   return {
     login,
     register,
@@ -280,5 +341,6 @@ export const useAuthMethods = (
     updateUserProfile,
     boostProfile,
     awardCosmetic,
+    updateSubscription,
   };
 };
