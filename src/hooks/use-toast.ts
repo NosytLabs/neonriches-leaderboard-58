@@ -1,3 +1,4 @@
 
-// This file exports the useToast hook and toast function from the ui component
-export { useToast, toast } from '@/components/ui/use-toast';
+// Re-export from both files to maintain compatibility
+export { useToast, toast, ToastContext, type ToastActionElement, type ToastProps, type ToastOptions } from '@/components/ui/use-toast';
+export { ToastProvider } from '@/components/ui/toast-provider';

@@ -1,7 +1,7 @@
 
 // Updated use-toast.ts with compatible variant types
 import * as React from "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const TOAST_REMOVE_DELAY = 1000;
 
@@ -48,53 +48,8 @@ function useToastContext() {
   return context;
 }
 
-export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [toasts, setToasts] = useState<ToasterToast[]>([]);
-
-  const addToast = (toast: Toast) => {
-    setToasts((prevToasts) => {
-      const newToast: ToasterToast = {
-        ...toast,
-        id: toast.id || Math.random().toString(36).substr(2, 9),
-        open: true,
-        onOpenChange: (open) => {
-          setToasts((prevToasts) =>
-            prevToasts.map((t) =>
-              t.id === toast.id ? { ...t, open } : t
-            )
-          );
-        },
-      };
-
-      return [...prevToasts, newToast];
-    });
-  };
-
-  const removeToast = (id: string) => {
-    setToasts((prevToasts) => prevToasts.filter((t) => t.id !== id));
-  };
-
-  const updateToast = (id: string, toast: Partial<Toast>) => {
-    setToasts((prevToasts) =>
-      prevToasts.map((t) => (t.id === id ? { ...t, ...toast } : t))
-    );
-  };
-
-  return (
-    <ToastContext.Provider
-      value={{
-        toasts,
-        addToast,
-        removeToast,
-        updateToast,
-      }}
-    >
-      {children}
-    </ToastContext.Provider>
-  );
-};
+// Export the context and provider without using JSX
+export { ToastContext };
 
 export function useToast() {
   const { addToast, removeToast, updateToast, toasts } = useToastContext();
