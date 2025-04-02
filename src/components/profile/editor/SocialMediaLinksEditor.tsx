@@ -29,7 +29,9 @@ const SocialMediaLinksEditor: React.FC<SocialMediaLinksEditorProps> = ({
       id: `link-${Date.now()}`, // Generate a string ID
       platform: '',
       url: '',
-      title: '', // Using title property which is now required
+      title: '', // Using title property
+      icon: 'link', // Add default icon
+      enabled: true, // Add required enabled property
     };
     
     onChange([...links, newLink]);

@@ -1,135 +1,84 @@
 
-// Define the team color options
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze' | 'crimson';
+// Create this file to include the MockeryAction type with 'carrot' and 'confetti'
+import { TeamColor, UserTier } from './user';
 
-// Define the user tier options
-export type UserTier = 
-  | 'free'
-  | 'basic'
-  | 'pro'
-  | 'premium'
-  | 'royal'
-  | 'founder'
-  | 'platinum'
-  | 'diamond'
-  | 'gold'
-  | 'silver'
-  | 'bronze'
-  | 'vip'
-  | 'whale'
-  | 'shark'
-  | 'dolphin'
-  | 'noble'
-  | 'standard'
-  | 'elite'
-  | 'legendary';
-
-// Define the mockery tier options
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal' | 'basic';
-
-// Define the mockery actions
 export type MockeryAction = 
-  | 'boost'
-  | 'shame'
-  | 'gift'
-  | 'challenge'
-  | 'follow'
-  | 'unfollow'
-  | 'mention'
-  | 'comment'
-  | 'react'
-  | 'mock'
-  | 'praise'
-  | 'invite'
-  | 'tomatoes'
-  | 'eggs'
-  | 'putridEggs'
-  | 'stocks'
-  | 'crown'
-  | 'jester'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'silence'
-  | 'protection'
-  | 'taunt'
-  | 'joust'
-  | 'duel'
-  | 'thumbsDown';
+  | 'tomato' 
+  | 'egg' 
+  | 'flower' 
+  | 'gold_star' 
+  | 'crown' 
+  | 'torch' 
+  | 'shame_bell'
+  | 'carrot'  // Added for PublicShamingFeature.tsx
+  | 'confetti'; // Added for mockeryUtils.ts
 
-// Define gender options
-export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble' | 'none';
+export type MockeryTier = 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary'
+  | 'premium'; // Added for mockeryUtils.ts
 
-// Define the team data interface
-export interface TeamData {
+export interface MockedUser {
   id: string;
-  name: string;
-  color: TeamColor;
-  memberCount: number;
+  username: string;
+  profileImage: string;
   totalSpent: number;
   rank: number;
-  crest: string;
-  leaderUsername?: string;
-  leaderAvatar?: string;
-  members?: number; // Added for compatibility
-  logoUrl?: string; // Added for compatibility
-  totalContribution?: number; // Added for compatibility
-  previousRank?: number; // Added for compatibility
+  tier: UserTier;
+  team: TeamColor;
+  action?: MockeryAction; // Added for use-mockery.tsx
 }
 
-// Define the leaderboard user interface
+export interface MockeryEvent {
+  id: string;
+  actionType: MockeryAction;
+  fromUserId: string;
+  fromUsername: string;
+  targetUserId: string;
+  targetUsername: string;
+  timestamp: string;
+  message?: string;
+  toUserId?: string; // Added for use-mockery.tsx
+}
+
 export interface LeaderboardUser {
   id: string;
-  userId?: string;
   username: string;
-  displayName?: string;
   profileImage: string;
   tier: UserTier;
   team: TeamColor;
   rank: number;
   previousRank: number;
   totalSpent: number;
-  amountSpent?: number;
-  isVerified?: boolean;
-  isProtected?: boolean;
   spendStreak?: number;
-  joinDate?: string;
-  rankChange?: number;
-  spendChange?: number;
-  avatarUrl?: string;
-  walletBalance?: number; // Added for compatibility
-}
-
-// Define the leaderboard filter interface
-export interface LeaderboardFilter {
-  team: 'all' | TeamColor;
-  tier: 'all' | UserTier;
-  timeframe: 'all-time' | 'today' | 'week' | 'month' | 'year';
-  search: string;
-  sortBy: 'rank' | 'spent' | 'username';
-  sortDirection: 'asc' | 'desc';
-  limit?: number; // Added for compatibility
-}
-
-// Define the mockery event interface
-export interface MockeryEvent {
-  id: string;
-  type: MockeryAction;
-  sourceUserId: string;
-  targetUserId: string;
-  timestamp: string;
-  message?: string;
-  amount?: number;
-  visibility: 'public' | 'private' | 'team';
-  fromUserId?: string; // Added for compatibility
-}
-
-// Define the mocked user interface
-export interface MockedUser {
-  id: string;
-  username: string;
+  walletBalance?: number;
+  isVerified?: boolean;
+  isVIP?: boolean;
   displayName?: string;
-  profileImage: string;
-  tier: UserTier;
-  team: TeamColor;
-  userId?: string; // Added for compatibility
+  isProtected?: boolean;
+  amountSpent?: number;
+  userId?: string;
+  spentAmount?: number; // Added for mockData.ts
+}
+
+export interface MockeryAction {
+  id: string;
+  type: string;
+  cost: number;
+  name: string;
+  description: string;
+  iconUrl: string;
+  rarity: string;
+  cooldown: number;
+}
+
+export interface MockeryResponse {
+  success: boolean;
+  message: string;
+  actionId?: string;
+  mockedUserId?: string;
+  tier?: MockeryTier;
 }

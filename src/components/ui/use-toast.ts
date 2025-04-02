@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import type {
   ToastActionElement,
@@ -12,6 +13,7 @@ type ToasterToast = ToastProps & {
   title?: React.ReactNode
   description?: React.ReactNode
   action?: ToastActionElement
+  duration?: number
 }
 
 const actionTypes = {
@@ -168,7 +170,8 @@ function toast({ ...props }: Toast) {
 }
 
 export interface ToastOptions extends Toast {
-  variant?: "default" | "destructive" | "success" | "royal" | "outline" | "secondary";
+  variant?: "default" | "destructive" | "success" | "royal" | "outline" | "secondary" | "gold" | "warning";
+  duration?: number;
 }
 
 function useToast() {

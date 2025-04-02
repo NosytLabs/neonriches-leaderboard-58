@@ -37,6 +37,8 @@ const toastVariants = cva(
           "royal group border-royal-purple/20 bg-royal-purple/10 text-royal-purple",
         outline: "border border-white/10 bg-transparent text-foreground",
         secondary: "border bg-secondary text-secondary-foreground",
+        gold: "border-transparent bg-yellow-600/20 text-yellow-500 shadow hover:bg-yellow-600/30",
+        warning: "border-transparent bg-warning text-warning-foreground shadow hover:bg-warning/80",
       },
     },
     defaultVariants: {

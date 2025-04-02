@@ -34,11 +34,13 @@ export interface CosmeticItem {
   rarity: CosmeticRarity;
   type: CosmeticType | string;
   enabled: boolean;
-  cost: number;
-  price?: number; // Added for RoyalBoutique component
+  cost?: number; // Make cost optional
+  price?: number; // Price can be used as a fallback for cost
   previewUrl?: string;
   image?: string;
   imageSrc?: string; // Added to support existing code
+  icon?: string;
+  strength?: number; // Added for boost effects
 }
 
 export interface SocialLink {
@@ -50,6 +52,7 @@ export interface SocialLink {
   title?: string; // Added for compatibility
   displayText?: string;
   label?: string;
+  clicks?: number; // Add clicks property
 }
 
 export interface UserCosmetics {
@@ -62,8 +65,8 @@ export interface UserCosmetics {
   effect?: string[];
   badge?: string[];
   theme?: string[];
-  [key: string]: string[] | undefined;
-  // Properties from user.d.ts for backwards compatibility
+  [key: string]: string[] | string | undefined;
+  // Individual active items
   activeTitle?: string;
   activeBorder?: string;
   activeBackground?: string;

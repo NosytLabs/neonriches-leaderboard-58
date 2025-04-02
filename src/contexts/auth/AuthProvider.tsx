@@ -1,10 +1,8 @@
-
 import React, { useReducer, useEffect, useMemo } from 'react';
 import { AuthState, AuthAction, AuthContextType, AuthProviderProps } from '@/types/auth-context';
 import { UserProfile } from '@/types/user-consolidated';
 import { AuthContext } from './index';
 
-// Initial state for the auth reducer
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
@@ -12,7 +10,6 @@ const initialState: AuthState = {
   error: null
 };
 
-// Auth reducer function
 const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
     case 'LOGIN_START':
@@ -65,9 +62,6 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
   }
 };
 
-/**
- * Mock function to create a demo user profile
- */
 const createDemoUserProfile = (id: string, username: string): UserProfile => ({
   id,
   username,
@@ -94,7 +88,20 @@ const createDemoUserProfile = (id: string, username: string): UserProfile => ({
     showRank: true,
     darkMode: true,
     soundEffects: true,
-    showBadges: true
+    showBadges: true,
+    showTeam: true,
+    showSpending: true
+  },
+  cosmetics: {
+    border: [],
+    color: [],
+    font: [],
+    emoji: [],
+    title: [],
+    background: [],
+    effect: [],
+    badge: [],
+    theme: []
   },
   following: [],
   followers: [],
@@ -104,7 +111,6 @@ const createDemoUserProfile = (id: string, username: string): UserProfile => ({
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Check for existing auth on mount
   useEffect(() => {
     const checkAuth = async () => {
       dispatch({ type: 'AUTH_START' });
@@ -134,12 +140,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuth();
   }, []);
 
-  // Login function
   const login = async (email: string, password: string): Promise<boolean> => {
     dispatch({ type: 'LOGIN_START' });
     
     try {
-      // Mock login - in a real app, this would call an API
       const demoUser = await new Promise<UserProfile>((resolve) => {
         setTimeout(() => {
           const user = createDemoUserProfile('user-123', email.split('@')[0]);
@@ -161,15 +165,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // Alternative name for login
   const signIn = login;
 
-  // Register function
   const register = async (username: string, email: string, password: string): Promise<boolean> => {
     dispatch({ type: 'REGISTER_START' });
     
     try {
-      // Mock registration - in a real app, this would call an API
       const demoUser = await new Promise<UserProfile>((resolve) => {
         setTimeout(() => {
           const user = createDemoUserProfile('new-user-' + Date.now(), username);
@@ -191,7 +192,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // Logout function
   const logout = async (): Promise<void> => {
     try {
       localStorage.removeItem('auth');
@@ -201,10 +201,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // Alternative name for logout
   const signOut = logout;
 
-  // Update user function
   const updateUser = async (updates: Partial<UserProfile>): Promise<boolean> => {
     try {
       if (!state.user) {
@@ -231,10 +229,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // Alternative name for updateUser
   const updateUserProfile = updateUser;
 
-  // Award cosmetic function
   const awardCosmetic = async (category: string, itemId: string, notify: boolean = true): Promise<boolean> => {
     try {
       if (!state.user || !state.user.cosmetics) {
@@ -261,7 +257,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  // Create a memoized value of the context
   const contextValue = useMemo<AuthContextType>(() => ({
     user: state.user,
     isAuthenticated: state.isAuthenticated,

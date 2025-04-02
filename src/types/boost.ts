@@ -24,6 +24,7 @@ export interface BoostEffect {
   // Add missing properties
   icon?: string;
   previewImage?: string;
+  strength?: number; // Add strength property
 }
 
 export interface ProfileBoost {
@@ -32,10 +33,10 @@ export interface ProfileBoost {
   startDate: string;
   endDate: string;
   level: number;
-  active: boolean;
+  active: boolean; // Required by boost.ts
   effectId?: string;
   // Add properties needed for user.ts ProfileBoost
-  isActive?: boolean;
+  isActive?: boolean; // Optional in user.ts
   strength?: number;
   appliedBy?: string;
   name?: string;

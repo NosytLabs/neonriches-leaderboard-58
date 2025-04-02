@@ -2,6 +2,7 @@
 import { TeamColor } from './team';
 import { ProfileBoost } from './boost';
 import { UserCosmetics } from './cosmetics';
+import { SocialLink } from './cosmetics';
 
 // User profile consolidated type to prevent duplicate declarations
 export interface UserProfile {
@@ -88,5 +89,4 @@ export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to
 
 // Export the TeamColor type for compatibility
 export type { TeamColor };
-export type { SocialLink } from './cosmetics';
 export type TeamType = TeamColor; // Re-export TeamType for compatibility

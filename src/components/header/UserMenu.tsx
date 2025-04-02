@@ -24,7 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 
 // UserBadge component for the dropdown
-const UserBadge = ({ type, value, size, className, showLabel = true }) => {
+const UserBadge = ({ type, value, size, className = "", showLabel = true }) => {
   return (
     <Badge variant="outline" className={className}>
       {value}
@@ -144,7 +144,13 @@ const UserMenu: React.FC<UserMenuProps> = () => {
             <span>Profile</span>
           </div>
           {user.team && (
-            <UserBadge type="team" value={getTeamForBadge() as any} size="sm" showLabel={false} />
+            <UserBadge 
+              type="team" 
+              value={getTeamForBadge() as any} 
+              size="sm" 
+              showLabel={false}
+              className="ml-2" // Add the missing className prop
+            />
           )}
         </DropdownMenuItem>
         <DropdownMenuItem

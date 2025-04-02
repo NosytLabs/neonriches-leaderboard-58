@@ -65,6 +65,7 @@ export interface OnChainLeaderboardEntry {
   spent: number;
   username: string;
   team: string;
+  amount?: number; // Added for solanaService.ts compatibility
 }
 
 export interface SolanaTransaction {
@@ -78,4 +79,8 @@ export interface SolanaTransaction {
   type: 'deposit' | 'withdrawal' | 'transfer' | 'spend';
   memo?: string;
   usdValue?: number;
+  id?: string; // Added for solanaService.ts compatibility
+  sender?: string; // Added for treasuryService.ts compatibility
+  receiver?: string; // Added for treasuryService.ts compatibility
+  recipient?: string; // Added for treasuryService.ts compatibility
 }

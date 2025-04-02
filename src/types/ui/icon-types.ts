@@ -1,122 +1,107 @@
 
-import { LucideProps } from 'lucide-react';
-import { ElementType } from 'react';
+import { LucideProps } from "lucide-react";
+import { CSSProperties } from "react";
 
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
-export type IconColor = 
-  | 'default' 
-  | 'primary'
-  | 'secondary'
-  | 'muted'
-  | 'accent'
-  | 'success'
-  | 'warning'
-  | 'danger'
-  | 'info'
-  | 'gold' 
-  | 'silver' 
-  | 'crimson' 
-  | 'emerald' 
-  | 'royal'
-  | 'red'
-  | 'blue'
-  | 'green'
-  | 'purple';
-
-export type IconStyle = 'default' | 'medieval';
-
-export type MedievalIconName = 
+// Define the MedievalIconName type
+export type MedievalIconName =
   | 'crown'
-  | 'shield'
   | 'sword'
+  | 'shield'
   | 'castle'
-  | 'chalice'
-  | 'dragon'
-  | 'flag'
-  | 'fleur-de-lis'
-  | 'goblet'
-  | 'knight'
-  | 'royal-crown'
   | 'scroll'
+  | 'dragon'
+  | 'knight'
+  | 'goblet'
   | 'throne'
-  | 'tower'
-  | 'treasure-chest'
-  | 'coat-of-arms'
-  | 'medal'
-  | 'gem'
-  | 'heart'
-  | 'trophy'
-  | 'key'
-  | 'coins'
-  | 'wallet'
-  | 'seal'
-  | 'sparkles'
-  | 'user'
-  | 'users'
-  | 'Crown'
-  | 'Scroll'
-  | 'Coins'
-  | 'Shield'
-  | 'Sparkles'
-  | 'Trophy'
-  | 'Users'
-  | 'User'
   | 'banner'
+  | 'crossed-swords'
+  | 'fleur-de-lis'
+  | 'coat-of-arms'
+  | 'royal-scepter'
+  | 'royal-crown'
+  | 'chalice'
+  | 'treasure-chest'
+  | 'helmet'
+  | 'axe'
+  | 'mace'
+  | 'bow-arrow'
   | 'dagger'
-  | 'coin'
+  | 'horse'
+  | 'torch'
+  | 'quill'
+  | 'armor'
+  | 'tower'
+  | 'jester'
+  | 'target'
+  | 'medallion'
+  | 'wizard-hat'
+  | 'wand'
   | 'potion'
-  | 'treasure-chest';
+  | 'cauldron'
+  | 'magic-book'
+  | 'crystal-ball'
+  | 'wizard-staff'
+  | 'witch-broom'
+  | 'talisman'
+  | 'amulet'
+  | 'ring'
+  | 'pendant'
+  | 'coin'
+  | 'gold-coin'
+  | 'chest'
+  | 'key'
+  | 'lock'
+  | 'map'
+  | 'compass'
+  | 'telescope'
+  | 'hourglass'
+  | 'sundial'
+  | 'parchment'
+  | 'feather'
+  | 'ink-bottle'
+  | 'royal-seal'
+  | 'quill-ink'
+  | 'royal-decree'
+  | 'tome'
+  | 'spellbook'
+  | 'grimoire'
+  | 'rune-stone'
+  | 'candelabra'
+  | 'chandelier'
+  | 'royal-carriage'
+  | 'royal-throne'
+  | 'catapult'
+  | 'trebuchet'
+  | 'ballista'
+  | 'battering-ram'
+  | 'royal-banner';
 
+// Define the MedievalIconSize type
+export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+
+// Define the IconProps interface
 export interface IconProps extends LucideProps {
-  icon?: string;
   name?: string;
-  size?: IconSize | number;
-  color?: IconColor | string;
-  className?: string;
-  style?: IconStyle;
-  animated?: boolean;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  color?: string;
+  style?: CSSProperties | string;
 }
 
-export interface MedievalIconProps {
+// Define the IconAdapterProps interface
+export interface IconAdapterProps {
+  name: string;
+  size?: MedievalIconSize;
+  color?: string;
+  className?: string;
+}
+
+// Define the ThemeIconProps interface
+export interface ThemeIconProps extends React.HTMLAttributes<HTMLDivElement> {
   name: MedievalIconName;
-  size?: IconSize;
-  color?: IconColor;
+  size?: MedievalIconSize;
+  color?: string;
   className?: string;
-  animated?: boolean;
 }
 
-// Icon size mapping
-export const iconSizeMap: Record<IconSize, string> = {
-  'xs': 'w-3 h-3',
-  'sm': 'w-4 h-4',
-  'md': 'w-6 h-6',
-  'lg': 'w-8 h-8',
-  'xl': 'w-10 h-10',
-  '2xl': 'w-12 h-12',
-  '3xl': 'w-16 h-16',
-  '4xl': 'w-20 h-20'
-};
-
-// Icon color mapping
-export const iconColorMap: Record<IconColor, string> = {
-  'default': 'text-foreground',
-  'primary': 'text-primary',
-  'secondary': 'text-secondary',
-  'muted': 'text-muted-foreground',
-  'accent': 'text-accent',
-  'success': 'text-green-500',
-  'warning': 'text-amber-500',
-  'danger': 'text-red-500',
-  'info': 'text-blue-500',
-  'gold': 'text-royal-gold',
-  'silver': 'text-gray-300',
-  'crimson': 'text-royal-crimson',
-  'emerald': 'text-emerald-500',
-  'royal': 'text-royal-gold',
-  'red': 'text-red-500',
-  'blue': 'text-blue-500',
-  'green': 'text-green-500',
-  'purple': 'text-purple-500'
-};
-
-export interface LucideIcon extends ElementType<LucideProps> {}
+// Export a IconComponent type
+export type IconComponent = React.ComponentType<IconProps>;

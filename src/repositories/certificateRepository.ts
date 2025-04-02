@@ -1,61 +1,50 @@
 
-import { Certificate, CertificateRepository } from '@/types/certificates';
+import { Certificate, CertificateTemplate } from "@/types/certificate";
 
-// Mock implementation for now - would connect to a real data source in production
+export interface CertificateRepository {
+  getCertificates(): Promise<Certificate[]>;
+  getCertificateById(id: string): Promise<Certificate | null>;
+  getUserCertificates(userId: string): Promise<Certificate[]>;
+  mintCertificate(certificate: Certificate): Promise<boolean>;
+  verifyCertificate(certificateId: string): Promise<boolean>;
+  getCertificateTemplates(): Promise<CertificateTemplate[]>;
+}
+
 export class MockCertificateRepository implements CertificateRepository {
   private certificates: Certificate[] = [];
+  private templates: CertificateTemplate[] = [];
 
-  async getCertificatesByUserId(userId: string): Promise<Certificate[]> {
-    return this.certificates.filter(cert => cert.userId === userId);
+  constructor() {
+    // Initialize with mock data if needed
   }
 
-  async createCertificate(certificate: Certificate): Promise<Certificate> {
-    const newCertificate = {
-      ...certificate,
-      id: certificate.id || `cert-${Date.now()}`,
-      createdAt: certificate.createdAt || new Date().toISOString()
-    };
-    
-    this.certificates.push(newCertificate);
-    return newCertificate;
+  async getCertificates(): Promise<Certificate[]> {
+    return this.certificates;
   }
 
   async getCertificateById(id: string): Promise<Certificate | null> {
-    const certificate = this.certificates.find(cert => cert.id === id);
-    return certificate || null;
+    const cert = this.certificates.find(c => c.id === id);
+    return cert || null;
   }
 
-  async getCertificate(id: string): Promise<Certificate | null> {
-    return this.getCertificateById(id);
+  async getUserCertificates(userId: string): Promise<Certificate[]> {
+    return this.certificates.filter(c => c.recipientId === userId);
   }
 
-  async getCertificatesForUser(userId: string): Promise<Certificate[]> {
-    return this.certificates.filter(cert => cert.userId === userId);
-  }
-
-  async getMintedCertificatesForUser(userId: string): Promise<Certificate[]> {
-    return this.certificates.filter(cert => cert.userId === userId && cert.isMinted);
-  }
-
-  async updateCertificate(certificate: Certificate): Promise<boolean> {
-    const index = this.certificates.findIndex(cert => cert.id === certificate.id);
-    
-    if (index === -1) {
-      return false;
-    }
-    
-    this.certificates[index] = certificate;
+  async mintCertificate(certificate: Certificate): Promise<boolean> {
+    this.certificates.push(certificate);
     return true;
   }
 
-  async deleteCertificate(id: string): Promise<boolean> {
-    const initialLength = this.certificates.length;
-    this.certificates = this.certificates.filter(cert => cert.id !== id);
-    return initialLength > this.certificates.length;
+  async verifyCertificate(certificateId: string): Promise<boolean> {
+    return true; // Mock implementation always returns true
+  }
+
+  async getCertificateTemplates(): Promise<CertificateTemplate[]> {
+    return this.templates;
   }
 }
 
-// Factory function to create the appropriate repository
-export const createCertificateRepository = (): CertificateRepository => {
-  return new MockCertificateRepository();
-};
+// Create singleton instance
+const certificateRepository: CertificateRepository = new MockCertificateRepository();
+export default certificateRepository;
