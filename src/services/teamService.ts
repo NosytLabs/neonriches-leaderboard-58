@@ -110,7 +110,6 @@ class TeamService {
     return this.teamBenefits[team] || this.teamBenefits.none;
   }
   
-  // Add exportable functions for the test file
   getTeams(): TeamColor[] {
     return Object.keys(this.teamColors) as TeamColor[];
   }
@@ -125,5 +124,12 @@ class TeamService {
   }
 }
 
+// Export the service instance and standalone functions
 export const teamService = new TeamService();
-export const { getTeams, getTeamById, getTeamByColor } = new TeamService();
+
+// Export individual functions for compatibility with tests
+export const getTeams = teamService.getTeams.bind(teamService);
+export const getTeamById = teamService.getTeamById.bind(teamService);
+export const getTeamByColor = teamService.getTeamByColor.bind(teamService);
+
+export default teamService;

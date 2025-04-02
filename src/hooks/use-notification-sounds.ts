@@ -1,5 +1,5 @@
 
-import { useSound } from './use-sound';
+import { useSound } from './sounds/use-sound';
 import { SoundType, SoundOptions } from '@/types/sound-types';
 
 export const useNotificationSounds = () => {
@@ -11,35 +11,28 @@ export const useNotificationSounds = () => {
       ...options
     };
 
-    // Make sure we only pass valid sound types
-    const validSoundType = (type as SoundType) || 'notification';
+    // Map common notification types to valid sound types
+    const soundTypeMap: Record<string, SoundType> = {
+      notification: 'notification',
+      achievement: 'achievement',
+      message: 'message',
+      alert: 'alert',
+      success: 'success',
+      error: 'error',
+      reward: 'reward',
+      chime: 'chime',
+      badge: 'badge',
+      toggle: 'toggle',
+      upgrade: 'upgrade',
+      down: 'down',
+      up: 'up',
+      withdraw: 'withdraw'
+    };
 
-    switch (type) {
-      case 'achievement':
-        playSound('achievement', soundOptions);
-        break;
-      case 'message':
-        playSound('message', soundOptions);
-        break;
-      case 'alert':
-        playSound('notification', soundOptions);
-        break;
-      case 'success':
-        playSound('success', soundOptions);
-        break;
-      case 'error':
-        playSound('error', soundOptions);
-        break;
-      case 'reward':
-        playSound('reward', soundOptions);
-        break;
-      case 'chime':
-        playSound('chime', soundOptions);
-        break;
-      default:
-        playSound('notification', soundOptions);
-        break;
-    }
+    // Use the mapped sound type or fallback to notification
+    const soundType = soundTypeMap[type] || 'notification';
+
+    playSound(soundType, soundOptions);
   };
 
   return { playNotificationSound };

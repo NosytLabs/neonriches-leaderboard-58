@@ -23,7 +23,7 @@ export type CosmeticType =
   | 'exclusive'; // Added for compatibility
 
 // Type alias for backward compatibility
-export type CosmeticCategory = CosmeticType;
+export type { CosmeticType as CosmeticCategory };
 
 export type CosmeticRarity = 
   | 'common'

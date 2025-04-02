@@ -19,6 +19,15 @@ export interface Certificate {
   // Compatibility fields
   issueDate?: string;
   nftAddress?: string;
+  thumbnailUrl?: string;
+  isPublic?: boolean;
+  dateExpires?: string;
+  nftId?: string;
+  isVerified?: boolean;
+  templateId?: string;
+  keywords?: string[];
+  metadata?: Record<string, any>;
+  signature?: string;
 }
 
 export type CertificateType = 
@@ -29,7 +38,8 @@ export type CertificateType =
   | 'founder' 
   | 'event' 
   | 'royal'
-  | 'nobility';
+  | 'nobility'
+  | 'custom'; // Added for compatibility
 
 export type CertificateStyle = 
   | 'modern'
@@ -37,7 +47,9 @@ export type CertificateStyle =
   | 'royal'
   | 'minimalist'
   | 'ornate'
-  | 'classic'; // Added classic as valid style
+  | 'classic'
+  | 'medieval'
+  | 'elegant'; // Added for compatibility
 
 export type CertificateTeam = 
   | 'red'
@@ -62,6 +74,8 @@ export interface CertificateTemplate {
   // Compatibility fields
   title?: string;
   available?: boolean | string[];
+  thumbnailUrl?: string;
+  isPublic?: boolean;
 }
 
 export interface CertificateRepository {

@@ -1,9 +1,29 @@
+
 /**
  * Core mockery types for the application
  */
 
 // User & Team related types
-export type UserTier = 'free' | 'basic' | 'premium' | 'elite' | 'royal' | 'gold' | 'silver' | 'bronze' | 'pro';
+export type UserTier = 
+  | 'free' 
+  | 'basic' 
+  | 'premium' 
+  | 'elite' 
+  | 'royal' 
+  | 'gold' 
+  | 'silver' 
+  | 'bronze' 
+  | 'pro'
+  | 'platinum'
+  | 'diamond'
+  | 'vip'
+  | 'whale'
+  | 'shark'
+  | 'dolphin'
+  | 'noble'
+  | 'standard'
+  | 'legendary'
+  | 'founder';
 
 export type TeamColor = 
   | 'red' 
@@ -54,7 +74,9 @@ export type MockeryAction =
   | 'courtJester'
   | 'smokeBomb'
   | 'protection'
-  | 'confetti';
+  | 'confetti'
+  | 'flowers'
+  | 'thumbsDown';
 
 export type MockeryTier = 
   | 'common' 
@@ -67,7 +89,8 @@ export type MockeryTier =
   | 'premium'
   | 'silver'
   | 'bronze'
-  | 'standard';
+  | 'standard'
+  | 'crimson';
 
 export interface MockedUser {
   userId: string;
@@ -77,6 +100,7 @@ export interface MockedUser {
   team: TeamColor;
   tier: UserTier;
   displayName?: string;
+  id?: string; // Added for compatibility with use-mockery.tsx
 }
 
 export interface MockeryEvent {
@@ -86,6 +110,7 @@ export interface MockeryEvent {
   timestamp: string;
   message?: string;
   fromUserId?: string;
+  toUserId?: string; // Added for compatibility with use-mockery.tsx
 }
 
 // Leaderboard Types
@@ -93,10 +118,11 @@ export interface LeaderboardFilter {
   search?: string;
   team: 'all' | TeamColor;
   tier: 'all' | UserTier;
-  timeframe: 'all-time' | 'today' | 'week' | 'month' | 'year';
+  timeframe: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all';
   sortBy: 'rank' | 'spent' | 'username';
   limit?: number;
   page?: number;
+  sortDirection?: 'asc' | 'desc';
 }
 
 // Extend the LeaderboardUser interface to include rankChange, spendChange, and avatarUrl
@@ -122,39 +148,22 @@ export interface LeaderboardUser {
   joinDate?: string;
   amountSpent?: number;
   spentAmount?: number;
+  createdAt?: string;
 }
 
-// SoundTypes
-export type SoundType = 
-  | 'success' 
-  | 'error' 
-  | 'notification' 
-  | 'purchase' 
-  | 'achievement' 
-  | 'deposit' 
-  | 'withdrawal' 
-  | 'rank_up' 
-  | 'level_up' 
-  | 'coin' 
-  | 'shame' 
-  | 'mockery' 
-  | 'boost' 
-  | 'throne' 
-  | 'royal' 
-  | 'click'
-  | 'message'
-  | 'reward'
-  | 'chime'
-  | 'fanfare'
-  | 'coinDrop';
+// Gender type
+export type Gender = 
+  | 'male' 
+  | 'female' 
+  | 'other' 
+  | 'none' 
+  | 'king' 
+  | 'queen' 
+  | 'jester' 
+  | 'noble' 
+  | 'prefer-not-to-say';
 
-export interface SoundOptions {
-  volume?: number;
-  interrupt?: boolean;
-  loop?: boolean;
-}
-
-// User Profile 
+// UserProfile 
 export interface UserProfile {
   id: string;
   username: string;
@@ -177,10 +186,11 @@ export interface UserProfile {
   spendStreak?: number;
   isVerified?: boolean;
   isProtected?: boolean;
+  gender?: Gender;
 }
 
 export interface UserSettings {
-  theme: 'dark' | 'light' | 'system';
+  theme: 'dark' | 'light' | 'system' | 'royal';
   notifications: boolean;
   sound: boolean;
   profileVisibility: 'public' | 'private' | 'followers' | 'friends';
@@ -192,7 +202,7 @@ export interface SolanaTransaction {
   id: string;
   signature: string;
   timestamp: string;
-  amount: string;
+  amount: string | number;
   sender: string;
   status: string;
   type: string;
@@ -203,10 +213,7 @@ export interface SolanaTransaction {
 export interface OnChainLeaderboardEntry {
   userId: string;
   publicKey: string;
-  totalSpent: string;
+  totalSpent: string | number;
   signature: string;
   timestamp: string;
 }
-
-// Add Gender for user-consolidated
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';

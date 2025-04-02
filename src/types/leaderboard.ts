@@ -23,6 +23,7 @@ export interface LeaderboardUser {
   amountSpent?: number;
   spentAmount?: number;
   joinDate?: string;
+  createdAt?: string;
 }
 
 export interface LeaderboardFilter {
@@ -32,6 +33,9 @@ export interface LeaderboardFilter {
   sortBy: 'rank' | 'spent' | 'username';
   // Added to fix errors
   sortDirection?: 'asc' | 'desc';
+  search?: string;
+  limit?: number;
+  page?: number;
 }
 
 export interface LeaderboardConfig {
@@ -49,7 +53,7 @@ export interface LeaderboardProps {
   className?: string;
 }
 
-// Extend for typed filters while maintaining backward compatibility
-export interface TypedLeaderboardFilter extends LeaderboardFilter {
+// TypedLeaderboardFilter should extend but allow string sortBy
+export interface TypedLeaderboardFilter extends Omit<LeaderboardFilter, 'sortBy'> {
   sortBy: string; // Allow any string for backward compatibility
 }

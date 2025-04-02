@@ -48,7 +48,21 @@ export type SoundType =
   | 'upgrade'
   | 'down'
   | 'up'
-  | 'withdraw';
+  | 'withdraw'
+  | 'thumbsDown'
+  | 'advertisement'
+  | 'wish'
+  | 'inkScribble'
+  | 'hover'
+  | 'parchmentUnfurl'
+  | 'pageChange'
+  | 'noblesLaugh'
+  | 'swordClash'
+  | 'medallion'
+  | 'trumpet'
+  | 'seal'
+  | 'team'
+  | 'royalAnnouncement';
 
 export interface SoundOptions {
   volume?: number;
@@ -70,4 +84,5 @@ export interface PremiumSoundPackDetails {
   tier: string;
   // Added for compatibility
   icon?: string;
+  sounds?: SoundType[];
 }

@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { IconProps } from '@/types/ui/icon-types';
 
 export interface IconComponentProps extends React.SVGProps<SVGSVGElement> {
-  iconName: string;
+  iconName?: string;
   name?: string; // Added for backward compatibility
   size?: string | number;
   color?: string;
@@ -89,8 +89,8 @@ export const Icon = React.forwardRef<SVGSVGElement, IconComponentProps>((props, 
     .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
     .join('');
 
-  // Get the icon component
-  const LucideIcon = (LucideIcons as unknown as Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>)[formattedIconName];
+  // Get the icon component - cast LucideIcons to any to avoid TypeScript errors
+  const LucideIcon = (LucideIcons as any)[formattedIconName];
 
   if (!LucideIcon) {
     console.warn(`Icon not found: ${iconToUse}`);
