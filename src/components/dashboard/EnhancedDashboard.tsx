@@ -32,20 +32,20 @@ function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfi
     username: user.username,
     displayName: user.displayName || '',
     email: user.email || '',
-    profileImage: user.profileImage,
+    profileImage: user.profileImage || '',
     bio: user.bio || '',
-    joinedDate: user.joinedDate,
-    isVerified: user.isVerified,
-    isProtected: user.isProtected,
-    isVIP: user.isVIP,
-    isFounder: user.isFounder,
-    isAdmin: user.isAdmin,
+    joinedDate: user.joinedDate || '',
+    isVerified: user.isVerified || false,
+    isProtected: user.isProtected || false,
+    isVIP: user.isVIP || false,
+    isFounder: user.isFounder || false,
+    isAdmin: user.isAdmin || false,
     team: teamColor,
-    tier: user.tier,
-    rank: user.rank,
-    previousRank: user.previousRank,
-    totalSpent: user.totalSpent,
-    amountSpent: user.amountSpent,
+    tier: user.tier || 'basic',
+    rank: user.rank || 0,
+    previousRank: user.previousRank || 0,
+    totalSpent: user.totalSpent || 0,
+    amountSpent: user.amountSpent || 0,
     walletBalance: user.walletBalance || 0,
     settings: {
       profileVisibility: (user.settings?.profileVisibility as "public" | "private" | "followers" | "friends") || 'public',
@@ -58,8 +58,8 @@ function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfi
       darkMode: Boolean(user.settings?.darkMode),
       soundEffects: Boolean(user.settings?.soundEffects),
       showBadges: Boolean(user.settings?.showBadges),
-      showTeam: Boolean(user.settings?.showTeam),
-      showSpending: Boolean(user.settings?.showSpending)
+      showTeam: Boolean(user.settings?.showTeam || true),
+      showSpending: Boolean(user.settings?.showSpending || true)
     },
     profileBoosts: user.profileBoosts || [],
     cosmetics: user.cosmetics || {
@@ -137,7 +137,7 @@ const EnhancedDashboard = () => {
   }
 
   // Adapt the user to a version that components can use
-  const adaptedUser = user as ConsolidatedUserProfile;
+  const adaptedUser = user as unknown as ConsolidatedUserProfile;
   
   // Create a UserProfile compatible with the user.UserProfile type
   const userForComponents = adaptUserProfileForComponents(adaptedUser);
@@ -161,7 +161,7 @@ const EnhancedDashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <DashboardWelcome user={adaptedUser} />
+      <DashboardWelcome user={userForComponents} />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid grid-cols-5 w-full bg-black/20">
@@ -190,7 +190,7 @@ const EnhancedDashboard = () => {
         <div className="mt-6">
           <TabsContent value="overview">
             <OverviewTab 
-              user={adaptedUser}
+              user={userForComponents}
               onSpend={handleSpend} 
               onPaymentSuccess={handlePaymentSuccess} 
             />

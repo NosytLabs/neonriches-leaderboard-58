@@ -9,7 +9,9 @@ export interface TeamData {
   logoUrl: string;
   benefits: string[];
   members: number; // Changed from memberCount to members
+  memberCount?: number; // Added for backwards compatibility
   totalContribution: number;
+  totalSpent?: number; // Added this property
   rank: number;
   previousRank: number;
 }

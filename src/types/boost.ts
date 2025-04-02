@@ -15,6 +15,7 @@ export interface ProfileBoost {
   duration?: number;
   price?: number;
   icon?: string;
+  effectId?: string; // Add effectId property
   // Legacy/compatibility
   active?: boolean;
 }
@@ -52,6 +53,9 @@ export interface BoostEffect {
   icon: string;
   previewImage?: string;
   strength: number;
+  minTier?: string;
+  iconName?: string;
+  allowStacking?: boolean; // Add allowStacking property to support boostEffects.ts
 }
 
 export interface BoostService {

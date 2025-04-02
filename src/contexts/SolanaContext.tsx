@@ -5,10 +5,12 @@ import { toast } from '@/components/ui/use-toast';
 // Define minimal context value type
 export interface SolanaContextValue {
   connected: boolean;
+  connecting?: boolean;
   walletAddress: string | null;
   walletBalance: number;
   connect: () => Promise<void>;
   disconnect: () => void;
+  publicKey?: { toString: () => string } | null; // Add publicKey property
 }
 
 // Create the context with default values
@@ -18,19 +20,25 @@ const SolanaContext = createContext<SolanaContextValue>({
   walletBalance: 0,
   connect: async () => {},
   disconnect: () => {},
+  publicKey: null
 });
 
 export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [connected, setConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [walletBalance, setWalletBalance] = useState(0);
+  const [publicKey, setPublicKey] = useState<{ toString: () => string } | null>(null);
 
   // Simplified connect function
   const connect = async (): Promise<void> => {
     try {
       // Mock connection
       await new Promise(resolve => setTimeout(resolve, 300));
-      setWalletAddress('8xj7dzvJxZnQ19BSt9yfXGtQhJbHJQ6WujDAZMPUMPcy');
+      const address = '8xj7dzvJxZnQ19BSt9yfXGtQhJbHJQ6WujDAZMPUMPcy';
+      setWalletAddress(address);
+      setPublicKey({
+        toString: () => address
+      });
       setWalletBalance(5);
       setConnected(true);
       
@@ -53,6 +61,7 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const disconnect = (): void => {
     setConnected(false);
     setWalletAddress(null);
+    setPublicKey(null);
     setWalletBalance(0);
     
     // Use direct toast function
@@ -68,6 +77,7 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         connected,
         walletAddress,
         walletBalance,
+        publicKey,
         connect,
         disconnect,
       }}

@@ -6,6 +6,7 @@ import { ProfileBoost } from '@/types/user';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { addProfileBoostWithDays, addCosmeticByCategoryString } from './authUtils';
+import { ensureTotalSpent } from '@/utils/userTypes';
 
 export const useAuthState = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -110,11 +111,17 @@ export const useAuthMethods = (
     try {
       if (!user) throw new Error('No user to update');
       
+      // Ensure displayName is not undefined
+      const userWithDisplayName = {
+        ...user,
+        displayName: user.displayName || user.username
+      };
+      
       // Update user metadata in Supabase Auth
       const { error: authUpdateError } = await supabase.auth.updateUser({
         data: {
-          username: updatedUser.username || user.username,
-          display_name: updatedUser.displayName,
+          username: updatedUser.username || userWithDisplayName.username,
+          display_name: updatedUser.displayName || userWithDisplayName.displayName,
           avatar_url: updatedUser.profileImage,
           team: updatedUser.team,
           tier: updatedUser.tier,
@@ -128,20 +135,26 @@ export const useAuthMethods = (
       const { error: profileUpdateError } = await supabase
         .from('users')
         .update({
-          username: updatedUser.username || user.username,
-          display_name: updatedUser.displayName,
+          username: updatedUser.username || userWithDisplayName.username,
+          display_name: updatedUser.displayName || userWithDisplayName.displayName,
           profile_image: updatedUser.profileImage,
           bio: updatedUser.bio,
           team: updatedUser.team,
           tier: updatedUser.tier,
           gender: updatedUser.gender,
         })
-        .eq('id', user.id);
+        .eq('id', userWithDisplayName.id);
       
       if (profileUpdateError) throw profileUpdateError;
       
-      // Update local state
-      const newUser = { ...user, ...updatedUser, totalSpent: user.totalSpent || user.amountSpent || 0 };
+      // Update local state with ensured displayName
+      const newUser = { 
+        ...userWithDisplayName, 
+        ...updatedUser, 
+        totalSpent: userWithDisplayName.totalSpent || userWithDisplayName.amountSpent || 0,
+        displayName: updatedUser.displayName || userWithDisplayName.displayName || userWithDisplayName.username
+      };
+      
       setUser(newUser);
       
       toast({
@@ -169,11 +182,17 @@ export const useAuthMethods = (
       // Convert days to string for the API
       const daysStr = String(days);
       
-      const newBoosts = addProfileBoostWithDays(user, days, level);
+      // Ensure user has displayName
+      const userWithDisplayName = {
+        ...user,
+        displayName: user.displayName || user.username
+      };
+      
+      const newBoosts = addProfileBoostWithDays(userWithDisplayName, days, level);
       
       // Create a properly typed updated user object
       const updatedUser: UserProfile = {
-        ...user,
+        ...userWithDisplayName,
         profileBoosts: newBoosts
       };
       
@@ -211,10 +230,16 @@ export const useAuthMethods = (
     try {
       if (!user) return false;
       
-      const updatedCosmetics = addCosmeticByCategoryString(user, cosmeticId, category);
+      // Ensure user has displayName
+      const userWithDisplayName = {
+        ...user,
+        displayName: user.displayName || user.username
+      };
+      
+      const updatedCosmetics = addCosmeticByCategoryString(userWithDisplayName, cosmeticId, category);
       
       const updatedUser = {
-        ...user,
+        ...userWithDisplayName,
         cosmetics: updatedCosmetics,
       };
       

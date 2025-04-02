@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useMemo } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useLeaderboard } from '@/hooks/useLeaderboard';
 import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
-import { UserTier, TeamColor } from '@/types/mockery-types';
 import { Loader } from 'lucide-react';
+import LeaderboardList from './LeaderboardList';
 
 const PersistentLeaderboard = () => {
   const [filter, setFilter] = useState<LeaderboardFilter>({
     team: 'all',
     tier: 'all',
-    timeframe: 'all',
+    timeframe: 'all-time',
     search: '',
     sortBy: 'spent',
     sortDirection: 'desc',

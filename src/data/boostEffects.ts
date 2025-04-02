@@ -11,9 +11,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'basic',
     price: 10,
     duration: 24, // 24 hours
+    durationDays: 1,
     icon: 'sun',
     strength: 1,
-    allowStacking: false,
     minTier: 'basic',
     iconName: 'sun'
   },
@@ -26,9 +26,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'silver',
     price: 20,
     duration: 48, // 48 hours
+    durationDays: 2,
     icon: 'star',
     strength: 2,
-    allowStacking: false,
     minTier: 'silver',
     iconName: 'star'
   },
@@ -41,9 +41,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'gold',
     price: 30,
     duration: 72, // 72 hours
+    durationDays: 3,
     icon: 'crown',
     strength: 3,
-    allowStacking: false,
     minTier: 'gold',
     iconName: 'crown'
   },
@@ -56,9 +56,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'pro',
     price: 25,
     duration: 48,
+    durationDays: 2,
     icon: 'sun',
     strength: 2,
-    allowStacking: true,
     minTier: 'pro',
     iconName: 'sun'
   },
@@ -71,9 +71,9 @@ export const profileBoostEffects: BoostEffect[] = [
     tier: 'premium',
     price: 40,
     duration: 96, // 96 hours
+    durationDays: 4,
     icon: 'flame',
     strength: 3,
-    allowStacking: false,
     minTier: 'premium',
     iconName: 'flame'
   }

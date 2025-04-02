@@ -6,7 +6,7 @@ import { Crown } from 'lucide-react';
 import { formatCurrency } from '@/utils/formatters';
 
 interface DashboardWelcomeProps {
-  user: UserProfile;
+  user: UserProfile | any; // Make it accept any user type
 }
 
 export const DashboardWelcome: React.FC<DashboardWelcomeProps> = ({ user }) => {

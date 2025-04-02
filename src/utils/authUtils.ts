@@ -1,4 +1,3 @@
-
 import { UserProfile } from '@/types/user-consolidated';
 import { ProfileBoost } from '@/types/boost';
 import { TeamColor } from '@/types/team';
@@ -41,6 +40,19 @@ export const processUser = (
     walletBalance: userData.walletBalance || 0,
     totalSpent: userData.totalSpent || userData.amountSpent || 0,
     amountSpent: userData.amountSpent || userData.totalSpent || 0,
+    profileBoosts: userData.profileBoosts || [],
+    cosmetics: userData.cosmetics || {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    },
+    spendStreak: userData.spendStreak || 0,
     settings: userData.settings || {
       profileVisibility: 'public',
       allowProfileLinks: true,
