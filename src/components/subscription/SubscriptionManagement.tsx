@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { UserProfile } from '@/types/user-consolidated';
-import { ensureUserTier } from '@/utils/typeUnifier';
-import { useAuth } from '@/hooks/useAuth';
-import { Shell } from '@/components/ui/shell';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Check, Crown, Wallet, CreditCard, AlertTriangle, CheckCircle } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Shell } from '@/components/ui/shell';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { adaptSubscription } from '@/utils/userProfileAdapter';
+import { useToast } from '@/hooks/use-toast';
+import useAuth from '@/hooks/useAuth';
+import { SubscriptionPlanCardProps } from './SubscriptionPlanCard';
 import { UserSubscription } from '@/types/user-consolidated';
-import SubscriptionPlanCard, { SubscriptionPlanProps } from './SubscriptionPlanCard';
 
 const ensureValidStatus = (status: string): "active" | "cancelled" | "expired" | "pending" | "paused" => {
   const validStatuses = ["active", "cancelled", "expired", "pending", "paused"];

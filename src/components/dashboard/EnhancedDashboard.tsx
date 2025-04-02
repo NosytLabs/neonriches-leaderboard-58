@@ -14,8 +14,7 @@ import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { UserProfile } from '@/types/user';
 import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
-import { ensureTeamColor } from '@/utils/typeUnifier';
-import { toConsolidatedUserProfile, toStandardUserProfile } from '@/utils/typeUnifier';
+import { toStandardUserProfile, toUserProfile } from '@/utils/typeUnifier';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -78,7 +77,7 @@ const EnhancedDashboard = () => {
 
   // Ensure the user has all required properties for both user types
   const standardUser = toStandardUserProfile(user);
-  const consolidatedUser = toConsolidatedUserProfile(user);
+  const userProfileForComponents = toUserProfile(standardUser);
 
   const handleSpend = () => {
     toast({
@@ -99,7 +98,7 @@ const EnhancedDashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <DashboardWelcome user={consolidatedUser} />
+      <DashboardWelcome user={standardUser} />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid grid-cols-5 w-full bg-black/20">
@@ -128,7 +127,7 @@ const EnhancedDashboard = () => {
         <div className="mt-6">
           <TabsContent value="overview">
             <OverviewTab 
-              user={standardUser}
+              user={userProfileForComponents}
               onSpend={handleSpend} 
               onPaymentSuccess={handlePaymentSuccess} 
             />
@@ -139,7 +138,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="team">
-            <TeamStatusCard user={standardUser} />
+            <TeamStatusCard user={userProfileForComponents} />
           </TabsContent>
           
           <TabsContent value="achievements">
@@ -147,7 +146,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="upgrade">
-            <CashThroneUpgrade user={standardUser} />
+            <CashThroneUpgrade user={userProfileForComponents} />
           </TabsContent>
         </div>
       </Tabs>

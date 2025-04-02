@@ -7,8 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { useMockery } from '@/hooks/use-mockery';
 import MockeryComponent from '@/components/mockery/MockeryComponent';
 import HallOfShame from '@/components/mockery/components/HallOfShame';
-import { MockeryAction } from '@/types/mockery-types';
+import { ensureMockeryAction } from '@/utils/mockeryNormalizer';
 import { UserProfile } from '@/types/user';
+import { MockeryResult } from '@/types/mockery-types';
 
 // Mock data for the Hall of Shame
 const mockShameUsers = [
@@ -38,7 +39,7 @@ const MockeryPage = () => {
   const navigate = useNavigate();
   const { targetUser, mockUser, isMocking, mockeryResult, costForAction, resetMockery } = useMockery();
 
-  const handleMockUser = async (actionType: MockeryAction, targetUserId: string) => {
+  const handleMockUser = async (actionType: string, targetUserId: string): Promise<void> => {
     // Mock implementation: Replace with actual user retrieval logic
     const mockTargetUser: UserProfile = {
       id: targetUserId,
@@ -50,9 +51,12 @@ const MockeryPage = () => {
       rank: 1,
       previousRank: 2,
       amountSpent: 1000,
-      joinedDate: new Date().toISOString()
+      joinedDate: new Date().toISOString(),
+      totalSpent: 1000,
+      walletBalance: 500
     };
 
+    // Call mockUser but ignore the result to match the expected Promise<void> return type
     await mockUser(actionType, mockTargetUser);
   };
 

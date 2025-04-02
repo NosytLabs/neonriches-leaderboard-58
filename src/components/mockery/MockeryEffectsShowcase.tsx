@@ -31,7 +31,7 @@ const MockeryEffectsShowcase: React.FC<MockeryEffectsShowcaseProps> = () => {
             <div className="p-4">
               <h3 className="text-lg font-semibold capitalize">{action}</h3>
               <div className="h-40 flex items-center justify-center">
-                <MockeryEffect actionType={action} />
+                <MockeryEffect action={action} username="Target User" />
               </div>
             </div>
           </div>

@@ -1,75 +1,74 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check, Crown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { Check } from 'lucide-react';
 
 export interface SubscriptionPlanCardProps {
+  key: string | number;
   plan: {
     id: string;
     name: string;
     description: string;
-    price: number | { monthly: number; yearly: number };
+    price: {
+      monthly: number;
+      yearly: number;
+    };
     features: string[];
-    popular?: boolean;
     tier: string;
+    badge?: string;
+    popular?: boolean;
   };
-  selected?: boolean;
-  onSelect?: (planId: string) => void;
-  billingInterval?: 'monthly' | 'yearly';
+  selected: boolean;
+  billingInterval: 'monthly' | 'yearly';
+  onSelect: (planId: string) => void;
 }
 
 const SubscriptionPlanCard: React.FC<SubscriptionPlanCardProps> = ({
   plan,
-  selected = false,
-  onSelect,
-  billingInterval = 'monthly'
+  selected,
+  billingInterval,
+  onSelect
 }) => {
-  const getPrice = () => {
-    if (typeof plan.price === 'number') {
-      return plan.price;
-    }
-    return billingInterval === 'monthly' ? plan.price.monthly : plan.price.yearly;
-  };
-
-  const handleSelect = () => {
-    if (onSelect) {
-      onSelect(plan.id);
-    }
-  };
-
+  const price = billingInterval === 'monthly' ? plan.price.monthly : plan.price.yearly;
+  const isYearly = billingInterval === 'yearly';
+  const savedAmount = isYearly ? Math.round((plan.price.monthly * 12 - plan.price.yearly) / 12) : 0;
+  
   return (
     <Card 
-      className={cn(
-        "relative overflow-hidden transition-all", 
-        selected ? "border-royal-gold" : "border-white/10",
-        plan.popular ? "bg-royal-gold/10" : "bg-black/20"
-      )}
+      className={`border transition-all duration-300 ${
+        selected 
+          ? 'border-royal-gold shadow-[0_0_15px_2px_rgba(201,146,25,0.2)]' 
+          : 'border-white/10 hover:border-white/30'
+      }`}
     >
-      {plan.popular && (
-        <div className="absolute top-0 right-0">
-          <Badge className="m-2" variant="gold">Most Popular</Badge>
+      <CardHeader className="space-y-1 pb-3">
+        <div className="flex justify-between items-start">
+          <CardTitle className="text-xl">{plan.name}</CardTitle>
+          {plan.badge && (
+            <Badge className="bg-royal-gold text-black">{plan.badge}</Badge>
+          )}
         </div>
-      )}
-      
-      <CardHeader>
-        <CardTitle>{plan.name}</CardTitle>
-        <CardDescription>{plan.description}</CardDescription>
+        <p className="text-sm text-white/70">{plan.description}</p>
       </CardHeader>
       
-      <CardContent>
-        <div className="mb-6">
-          <span className="text-3xl font-bold">${getPrice()}</span>
-          <span className="text-white/60">/{billingInterval === 'monthly' ? 'mo' : 'yr'}</span>
+      <CardContent className="pb-3">
+        <div className="mb-4">
+          <div className="flex items-baseline gap-1">
+            <span className="text-3xl font-bold">${price}</span>
+            <span className="text-white/70 text-sm">/ {billingInterval === 'monthly' ? 'month' : 'year'}</span>
+          </div>
+          {isYearly && savedAmount > 0 && (
+            <p className="text-royal-gold text-sm mt-1">Save ${savedAmount}/month when billed yearly</p>
+          )}
         </div>
         
         <ul className="space-y-2">
           {plan.features.map((feature, index) => (
-            <li key={index} className="flex items-center text-sm">
-              <Check className="mr-2 h-4 w-4 text-royal-gold" />
-              <span>{feature}</span>
+            <li key={index} className="flex items-start gap-2">
+              <Check className="h-5 w-5 text-royal-gold flex-shrink-0 mt-0.5" />
+              <span className="text-sm">{feature}</span>
             </li>
           ))}
         </ul>
@@ -77,18 +76,11 @@ const SubscriptionPlanCard: React.FC<SubscriptionPlanCardProps> = ({
       
       <CardFooter>
         <Button 
-          onClick={handleSelect} 
-          variant={selected ? "default" : "outline"} 
-          className={cn("w-full", selected && "bg-royal-gold hover:bg-royal-gold/90")}
+          onClick={() => onSelect(plan.id)}
+          className={selected ? 'bg-royal-gold text-black hover:bg-royal-gold/90' : 'w-full'}
+          variant={selected ? 'default' : 'outline'}
         >
-          {selected ? (
-            <span className="flex items-center">
-              <Crown className="mr-2 h-4 w-4" />
-              Selected
-            </span>
-          ) : (
-            "Select Plan"
-          )}
+          {selected ? 'Selected' : 'Select'}
         </Button>
       </CardFooter>
     </Card>

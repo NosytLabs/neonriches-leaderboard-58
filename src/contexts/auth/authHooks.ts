@@ -1,13 +1,13 @@
-
 import { useState } from 'react';
 import { Session } from '@supabase/supabase-js';
+import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
 import { UserProfile } from '@/types/user';
 import { ProfileBoost } from '@/types/user';
 import { UserSubscription } from '@/types/user-consolidated';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { addProfileBoostWithDays, addCosmeticByCategoryString } from './authUtils';
-import { ensureUserProfile, ensureConsolidatedUserProfile } from '@/utils/userTypeConverter';
+import { toStandardUserProfile, toUserProfile } from '@/utils/typeUnifier';
 
 export const useAuthState = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -112,11 +112,12 @@ export const useAuthMethods = (
     try {
       if (!user) return false;
       
-      // Make sure we have a correctly typed UserProfile
-      const userProfileData = ensureUserProfile({
-        ...user,
+      // Make sure we have a correctly typed UserProfile - convert to standard profile first
+      const standardUser = toStandardUserProfile(user);
+      const userProfileData = toUserProfile({
+        ...standardUser,
         ...userData,
-        displayName: userData.displayName || user.displayName || user.username
+        displayName: userData.displayName || standardUser.displayName || standardUser.username
       });
       
       // Update user metadata in Supabase Auth

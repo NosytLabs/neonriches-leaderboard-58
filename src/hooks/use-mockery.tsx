@@ -1,107 +1,82 @@
 
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { MockeryAction } from '@/types/mockery-types';
+import { MockeryAction, MockeryResult } from '@/types/mockery-types';
 import { UserProfile } from '@/types/user';
+import { ensureMockeryAction } from '@/utils/mockeryNormalizer';
 
-export interface MockeryEvent {
-  id: string;
-  action: MockeryAction;
-  fromUserId: string;
-  targetUserId: string; // Use targetUserId for consistency
-  timestamp: string;
-  value: number;
-  description?: string;
-}
-
-export interface MockeryResult {
-  success: boolean;
-  message: string;
-  targetUser?: UserProfile;
-  event?: MockeryEvent;
-}
-
-// Export only once
 export const useMockery = () => {
   const { toast } = useToast();
-  const [isMocking, setIsMocking] = useState<boolean>(false);
   const [targetUser, setTargetUser] = useState<UserProfile | null>(null);
+  const [isMocking, setIsMocking] = useState(false);
   const [mockeryResult, setMockeryResult] = useState<MockeryResult | null>(null);
 
-  const costForAction = useCallback((action: MockeryAction): number => {
-    const costs: Record<MockeryAction, number> = {
-      tomato: 5,
-      egg: 10,
-      thumbsDown: 15,
-      shame: 20,
-      jester: 30,
-      mock: 50,
-      challenge: 75,
-      joust: 100,
-      duel: 150,
-      crown: 200,
-      stocks: 250,
-      putridEgg: 300,
-      silence: 350,
-      courtJester: 400,
-      smokeBomb: 450,
-      protection: 500,
-      laugh: 25,
-      fish: 35,
-      taunt: 40,
-      rotten_egg: 300, 
-      flame: 75,
-      heart: 100,
-      thumbs_down: 15,
-      skull: 20,
-      trumpet: 45,
-      confetti: 50,
-      royal_decree: 600,
-      shame_certificate: 250,
-      insult: 100,
-      humiliate: 300
-    };
-    
-    return costs[action] || 50;
-  }, []);
+  // Define costs for different mockery actions
+  const actionCosts: Record<MockeryAction, number> = {
+    tomato: 10,
+    egg: 15,
+    putridEgg: 25,
+    crown: 50,
+    thumbsDown: 5,
+    mock: 10,
+    stocks: 35,
+    jester: 30,
+    courtJester: 30,
+    silence: 40,
+    taunt: 10,
+    smokeBomb: 45,
+    protection: 75,
+    shame: 20,
+    challenge: 30,
+    joust: 40,
+    duel: 50,
+    royal_decree: 100,
+    flame: 15,
+    heart: 20,
+    skull: 25,
+    thumbs_down: 10,
+    rotten_egg: 20
+  };
 
-  const mockUser = useCallback(async (actionType: MockeryAction, user: UserProfile): Promise<MockeryResult> => {
-    setIsMocking(true);
-    setTargetUser(user);
-    
+  const mockUser = async (actionType: string, target: UserProfile): Promise<MockeryResult> => {
     try {
-      // In a real implementation, this would be an API call
-      const mockResult: MockeryResult = {
+      setIsMocking(true);
+      setTargetUser(target);
+      
+      // Normalize the action type to match our MockeryAction type
+      const normalizedAction = ensureMockeryAction(actionType);
+      
+      // In a real app, this would make an API call
+      // For now, we'll simulate a successful mockery
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const cost = costForAction(normalizedAction);
+      
+      const result: MockeryResult = {
         success: true,
-        message: `Successfully mocked ${user.username} with ${actionType}`,
-        targetUser: user,
-        event: {
-          id: `mock-${Date.now()}`,
-          action: actionType,
-          fromUserId: 'current-user-id',
-          targetUserId: user.id,
-          timestamp: new Date().toISOString(),
-          value: costForAction(actionType)
-        }
+        message: `You have successfully mocked ${target.username || 'the user'} with ${normalizedAction}!`,
+        cost,
+        actionType: normalizedAction,
+        targetId: target.id
       };
       
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 800));
+      setMockeryResult(result);
       
-      setMockeryResult(mockResult);
       toast({
         title: "Mockery Successful",
-        description: mockResult.message,
+        description: result.message,
       });
       
-      return mockResult;
+      return result;
     } catch (error) {
       const errorResult: MockeryResult = {
         success: false,
-        message: "Failed to mock user. Please try again."
+        message: "Failed to mock user",
+        error: error instanceof Error ? error.message : "Unknown error"
       };
       
       setMockeryResult(errorResult);
+      
       toast({
         title: "Mockery Failed",
         description: errorResult.message,
@@ -112,7 +87,11 @@ export const useMockery = () => {
     } finally {
       setIsMocking(false);
     }
-  }, [toast, costForAction]);
+  };
+
+  const costForAction = (action: MockeryAction): number => {
+    return actionCosts[action] || 10;
+  };
 
   const resetMockery = useCallback(() => {
     setTargetUser(null);
@@ -121,10 +100,12 @@ export const useMockery = () => {
 
   return {
     targetUser,
-    mockUser,
     isMocking,
     mockeryResult,
+    mockUser,
     costForAction,
     resetMockery
   };
 };
+
+export default useMockery;

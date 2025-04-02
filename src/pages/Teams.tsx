@@ -7,7 +7,8 @@ import TeamOverview from '@/components/teams/TeamOverview';
 import TeamSelection from '@/components/teams/TeamSelection';
 import { TeamMembersTable } from '@/components/teams/TeamMembersTable';
 import useAuth from '@/hooks/useAuth';
-import { toStandardUserProfile } from '@/utils/typeUnifier';
+import { toStandardUserProfile, ensureTeamColor } from '@/utils/typeUnifier';
+import { TeamColor } from '@/types/mockery-types';
 
 const TeamsPage: React.FC = () => {
   const { user, updateUser } = useAuth();
@@ -16,10 +17,13 @@ const TeamsPage: React.FC = () => {
   // Create a standard user profile
   const standardUser = user ? toStandardUserProfile(user) : null;
 
-  const handleUpdateTeam = async (team: string) => {
+  const handleUpdateTeam = async (team: string): Promise<boolean> => {
     if (user && updateUser) {
-      await updateUser({ team });
+      const teamColor = ensureTeamColor(team);
+      await updateUser({ team: teamColor });
+      return true;
     }
+    return false;
   };
 
   const handleTeamSelect = (team: string) => {

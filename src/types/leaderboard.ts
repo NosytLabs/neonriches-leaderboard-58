@@ -1,66 +1,42 @@
 
-import { TeamColor } from './team';
+import { TeamColor, UserTier } from './mockery-types';
 
 export interface LeaderboardUser {
   id: string;
-  userId: string;
+  userId?: string;
   username: string;
   displayName: string;
   profileImage: string;
-  avatarUrl?: string;  // For backward compatibility
-  rank: number;
-  previousRank: number;
+  avatarUrl?: string;
   totalSpent: number;
   amountSpent: number;
-  tier: string;
+  rank: number;
+  previousRank: number;
   team: TeamColor | string;
-  isVerified?: boolean;
-  isProtected?: boolean;
+  tier: UserTier | string;
   spendStreak?: number;
+  walletBalance?: number;
   rankChange?: number;
   spendChange?: number;
-  walletBalance?: number;
+  isProtected?: boolean;
+  isVerified?: boolean;
 }
 
 export interface LeaderboardFilter {
-  team: string;
+  timeframe: 'all' | 'week' | 'month' | 'year' | 'today' | 'all-time';
+  team: TeamColor | 'all' | string;
   tier: string;
-  timeframe: string;
-  search: string;
-  sortBy: string;
-  sortDirection: string;
-  limit: number;
-  sort?: string; // For compatibility with leaderboardService
-}
-
-export interface LeaderboardConfig {
-  filter: LeaderboardFilter;
-  currentUserId?: string;
+  sortDirection: 'asc' | 'desc';
+  sortBy: 'totalSpent' | 'joinDate' | 'username' | 'rank' | 'spendStreak';
   limit?: number;
-  includeUser?: boolean;
+  page?: number;
 }
 
 export interface LeaderboardProps {
-  filter?: Partial<LeaderboardFilter>;
-  limit?: number;
-  showShameButton?: boolean;
-  showRankChange?: boolean;
-  showSpendChange?: boolean;
-  onUserClick?: (userId: string) => void;
-  onUserShamed?: (userId: string) => void;
-}
-
-export interface LeaderboardResponse {
   users: LeaderboardUser[];
-  total: number;
-  currentUserRank?: number;
-  hasMore?: boolean;
-}
-
-export interface UseLeaderboardResult {
-  leaderboard: LeaderboardUser[];
-  loading: boolean;
-  error: Error | null;
-  refreshLeaderboard: () => Promise<void>;
-  userRank?: number;
+  filter: LeaderboardFilter;
+  onFilterChange: (filter: Partial<LeaderboardFilter>) => void;
+  onProfileClick?: (userId: string, username: string) => void;
+  onShameUser?: (user: LeaderboardUser) => void;
+  currentUserId?: string;
 }

@@ -1,156 +1,168 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
 import { Shell } from '@/components/ui/shell';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Award, Download, Share2, ChevronLeft, AlertCircle } from 'lucide-react';
-import CertificateDisplay from '@/components/certificates/CertificateDisplay';
-import RoyalCertificate from '@/components/certificates/RoyalCertificate';
 import { useToast } from '@/hooks/use-toast';
-import { adaptCertificate } from '@/types/certificate-unified';
-import { formatDate } from '@/utils/formatters';
-import { Certificate } from '@/types/certificate-unified';
+import { Certificate } from '@/types/certificates';
+import CertificateDisplay from '@/components/certificates/CertificateDisplay';
+import useAuth from '@/hooks/useAuth';
+import { wrapCertificateMint, wrapCertificateShare, wrapCertificateDownload } from '@/utils/certificateAdapter';
+import { toStandardUserProfile } from '@/utils/typeUnifier';
 
-// Define params as a proper record type
-interface Params extends Record<string, string> {
-  certificateId: string;
-}
-
-const CertificatePage = () => {
-  const params = useParams<Params>();
-  const certificateId = params.certificateId;
-  const { user } = useAuth();
+const CertificatePage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { toast } = useToast();
-
   const [certificate, setCertificate] = useState<Certificate | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
+  const [isMinting, setIsMinting] = useState<boolean>(false);
+  
   useEffect(() => {
-    if (!certificateId) {
-      setError('Certificate ID is missing.');
-      setIsLoading(false);
-      return;
-    }
-
-    // Mock API call to fetch certificate data
-    setTimeout(() => {
+    const fetchCertificate = async () => {
+      // Simulate fetching certificate data
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Mock certificate data
       const mockCertificate: Certificate = {
-        id: certificateId,
-        title: 'SpendThrone Royal Certificate',
-        description: 'Awarded for outstanding contributions to the SpendThrone community.',
-        imageUrl: '/assets/certificates/royal.png',
+        id: id || 'cert_123',
+        title: 'Royal Supporter',
+        description: 'Awarded for outstanding support of the Royal Throne.',
+        imageUrl: '/assets/certificates/supporter.png',
+        userId: user?.id || 'user_123',
         dateIssued: new Date().toISOString(),
-        type: 'royal',
-        style: 'royal',
-        team: 'none',
+        mintAddress: '',
+        mintDate: '',
+        type: 'supporter',
+        style: 'standard',
+        team: 'gold',
         status: 'issued',
         rarity: 'rare',
-        issuerName: 'SpendThrone',
+        issuerName: 'Royal System',
         recipientName: user?.displayName || 'User',
-        recipientId: user?.id || 'user-id',
-        isMinted: false,
-        name: 'SpendThrone Royal Certificate'
+        recipientId: user?.id || 'user_123',
       };
-
+      
       setCertificate(mockCertificate);
-      setIsLoading(false);
-    }, 500);
-  }, [certificateId, user]);
-
-  const handleGoBack = () => {
-    navigate('/dashboard');
-  };
-
-  const handleMintCertificate = async (cert: Certificate): Promise<boolean> => {
-    return new Promise<boolean>((resolve) => {
-      setTimeout(() => {
-        toast({
-          title: 'Certificate Minted',
-          description: `Certificate "${cert.title}" has been successfully minted.`,
-        });
-        resolve(true);
-      }, 1500);
-    });
-  };
-
-  const handleShareCertificate = async (cert: Certificate): Promise<string> => {
-    return new Promise<string>((resolve) => {
-      setTimeout(() => {
-        const shareUrl = `https://example.com/certificates/${cert.id}`;
-        toast({
-          title: 'Certificate Shared',
-          description: `Certificate "${cert.title}" has been shared.`,
-        });
-        resolve(shareUrl);
-      }, 1000);
-    });
-  };
-
-  const handleDownloadCertificate = (cert: Certificate) => {
-    toast({
-      title: 'Certificate Downloaded',
-      description: `Certificate "${cert.title}" has been downloaded.`,
-    });
-  };
-
-  const handleCertificateDisplay = (cert: any) => {
-    const adaptedCertificate = adaptCertificate(cert);
+    };
     
-    return (
-      <CertificateDisplay
-        certificate={adaptedCertificate}
-        user={user!}
-        onMint={handleMintCertificate}
-        onShare={handleShareCertificate}
-        onDownload={handleDownloadCertificate}
-      />
-    );
-  };
-
-  if (isLoading) {
-    return (
-      <Shell>
-        <Card>
-          <CardContent>Loading certificate...</CardContent>
-        </Card>
-      </Shell>
-    );
-  }
-
-  if (error) {
-    return (
-      <Shell>
-        <Card>
-          <CardContent>
-            <AlertCircle className="h-4 w-4 mr-2 inline-block" />
-            Error: {error}
-          </CardContent>
-        </Card>
-      </Shell>
-    );
-  }
-
-  if (!certificate) {
-    return (
-      <Shell>
-        <Card>
-          <CardContent>Certificate not found.</CardContent>
-        </Card>
-      </Shell>
-    );
-  }
-
+    fetchCertificate();
+  }, [id, user]);
+  
+  // Adapt the certificate mint, share, and download functions
+  const handleMintCertificate = wrapCertificateMint(async (cert) => {
+    try {
+      setIsMinting(true);
+      // Simulate minting
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Update the certificate with mint details
+      setCertificate({
+        ...certificate!,
+        mintAddress: `mint_${Math.random().toString(36).substring(2, 15)}`,
+        mintDate: new Date().toISOString(),
+        status: 'minted'
+      });
+      
+      toast({
+        title: "Certificate Minted!",
+        description: "Your certificate has been successfully minted on the blockchain.",
+      });
+      
+      return true;
+    } catch (error) {
+      console.error('Error minting certificate:', error);
+      
+      toast({
+        title: "Minting Failed",
+        description: "There was an error minting your certificate. Please try again.",
+        variant: "destructive"
+      });
+      
+      return false;
+    } finally {
+      setIsMinting(false);
+    }
+  });
+  
+  const handleShareCertificate = wrapCertificateShare(async (cert) => {
+    try {
+      // Simulate sharing
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const shareUrl = `https://yourwebsite.com/certificate/${id}`;
+      
+      toast({
+        title: "Certificate Shared",
+        description: "Share link copied to clipboard!",
+      });
+      
+      // Copy to clipboard
+      await navigator.clipboard.writeText(shareUrl);
+      
+      return shareUrl;
+    } catch (error) {
+      console.error('Error sharing certificate:', error);
+      
+      toast({
+        title: "Sharing Failed",
+        description: "There was an error sharing your certificate.",
+        variant: "destructive"
+      });
+      
+      return '';
+    }
+  });
+  
+  const handleDownloadCertificate = wrapCertificateDownload((cert) => {
+    try {
+      // In a real app, this would download an image
+      toast({
+        title: "Certificate Downloaded",
+        description: "Your certificate has been downloaded.",
+      });
+    } catch (error) {
+      console.error('Error downloading certificate:', error);
+      
+      toast({
+        title: "Download Failed",
+        description: "There was an error downloading your certificate.",
+        variant: "destructive"
+      });
+    }
+  });
+  
+  
   return (
     <Shell>
-      <Button onClick={handleGoBack} variant="ghost" className="mb-4">
-        <ChevronLeft className="h-4 w-4 mr-2" />
-        Back to Dashboard
-      </Button>
-      {handleCertificateDisplay(certificate)}
+      <div className="container max-w-4xl mx-auto py-8 px-4">
+        <div className="mb-6">
+          <Button 
+            variant="outline" 
+            onClick={() => navigate(-1)}
+            className="mb-4"
+          >
+            ← Back
+          </Button>
+          
+          <h1 className="text-3xl font-bold">Certificate Details</h1>
+        </div>
+        
+        {certificate ? (
+          <CertificateDisplay
+            certificate={certificate}
+            user={toStandardUserProfile(user)}
+            onMint={handleMintCertificate}
+            onShare={handleShareCertificate}
+            onDownload={handleDownloadCertificate}
+            isMinting={isMinting}
+          />
+        ) : (
+          <div className="glass-morphism border-white/10 rounded-lg p-8 text-center">
+            <h2 className="text-xl font-semibold mb-4">Loading Certificate...</h2>
+            <div className="w-8 h-8 border-4 border-t-royal-gold border-white/20 rounded-full animate-spin mx-auto"></div>
+          </div>
+        )}
+      </div>
     </Shell>
   );
 };

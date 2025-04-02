@@ -6,24 +6,28 @@ import { getMockeryDescription } from '@/utils/mockeryUtils';
 import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 import { mockeryDescriptions } from '@/utils/mockeryUtils';
 
-interface MockeryEffectProps {
-  username: string;
-  action: MockeryAction;
-  isActive: boolean;
+export interface MockeryEffectProps {
+  username?: string;
+  action?: MockeryAction;
+  isActive?: boolean;
   onComplete?: () => void;
+  actionType?: MockeryAction;
 }
 
 const MockeryEffect: React.FC<MockeryEffectProps> = ({
-  username,
+  username = 'User',
   action,
-  isActive,
+  actionType,
+  isActive = true,
   onComplete
 }) => {
+  const effectAction = action || actionType || 'mock';
+  
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, rotation: number, velocity: number, delay: number}>>([]);
   const [showImpactEffect, setShowImpactEffect] = useState(false);
   
   const getEffectContent = () => {
-    const normalizedAction = normalizeMockeryAction(action as string);
+    const normalizedAction = normalizeMockeryAction(effectAction as string);
     
     switch (normalizedAction) {
       case 'tomato':
@@ -107,7 +111,7 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
     if (!isActive) return;
     
     let particleCount = 20;
-    const normalizedAction = normalizeMockeryAction(action as string);
+    const normalizedAction = normalizeMockeryAction(effectAction as string);
     
     switch (normalizedAction) {
       case 'tomato':
@@ -157,13 +161,13 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
     }, 2500);
     
     return () => clearTimeout(timer);
-  }, [isActive, action, onComplete, effectContent.sound]);
+  }, [isActive, effectAction, onComplete, effectContent.sound]);
   
   if (!isActive) {
     return null;
   }
   
-  if (isActive && normalizeMockeryAction(action as string) === 'smokeBomb') {
+  if (isActive && normalizeMockeryAction(effectAction as string) === 'smokeBomb') {
     return (
       <AnimatePresence>
         <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden perspective">
@@ -201,7 +205,7 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
-              {getMockeryDescription(normalizeMockeryAction(action as string))}
+              {getMockeryDescription(normalizeMockeryAction(effectAction as string) as MockeryAction)}
             </motion.div>
           </motion.div>
           

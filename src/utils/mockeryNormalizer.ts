@@ -1,49 +1,41 @@
 
 import { MockeryAction } from '@/types/mockery-types';
 
-/**
- * Normalizes a mockery action string to ensure it maps to a valid MockeryAction type
- * This helps with legacy action names and string manipulation
- */
-export const normalizeMockeryAction = (action: string | MockeryAction): string => {
+// Helper function for normalizing mockery action strings to match our type definition
+export const normalizeMockeryAction = (action: string): string => {
   if (!action) return 'mock';
   
-  // Convert to lowercase and remove any spaces or special characters
-  const normalized = String(action).toLowerCase().trim();
-  
-  // Map legacy or alternate names to their standard counterparts
-  const actionMap: Record<string, string> = {
-    'tomatoes': 'tomato',
-    'eggs': 'egg',
-    'rotten_eggs': 'rotten_egg',
-    'putrid_egg': 'putridEgg',
-    'thumbs_down': 'thumbsDown',
-    'court_jester': 'courtJester',
-    'smoke_bomb': 'smokeBomb'
-  };
-  
-  return actionMap[normalized] || normalized;
+  // Normalize common action name variations
+  switch (action.toLowerCase()) {
+    case 'tomatoe': 
+    case 'tomatoes': return 'tomato';
+    case 'eggs': return 'egg';
+    case 'rotten egg': 
+    case 'rotten-egg': 
+    case 'rottenegg': return 'putridEgg';
+    case 'putrid egg': 
+    case 'putrid-egg': return 'putridEgg';
+    case 'crown flip': 
+    case 'topple': 
+    case 'topplecrown': return 'crown';
+    case 'thumbs down': 
+    case 'thumbs-down': 
+    case 'thumbsdown': return 'thumbsDown';
+    case 'court jester': 
+    case 'court-jester': return 'courtJester';
+    case 'silence user': 
+    case 'royal silence': return 'silence';
+    case 'smoke': 
+    case 'smoke bomb': 
+    case 'smokebomb': return 'smokeBomb';
+    case 'protect': 
+    case 'royal protection': return 'protection';
+    default: return action;
+  }
 };
 
-/**
- * Checks if a string is a valid mockery action
- */
-export const isValidMockeryAction = (action: string): boolean => {
-  const validActions: string[] = [
-    'tomato', 'egg', 'rotten_egg', 'flame', 'heart', 
-    'thumbs_down', 'skull', 'crown', 'putridEgg', 
-    'stocks', 'jester', 'mock', 'challenge', 'joust',
-    'duel', 'silence', 'laugh', 'fish', 'taunt', 
-    'thumbsDown', 'trumpet', 'confetti', 'shame',
-    'courtJester', 'smokeBomb', 'protection',
-    'royal_decree', 'shame_certificate', 'insult', 'humiliate'
-  ];
-  
-  const normalizedAction = normalizeMockeryAction(action);
-  return validActions.includes(normalizedAction);
-};
-
-export default {
-  normalizeMockeryAction,
-  isValidMockeryAction
+// Helper to safely cast string to MockeryAction
+export const ensureMockeryAction = (action: string): MockeryAction => {
+  const normalized = normalizeMockeryAction(action);
+  return normalized as MockeryAction;
 };
