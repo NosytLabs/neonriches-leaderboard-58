@@ -7,10 +7,13 @@ import { motion, useAnimation } from "framer-motion";
 import { Magnet } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
+import { TeamColor } from "@/types/team";
+import { getTeamTextColor, getTeamBackgroundLightColor, getTeamBorderColor } from "@/utils/teamUtils";
 
 interface MagnetizeButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     particleCount?: number;
     attractRadius?: number;
+    color?: TeamColor;
 }
 
 interface Particle {
@@ -23,6 +26,7 @@ function MagnetizeButton({
     className,
     particleCount = 12,
     attractRadius = 50,
+    color = 'purple',
     ...props
 }: MagnetizeButtonProps) {
     const [isAttracting, setIsAttracting] = useState(false);
@@ -64,14 +68,46 @@ function MagnetizeButton({
         }));
     }, [particlesControl, particles]);
 
+    // Get the appropriate color classes based on the team color
+    const getColorClasses = () => {
+        // Default classes for violet theme
+        if (color === 'purple' || !color) {
+            return {
+                background: "bg-violet-100 dark:bg-violet-900",
+                hover: "hover:bg-violet-200 dark:hover:bg-violet-800",
+                text: "text-violet-600 dark:text-violet-300",
+                border: "border border-violet-300 dark:border-violet-700",
+                particle: "bg-violet-400 dark:bg-violet-300"
+            };
+        }
+
+        // Get team-specific classes
+        const textColor = getTeamTextColor(color);
+        const bgLight = getTeamBackgroundLightColor(color);
+        const borderColor = getTeamBorderColor(color);
+        
+        // Extract color base from the team text color (e.g. "text-red-500" -> "red")
+        const baseColor = textColor.match(/text-([a-z]+)-/)?.[1] || 'gray';
+        
+        return {
+            background: bgLight,
+            hover: `hover:bg-${baseColor}-200 dark:hover:bg-${baseColor}-800`,
+            text: textColor,
+            border: borderColor,
+            particle: textColor
+        };
+    };
+
+    const colorClasses = getColorClasses();
+
     return (
         <Button
             className={cn(
                 "min-w-40 relative touch-none",
-                "bg-violet-100 dark:bg-violet-900",
-                "hover:bg-violet-200 dark:hover:bg-violet-800",
-                "text-violet-600 dark:text-violet-300",
-                "border border-violet-300 dark:border-violet-700",
+                colorClasses.background,
+                colorClasses.hover,
+                colorClasses.text,
+                colorClasses.border,
                 "transition-all duration-300",
                 className
             )}
@@ -89,7 +125,7 @@ function MagnetizeButton({
                     animate={particlesControl}
                     className={cn(
                         "absolute w-1.5 h-1.5 rounded-full",
-                        "bg-violet-400 dark:bg-violet-300",
+                        colorClasses.particle,
                         "transition-opacity duration-300",
                         isAttracting ? "opacity-100" : "opacity-40"
                     )}
