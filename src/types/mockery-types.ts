@@ -95,5 +95,5 @@ export interface TeamData {
   logoUrl: string;
 }
 
-// Export using explicit export type syntax for isolatedModules
+// Export using export type syntax for isolatedModules
 export type { TeamColor };

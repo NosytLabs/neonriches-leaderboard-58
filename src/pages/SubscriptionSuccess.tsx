@@ -1,126 +1,137 @@
 
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { Button } from '@/components/ui/button';
+import React from 'react';
+import { Shell } from '@/components/ui/shell/Shell';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Crown, ArrowLeft, Check, Sparkles } from 'lucide-react';
-import { useAuth } from '@/contexts/auth';
-import { PRODUCT_FEATURES, FEATURE_METADATA } from '@/config/subscriptions';
+import { Button } from '@/components/ui/button';
+import { Confetti } from '@/components/ui/confetti';
+import { Check, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const SubscriptionSuccess = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const [plan, setPlan] = useState<string>('premium');
-  
-  // Parse URL parameters
-  useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const sessionId = queryParams.get('session_id');
-    const planParam = queryParams.get('plan');
-    
-    if (!sessionId) {
-      // No session ID found, redirect back to home after a delay
-      const timeout = setTimeout(() => navigate('/'), 5000);
-      return () => clearTimeout(timeout);
-    }
-    
-    // Set the plan from URL parameters if available
-    if (planParam) {
-      if (planParam.includes('royal')) {
-        setPlan('royal');
-      } else if (planParam.includes('standard')) {
-        setPlan('standard');
-      } else {
-        setPlan('premium'); // Default to premium
-      }
-    }
-    
-    // In a real implementation, you would verify the subscription status with Stripe here
-    
-  }, [location, navigate]);
-  
-  // Get features for the subscribed plan
-  const getUnlockedFeatures = () => {
-    return PRODUCT_FEATURES[plan as keyof typeof PRODUCT_FEATURES] || PRODUCT_FEATURES.premium;
-  };
-  
-  const unlockedFeatures = getUnlockedFeatures();
-  
-  // Get plan display name
-  const getPlanDisplayName = () => {
-    switch (plan) {
-      case 'royal': return 'Royal';
-      case 'standard': return 'Standard';
-      default: return 'Premium';
+  // Mocked subscription plans benefits
+  const planBenefits = {
+    analytics: {
+      free: 'Basic analytics',
+      basic: 'Enhanced analytics',
+      premium: 'Advanced analytics',
+      royal: 'Comprehensive analytics'
+    },
+    links: {
+      free: '3 social links',
+      basic: '5 social links',
+      premium: '10 social links',
+      royal: 'Unlimited social links'
+    },
+    visibility: {
+      free: 'Standard visibility',
+      basic: 'Improved visibility',
+      premium: 'High visibility',
+      royal: 'Maximum visibility'
+    },
+    marketing: {
+      free: 'No marketing tools',
+      basic: 'Basic marketing tools',
+      premium: 'Advanced marketing tools',
+      royal: 'Premium marketing suite'
+    },
+    protection: {
+      free: 'No protection',
+      basic: '24h protection',
+      premium: '48h protection',
+      royal: '72h protection'
     }
   };
-  
+
+  // You would normally get this from the subscription response
+  const subscribedPlan = 'premium';
+  const planLabel = subscribedPlan.charAt(0).toUpperCase() + subscribedPlan.slice(1);
+
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <Header />
-      
-      <main className="flex-1 container mx-auto px-4 py-12 flex items-center justify-center">
-        <Card className="max-w-md w-full glass-morphism border-royal-gold/20">
-          <CardHeader className="pb-4">
-            <div className="mx-auto mb-4 w-16 h-16 bg-royal-gold/10 rounded-full flex items-center justify-center">
-              {plan === 'royal' ? (
-                <Crown className="h-10 w-10 text-royal-gold" />
-              ) : (
-                <Sparkles className="h-10 w-10 text-royal-gold" />
-              )}
-            </div>
-            <CardTitle className="text-center text-2xl">Welcome to {getPlanDisplayName()} Tier!</CardTitle>
-            <CardDescription className="text-center">
-              Your subscription has been successfully activated
+    <Shell>
+      <Confetti />
+      <div className="container py-10 max-w-5xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold tracking-tight">Subscription Activated!</h1>
+          <p className="text-xl text-muted-foreground mt-2">
+            Thank you for subscribing to the {planLabel} Plan
+          </p>
+        </div>
+
+        <Card className="shadow-lg border-success/20 bg-card">
+          <CardHeader className="pb-4 border-b">
+            <CardTitle className="flex items-center">
+              <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-2">
+                <Check className="h-5 w-5 text-white" />
+              </div>
+              Your {planLabel} Plan is Active
+            </CardTitle>
+            <CardDescription>
+              Your subscription has been successfully processed and your account has been upgraded.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="p-4 bg-white/5 rounded-lg">
-              <h3 className="text-royal-gold font-medium mb-2">Unlocked Features:</h3>
-              <ul className="space-y-2">
-                {unlockedFeatures.map(feature => (
-                  <li key={feature} className="flex items-start text-sm">
-                    <Check size={16} className="mr-2 mt-0.5 text-royal-gold" />
-                    <div>
-                      <p className="font-medium">{FEATURE_METADATA[feature]?.name || feature}</p>
-                      <p className="text-white/60 text-xs">{FEATURE_METADATA[feature]?.description}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button 
-                variant="outline" 
-                className="flex-1 glass-morphism border-white/10 hover:bg-white/10"
-                asChild
-              >
-                <Link to="/">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Dashboard
+          <CardContent className="pt-6">
+            <h3 className="text-lg font-semibold mb-4">Your Premium Benefits</h3>
+
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <div className="mr-3 mt-1">
+                  <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Check className="h-3 w-3 text-primary" />
+                  </div>
+                </div>
+                <span>{planBenefits.analytics[subscribedPlan as keyof typeof planBenefits.analytics]}</span>
+              </li>
+              <li className="flex items-start">
+                <div className="mr-3 mt-1">
+                  <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Check className="h-3 w-3 text-primary" />
+                  </div>
+                </div>
+                <span>{planBenefits.links[subscribedPlan as keyof typeof planBenefits.links]}</span>
+              </li>
+              <li className="flex items-start">
+                <div className="mr-3 mt-1">
+                  <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Check className="h-3 w-3 text-primary" />
+                  </div>
+                </div>
+                <span>{planBenefits.visibility[subscribedPlan as keyof typeof planBenefits.visibility]}</span>
+              </li>
+              <li className="flex items-start">
+                <div className="mr-3 mt-1">
+                  <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Check className="h-3 w-3 text-primary" />
+                  </div>
+                </div>
+                <span>{planBenefits.marketing[subscribedPlan as keyof typeof planBenefits.marketing]}</span>
+              </li>
+              <li className="flex items-start">
+                <div className="mr-3 mt-1">
+                  <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Check className="h-3 w-3 text-primary" />
+                  </div>
+                </div>
+                <span>{planBenefits.protection[subscribedPlan as keyof typeof planBenefits.protection]}</span>
+              </li>
+            </ul>
+
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild>
+                <Link to="/dashboard">
+                  Go to Dashboard
+                  <ChevronRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              
-              <Button 
-                className="flex-1 bg-gradient-to-r from-royal-crimson via-royal-gold to-royal-navy hover:opacity-90"
-                asChild
-              >
-                <Link to={user ? `/profile/${user.username}` : "/auth"}>
-                  <Crown className="mr-2 h-4 w-4" />
-                  {user ? 'Customize Profile' : 'Sign In'}
+              <Button variant="outline" asChild>
+                <Link to="/settings">
+                  Manage Subscription
                 </Link>
               </Button>
             </div>
           </CardContent>
         </Card>
-      </main>
-      
-      <Footer />
-    </div>
+      </div>
+    </Shell>
   );
 };
 

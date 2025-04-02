@@ -8,6 +8,7 @@ export * from './numberFormatters';
 export * from './stringFormatters';
 export * from './currencyFormatters';
 export * from './addressFormatters';
+export * from './fileFormatters';
 
 // Re-export specific formatters for backward compatibility
 import { formatCurrency, formatDollarAmount, formatWithUnit, formatCompactNumber, formatPercent } from './currencyFormatters';

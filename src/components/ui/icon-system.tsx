@@ -20,47 +20,58 @@ const IconSystem = React.forwardRef<SVGSVGElement, IconProps>(
     // Animation class
     const animationClass = animated ? 'animate-pulse' : '';
 
-    // If we have a LucideIcon component directly provided
-    if (typeof icon === 'function') {
-      const IconComponent = icon;
-      return <IconComponent ref={ref} className={cn(sizeClass, colorClass, animationClass, className)} {...props} />;
-    }
-
-    // If we have an icon name
-    if (name) {
-      // Try to find it in Lucide icons
-      const LucideIcon = (LucideIcons as any)[name];
-      if (LucideIcon) {
-        return <LucideIcon ref={ref} className={cn(sizeClass, colorClass, animationClass, className)} {...props} />;
-      }
-    }
-
-    // If we have a string icon name (not a Lucide component)
-    if (typeof icon === 'string') {
-      // Try to find it in Lucide icons by string name
-      const iconName = icon.charAt(0).toUpperCase() + icon.slice(1);
-      const LucideIcon = (LucideIcons as any)[iconName];
+    const iconName = icon || name;
+    
+    // Extract the actual component name - try different formats
+    let iconComponent: any = null;
+    
+    if (typeof iconName === 'string') {
+      // Try direct lookup
+      iconComponent = (LucideIcons as any)[iconName];
       
-      if (LucideIcon) {
-        return <LucideIcon ref={ref} className={cn(sizeClass, colorClass, animationClass, className)} {...props} />;
+      if (!iconComponent) {
+        // Try with first letter capitalized
+        const capitalizedName = iconName.charAt(0).toUpperCase() + iconName.slice(1);
+        iconComponent = (LucideIcons as any)[capitalizedName];
+      }
+      
+      if (!iconComponent) {
+        // Try with camelCase conversion (kebab-case to CamelCase)
+        const camelCaseName = iconName
+          .split('-')
+          .map((part, index) => 
+            index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)
+          )
+          .join('');
+        
+        iconComponent = (LucideIcons as any)[camelCaseName];
+      }
+      
+      if (!iconComponent) {
+        // Try with PascalCase conversion
+        const pascalCaseName = iconName
+          .split('-')
+          .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+          .join('');
+        
+        iconComponent = (LucideIcons as any)[pascalCaseName];
       }
     }
 
-    // Fallback to a default icon
-    return (
-      <div 
-        className={cn(
-          'inline-flex items-center justify-center',
-          sizeClass,
-          colorClass,
-          animationClass,
-          className
-        )}
-        {...props}
-      >
-        <span className="sr-only">{name || 'Icon'}</span>
-        <LucideIcons.HelpCircle />
-      </div>
+    // If we couldn't find the icon, use a fallback
+    if (!iconComponent) {
+      console.warn(`Icon not found: ${iconName}`);
+      iconComponent = LucideIcons.HelpCircle;
+    }
+
+    return React.createElement(
+      iconComponent,
+      {
+        ref,
+        className: cn(sizeClass, colorClass, animationClass, className),
+        "aria-hidden": "true",
+        ...props
+      }
     );
   }
 );

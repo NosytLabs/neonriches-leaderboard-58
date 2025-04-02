@@ -1,57 +1,47 @@
 
 export interface ProjectMetrics {
-  // Basic metrics
   totalFiles: number;
   totalSize: number;
-  
-  // Code size metrics
-  lineCount: number;
-  componentCount: number;
-  avgComponentSize: number;
-  
-  // Bundle analysis
-  dependencies: string[];
-  dependencyCount: number;
-  
-  // Cleanup metrics
-  beforeCleanup: {
-    files: number;
-    size: number;
+  totalLines: number;
+  dependencies: number;
+  beforeCleanup?: {
+    totalFiles: number;
+    totalSize: number;
+    totalLines: number;
     dependencies: number;
   };
-  afterCleanup: {
-    files: number;
-    size: number;
+  afterCleanup?: {
+    totalFiles: number;
+    totalSize: number;
+    totalLines: number;
     dependencies: number;
   };
-  
-  // Savings metrics
-  sizeSavings: number;
-  fileSavings: number;
-  dependencySavings: number;
-  
-  // Percentages
-  sizePercentage: number;
-  filePercentage: number;
-  dependencyPercentage: number;
+  sizeSavings?: number;
+  fileSavings?: number;
+  dependencySavings?: number;
+  sizePercentage?: number;
+  codeDuplication?: number;
+  unusedCode?: number;
+  redundantDependencies?: number;
+  performanceScore?: number;
 }
 
 export interface PerformanceIssue {
   id: string;
-  type: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  type: 'warning' | 'error' | 'info';
   description: string;
-  impactScore: number;
-  file?: string;
-  lineNumber?: number;
-  recommendation?: string;
+  file?: string;  // File path
+  lineNumber?: number;  // Line number
+  recommendation?: string;  // Suggested fix
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  category: 'performance' | 'code-quality' | 'security' | 'maintainability';
+  impact?: string;
 }
 
-export interface CodeQualityMetrics {
-  complexity: number;
-  maintainability: number;
-  readability: number;
-  testCoverage: number;
-  duplicateCode: number;
-  totalScore: number;
+export interface FileSizeData {
+  fileName: string;
+  size: number;
+  lineCount: number;
+  duplicatedLines?: number;
+  unusedExports?: string[];
 }

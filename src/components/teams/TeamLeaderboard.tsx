@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TeamData, TeamColor } from '@/types/team';
-import { formatDollarAmount, formatNumber } from '@/utils/formatters';
-import { Trophy, Users, TrendingUp, ArrowUp, ArrowDown, Minus } from 'lucide-react';
-import TeamBadge from './TeamBadge';
+import { Badge } from '@/components/ui/badge';
+import { Avatar } from '@/components/ui/avatar';
+import { TeamData } from '@/types/mockery-types';
+import { formatNumber } from '@/utils/formatters';
 
 interface TeamLeaderboardProps {
   teams: TeamData[];
@@ -12,117 +12,93 @@ interface TeamLeaderboardProps {
 
 const TeamLeaderboard: React.FC<TeamLeaderboardProps> = ({ teams }) => {
   // Sort teams by total contribution
-  const sortedTeams = [...teams].filter(team => team.id !== 'none' && team.id !== 'neutral')
-    .sort((a, b) => b.totalContribution - a.totalContribution);
-  
+  const sortedTeams = [...teams].sort((a, b) => b.totalContribution - a.totalContribution);
+
+  // Get team badge color based on team color
+  const getTeamBadgeColor = (teamColor: string) => {
+    switch (teamColor) {
+      case 'red':
+        return 'bg-red-500 text-white';
+      case 'blue':
+        return 'bg-blue-500 text-white';
+      case 'green':
+        return 'bg-green-500 text-white';
+      case 'gold':
+        return 'bg-yellow-500 text-white';
+      case 'purple':
+        return 'bg-purple-500 text-white';
+      default:
+        return 'bg-gray-500 text-white';
+    }
+  };
+
+  // Calculate average contribution per member
+  const getAverageContribution = (team: TeamData) => {
+    if (!team.members || team.members === 0) return 0;
+    return Math.round(team.totalContribution / team.members);
+  };
+
+  // Get contribution trend indicator
+  const getContributionTrendIndicator = (team: TeamData) => {
+    const previousRank = team.previousRank || 0;
+    const currentRank = team.rank || 0;
+    
+    if (previousRank === 0 || currentRank === 0) return 'neutral';
+    
+    if (currentRank < previousRank) {
+      return 'up';
+    } else if (currentRank > previousRank) {
+      return 'down';
+    } else {
+      return 'neutral';
+    }
+  };
+
   return (
-    <div className="space-y-6">
-      <Card className="glass-morphism border-white/10">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Trophy className="h-5 w-5 mr-2 text-royal-gold" />
-            Team Leaderboard
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="text-left border-b border-white/10">
-                  <th className="pb-3 pl-3">Rank</th>
-                  <th className="pb-3">Team</th>
-                  <th className="pb-3">Members</th>
-                  <th className="pb-3">Total Spent</th>
-                  <th className="pb-3">Avg Per Member</th>
-                  <th className="pb-3">Trend</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedTeams.map((team, index) => {
-                  const avgPerMember = team.members > 0 
-                    ? team.totalContribution / team.members 
-                    : 0;
-                  
-                  // Mock trend data
-                  const trends = ['up', 'down', 'neutral'];
-                  const trend = trends[Math.floor(Math.random() * trends.length)];
-                  
-                  return (
-                    <tr key={team.id} className="border-b border-white/5 hover:bg-white/5">
-                      <td className="py-4 pl-3 font-bold">#{index + 1}</td>
-                      <td className="py-4">
-                        <div className="flex items-center">
-                          <TeamBadge team={team.id as TeamColor} showName={true} />
-                        </div>
-                      </td>
-                      <td className="py-4">
-                        <div className="flex items-center">
-                          <Users className="h-4 w-4 mr-1 text-white/60" />
-                          {formatNumber(team.members)}
-                        </div>
-                      </td>
-                      <td className="py-4 font-bold">
-                        {formatDollarAmount(team.totalContribution)}
-                      </td>
-                      <td className="py-4">
-                        {formatDollarAmount(avgPerMember)}
-                      </td>
-                      <td className="py-4">
-                        {trend === 'up' && <ArrowUp className="h-5 w-5 text-green-500" />}
-                        {trend === 'down' && <ArrowDown className="h-5 w-5 text-red-500" />}
-                        {trend === 'neutral' && <Minus className="h-5 w-5 text-gray-500" />}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Card className="glass-morphism border-white/10">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <TrendingUp className="h-5 w-5 mr-2 text-royal-gold" />
-            Team Performance Stats
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {sortedTeams.slice(0, 3).map((team, index) => (
-              <Card key={team.id} className="glass-morphism border-white/10">
-                <CardContent className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <p className="text-sm text-white/60">
-                        {index === 0 ? 'Leading Team' : index === 1 ? '2nd Place' : '3rd Place'}
-                      </p>
-                      <h3 className="font-bold flex items-center mt-1">
-                        <TeamBadge team={team.id as TeamColor} size="sm" className="mr-2" />
-                        {team.name}
-                      </h3>
-                    </div>
-                    {index === 0 && <Trophy className="h-6 w-6 text-royal-gold" />}
+    <Card className="w-full shadow-md bg-card">
+      <CardHeader className="border-b pb-3">
+        <CardTitle className="text-xl font-bold">Team Standings</CardTitle>
+      </CardHeader>
+      <CardContent className="pt-4">
+        <div className="space-y-4">
+          {sortedTeams.map((team, index) => (
+            <div key={team.id} className="flex items-center justify-between p-3 rounded-md hover:bg-muted/50 transition-colors">
+              <div className="flex items-center space-x-4">
+                <div className="flex flex-col items-center justify-center min-w-8">
+                  <span className="text-lg font-bold">{index + 1}</span>
+                  {getContributionTrendIndicator(team) === 'up' && (
+                    <span className="text-green-500 text-xs">▲</span>
+                  )}
+                  {getContributionTrendIndicator(team) === 'down' && (
+                    <span className="text-red-500 text-xs">▼</span>
+                  )}
+                </div>
+                
+                <Avatar className="h-10 w-10">
+                  <img src={team.logoUrl} alt={team.name} className="object-cover" />
+                </Avatar>
+                
+                <div>
+                  <div className="font-medium">{team.name}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {team.members} {team.members === 1 ? 'member' : 'members'}
                   </div>
-                  
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div>
-                      <p className="text-white/60">Total Spent</p>
-                      <p className="font-bold">{formatDollarAmount(team.totalContribution)}</p>
-                    </div>
-                    <div>
-                      <p className="text-white/60">Members</p>
-                      <p className="font-bold">{formatNumber(team.members)}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+                </div>
+              </div>
+              
+              <div className="flex flex-col items-end">
+                <Badge className={getTeamBadgeColor(team.color)}>
+                  {team.color.charAt(0).toUpperCase() + team.color.slice(1)}
+                </Badge>
+                <div className="text-sm mt-1">
+                  {formatNumber(team.totalContribution)} points
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

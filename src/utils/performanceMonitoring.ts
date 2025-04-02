@@ -1,236 +1,162 @@
 
-/**
- * Core performance monitoring functionality
- */
-
-// Types for performance metrics
-interface PerformanceMetrics {
-  LCP?: { value: number; quality: string };
-  FID?: { value: number; quality: string };
-  CLS?: { value: number; quality: string };
-  INP?: { value: number; quality: string };
+export interface PerformanceMetrics {
+  fcp: number; // First Contentful Paint
+  lcp: number; // Largest Contentful Paint
+  fid: number; // First Input Delay
+  cls: number; // Cumulative Layout Shift
+  ttfb: number; // Time to First Byte
+  windowLoad: number; // Window Load Event
+  domLoad: number; // DOM Content Loaded
+  componentRenderTimes: Record<string, number>;
 }
 
-// Types for performance interactions
-interface PerformanceInteraction {
+export interface WebVitalMetric {
+  id: string;
   name: string;
-  timestamp: number;
-  duration: number;
+  value: number;
+  delta?: number;
+  entries?: any[];
 }
 
-// Global performance state
-declare global {
-  interface Window {
-    __PERFORMANCE_MARKS?: Record<string, { start: number }>;
-    __PERFORMANCE_METRICS?: PerformanceMetrics;
-    __PERFORMANCE_INTERACTIONS?: PerformanceInteraction[];
-  }
-}
-
-/**
- * Initializes performance monitoring for the application
- */
+// Initialize performance monitoring
 export const initPerformanceMonitoring = (): void => {
   if (typeof window === 'undefined') return;
-  
-  // Record navigation timing
-  if (performance && 'getEntriesByType' in performance) {
-    try {
-      window.addEventListener('load', () => {
-        setTimeout(recordNavigationTiming, 0);
-      });
-    } catch (error) {
-      console.error('[Performance] Error measuring navigation timing:', error);
-    }
-  }
-  
-  // Core Web Vitals measurement
-  if ('PerformanceObserver' in window) {
-    try {
-      observeLCP();
-      observeFID();
-      observeCLS();
-      observeINP();
-    } catch (error) {
-      console.error('[Performance] Error measuring Core Web Vitals:', error);
-    }
-  }
-  
-  // Component render times in development
-  if (process.env.NODE_ENV === 'development') {
-    window.__PERFORMANCE_MARKS = window.__PERFORMANCE_MARKS || {};
-    
-    // Clear previous marks on page navigation
-    window.addEventListener('popstate', () => {
-      window.__PERFORMANCE_MARKS = {};
-    });
-  }
-};
 
-// Record navigation timing metrics
-const recordNavigationTiming = (): void => {
-  if (!performance || !('getEntriesByType' in performance)) return;
-  
-  const navigationEntries = performance.getEntriesByType('navigation');
-  if (navigationEntries && navigationEntries.length > 0) {
-    const navigationEntry = navigationEntries[0] as PerformanceNavigationTiming;
-    
-    console.info(`[Performance] Page Load: ${navigationEntry.loadEventEnd.toFixed(2)}ms`);
-    console.info(`[Performance] DOM Ready: ${navigationEntry.domContentLoadedEventEnd.toFixed(2)}ms`);
-    console.info(`[Performance] TTFB: ${navigationEntry.responseStart.toFixed(2)}ms`);
+  // Create performance metrics store if not exists
+  if (!(window as any).__PERFORMANCE_METRICS) {
+    (window as any).__PERFORMANCE_METRICS = {
+      fcp: 0,
+      lcp: 0,
+      fid: 0,
+      cls: 0,
+      ttfb: 0,
+      windowLoad: 0,
+      domLoad: 0,
+      componentRenderTimes: {}
+    };
   }
-};
 
-// Observe Largest Contentful Paint
-const observeLCP = (): void => {
-  const lcpObserver = new PerformanceObserver((entryList) => {
-    const entries = entryList.getEntries();
-    const lastEntry = entries[entries.length - 1];
-    const lcp = lastEntry.startTime;
-    
-    // Log LCP and assess quality
-    const lcpQuality = lcp < 2500 ? 'Good' : lcp < 4000 ? 'Needs Improvement' : 'Poor';
-    console.info(`[Core Web Vitals] LCP: ${lcp.toFixed(2)}ms (${lcpQuality})`);
-    
-    // Store for reporting
-    window.__PERFORMANCE_METRICS = window.__PERFORMANCE_METRICS || {};
-    window.__PERFORMANCE_METRICS.LCP = { value: lcp, quality: lcpQuality };
-  });
-  
-  lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
-};
+  // Monitor page load
+  window.addEventListener('load', () => {
+    if (performance.getEntriesByType) {
+      const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+      if (navEntry) {
+        const ttfb = navEntry.responseStart - navEntry.requestStart;
+        const domLoad = navEntry.domContentLoadedEventEnd - navEntry.startTime;
+        const windowLoad = navEntry.loadEventEnd - navEntry.startTime;
 
-// Observe First Input Delay
-const observeFID = (): void => {
-  const fidObserver = new PerformanceObserver((entryList) => {
-    const entries = entryList.getEntries();
-    entries.forEach(entry => {
-      const fid = (entry as PerformanceEventTiming).processingStart - entry.startTime;
-      
-      // Log FID and assess quality
-      const fidQuality = fid < 100 ? 'Good' : fid < 300 ? 'Needs Improvement' : 'Poor';
-      console.info(`[Core Web Vitals] FID: ${fid.toFixed(2)}ms (${fidQuality})`);
-      
-      // Store for reporting
-      window.__PERFORMANCE_METRICS = window.__PERFORMANCE_METRICS || {};
-      window.__PERFORMANCE_METRICS.FID = { value: fid, quality: fidQuality };
-    });
-  });
-  
-  fidObserver.observe({ type: 'first-input', buffered: true });
-};
+        // Store metrics
+        (window as any).__PERFORMANCE_METRICS.ttfb = ttfb;
+        (window as any).__PERFORMANCE_METRICS.domLoad = domLoad;
+        (window as any).__PERFORMANCE_METRICS.windowLoad = windowLoad;
 
-// Observe Cumulative Layout Shift
-const observeCLS = (): void => {
-  const clsObserver = new PerformanceObserver((entryList) => {
-    let clsValue = 0;
-    
-    entryList.getEntries().forEach(entry => {
-      if (!(entry as any).hadRecentInput) {
-        clsValue += (entry as any).value;
+        console.info(`[Performance] TTFB: ${ttfb.toFixed(2)}ms, DOM Load: ${domLoad.toFixed(2)}ms, Window Load: ${windowLoad.toFixed(2)}ms`);
       }
-    });
-    
-    // Log CLS and assess quality
-    const clsQuality = clsValue < 0.1 ? 'Good' : clsValue < 0.25 ? 'Needs Improvement' : 'Poor';
-    console.info(`[Core Web Vitals] CLS: ${clsValue.toFixed(3)} (${clsQuality})`);
-    
-    // Store for reporting
-    window.__PERFORMANCE_METRICS = window.__PERFORMANCE_METRICS || {};
-    window.__PERFORMANCE_METRICS.CLS = { value: clsValue, quality: clsQuality };
-  });
-  
-  clsObserver.observe({ type: 'layout-shift', buffered: true });
-};
-
-// Observe Interaction to Next Paint
-const observeINP = (): void => {
-  try {
-    // Support for newer INP metric
-    const observer = new PerformanceObserver((entryList) => {
-      const interactions = entryList.getEntries();
-      
-      if (interactions.length > 0) {
-        // Get the 95th percentile for INP
-        const values = interactions.map(entry => entry.duration).sort((a, b) => a - b);
-        const inp = values[Math.floor(values.length * 0.95)];
-        
-        // Log INP and assess quality
-        const inpQuality = inp < 200 ? 'Good' : inp < 500 ? 'Needs Improvement' : 'Poor';
-        console.info(`[Core Web Vitals] INP: ${inp.toFixed(2)}ms (${inpQuality})`);
-        
-        // Store for reporting
-        window.__PERFORMANCE_METRICS = window.__PERFORMANCE_METRICS || {};
-        window.__PERFORMANCE_METRICS.INP = { value: inp, quality: inpQuality };
-      }
-    });
-    
-    // This has options that may not be supported in all browsers
-    if ('observe' in observer) {
-      observer.observe({ 
-        type: 'event', 
-        buffered: true, 
-        durationThreshold: 16 
-      } as any);
     }
-  } catch (error) {
-    console.warn('[Performance] INP metric not supported in this browser');
-  }
+  });
 };
 
-/**
- * Mark the start of a component render
- */
+// Mark the start of a component render
 export const markComponentRenderStart = (componentName: string): void => {
-  if (typeof window === 'undefined' || process.env.NODE_ENV !== 'development') return;
+  if (typeof window === 'undefined') return;
   
-  if (performance && 'mark' in performance) {
-    try {
-      performance.mark(`${componentName}-start`);
-      window.__PERFORMANCE_MARKS = window.__PERFORMANCE_MARKS || {};
-      window.__PERFORMANCE_MARKS[componentName] = { start: Date.now() };
-    } catch (error) {
-      console.error(`[Performance] Error marking ${componentName} start:`, error);
+  // Create a unique mark name for this component render start
+  const markName = `${componentName}_render_start_${Date.now()}`;
+  if (performance && performance.mark) {
+    performance.mark(markName);
+    
+    // Store the mark name for later use
+    if (!(window as any).__COMPONENT_RENDER_MARKS) {
+      (window as any).__COMPONENT_RENDER_MARKS = {};
     }
+    (window as any).__COMPONENT_RENDER_MARKS[componentName] = markName;
   }
 };
 
-/**
- * Mark the end of a component render and log the duration
- */
+// Mark the end of a component render and measure the duration
 export const markComponentRenderEnd = (componentName: string): void => {
-  if (typeof window === 'undefined' || process.env.NODE_ENV !== 'development') return;
+  if (typeof window === 'undefined') return;
   
-  if (performance && 'mark' in performance && 'measure' in performance && window.__PERFORMANCE_MARKS?.[componentName]) {
-    try {
-      performance.mark(`${componentName}-end`);
-      performance.measure(componentName, `${componentName}-start`, `${componentName}-end`);
+  // Get the start mark name
+  const startMarkName = (window as any).__COMPONENT_RENDER_MARKS?.[componentName];
+  if (!startMarkName || !performance || !performance.mark || !performance.measure) {
+    return;
+  }
+  
+  // Create the end mark and measure
+  const endMarkName = `${componentName}_render_end_${Date.now()}`;
+  performance.mark(endMarkName);
+  
+  try {
+    const measureName = `${componentName}_render_duration`;
+    performance.measure(measureName, startMarkName, endMarkName);
+    
+    // Get the measurement
+    const measurements = performance.getEntriesByName(measureName, 'measure');
+    const latestMeasurement = measurements[measurements.length - 1];
+    
+    // Store the render time
+    if (latestMeasurement && (window as any).__PERFORMANCE_METRICS) {
+      (window as any).__PERFORMANCE_METRICS.componentRenderTimes[componentName] = latestMeasurement.duration;
       
-      const startTime = window.__PERFORMANCE_MARKS[componentName].start;
-      const duration = Date.now() - startTime;
-      
-      // Only log if render took more than 16ms (1 frame at 60fps)
-      if (duration > 16) {
-        console.info(`[Performance] ${componentName} rendered in ${duration}ms`);
+      // Log for debugging
+      if (latestMeasurement.duration > 100) {
+        console.warn(`[Performance] Slow render detected: ${componentName} took ${latestMeasurement.duration.toFixed(2)}ms`);
       }
-      
-      // Clean up
-      delete window.__PERFORMANCE_MARKS[componentName];
-    } catch (error) {
-      console.error(`[Performance] Error measuring ${componentName}:`, error);
     }
+    
+    // Clean up marks
+    performance.clearMarks(startMarkName);
+    performance.clearMarks(endMarkName);
+    performance.clearMeasures(measureName);
+    
+    // Remove from temporary storage
+    delete (window as any).__COMPONENT_RENDER_MARKS[componentName];
+  } catch (e) {
+    console.error(`[Performance] Error measuring component render time for ${componentName}:`, e);
   }
 };
 
-/**
- * Get a summary of performance metrics
- */
-export const getPerformanceSummary = (): Record<string, any> => {
-  if (typeof window === 'undefined') return {};
+// Add web vitals reporting
+export const reportWebVital = (metric: WebVitalMetric): void => {
+  if (typeof window === 'undefined') return;
   
-  return {
-    metrics: window.__PERFORMANCE_METRICS || {},
-    interactions: window.__PERFORMANCE_INTERACTIONS || [],
-    navigation: performance.getEntriesByType('navigation')[0] || {}
-  };
+  // Update our performance metrics
+  if ((window as any).__PERFORMANCE_METRICS) {
+    switch (metric.name) {
+      case 'FCP':
+        (window as any).__PERFORMANCE_METRICS.fcp = metric.value;
+        break;
+      case 'LCP':
+        (window as any).__PERFORMANCE_METRICS.lcp = metric.value;
+        break;
+      case 'FID':
+        (window as any).__PERFORMANCE_METRICS.fid = metric.value;
+        break;
+      case 'CLS':
+        (window as any).__PERFORMANCE_METRICS.cls = metric.value;
+        break;
+    }
+  }
+  
+  // Log for debugging
+  console.info(`[Web Vital] ${metric.name}: ${metric.value}`);
+};
+
+// Get all performance metrics
+export const getPerformanceMetrics = (): PerformanceMetrics => {
+  if (typeof window === 'undefined') {
+    return {
+      fcp: 0,
+      lcp: 0,
+      fid: 0,
+      cls: 0,
+      ttfb: 0,
+      windowLoad: 0,
+      domLoad: 0,
+      componentRenderTimes: {}
+    };
+  }
+  
+  return (window as any).__PERFORMANCE_METRICS as PerformanceMetrics;
 };

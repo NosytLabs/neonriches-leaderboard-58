@@ -53,6 +53,7 @@ const RoyalBoutique = () => {
       id: 'border-1',
       name: 'Royal Gold Border',
       description: 'A luxurious gold border for your profile',
+      cost: 50,
       price: 50,
       category: 'border',
       cssClass: 'border-gold',
@@ -65,6 +66,7 @@ const RoyalBoutique = () => {
       id: 'border-2',
       name: 'Silver Filigree Border',
       description: 'An elegant silver border with delicate filigree',
+      cost: 35,
       price: 35,
       category: 'border',
       cssClass: 'border-silver',
@@ -77,6 +79,7 @@ const RoyalBoutique = () => {
       id: 'border-3',
       name: 'Crimson Dragon Scale Border',
       description: 'A border with a pattern resembling crimson dragon scales',
+      cost: 65,
       price: 65,
       category: 'border',
       cssClass: 'border-dragon-scale',
@@ -218,7 +221,7 @@ const RoyalBoutique = () => {
                             <CardTitle className="flex items-center justify-between">
                               <span>{item.name}</span>
                               <Badge variant="secondary">
-                                {formatCurrency(item.price)}
+                                {formatCurrency(item.price || item.cost)}
                               </Badge>
                             </CardTitle>
                             <CardDescription>{item.description}</CardDescription>

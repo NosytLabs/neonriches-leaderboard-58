@@ -2,7 +2,7 @@
 import { UserCosmetics } from './cosmetics';
 
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze';
-export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'none' | 'neutral';
+export type TeamType = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze';
 export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
 
 export type UserTier = 
@@ -19,6 +19,9 @@ export type UserTier =
   | 'bronze'
   | 'vip'
   | 'whale'
+  | 'shark'
+  | 'dolphin'
+  | 'noble'
   | 'standard'
   | 'elite'
   | 'legendary';
@@ -88,13 +91,10 @@ export interface UserProfile {
   id: string;
   username: string;
   displayName: string;
-  email: string;
+  email?: string;
   profileImage: string;
   bio: string;
   joinedDate: string;
-  joinDate?: string; // For backward compatibility
-  joinedAt?: string; // For backward compatibility
-  createdAt?: string; // For backward compatibility
   tier: UserTier;
   team: TeamColor;
   rank: number;
@@ -120,24 +120,17 @@ export interface UserProfile {
   profileViews?: number;
   profileClicks?: number;
   purchasedFeatures?: string[];
-  subscription?: any;
-  role?: string;
+  subscription?: {
+    planId: string;
+    nextBillingDate: string;
+    status?: 'active' | 'cancelled' | 'paused';
+    tier?: string;
+  };
+  teamRank?: number;
   activeTitle?: string;
   certificateNFT?: {
-    id?: string;
-    mintAddress?: string;
-    imageUrl?: string;
+    mintAddress: string;
+    mintDate: string;
     dateIssued?: string;
-    type?: string;
-    isVerified?: boolean;
   };
-  avatarUrl?: string; // For backward compatibility
-  gender?: Gender;
-  profileImages?: ProfileImage[];
-  achievements?: string[]; // Adding achievements
-  badges?: string[]; // Adding badges
 }
-
-export interface User extends UserProfile {}
-
-export type ProfileLink = SocialLink;

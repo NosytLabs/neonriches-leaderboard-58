@@ -1,24 +1,26 @@
 
-// If this file doesn't exist, we'll create it with the proper types
 export interface ProfileImage {
-  id: string | number;
+  id?: string;
   url: string;
+  isPrimary: boolean;
   caption?: string;
 }
 
 export interface ProfileLink {
-  id: number;
+  id?: string;
+  platform: string;
   url: string;
-  label: string;
+  title?: string;
+  displayText?: string;
+  icon?: string;
 }
 
-export interface ProfileData {
-  bio: string;
-  images: ProfileImage[];
-  links: ProfileLink[];
-  joinDate: string;
-  lastActive: string;
-  followers: number;
-  following: number;
-  views: number;
+export interface ProfileSettings {
+  visibility: 'public' | 'private' | 'followers' | 'friends';
+  allowLinks: boolean;
+  showEmail: boolean;
+  showRank: boolean;
+  showTeam: boolean;
+  showSpending: boolean;
+  showBadges: boolean;
 }

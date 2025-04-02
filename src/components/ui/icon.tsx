@@ -10,9 +10,9 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
     const iconName = (icon || name) as keyof typeof LucideIcons;
     
     // Get the Lucide icon component
-    const IconComponent = LucideIcons[iconName];
+    const LucideIcon = LucideIcons[iconName as keyof typeof LucideIcons];
 
-    if (!IconComponent) {
+    if (!LucideIcon) {
       console.warn(`Icon "${iconName}" not found`);
       return null;
     }
@@ -33,7 +33,7 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
 
     // Render the Lucide icon
     return (
-      <IconComponent
+      <LucideIcon
         ref={ref}
         className={cn(sizeClass, colorClass, animatedClass, className)}
         aria-hidden="true"
