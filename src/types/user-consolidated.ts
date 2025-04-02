@@ -2,137 +2,106 @@
 import { TeamColor } from './team';
 import { UserTier } from './tier';
 
-export interface UserCosmetics {
-  title?: string[] | string;
-  border?: string[] | string;
-  color?: string[] | string;
-  font?: string[] | string;
-  emoji?: string[] | string;
-  background?: string[] | string;
-  effect?: string[] | string;
-  badge?: string[] | string;
-  theme?: string[] | string;
-}
-
-export interface SocialLink {
-  id?: string | number;
-  platform?: string;
-  url: string;
-  username?: string;
-  display?: string;
-  icon?: string;
-  verified?: boolean;
-  primary?: boolean;
-  clicks?: number;
-  title?: string;
-  label?: string;
-  type?: string;
-}
-
-export interface ProfileImage {
-  id?: string;
-  url: string;
-  isPrimary: boolean;
-  caption?: string;
-}
-
 export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'friends';
-  allowProfileLinks: boolean;
-  theme: 'light' | 'dark' | 'royal' | 'system';
-  notifications: boolean;
-  emailNotifications: boolean;
-  marketingEmails: boolean;
-  soundEffects: boolean;
-  showEmailOnProfile: boolean;
-  rankChangeAlerts: boolean;
+  profileVisibility?: 'public' | 'private' | 'friends';
+  allowProfileLinks?: boolean;
+  theme?: string;
+  notifications?: boolean;
+  emailNotifications?: boolean;
+  marketingEmails?: boolean;
+  showRank?: boolean;
+  darkMode?: boolean;
+  soundEffects?: boolean;
+  showBadges?: boolean;
   newFollowerAlerts?: boolean;
   teamNotifications?: boolean;
-  showRank: boolean;
-  darkMode?: boolean; // For backward compatibility
-  language?: string;
-  shameAlerts?: boolean;
-  publicProfile?: boolean;
-  showTeam: boolean;
-  showSpending: boolean;
-  allowMessages?: boolean;
-  showBadges?: boolean;
+  showTeam?: boolean;
+  showSpending?: boolean;
+  showEmailOnProfile?: boolean;
+  rankChangeAlerts?: boolean;
+}
+
+export interface UserCosmetics {
+  [key: string]: string[] | undefined;
+  border?: string[];
+  color?: string[];
+  font?: string[];
+  emoji?: string[];
+  title?: string[];
+  background?: string[];
+  effect?: string[];
+  badge?: string[];
+  theme?: string[];
 }
 
 export interface ProfileBoost {
   id: string;
   type: string;
-  level: number;
   startDate: string;
   endDate: string;
-  appliedBy: string;
-  strength: number;
-  name?: string;
-  description?: string;
-  duration?: number;
-  price?: number;
-  icon?: string;
+  level: number;
   isActive: boolean;
+  strength: number;
+  appliedBy: string;
 }
 
-export interface CertificateNFT {
-  id?: string;
-  mintAddress?: string;
-  imageUrl?: string;
+export interface SocialLink {
+  platform: string;
+  url: string;
+  username?: string;
+}
+
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  unlockedAt: string;
+  tier?: string;
+}
+
+export interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  earnedAt: string;
+  tier?: string;
+}
+
+export interface NFTCertificate {
+  mintAddress: string;
+  mintDate?: string;
   dateIssued?: string;
-  type?: string;
-  isVerified?: boolean;
 }
-
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
 
 export interface UserProfile {
-  id: string | number;
+  id: string;
   username: string;
-  email?: string;
-  displayName?: string;
+  displayName: string;
+  email: string;
   profileImage?: string;
   bio?: string;
-  walletBalance?: number;
-  totalSpent?: number;
-  amountSpent?: number;
-  rank?: number;
-  previousRank?: number;
-  team?: TeamColor | string;
-  tier?: UserTier | string;
+  joinedDate: string;
   joinDate?: string;
-  joinedDate?: string;
-  joinedAt?: string;
   createdAt?: string;
+  totalSpent: number;
+  amountSpent?: number;
+  walletBalance?: number;
+  rank: number;
+  previousRank?: number;
+  tier: UserTier | string;
+  team: TeamColor | string | null;
   isVerified?: boolean;
-  isVIP?: boolean;
-  isProtected?: boolean;
-  isAdmin?: boolean;
   isFounder?: boolean;
-  lastActive?: string;
-  spendStreak?: number;
-  following?: string[];
-  followers?: string[];
   cosmetics?: UserCosmetics;
   settings?: UserSettings;
   profileBoosts?: ProfileBoost[];
-  socialLinks?: SocialLink[] | Record<string, string>;
-  profileViews?: number;
-  profileClicks?: number;
-  purchasedFeatures?: string[];
-  subscription?: any;
-  gender?: Gender;
-  profileImages?: ProfileImage[];
-  achievements?: string[];
-  badges?: string[];
-  activeTitle?: string;
-  certificateNFT?: CertificateNFT;
-  boostCount?: number;
-  teamRank?: number;
+  socialLinks?: SocialLink[];
+  followers?: string[];
+  following?: string[];
+  achievements?: Achievement[];
+  badges?: Badge[];
+  spendStreak?: number;
+  certificateNFT?: NFTCertificate;
 }
-
-// Export TeamColor and UserTier for components that import it from here
-export { TeamColor, UserTier };
-
-// Re-export for backward compatibility
-export interface User extends UserProfile {}

@@ -64,5 +64,4 @@ export const SEO: React.FC<SEOProps> = ({
   );
 };
 
-// Export as both named and default export for flexibility
 export default SEO;

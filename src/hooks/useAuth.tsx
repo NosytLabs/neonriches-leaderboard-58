@@ -2,7 +2,6 @@
 import { useContext } from 'react';
 import { AuthContext } from '@/contexts/auth';
 import { AuthContextType } from '@/types/auth-context';
-import { TeamColor } from '@/types/team';
 import { toTeamColor } from '@/utils/typeConverters';
 
 /**

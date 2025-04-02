@@ -10,6 +10,7 @@ import Settings from '@/pages/Settings';
 import SoundProvider from '@/hooks/sounds/SoundProvider';
 import { AuthProvider } from '@/contexts/auth';
 import { HelmetProvider } from 'react-helmet-async';
+import Index from '@/pages/Index';
 
 const App: React.FC = () => {
   // Create a context object for react-helmet-async
@@ -20,7 +21,7 @@ const App: React.FC = () => {
       <AuthProvider>
         <SoundProvider>
           <Routes>
-            <Route path="/" element={<MainLayout><Chat /></MainLayout>} />
+            <Route path="/" element={<MainLayout><Index /></MainLayout>} />
             <Route path="/chat" element={<MainLayout><Chat /></MainLayout>} />
             <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
             <Route path="/signup" element={<MainLayout><Signup /></MainLayout>} />

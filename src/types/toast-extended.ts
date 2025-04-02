@@ -1,26 +1,10 @@
 
-import { Toast as ToastComponent } from '@/components/ui/toast';
-import { ReactNode } from 'react';
+import { ToastActionElement, ToastProps } from "@/components/ui/toast";
+import { ReactNode } from "react";
 
-// Extended toast props that allow ReactNode for title instead of just string
-export interface ExtendedToastProps {
+export type ExtendedToastProps = Omit<ToastProps, 'title' | 'description'> & {
   title?: ReactNode;
   description?: ReactNode;
-  variant?: 'default' | 'destructive' | 'success' | 'royal' | 'outline' | 'secondary';
-  duration?: number;
-  action?: ReactNode;
-  error?: string;
-  success?: boolean;
-}
-
-// Create a type-safe toast utility function
-export const createExtendedToast = (props: ExtendedToastProps): typeof ToastComponent => {
-  // Convert ReactNode title to string if needed
-  const sanitizedProps = {
-    ...props,
-    // Ensure title is string compatible
-    title: props.title ? (typeof props.title === 'string' ? props.title : String(props.title)) : undefined
-  };
-  
-  return sanitizedProps as unknown as typeof ToastComponent;
+  variant?: 'default' | 'destructive' | 'success' | 'outline' | 'secondary' | 'royal';
+  action?: ToastActionElement;
 };
