@@ -1,45 +1,53 @@
 
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'silver' | 'bronze' | 'neutral' | 'none' | 'crimson';
+/**
+ * Team type definitions
+ */
 
-export interface Team {
-  id: string;
-  name: string;
-  color: TeamColor;
-  totalSpent: number;
-  members: number;
-  rank: number;
-  previousRank: number;
-  logoUrl: string;
-  description: string;
-}
+import { TeamColor, TeamData } from './mockery-types';
+
+// Re-export TeamData for backward compatibility
+export type { TeamData };
 
 export interface TeamMember {
   id: string;
   userId: string;
-  teamId: string;
-  joinedAt: string;
-  role: 'member' | 'captain' | 'admin';
-  contribution: number;
   username: string;
-  displayName?: string;
   profileImage?: string;
+  joinDate: string;
+  rank: number;
+  totalSpent: number;
+  role: TeamRole;
 }
+
+export type TeamRole = 'member' | 'captain' | 'co-captain' | 'council';
 
 export interface TeamStats {
+  totalMembers: number;
   totalSpent: number;
-  memberCount: number;
-  averageSpent: number;
-  topContributor: {
+  avgSpentPerMember: number;
+  topSpender: {
     username: string;
-    contribution: number;
-  };
-  recentActivity: {
-    username: string;
-    action: string;
     amount: number;
-    timestamp: string;
-  }[];
+  };
+  position: number;
+  change: number;
+  captainId?: string;
 }
 
-// Export alias for compatibility
-export type TeamType = TeamColor;
+export interface TeamBenefits {
+  name: string;
+  description: string;
+  unlocked: boolean;
+  requiredSpending?: number;
+  requiredMembers?: number;
+}
+
+export interface TeamInvite {
+  id: string;
+  teamId: string;
+  userId: string;
+  invitedBy: string;
+  timestamp: string;
+  status: 'pending' | 'accepted' | 'declined' | 'expired';
+  expiresAt: string;
+}

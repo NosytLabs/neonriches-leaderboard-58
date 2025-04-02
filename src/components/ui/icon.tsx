@@ -1,95 +1,118 @@
 
-import React, { forwardRef } from 'react';
-import { IconProps } from '@/types/ui/icon-types';
+import React, { ComponentType } from 'react';
 import * as LucideIcons from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { LucideProps } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { IconProps, IconSize, IconColor, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
 
-// Define the size map 
-const iconSizeMap = {
-  xs: 'h-3 w-3',
-  sm: 'h-4 w-4',
-  md: 'h-5 w-5',
-  lg: 'h-6 w-6',
-  xl: 'h-8 w-8',
-  '2xl': 'w-10 h-10',
-  '3xl': 'w-16 h-16',
-  '4xl': 'w-20 h-20'
-};
+// Dynamic icon component
+export const Icon = React.forwardRef<
+  SVGSVGElement, 
+  IconProps & { iconName?: string }
+>((props, ref) => {
+  const { 
+    icon,
+    name,
+    iconName,
+    size = 'md', 
+    color = 'default', 
+    className, 
+    animated,
+    style = 'default',
+    ...restProps 
+  } = props;
 
-// Define color map
-const iconColorMap = {
-  default: 'text-foreground',
-  primary: 'text-primary',
-  secondary: 'text-muted-foreground',
-  accent: 'text-accent',
-  success: 'text-green-500',
-  warning: 'text-amber-500',
-  danger: 'text-red-500',
-  info: 'text-blue-500',
-  royal: 'text-royal-gold',
-  muted: 'text-muted-foreground',
-  gold: 'text-royal-gold',
-  silver: 'text-gray-300',
-  crimson: 'text-royal-crimson',
-  emerald: 'text-emerald-500',
-  bronze: 'text-amber-600',
-  red: 'text-red-500',
-  blue: 'text-blue-500',
-  green: 'text-green-500',
-  purple: 'text-purple-500'
-};
+  // Determine which icon name to use
+  const iconToRender = iconName || icon || name;
 
-export const Icon = forwardRef<SVGSVGElement, IconProps>(
-  ({ icon, name, size = 'md', color = 'default', className = '', animated = false, ...props }, ref) => {
-    // Use either icon or name prop for backwards compatibility
-    const iconName = (icon || name || '') as keyof typeof LucideIcons;
-    
-    if (!iconName) {
-      console.warn('Icon component must have either icon or name prop');
-      return null;
-    }
-    
-    // Get the Lucide icon component
-    const LucideIcon = iconName in LucideIcons ? LucideIcons[iconName] : null;
+  if (!iconToRender) {
+    console.warn('Icon component requires either icon, name, or iconName prop');
+    return null;
+  }
 
-    if (!LucideIcon) {
-      console.warn(`Icon "${iconName}" not found`);
-      return null;
-    }
+  // Get size and color classes
+  const sizeClass = typeof size === 'string' 
+    ? iconSizeMap[size as IconSize] || 'w-6 h-6'
+    : typeof size === 'number'
+      ? `w-${size} h-${size}`
+      : 'w-6 h-6';
 
-    // Determine size class based on the type
-    let sizeClass = '';
-    if (typeof size === 'number') {
-      sizeClass = `w-${size} h-${size}`;
-    } else {
-      sizeClass = iconSizeMap[size as keyof typeof iconSizeMap] || iconSizeMap.md;
-    }
-    
-    // Determine color class - handle both string literal types and CSS class strings
-    let colorClass = '';
-    if (typeof color === 'string' && color in iconColorMap) {
-      colorClass = iconColorMap[color as keyof typeof iconColorMap];
-    } else {
-      colorClass = color as string; // Allow custom color classes
-    }
-    
-    // Determine animation class
-    const animatedClass = animated ? 'animate-pulse' : '';
+  const colorClass = typeof color === 'string'
+    ? (color in iconColorMap)
+      ? iconColorMap[color as IconColor]
+      : color.startsWith('#') || color.startsWith('var(')
+        ? '' // Will be set as a style
+        : `text-${color}`
+    : 'text-current';
 
-    // Use React.createElement to avoid type errors with LucideIcon
-    return React.createElement(
-      LucideIcon,
-      {
-        ref,
-        className: cn(sizeClass, colorClass, animatedClass, className),
-        'aria-hidden': 'true',
-        ...props
-      }
+  // Check if the icon exists in Lucide
+  const LucideIcon = getLucideIcon(iconToRender);
+
+  // Animation class based on the animated prop
+  const animationClass = animated ? 'animate-pulse' : '';
+
+  // Style object for direct color values
+  const styleObject = color && (color.startsWith('#') || color.startsWith('var('))
+    ? { color }
+    : {};
+
+  if (LucideIcon) {
+    return (
+      <LucideIcon
+        ref={ref}
+        className={cn(sizeClass, colorClass, animationClass, className)}
+        style={styleObject}
+        {...restProps}
+      />
     );
   }
-);
+
+  // If not a Lucide icon, return a warning component in dev and null in prod
+  if (process.env.NODE_ENV === 'development') {
+    console.warn(`Icon "${iconToRender}" not found in Lucide icons`);
+    return (
+      <div 
+        className={cn(
+          'flex items-center justify-center border border-dashed',
+          sizeClass, 
+          'text-red-500 bg-red-100 rounded',
+          className
+        )}
+        ref={ref as any}
+      >
+        ?
+      </div>
+    );
+  }
+
+  return null;
+});
 
 Icon.displayName = 'Icon';
+
+// Helper function to get Lucide icon component
+function getLucideIcon(iconName: string): ComponentType<LucideProps> | null {
+  // Convert iconName to match Lucide's naming convention (e.g., 'chevron-down' to 'ChevronDown')
+  const formattedName = formatIconName(iconName);
+  
+  // Access the component from Lucide icons
+  const icon = (LucideIcons as Record<string, ComponentType<LucideProps>>)[formattedName];
+  
+  return icon || null;
+}
+
+// Helper function to format icon name to match Lucide naming convention
+function formatIconName(name: string): string {
+  // If the name is already in PascalCase, return it
+  if (/^[A-Z][a-zA-Z0-9]*$/.test(name)) {
+    return name;
+  }
+  
+  // Convert kebab-case or snake_case to PascalCase
+  return name
+    .split(/[-_]/)
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join('');
+}
 
 export default Icon;

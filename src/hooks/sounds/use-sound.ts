@@ -1,105 +1,117 @@
 
-import { useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { SoundType, SoundOptions } from '@/types/sound-types';
-import { useSoundsConfig } from './use-sounds-config';
 import getSoundPath from '@/utils/getSoundPath';
 
 /**
- * Custom hook for playing sound effects
+ * Hook for playing sounds
+ * @returns Sound control functions
  */
-export const useSound = () => {
-  const { soundConfig, toggleSounds, toggleMuted, setVolume } = useSoundsConfig();
+const useSound = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentSound, setCurrentSound] = useState<SoundType | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  useEffect(() => {
+    // Cleanup function to stop sound when component unmounts
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    };
+  }, []);
   
   /**
-   * Play a sound with options
+   * Play a sound
+   * @param type Sound type
+   * @param options Sound options
    */
-  const playSound = useCallback((type: SoundType, options?: SoundOptions) => {
-    if (soundConfig.muted || !soundConfig.enabled) return;
-    
-    // Get the sound path
+  const playSound = (type: SoundType, options?: SoundOptions) => {
     const soundPath = getSoundPath(type);
+    
     if (!soundPath) {
-      console.warn(`Sound path for type ${type} not found`);
+      console.warn(`Sound path not found for type: ${type}`);
       return;
     }
     
-    try {
-      // Create a new audio element
-      const audio = new Audio(soundPath);
+    // Stop any currently playing sound
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    
+    // Create a new audio element
+    const audio = new Audio(soundPath);
+    audioRef.current = audio;
+    
+    // Apply options
+    if (options) {
+      if (options.volume !== undefined) {
+        audio.volume = options.volume;
+      }
       
-      // Set volume
-      audio.volume = options?.volume !== undefined ? options.volume : soundConfig.volume;
+      if (options.loop !== undefined) {
+        audio.loop = options.loop;
+      }
       
-      // Set other options
-      if (options?.playbackRate) {
+      if (options.playbackRate !== undefined) {
         audio.playbackRate = options.playbackRate;
       }
       
-      // Set loop option
-      audio.loop = options?.loop || false;
-      
-      // Attach onend callback if provided
-      if (options?.onEnd) {
+      if (options.onEnd) {
         audio.onended = options.onEnd;
       }
-      
-      // Play the sound
-      audio.play().catch(err => {
-        console.warn(`Error playing sound (${type}):`, err);
-      });
-    } catch (err) {
-      console.error(`Error setting up sound (${type}):`, err);
     }
-  }, [soundConfig.muted, soundConfig.enabled, soundConfig.volume]);
+    
+    // Set up event listeners
+    audio.onplay = () => {
+      setIsPlaying(true);
+      setCurrentSound(type);
+    };
+    
+    audio.onended = () => {
+      setIsPlaying(false);
+      setCurrentSound(null);
+      if (options?.onEnd) {
+        options.onEnd();
+      }
+    };
+    
+    // Play the sound and handle any errors
+    const playPromise = audio.play();
+    
+    // Check if play returns a promise (modern browsers)
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          // Playback started successfully
+        })
+        .catch(error => {
+          console.error('Error playing sound:', error);
+          setIsPlaying(false);
+          setCurrentSound(null);
+        });
+    }
+  };
   
   /**
-   * Stop a sound (placeholder implementation)
+   * Stop the current sound
    */
-  const stopSound = useCallback((type?: SoundType) => {
-    // Simple placeholder implementation
-    console.log(`Stopping sound: ${type || 'all'}`);
-  }, []);
-
-  // Add a compatibility method for the play function that some components are using
-  const play = useCallback((type: SoundType, options?: SoundOptions) => {
-    playSound(type, options);
-  }, [playSound]);
-  
-  // Make sure these return booleans as required in the interface
-  const wrappedToggleSounds = useCallback((): boolean => {
-    const newState = toggleSounds();
-    return !!newState;
-  }, [toggleSounds]);
-  
-  const wrappedToggleMuted = useCallback((): boolean => {
-    const newState = toggleMuted();
-    return !!newState;
-  }, [toggleMuted]);
-  
-  const pauseSound = useCallback((type?: SoundType): void => {
-    console.log(`Pausing sound: ${type || 'all'}`);
-  }, []);
-  
-  const resumeSound = useCallback((type?: SoundType): void => {
-    console.log(`Resuming sound: ${type || 'all'}`);
-  }, []);
-  
-  const isPlaying = useCallback((type: SoundType): boolean => {
-    return false; // Placeholder implementation
-  }, []);
+  const stopSound = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+      setCurrentSound(null);
+    }
+  };
   
   return {
     playSound,
-    play,
     stopSound,
-    pauseSound,
-    resumeSound,
     isPlaying,
-    isSoundEnabled: !soundConfig.muted && soundConfig.enabled,
-    currentVolume: soundConfig.volume,
-    toggleMuted: wrappedToggleMuted,
-    toggleSounds: wrappedToggleSounds,
-    setVolume
+    currentSound
   };
 };
 

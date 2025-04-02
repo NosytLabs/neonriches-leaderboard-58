@@ -25,3 +25,11 @@ export * from './sound-types';
 // For backwards compatibility
 import { UserProfile } from './user-consolidated';
 export type User = UserProfile;
+
+// Fix duplicate exports by explicitly naming them
+import { TeamType as MockeryTeamType } from './mockery-types';
+import { UserCosmetics as MockeryUserCosmetics } from './user-consolidated';
+import { ProfileBoost as UserProfileBoost } from './user-consolidated';
+import { TeamColor as MockeryTeamColor } from './mockery-types';
+import { SoundOptions as MockerySoundOptions } from './mockery-types';
+import { SoundType as MockerySoundType } from './mockery-types';

@@ -32,7 +32,8 @@ export const useSoundsConfig = () => {
   }
   
   // Extract sound settings from the settings context
-  const soundConfig = settings.sounds || defaultSoundConfig;
+  // Handle case where settings.sounds might not exist
+  const soundConfig = settings.soundSettings || defaultSoundConfig;
   
   return {
     soundConfig,

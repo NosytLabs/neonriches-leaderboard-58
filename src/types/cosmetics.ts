@@ -1,4 +1,8 @@
 
+/**
+ * Cosmetics type definitions
+ */
+
 export type CosmeticCategory = 
   | 'border'
   | 'color'
@@ -8,7 +12,10 @@ export type CosmeticCategory =
   | 'background'
   | 'effect'
   | 'badge'
-  | 'theme';
+  | 'theme'
+  | 'appearance' // Added to match existing code
+  | 'profile'    // Added to match existing code
+  | 'interaction'; // Added to match existing code
 
 export type CosmeticRarity = 
   | 'common'
@@ -16,24 +23,32 @@ export type CosmeticRarity =
   | 'rare'
   | 'epic'
   | 'legendary'
-  | 'royal'
-  | 'exclusive';
+  | 'mythic'  // Added to match existing code
+  | 'unique'; // Added to match existing code
+
+export type CosmeticType = 
+  | 'standard'
+  | 'premium'
+  | 'exclusive'
+  | 'event'
+  | 'seasonal'
+  | 'limited';
 
 export interface CosmeticItem {
   id: string;
   name: string;
-  category: CosmeticCategory;
-  rarity: CosmeticRarity;
   description: string;
   price: number;
-  value: string;
-  preview?: string;
-  icon?: string;
+  category: CosmeticCategory;
+  rarity: CosmeticRarity;
   enabled: boolean;
-  effects?: string[];
-  exclusive?: boolean;
-  date_created?: string;
-  created_at?: string;
+  preview?: string;
+  previewUrl?: string; // Added for compatibility
+  image?: string;
+  imageSrc?: string; // Added for compatibility
+  cost?: number; // Added for compatibility
+  cssClass?: string; // Added for compatibility
+  type?: CosmeticType; // Added for compatibility
 }
 
 export interface UserCosmetics {
@@ -46,12 +61,26 @@ export interface UserCosmetics {
   effect: string[];
   badge: string[];
   theme: string[];
-  activeTitle?: string;
-  activeBorder?: string;
-  activeBackground?: string;
-  activeEffect?: string;
+  [key: string]: string[];
 }
 
-// Export aliases for backward compatibility
-export type { CosmeticItem as Cosmetic };
-export type { UserCosmetics as UserCosmeticsType };
+export interface SocialLink {
+  id?: string;
+  platform: string;
+  url: string;
+  username?: string;
+  isVerified?: boolean;
+}
+
+export interface UserCosmeticState {
+  activeBorder?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string[];
+  activeTitle?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  activeBadge?: string[];
+  activeTheme?: string;
+  [key: string]: string | string[] | undefined;
+}

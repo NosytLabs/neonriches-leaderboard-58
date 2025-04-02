@@ -3,38 +3,10 @@
  * Leaderboard type definitions
  */
 
-import { TeamColor, UserTier } from './mockery-types';
+import { TeamColor, UserTier, LeaderboardUser, LeaderboardFilter } from './mockery-types';
 
-export interface LeaderboardUser {
-  id: string;
-  userId: string;
-  username: string;
-  displayName?: string;
-  profileImage: string;
-  avatarUrl?: string; // For compatibility
-  team: TeamColor;
-  tier: UserTier;
-  rank: number;
-  previousRank?: number;
-  totalSpent: number;
-  amountSpent?: number; // For backward compatibility
-  spentAmount?: number; // Legacy field
-  isVerified?: boolean;
-  isProtected: boolean;
-  walletBalance?: number;
-  spendStreak?: number;
-  // Additional fields needed across the codebase
-  joinedDate?: string;
-  joinDate?: string;
-  joinedAt?: string;
-  createdAt?: string;
-  spendChange?: number;
-  rankChange?: number;
-  thumbsDown?: number;
-  carrot?: number;
-  fish?: number;
-  sortDirection?: 'asc' | 'desc';
-}
+// Re-export types for backwards compatibility
+export type { LeaderboardUser, LeaderboardFilter };
 
 export interface LeaderboardState {
   users: LeaderboardUser[];
@@ -62,17 +34,6 @@ export interface LeaderboardStats {
   }[];
 }
 
-export interface LeaderboardFilter {
-  team?: TeamColor | 'all';
-  tier?: UserTier | 'all';
-  timeframe?: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all' | string;
-  timeFrame?: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all' | string;
-  search?: string;
-  sort?: string;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-}
-
 export interface SortByOptions {
   value: string;
   label: string;
@@ -82,4 +43,26 @@ export interface TypedLeaderboardFilter extends LeaderboardFilter {
   sort?: string;
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
+}
+
+export interface OnChainLeaderboardEntry {
+  address: string;
+  username: string;
+  amount: number;
+  rank: number;
+  timestamp: number;
+}
+
+export interface SolanaTransaction {
+  id: string;
+  signature: string;
+  sender: string;
+  receiver?: string; // Added for compatibility
+  amount: number;
+  timestamp: string;
+  status: 'confirmed' | 'pending' | 'failed';
+  type: 'deposit' | 'withdraw' | 'transfer' | 'spend';
+  blockHeight?: number;
+  fee?: number;
+  metadata?: Record<string, any>;
 }

@@ -1,65 +1,52 @@
 
-import { MedievalIconName } from '@/types/ui/icon-types';
+/**
+ * Icon type adapter utilities
+ */
+
+import { IconSize, IconColor, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
 
 /**
- * Converts different icon name formats to a consistent format for the icon system
- * @param icon - The icon name to adapt
+ * Adapt icon size to appropriate CSS class
+ * @param size Icon size
+ * @returns CSS class string
  */
-export const adaptIconName = (icon: string): string => {
-  // Convert kebab-case or snake_case to camelCase
-  const camelCaseName = icon.replace(/[-_](.)/g, (_, char) => char.toUpperCase());
+export const adaptIconSize = (size: IconSize | number | undefined): string => {
+  if (typeof size === 'undefined') {
+    return iconSizeMap.md;
+  }
   
-  // Capitalize first letter for PascalCase
-  const pascalCaseName = camelCaseName.charAt(0).toUpperCase() + camelCaseName.slice(1);
+  if (typeof size === 'number') {
+    return `w-${size} h-${size}`;
+  }
   
-  return pascalCaseName;
+  return iconSizeMap[size] || iconSizeMap.md;
 };
 
 /**
- * Maps common icon names to medieval icon names
- * @param name - The icon name to map
+ * Adapt icon color to appropriate CSS class
+ * @param color Icon color
+ * @returns CSS class string
  */
-export const mapToMedievalIcon = (name: string): MedievalIconName => {
-  const iconMap: Record<string, MedievalIconName> = {
-    'user': 'knight',
-    'crown': 'crown',
-    'money': 'coins',
-    'coin': 'coin',
-    'shield': 'shield',
-    'sword': 'sword',
-    'scrolls': 'scroll',
-    'scroll': 'scroll',
-    'chalice': 'chalice',
-    'castle': 'castle',
-    'king': 'king',
-    'queen': 'queen',
-    'treasure': 'treasure-chest',
-    'flag': 'flag',
-    'key': 'key',
-  };
+export const adaptIconColor = (color: IconColor | string | undefined): string => {
+  if (!color) {
+    return iconColorMap.default;
+  }
   
-  return iconMap[name.toLowerCase()] || 'sword';
-};
-
-/**
- * Checks if an icon name is a valid MedievalIconName
- * @param name - The name to check
- */
-export const isMedievalIcon = (name: string): boolean => {
-  const medievalIcons: string[] = [
-    'crown', 'sword', 'shield', 'scroll', 'chalice', 'castle', 
-    'dragon', 'knight', 'king', 'queen', 'treasure-chest', 'flag',
-    'throne', 'tower', 'banner', 'coin', 'coins', 'key', 'dagger',
-    'potion', 'goblet', 'fleur', 'horse', 'wizard', 'jester',
-    'treasure', 'crossed-swords', 'helmet', 'bow', 'arrow',
-    'candle', 'torch', 'axe', 'mace'
-  ];
+  // Check if it's a predefined color
+  if (color in iconColorMap) {
+    return iconColorMap[color as IconColor];
+  }
   
-  return medievalIcons.includes(name.toLowerCase());
+  // If it's a hex color or CSS variable
+  if (color.startsWith('#') || color.startsWith('var(')) {
+    return color;
+  }
+  
+  // Default text color
+  return `text-${color}`;
 };
 
 export default {
-  adaptIconName,
-  mapToMedievalIcon,
-  isMedievalIcon
+  adaptIconSize,
+  adaptIconColor
 };

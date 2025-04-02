@@ -20,6 +20,7 @@ export interface Certificate {
   issueDate: string;
   imageUrl: string;
   nftAddress?: string;
+  mintAddress?: string; // Added for compatibility with existing code
   mintDate?: string;
   style: CertificateStyle;
   team?: CertificateTeam;
@@ -60,4 +61,12 @@ export interface CertificateTemplate {
   availableForTier?: string[];
   availableForRank?: number[];
   requiresFounder?: boolean;
+}
+
+export interface CertificateRepository {
+  getCertificates: (userId: string) => Promise<Certificate[]>;
+  getCertificate: (id: string) => Promise<Certificate | null>;
+  createCertificate: (certificate: Partial<Certificate>) => Promise<Certificate>;
+  updateCertificate: (id: string, updates: Partial<Certificate>) => Promise<Certificate>;
+  deleteCertificate: (id: string) => Promise<boolean>;
 }
