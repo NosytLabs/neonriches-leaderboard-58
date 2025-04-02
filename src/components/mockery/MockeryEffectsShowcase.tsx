@@ -1,41 +1,42 @@
 
-import React from 'react';
-import MockeryEffect from './MockeryEffect';
+import React, { useState, useEffect } from 'react';
 import { MockeryAction } from '@/types/mockery-types';
-import { ensureMockeryAction } from '@/utils/typeUnifier';
+import MockeryEffect from './MockeryEffect';
 
 interface MockeryEffectsShowcaseProps {
-  // Props
+  username: string;
+  action: MockeryAction;
+  isActive?: boolean;
+  onComplete?: () => void;
 }
 
-const MockeryEffectsShowcase: React.FC<MockeryEffectsShowcaseProps> = () => {
-  // Convert string literals to MockeryAction using our helper
-  const mockeryActions: MockeryAction[] = [
-    ensureMockeryAction('shame'),
-    ensureMockeryAction('silence'),
-    ensureMockeryAction('courtJester'),
-    ensureMockeryAction('smokeBomb'),
-    ensureMockeryAction('protection')
-  ];
-
-  return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Mockery Effects</h2>
-      <p className="text-white/70">
-        See how different mockery actions appear on the target's profile.
-      </p>
+const MockeryEffectsShowcase: React.FC<MockeryEffectsShowcaseProps> = ({
+  username,
+  action,
+  isActive = true,
+  onComplete
+}) => {
+  const [showEffect, setShowEffect] = useState(isActive);
+  
+  useEffect(() => {
+    setShowEffect(isActive);
+    
+    if (isActive) {
+      const timer = setTimeout(() => {
+        setShowEffect(false);
+        if (onComplete) onComplete();
+      }, 3000);
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-        {mockeryActions.map(action => (
-          <div key={action} className="bg-black/20 border border-white/10 rounded-lg overflow-hidden">
-            <div className="p-4">
-              <h3 className="text-lg font-semibold capitalize">{action}</h3>
-              <div className="h-40 flex items-center justify-center">
-                <MockeryEffect action={action} username="Target User" />
-              </div>
-            </div>
-          </div>
-        ))}
+      return () => clearTimeout(timer);
+    }
+  }, [isActive, onComplete]);
+  
+  if (!showEffect) return null;
+  
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
+      <div className="bg-background p-6 rounded-lg shadow-xl text-center text-xl">
+        <MockeryEffect action={action} username={username} />
       </div>
     </div>
   );

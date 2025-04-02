@@ -12,7 +12,7 @@ export const useMockery = () => {
   const [mockeryResult, setMockeryResult] = useState<MockeryResult | null>(null);
 
   // Define costs for different mockery actions
-  const actionCosts: Record<MockeryAction, number> = {
+  const actionCosts: Record<string, number> = {
     tomato: 10,
     egg: 15,
     putridEgg: 25,
@@ -35,6 +35,7 @@ export const useMockery = () => {
     heart: 20,
     skull: 25,
     thumbs_down: 10,
+    laugh: 30,
     rotten_egg: 20
   };
 
@@ -89,7 +90,7 @@ export const useMockery = () => {
     }
   };
 
-  const costForAction = (action: MockeryAction): number => {
+  const costForAction = (action: MockeryAction | string): number => {
     return actionCosts[action] || 10;
   };
 

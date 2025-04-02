@@ -1,30 +1,125 @@
 
-import { UserProfile as ConsolidatedUserProfile, UserSettings, UserSubscription, SocialLink, TeamColor, UserTier } from '@/types/user-consolidated';
-import { UserProfile } from '@/types/user';
-import { MockeryAction, TeamData } from '@/types/mockery-types';
+import { TeamColor, UserTier } from '@/types/mockery-types';
+import { UserProfile as UserProfileSource } from '@/types/user';
+import { UserProfile as UserProfileTarget } from '@/types/user-consolidated';
+import { UserSubscription, UserSettings, SocialLink as SocialLinkInterface } from '@/types/user-consolidated';
+import { ensureTeamColor, ensureUserTier } from '@/utils/mockeryNormalizer';
 
-// Type conversion for User Profile
-export function toStandardUserProfile(user: any): ConsolidatedUserProfile {
-  if (!user) return null as unknown as ConsolidatedUserProfile;
+// Ensure the user has all required properties with proper types
+export function ensureUserProfile(
+  userData: Partial<UserProfileSource | UserProfileTarget>
+): UserProfileTarget {
+  // Create a base profile with all required fields
+  const baseProfile: UserProfileTarget = {
+    id: userData.id || `user-${Date.now()}`,
+    username: userData.username || 'anonymous',
+    displayName: userData.displayName || userData.username || 'Anonymous User',
+    email: userData.email,
+    profileImage: userData.profileImage || '/default-avatar.png',
+    bio: userData.bio || '',
+    joinedDate: userData.joinedDate || userData.joinDate || userData.createdAt || new Date().toISOString(),
+    isVerified: userData.isVerified || false,
+    isProtected: userData.isProtected || false,
+    isVIP: userData.isVIP || false,
+    isFounder: userData.isFounder || false,
+    isAdmin: false, // Default value for isAdmin
+    team: ensureTeamColor(userData.team as string || 'none'),
+    tier: ensureUserTier(userData.tier as string || 'basic'),
+    rank: userData.rank || 0,
+    previousRank: userData.previousRank || 0,
+    totalSpent: userData.totalSpent || userData.amountSpent || 0,
+    amountSpent: userData.amountSpent || userData.totalSpent || 0,
+    walletBalance: userData.walletBalance || 0,
+    settings: userData.settings || createDefaultSettings(),
+    profileBoosts: userData.profileBoosts || [],
+    cosmetics: userData.cosmetics || {},
+    spendStreak: userData.spendStreak || 0,
+    profileViews: userData.profileViews || 0,
+    profileClicks: userData.profileClicks || 0,
+    // Handle subscription
+    subscription: userData.subscription 
+      ? createSubscription(userData.subscription)
+      : null,
+    purchasedFeatures: userData.purchasedFeatures || [],
+    // Handle optional properties
+    certificateNFT: userData.certificateNFT,
+    socialLinks: userData.socialLinks || [],
+    gender: userData.gender || 'prefer-not-to-say',
+    lastActive: userData.lastActive || new Date().toISOString(),
+    followers: userData.followers || [],
+    following: userData.following || [],
+    achievements: userData.achievements || [],
+    badges: userData.badges || [],
+    boostCount: userData.boostCount || 0,
+    activeTitle: userData.activeTitle || null
+  };
 
-  // Set default values for required fields
-  const displayName = user.displayName || user.username || 'Anonymous';
-  const profileImage = user.profileImage || user.avatarUrl || '/assets/default-avatar.png';
-  const team = user.team || 'none';
-  const joinedDate = user.joinedDate || user.joinDate || user.createdAt || new Date().toISOString();
-  const walletBalance = user.walletBalance || 0;
-  const rank = user.rank || 0;
-  const previousRank = user.previousRank || 0;
-  const totalSpent = user.totalSpent || user.amountSpent || 0;
-  const amountSpent = user.amountSpent || user.totalSpent || 0;
-  const tier = user.tier || 'basic';
-  const spendStreak = user.spendStreak || 0;
+  return baseProfile;
+}
 
-  // Create default settings if not provided
-  const settings: UserSettings = user.settings || {
-    theme: 'royal',
+// Create a standardized UserProfile from any type of user profile
+export function toStandardUserProfile(
+  userData: Partial<UserProfileSource | UserProfileTarget>
+): UserProfileTarget {
+  return ensureUserProfile(userData);
+}
+
+// Convert a consolidated UserProfile to the original UserProfile
+export function toUserProfile(userData: UserProfileTarget): UserProfileSource {
+  const profile: UserProfileSource = {
+    id: userData.id,
+    username: userData.username,
+    displayName: userData.displayName,
+    email: userData.email,
+    profileImage: userData.profileImage,
+    bio: userData.bio || '',
+    joinedDate: userData.joinedDate,
+    tier: ensureUserTier(userData.tier as string),
+    team: ensureTeamColor(userData.team as string),
+    rank: userData.rank,
+    previousRank: userData.previousRank,
+    totalSpent: userData.totalSpent,
+    amountSpent: userData.amountSpent,
+    walletBalance: userData.walletBalance || 0,
+    isFounder: userData.isFounder,
+    isVerified: userData.isVerified,
+    isVIP: userData.isVIP,
+    isProtected: userData.isProtected,
+    spendStreak: userData.spendStreak || 0,
+    // Maps consolidated settings to original settings with proper types
+    settings: createUserSettings(userData.settings),
+    cosmetics: userData.cosmetics || {},
+    // Handle arrays and optional fields
+    profileBoosts: userData.profileBoosts || [],
+    socialLinks: userData.socialLinks || [],
+    profileViews: userData.profileViews,
+    profileClicks: userData.profileClicks,
+    purchasedFeatures: userData.purchasedFeatures,
+    // Handle subscription
+    subscription: userData.subscription ? {
+      planId: userData.subscription.planId || '',
+      nextBillingDate: userData.subscription.nextBillingDate || '',
+      status: userData.subscription.status as any || 'active',
+      tier: userData.subscription.tier
+    } : undefined,
+    // Passthrough other fields
+    lastActive: userData.lastActive,
+    gender: userData.gender,
+    activeTitle: userData.activeTitle,
+    certificateNFT: userData.certificateNFT,
+    following: userData.following,
+    followers: userData.followers
+  };
+
+  return profile;
+}
+
+// Helper function to create default settings
+function createDefaultSettings(): UserSettings {
+  return {
     profileVisibility: 'public',
     allowProfileLinks: true,
+    theme: 'royal',
     notifications: true,
     emailNotifications: false,
     marketingEmails: false,
@@ -33,218 +128,52 @@ export function toStandardUserProfile(user: any): ConsolidatedUserProfile {
     soundEffects: true,
     showBadges: true,
     showTeam: true,
-    showSpending: true
+    showSpending: true,
+    allowMentions: true,
+    shameAlerts: true,
+    teamNotifications: true,
+    leaderboardAlerts: true,
+    rankChangeNotifications: true,
+    eventAlerts: true,
+    walletAlerts: true,
+    showEmailOnProfile: false,
+    rankChangeAlerts: true,
+    newFollowerAlerts: true
   };
+}
 
-  // Create standardized profile
+// Creates a properly typed UserSettings from a partial
+function createUserSettings(settings?: Partial<UserSettings>): any {
+  const defaultSettings = createDefaultSettings();
+  
+  if (!settings) return defaultSettings;
+
+  // Since we need to handle theme differently because of strict typing
+  const theme = settings.theme || defaultSettings.theme;
+  const safeTheme = ['royal', 'dark', 'light', 'system'].includes(theme as string) 
+    ? theme 
+    : 'royal';
+
   return {
-    id: user.id || `user-${Math.random().toString(36).substring(2, 15)}`,
-    username: user.username || 'user',
-    displayName,
-    email: user.email,
-    profileImage,
-    bio: user.bio || '',
-    joinedDate,
-    isVerified: user.isVerified || false,
-    isProtected: user.isProtected || false,
-    isVIP: user.isVIP || false,
-    isFounder: user.isFounder || false,
-    team,
-    tier,
-    rank,
-    previousRank,
-    totalSpent,
-    amountSpent,
-    walletBalance,
-    settings,
-    profileBoosts: user.profileBoosts || [],
-    cosmetics: user.cosmetics || {},
-    spendStreak,
-    profileViews: user.profileViews || 0,
-    profileClicks: user.profileClicks || 0,
-    subscription: user.subscription || null,
-    purchasedFeatures: user.purchasedFeatures || [],
-    certificateNFT: user.certificateNFT || null,
-    socialLinks: user.socialLinks || [],
-    gender: user.gender || 'none',
-    lastActive: user.lastActive || joinedDate,
-    followers: user.followers || [],
-    following: user.following || [],
-    achievements: user.achievements || [],
-    badges: user.badges || [],
-    boostCount: user.boostCount || 0,
-    activeTitle: user.activeTitle || null
+    ...defaultSettings,
+    ...settings,
+    theme: safeTheme
   };
 }
 
-// Convert the standardized user profile back to the original user type
-export function toUserProfile(standardUser: ConsolidatedUserProfile): UserProfile {
-  if (!standardUser) return null as unknown as UserProfile;
-
-  const userSettings: any = {
-    ...standardUser.settings,
-  };
-
-  const socialLinks: any = standardUser.socialLinks || [];
-
-  // Convert to UserProfile type
+// Creates a standardized UserSubscription
+function createSubscription(subscription: any): UserSubscription {
+  if (!subscription) return null as any;
+  
   return {
-    id: standardUser.id,
-    username: standardUser.username,
-    displayName: standardUser.displayName,
-    email: standardUser.email,
-    profileImage: standardUser.profileImage,
-    bio: standardUser.bio,
-    joinedDate: standardUser.joinedDate,
-    isVerified: standardUser.isVerified,
-    isProtected: standardUser.isProtected,
-    isVIP: standardUser.isVIP,
-    isFounder: standardUser.isFounder,
-    team: standardUser.team as string,
-    tier: standardUser.tier as string,
-    rank: standardUser.rank,
-    previousRank: standardUser.previousRank,
-    totalSpent: standardUser.totalSpent,
-    amountSpent: standardUser.amountSpent,
-    walletBalance: standardUser.walletBalance,
-    settings: userSettings,
-    profileBoosts: standardUser.profileBoosts,
-    cosmetics: standardUser.cosmetics,
-    spendStreak: standardUser.spendStreak,
-    profileViews: standardUser.profileViews,
-    profileClicks: standardUser.profileClicks,
-    subscription: standardUser.subscription ? {
-      planId: standardUser.subscription.planId || '',
-      nextBillingDate: standardUser.subscription.nextBillingDate || '',
-      status: standardUser.subscription.status,
-      tier: standardUser.subscription.tier
-    } : null,
-    purchasedFeatures: standardUser.purchasedFeatures,
-    certificateNFT: standardUser.certificateNFT,
-    socialLinks: socialLinks,
-    gender: standardUser.gender,
-    lastActive: standardUser.lastActive,
-    followers: standardUser.followers,
-    following: standardUser.following,
-    achievements: standardUser.achievements,
-    badges: standardUser.badges,
-    boostCount: standardUser.boostCount,
-    activeTitle: standardUser.activeTitle
+    id: subscription.id || `sub-${Date.now()}`,
+    planId: subscription.planId || 'basic',
+    tier: subscription.tier || 'basic',
+    status: (subscription.status || 'active') as 'active' | 'cancelled' | 'expired' | 'pending' | 'paused',
+    startDate: subscription.startDate || new Date().toISOString(),
+    endDate: subscription.endDate,
+    autoRenew: subscription.autoRenew ?? true,
+    nextBillingDate: subscription.nextBillingDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    cancelAtPeriodEnd: subscription.cancelAtPeriodEnd ?? false
   };
 }
-
-// Ensure a string is a valid TeamColor
-export const ensureTeamColor = (team?: string | null): TeamColor => {
-  if (!team) return 'none';
-  
-  switch (team.toLowerCase()) {
-    case 'red': return 'red';
-    case 'blue': return 'blue';
-    case 'green': return 'green';
-    case 'gold': return 'gold';
-    case 'purple': return 'purple';
-    case 'silver': return 'silver';
-    case 'bronze': return 'bronze';
-    case 'crimson': return 'crimson';
-    case 'neutral': return 'neutral';
-    case 'none': return 'none';
-    default: return 'none';
-  }
-};
-
-// Ensure a string is a valid UserTier
-export const ensureUserTier = (tier?: string | null): UserTier => {
-  if (!tier) return 'basic';
-  
-  switch (tier.toLowerCase()) {
-    case 'basic': return 'basic';
-    case 'premium': return 'premium';
-    case 'royal': return 'royal';
-    case 'founder': return 'founder';
-    case 'free': return 'free';
-    // Extended tiers
-    case 'pro': return 'pro' as UserTier;
-    case 'platinum': return 'platinum' as UserTier;
-    case 'diamond': return 'diamond' as UserTier;
-    case 'gold': return 'gold' as UserTier;
-    case 'silver': return 'silver' as UserTier;
-    case 'bronze': return 'bronze' as UserTier;
-    case 'vip': return 'vip' as UserTier;
-    case 'whale': return 'whale' as UserTier;
-    case 'shark': return 'shark' as UserTier;
-    case 'dolphin': return 'dolphin' as UserTier;
-    case 'noble': return 'noble' as UserTier;
-    case 'standard': return 'standard' as UserTier;
-    case 'elite': return 'elite' as UserTier;
-    case 'legendary': return 'legendary' as UserTier;
-    default: return 'basic';
-  }
-};
-
-// Ensure a string is a valid MockeryAction
-export const ensureMockeryAction = (action?: string | null): MockeryAction => {
-  if (!action) return 'mock';
-  
-  switch (action.toLowerCase()) {
-    case 'tomato': return 'tomato';
-    case 'egg': return 'egg';
-    case 'putridegg': case 'putrid_egg': case 'putrid-egg': return 'putridEgg';
-    case 'crown': return 'crown';
-    case 'thumbsdown': case 'thumbs_down': case 'thumbs-down': return 'thumbsDown';
-    case 'mock': return 'mock';
-    case 'stocks': return 'stocks';
-    case 'jester': return 'jester';
-    case 'courtjester': case 'court_jester': case 'court-jester': return 'courtJester';
-    case 'silence': return 'silence';
-    case 'taunt': return 'taunt';
-    case 'smokebomb': case 'smoke_bomb': case 'smoke-bomb': return 'smokeBomb';
-    case 'protection': return 'protection';
-    case 'shame': return 'shame' as MockeryAction;
-    case 'challenge': return 'challenge' as MockeryAction;
-    case 'joust': return 'joust' as MockeryAction;
-    case 'duel': return 'duel' as MockeryAction;
-    case 'royal_decree': case 'royaldecree': case 'royal-decree': return 'royal_decree' as MockeryAction;
-    case 'laugh': return 'laugh' as MockeryAction;
-    default: return 'mock';
-  }
-};
-
-// Create a TeamData object
-export const createTeamData = (color: TeamColor | string, name?: string, ranking?: number): TeamData => {
-  const teamColor = ensureTeamColor(color);
-  return {
-    color: teamColor,
-    name: name || getTeamName(teamColor),
-    memberCount: 0,
-    ranking: ranking || 0,
-    teamId: addTeamId(teamColor)
-  };
-};
-
-// Helper functions from teamUtils to avoid circular dependencies
-function getTeamName(team: TeamColor | string | null): string {
-  if (!team) return 'Neutral';
-  
-  switch (team) {
-    case 'red': return 'Red Crown';
-    case 'blue': return 'Blue Legion';
-    case 'green': return 'Green Order';
-    case 'gold': return 'Gold Dynasty';
-    case 'purple': return 'Purple Realm';
-    case 'silver': return 'Silver Alliance';
-    case 'bronze': return 'Bronze Brigade';
-    case 'crimson': return 'Crimson Court';
-    case 'neutral': return 'Neutral';
-    case 'none': return 'Unaffiliated';
-    default: return team.charAt(0).toUpperCase() + team.slice(1);
-  }
-}
-
-function addTeamId(team: TeamColor | string): string {
-  return `${team}-team`;
-}
-
-// Ensure a UserProfile object
-export const ensureUserProfile = (userData: any): UserProfile => {
-  return toUserProfile(toStandardUserProfile(userData));
-};

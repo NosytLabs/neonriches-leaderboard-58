@@ -3,7 +3,7 @@ import { MockeryAction, MockeryTier } from '@/types/mockery-types';
 import { AlertCircle, Crown, Egg, Award, MessageCircle, ThumbsDown, Shield, UserX, CloudOff } from 'lucide-react';
 
 // Mockery tier labels for display
-export const mockeryTierLabels = {
+export const mockeryTierLabels: Record<string, string> = {
   common: "Common",
   uncommon: "Uncommon",
   rare: "Rare",
@@ -18,7 +18,7 @@ export const mockeryTierLabels = {
 };
 
 // Mockery action names
-export const mockeryActionNames = {
+export const mockeryActionNames: Record<string, string> = {
   tomato: "Tomatoes",
   egg: "Eggs",
   putridEgg: "Putrid Egg",
@@ -36,11 +36,17 @@ export const mockeryActionNames = {
   challenge: "Challenge",
   joust: "Joust",
   duel: "Royal Duel",
-  royal_decree: "Royal Decree"
+  royal_decree: "Royal Decree",
+  flame: "Flame",
+  heart: "Heart",
+  skull: "Skull",
+  thumbs_down: "Thumbs Down",
+  laugh: "Laugh",
+  rotten_egg: "Rotten Egg"
 };
 
 // Mockery action icons
-export const mockeryActionIcons = {
+export const mockeryActionIcons: Record<string, any> = {
   tomato: AlertCircle,
   egg: Egg,
   putridEgg: Egg,
@@ -58,11 +64,17 @@ export const mockeryActionIcons = {
   challenge: Award,
   joust: Award,
   duel: Award,
-  royal_decree: Crown
+  royal_decree: Crown,
+  flame: AlertCircle,
+  heart: Shield,
+  skull: UserX,
+  thumbs_down: ThumbsDown,
+  laugh: MessageCircle,
+  rotten_egg: Egg
 };
 
 // Mockery action costs
-export const mockeryActionCosts = {
+export const mockeryActionCosts: Record<string, number> = {
   tomato: 10,
   egg: 15,
   putridEgg: 25,
@@ -80,7 +92,13 @@ export const mockeryActionCosts = {
   challenge: 30,
   joust: 40,
   duel: 50,
-  royal_decree: 100
+  royal_decree: 100,
+  flame: 15,
+  heart: 20,
+  skull: 25,
+  thumbs_down: 10,
+  laugh: 30,
+  rotten_egg: 20
 };
 
 // Helper function to get mockery tier label
@@ -92,6 +110,9 @@ export function getMockeryTierLabel(tier: MockeryTier | string): string {
 export function getMockeryActionName(action: MockeryAction | string): string {
   return mockeryActionNames[action as keyof typeof mockeryActionNames] || action;
 }
+
+// Alias for getMockeryActionName for backward compatibility
+export const getMockeryActionDisplayName = getMockeryActionName;
 
 // Helper function to get mockery action icon
 export function getMockeryActionIcon(action: MockeryAction | string) {

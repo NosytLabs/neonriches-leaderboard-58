@@ -21,8 +21,12 @@ export const mockeryShortDescriptions: Record<string, string> = {
   joust: "Challenge to joust",
   duel: "Engage in a duel",
   royal_decree: "Issue a royal decree",
-  // Ensure these are defined in MockeryAction
-  mock: "Mock mercilessly"
+  flame: "Flame harshly",
+  heart: "Show affection",
+  skull: "Threaten ominously",
+  thumbs_down: "Disapprove publicly",
+  laugh: "Laugh dismissively",
+  rotten_egg: "Assault with an egg that has far exceeded its shelf life"
 };
 
 // Descriptions for mockery actions (full format)
@@ -45,7 +49,11 @@ export const mockeryDescriptions: Record<string, string> = {
   joust: "Challenge the target to a virtual jousting match.",
   duel: "Engage the target in a prestigious royal duel.",
   royal_decree: "Issue a royal decree declaring the target's embarrassment.",
-  // Ensure these are defined in MockeryAction
+  flame: "Publicly flame the target with harsh criticism.",
+  heart: "Show unexpected affection to confuse the target.",
+  skull: "Send an ominous skull as a warning to the target.",
+  thumbs_down: "Publicly show disapproval of the target's contributions.",
+  laugh: "Dismissively laugh at the target's efforts or statements.",
   rotten_egg: "Assault with an egg that has far exceeded its shelf life."
 };
 

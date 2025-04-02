@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { MockeryAction } from '@/types/mockery-types';
+import { ensureMockeryAction } from '@/utils/mockeryNormalizer';
 
 interface MockeryEffectProps {
   action: MockeryAction;
@@ -7,7 +9,10 @@ interface MockeryEffectProps {
 }
 
 const MockeryEffect: React.FC<MockeryEffectProps> = ({ action, username }) => {
-  switch (action) {
+  // Ensure the action is a valid MockeryAction
+  const safeAction = ensureMockeryAction(action);
+  
+  switch (safeAction) {
     case 'tomato':
       return <div className="text-red-500">Throwing tomatoes at {username}!</div>;
     case 'egg':
@@ -42,6 +47,20 @@ const MockeryEffect: React.FC<MockeryEffectProps> = ({ action, username }) => {
       return <div>Jousting with {username}!</div>;
     case 'duel':
       return <div>Duelling with {username}!</div>;
+    case 'royal_decree':
+      return <div>Issuing a royal decree about {username}!</div>;
+    case 'flame':
+      return <div className="text-orange-500">Flaming {username}!</div>;
+    case 'heart':
+      return <div className="text-pink-500">Sending hearts to {username}!</div>;
+    case 'skull':
+      return <div className="text-gray-500">Sending a skull to {username}!</div>;
+    case 'thumbs_down':
+      return <div className="text-gray-500">Giving {username} a thumbs down!</div>;
+    case 'laugh':
+      return <div className="text-yellow-300">Laughing at {username}!</div>;
+    case 'rotten_egg':
+      return <div className="text-green-600">Pelting {username} with rotten eggs!</div>;
     default:
       return <div>Performing a generic mockery on {username}!</div>;
   }

@@ -1,41 +1,46 @@
 
-import { MockeryAction } from '@/types/mockery-types';
+import { MockeryAction, TeamColor, UserTier } from '@/types/mockery-types';
 
-// Helper function for normalizing mockery action strings to match our type definition
-export const normalizeMockeryAction = (action: string): string => {
-  if (!action) return 'mock';
-  
-  // Normalize common action name variations
-  switch (action.toLowerCase()) {
-    case 'tomatoe': 
-    case 'tomatoes': return 'tomato';
-    case 'eggs': return 'egg';
-    case 'rotten egg': 
-    case 'rotten-egg': 
-    case 'rottenegg': return 'putridEgg';
-    case 'putrid egg': 
-    case 'putrid-egg': return 'putridEgg';
-    case 'crown flip': 
-    case 'topple': 
-    case 'topplecrown': return 'crown';
-    case 'thumbs down': 
-    case 'thumbs-down': 
-    case 'thumbsdown': return 'thumbsDown';
-    case 'court jester': 
-    case 'court-jester': return 'courtJester';
-    case 'silence user': 
-    case 'royal silence': return 'silence';
-    case 'smoke': 
-    case 'smoke bomb': 
-    case 'smokebomb': return 'smokeBomb';
-    case 'protect': 
-    case 'royal protection': return 'protection';
-    default: return action;
-  }
-};
+// List of all valid mockery actions
+const validMockeryActions: MockeryAction[] = [
+  'tomato', 'egg', 'putridEgg', 'crown', 'thumbsDown', 
+  'mock', 'stocks', 'jester', 'courtJester', 'silence', 
+  'taunt', 'smokeBomb', 'protection', 'shame', 'challenge', 
+  'joust', 'duel', 'royal_decree', 'flame', 'heart', 
+  'skull', 'thumbs_down', 'laugh', 'rotten_egg'
+];
 
-// Helper to safely cast string to MockeryAction
-export const ensureMockeryAction = (action: string): MockeryAction => {
-  const normalized = normalizeMockeryAction(action);
-  return normalized as MockeryAction;
-};
+// Convert any string to a valid MockeryAction or default to 'mock'
+export function ensureMockeryAction(action: string): MockeryAction {
+  return validMockeryActions.includes(action as MockeryAction)
+    ? action as MockeryAction
+    : 'mock';
+}
+
+// List of all valid team colors
+const validTeamColors: TeamColor[] = [
+  'red', 'blue', 'green', 'gold', 'purple', 
+  'neutral', 'none', 'silver', 'bronze', 'crimson'
+];
+
+// Convert any string to a valid TeamColor or default to 'none'
+export function ensureTeamColor(team: string): TeamColor {
+  return validTeamColors.includes(team as TeamColor)
+    ? team as TeamColor
+    : 'none';
+}
+
+// List of all valid user tiers
+const validUserTiers: UserTier[] = [
+  'basic', 'premium', 'royal', 'founder', 'free',
+  'pro', 'platinum', 'diamond', 'gold', 'silver',
+  'bronze', 'vip', 'whale', 'shark', 'dolphin',
+  'noble', 'standard', 'elite', 'legendary'
+];
+
+// Convert any string to a valid UserTier or default to 'basic'
+export function ensureUserTier(tier: string): UserTier {
+  return validUserTiers.includes(tier as UserTier)
+    ? tier as UserTier
+    : 'basic';
+}
