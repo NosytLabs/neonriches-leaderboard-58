@@ -72,5 +72,3 @@ export const formatDollarAmount = (amount: number): string => {
     maximumFractionDigits: 2
   }).format(amount);
 };
-
-// Use named exports rather than re-exporting to prevent errors

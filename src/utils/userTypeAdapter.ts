@@ -19,8 +19,8 @@ export const ensureTotalSpent = (user: UserProfile): UserProfile & { totalSpent:
  * by ensuring profile boosts have required properties
  */
 export const adaptToStandardUserProfile = (user: UserProfile & { totalSpent: number; amountSpent: number }): UserProfile => {
-  // Adding joinedDate from joinDate for backward compatibility
-  const joinedDate = user.joinedDate || user.joinDate;
+  // Adding joinedDate from joinedDate for backward compatibility
+  const joinedDate = user.joinedDate;
   
   // Ensure all required properties are present
   const adaptedUser: UserProfile = {
@@ -30,7 +30,6 @@ export const adaptToStandardUserProfile = (user: UserProfile & { totalSpent: num
     team: user.team || 'none',
     // Use joinedDate as the standard field for when user joined
     joinedDate: joinedDate || new Date().toISOString(),
-    joinDate: user.joinDate || joinedDate,
     // Ensure totalSpent and amountSpent are set
     totalSpent: user.totalSpent,
     amountSpent: user.amountSpent

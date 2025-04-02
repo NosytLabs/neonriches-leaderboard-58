@@ -1,103 +1,164 @@
-
-import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@/contexts/auth';
-import { useToast } from '@/hooks/use-toast';
-import { SoundType } from '@/hooks/sounds/types';
-import { premiumSoundPacks } from '@/hooks/sounds/premium-sound-assets';
-import { PremiumSoundPackDetails } from '@/hooks/sounds/types';
-
-// Helper function to adapt premium sound packs to the required interface
-const adaptSoundPacks = (): PremiumSoundPackDetails[] => {
-  return premiumSoundPacks.map(pack => ({
-    id: pack.id,
-    name: pack.name,
-    description: pack.description,
-    price: pack.price,
-    icon: pack.icon || `/images/sound-packs/${pack.id}.png`,
-    preview: pack.preview || `/sounds/previews/${pack.id}-preview.mp3`,
-    previewSound: pack.previewSound,
-    sounds: pack.sounds,
-    features: pack.features
-  }));
-};
+import { useState, useEffect } from 'react';
+import { PremiumSoundPackDetails } from '@/types/sound-types';
+import { useToast } from './use-toast';
 
 export const usePremiumSounds = () => {
-  const [soundPacks, setSoundPacks] = useState<PremiumSoundPackDetails[]>(adaptSoundPacks());
-  const [purchasedPacks, setPurchasedPacks] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const { user } = useAuth();
+  const [premiumPacks, setPremiumPacks] = useState<PremiumSoundPackDetails[]>([
+    {
+      id: 'royal-pack',
+      name: 'Royal Sound Pack',
+      description: 'Elevate your experience with regal notification sounds',
+      price: 75,
+      icon: 'crown',
+      preview: '/images/sound-packs/royal-preview.png',
+      previewSound: 'royal',
+      sounds: ['royal-notification', 'royal-success', 'royal-error'],
+      features: ['3 premium royal sounds', 'Gold crown sound icon', 'Exclusive to royalty'],
+      enabled: false
+    },
+    {
+      id: 'gaming-pack',
+      name: 'Gaming Sound Pack',
+      description: 'Classic arcade and gaming sounds for notifications',
+      price: 50,
+      icon: 'gamepad',
+      preview: '/images/sound-packs/gaming-preview.png',
+      previewSound: 'levelUp',
+      sounds: ['level-up', 'game-over', 'power-up'],
+      features: ['5 retro gaming sounds', 'Nostalgic 8-bit tones', 'Configurable volume'],
+      enabled: false
+    },
+    {
+      id: 'nature-pack',
+      name: 'Nature Sound Pack',
+      description: 'Serene and calming natural sounds for a peaceful experience',
+      price: 40,
+      icon: 'leaf',
+      preview: '/images/sound-packs/nature-preview.png',
+      previewSound: 'chime',
+      sounds: ['gentle-stream', 'forest-birds', 'ocean-waves'],
+      features: ['4 calming nature sounds', 'Recorded in high definition', 'Perfect for focus'],
+      enabled: false
+    }
+  ]);
+  
   const { toast } = useToast();
-
+  const [selectedPack, setSelectedPack] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [ownedPacks, setOwnedPacks] = useState<string[]>([]);
+  
   useEffect(() => {
-    const fetchPurchasedSoundPacks = async () => {
-      setIsLoading(true);
+    // Load owned packs from localStorage or API
+    const loadOwnedPacks = async () => {
       try {
-        // Simulate fetching purchased packs
-        await new Promise(resolve => setTimeout(resolve, 500));
-        const userPacks = user?.purchasedFeatures?.filter(f => f.startsWith('sound_pack_')) || [];
-        
-        if (userPacks.length > 0) {
-          setPurchasedPacks(userPacks.map(p => p.replace('sound_pack_', '')));
+        const savedPacks = localStorage.getItem('ownedSoundPacks');
+        if (savedPacks) {
+          const packIds = JSON.parse(savedPacks);
+          setOwnedPacks(packIds);
           
-          // Update sound packs with purchase status
-          const updatedPacks = soundPacks.map(pack => ({
-            ...pack,
-            isPurchased: userPacks.includes(`sound_pack_${pack.id}`)
-          }));
-          
-          setSoundPacks(updatedPacks as PremiumSoundPackDetails[]);
+          // Update premium packs to show which are enabled
+          setPremiumPacks(prevPacks => 
+            prevPacks.map(pack => ({
+              ...pack,
+              enabled: packIds.includes(pack.id)
+            }))
+          );
         }
       } catch (error) {
-        console.error('Error fetching premium sound packs:', error);
-      } finally {
-        setIsLoading(false);
+        console.error('Error loading owned sound packs:', error);
       }
     };
-
-    if (user) {
-      fetchPurchasedSoundPacks();
-    }
-  }, [user]);
-
-  const purchaseSoundPack = useCallback(async (packId: string): Promise<boolean> => {
+    
+    loadOwnedPacks();
+  }, []);
+  
+  const purchaseSoundPack = async (packId: string): Promise<boolean> => {
+    setIsLoading(true);
+    
     try {
-      setIsLoading(true);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Simulate API call for purchasing
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Add to owned packs
+      const updatedOwnedPacks = [...ownedPacks, packId];
+      setOwnedPacks(updatedOwnedPacks);
       
-      // Update local state
-      setPurchasedPacks(prev => [...prev, packId]);
+      // Save to localStorage
+      localStorage.setItem('ownedSoundPacks', JSON.stringify(updatedOwnedPacks));
       
-      // Show success message
+      // Update premium packs
+      setPremiumPacks(prevPacks => 
+        prevPacks.map(pack => ({
+          ...pack,
+          enabled: pack.id === packId ? true : pack.enabled
+        }))
+      );
+      
       toast({
-        title: "Purchase Successful",
-        description: "You have successfully purchased the sound pack.",
-        variant: "success"
+        title: "Sound Pack Purchased",
+        description: "Your new sound pack is now available to use.",
+      });
+      
+      setIsLoading(false);
+      return true;
+    } catch (error) {
+      console.error('Error purchasing sound pack:', error);
+      toast({
+        title: "Purchase Failed",
+        description: "There was an error purchasing the sound pack.",
+        variant: "destructive"
+      });
+      
+      setIsLoading(false);
+      return false;
+    }
+  };
+  
+  const activateSoundPack = async (packId: string): Promise<boolean> => {
+    try {
+      // Check if pack is owned
+      if (!ownedPacks.includes(packId)) {
+        toast({
+          title: "Pack Not Owned",
+          description: "You need to purchase this sound pack first.",
+          variant: "destructive"
+        });
+        return false;
+      }
+      
+      // Save active pack to localStorage
+      localStorage.setItem('activeSoundPack', packId);
+      
+      toast({
+        title: "Sound Pack Activated",
+        description: "Your selected sound pack is now active.",
       });
       
       return true;
     } catch (error) {
-      console.error('Error purchasing sound pack:', error);
-      
-      toast({
-        title: "Purchase Failed",
-        description: "There was an error processing your purchase. Please try again.",
-        variant: "destructive"
-      });
-      
+      console.error('Error activating sound pack:', error);
       return false;
-    } finally {
-      setIsLoading(false);
     }
-  }, [toast]);
+  };
+  
+  const getPackById = (packId: string): PremiumSoundPackDetails | undefined => {
+    return premiumPacks.find(pack => pack.id === packId);
+  };
+  
+  const isPackOwned = (packId: string): boolean => {
+    return ownedPacks.includes(packId);
+  };
 
   return {
-    soundPacks,
-    purchasedPacks,
+    premiumPacks,
+    selectedPack,
+    setSelectedPack,
     isLoading,
+    ownedPacks,
     purchaseSoundPack,
-    isPurchased: (packId: string) => purchasedPacks.includes(packId)
+    activateSoundPack,
+    getPackById,
+    isPackOwned
   };
 };
 

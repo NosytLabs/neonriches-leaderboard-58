@@ -1,65 +1,64 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import MedievalIcon from '@/components/ui/medieval-icon';
-import { BaseDecorationProps, sizeClasses } from '@/types/ui/decorations/types';
 
-interface BorderPatternProps extends BaseDecorationProps {
-  pattern?: 'diamonds' | 'crosses' | 'dots' | 'lines';
-  borderWidth?: string;
+export type BorderPatternVariant = 
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'accent' 
+  | 'navy'
+  | 'silver'
+  | 'bronze'
+  | 'crimson';
+
+export type BorderPatternSize = 'sm' | 'md' | 'lg' | 'xl';
+
+export interface BorderPatternProps {
+  variant?: BorderPatternVariant;
+  size?: BorderPatternSize;
+  className?: string;
+  fillClassName?: string;
 }
 
-const BorderPattern: React.FC<BorderPatternProps> = ({
-  color = 'gold',
+export const BorderPattern = ({
+  variant = 'default',
   size = 'md',
   className,
-  pattern = 'diamonds',
-  borderWidth = '2px',
-}) => {
-  const sizeClass = sizeClasses[size];
-  const patternClass = 
-    pattern === 'diamonds' ? 'bg-[linear-gradient(45deg,transparent_25%,currentColor_25%,currentColor_50%,transparent_50%,transparent_75%,currentColor_75%)]' :
-    pattern === 'crosses' ? 'bg-[repeating-linear-gradient(45deg,currentColor,currentColor_2px,transparent_2px,transparent_10px)]' :
-    pattern === 'dots' ? 'bg-[radial-gradient(circle,currentColor_1px,transparent_1px)]' :
-    'bg-[repeating-linear-gradient(90deg,currentColor,currentColor_1px,transparent_1px,transparent_10px)]';
+  fillClassName,
+}: BorderPatternProps) => {
+  // Size styles
+  const sizeStyles = {
+    sm: "h-[1px]",
+    md: "h-[2px]",
+    lg: "h-1",
+    xl: "h-2",
+  };
 
-  const bgSize = 
-    pattern === 'diamonds' ? 'bg-[size:12px_12px]' :
-    pattern === 'crosses' ? 'bg-[size:10px_10px]' :
-    pattern === 'dots' ? 'bg-[size:6px_6px]' :
-    'bg-[size:10px_10px]';
-
-  const colorClass = 
-    color === 'gold' ? 'text-royal-gold/30' :
-    color === 'royal' ? 'text-royal-purple/30' :
-    color === 'crimson' ? 'text-royal-crimson/30' :
-    color === 'navy' ? 'text-royal-navy/30' : 
-    'text-white/20';
+  // Color styles based on variant
+  const getGradient = () => {
+    if (variant === 'primary') {
+      return 'bg-gradient-to-r from-primary/30 via-primary to-primary/30';
+    } else if (variant === 'secondary') {
+      return 'bg-gradient-to-r from-secondary/30 via-secondary to-secondary/30';
+    } else if (variant === 'accent') {
+      return 'bg-gradient-to-r from-accent/30 via-accent to-accent/30';
+    } else if (variant === 'navy') {
+      return 'bg-gradient-to-r from-blue-900/30 via-blue-800 to-blue-900/30';
+    } else if (variant === 'silver') {
+      return 'bg-gradient-to-r from-gray-400/30 via-gray-300 to-gray-400/30';
+    } else if (variant === 'bronze') {
+      return 'bg-gradient-to-r from-amber-700/30 via-amber-600 to-amber-700/30';
+    } else if (variant === 'crimson') {
+      return 'bg-gradient-to-r from-red-900/30 via-red-800 to-red-900/30';
+    } else {
+      return 'bg-gradient-to-r from-white/5 via-white/20 to-white/5 dark:from-white/10 dark:via-white/30 dark:to-white/10';
+    }
+  };
 
   return (
-    <div className={cn("relative p-2", className)}>
-      <div 
-        className={cn(
-          "absolute inset-0 rounded",
-          patternClass,
-          bgSize,
-          colorClass
-        )}
-      ></div>
-      <div 
-        className={cn(
-          "border rounded",
-          colorClass,
-          "relative z-10"
-        )}
-        style={{ borderWidth }}
-      >
-        <div className="px-4 py-2">
-          {/* Content slot */}
-        </div>
-      </div>
+    <div className={cn("w-full relative", sizeStyles[size], className)}>
+      <div className={cn("absolute inset-0", getGradient(), fillClassName)} />
     </div>
   );
 };
-
-export default BorderPattern;

@@ -1,7 +1,7 @@
 
 export type UserTier = 'free' | 'basic' | 'premium' | 'gold' | 'silver' | 'bronze' | 'elite' | 'pro' | 'royal' | 'legendary' | 'diamond' | 'platinum' | 'founder' | 'vip' | 'whale' | 'standard' | 'shark' | 'dolphin' | 'noble';
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'silver' | 'bronze' | 'neutral' | 'none' | 'crimson';
-export type Gender = 'male' | 'female' | 'other' | 'none';
+export type Gender = 'male' | 'female' | 'other' | 'none' | 'king' | 'queen' | 'jester' | 'noble' | 'prefer-not-to-say';
 
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'followers' | 'friends';
@@ -96,6 +96,8 @@ export interface UserProfile {
   purchasedFeatures?: string[];
   teamRank?: number;
   isProtected?: boolean;
+  joinDate?: string;
+  createdAt?: string;
   certificateNFT?: {
     mintAddress: string;
     mintDate: string;
@@ -107,13 +109,9 @@ export interface UserProfile {
     status?: 'active' | 'cancelled' | 'paused';
     tier?: string;
   };
-  // Compatibility fields
-  joinDate?: string;
-  joinedAt?: string;
-  createdAt?: string;
 }
 
-// Use 'export type' instead of 'export' to avoid conflicts
+// Use export type to avoid conflicting exports
 export type { UserTier as UserTierType };
 export type { TeamColor as TeamColorType };
 export type TeamType = TeamColor;

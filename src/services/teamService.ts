@@ -109,6 +109,21 @@ class TeamService {
   getTeamBenefits(team: TeamColor): string[] {
     return this.teamBenefits[team] || this.teamBenefits.none;
   }
+  
+  // Add exportable functions for the test file
+  getTeams(): TeamColor[] {
+    return Object.keys(this.teamColors) as TeamColor[];
+  }
+  
+  getTeamById(id: string): TeamColor | null {
+    const team = Object.keys(this.teamColors).find(t => t === id);
+    return team as TeamColor || null;
+  }
+  
+  getTeamByColor(color: string): TeamColor | null {
+    return this.getTeamById(color);
+  }
 }
 
 export const teamService = new TeamService();
+export const { getTeams, getTeamById, getTeamByColor } = new TeamService();

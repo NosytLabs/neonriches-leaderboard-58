@@ -1,5 +1,5 @@
 
-import { TeamColor } from '@/types/team';
+import { TeamColor } from '@/types/mockery-types';
 
 export const teamBenefits: Record<TeamColor, string[]> = {
   red: [
@@ -46,5 +46,10 @@ export const teamBenefits: Record<TeamColor, string[]> = {
     'Bonus experience gain',
     'Crafting cost reduction',
     'Improved durability for equipment'
+  ],
+  crimson: [
+    'Blood magic abilities',
+    'Intimidation bonus in negotiations',
+    'Sacrifice-based power enhancements'
   ]
 };

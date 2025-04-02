@@ -1,5 +1,5 @@
 
-import { TeamColor } from '@/types/team';
+import { TeamColor } from '@/types/mockery-types';
 
 export const teamMottos: Record<TeamColor, string> = {
   red: 'Strength and Power',
@@ -10,5 +10,6 @@ export const teamMottos: Record<TeamColor, string> = {
   none: 'Independent and Free',
   neutral: 'Balance in All Things',
   silver: 'Elegance and Grace',
-  bronze: 'Foundation and History'
+  bronze: 'Foundation and History',
+  crimson: 'Blood and Glory'
 };

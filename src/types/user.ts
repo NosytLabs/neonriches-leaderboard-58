@@ -45,6 +45,8 @@ export interface UserProfile {
     status?: 'active' | 'cancelled' | 'paused';
     tier?: string;
   };
+  achievements?: any[];
+  badges?: string[];
 }
 
 export interface UserSettings {
@@ -86,7 +88,7 @@ export interface SocialLink {
   verified?: boolean;
   clicks?: number;
   title?: string;
-  label?: string; // Add label property to fix errors
+  label?: string;
 }
 
 export interface ProfileBoost {
@@ -116,7 +118,8 @@ export interface ProfileLink {
   url: string;
   title?: string;
   icon?: string;
-  label?: string; // Add label property to fix errors
+  label?: string;
+  clicks?: number;
 }
 
 // Type alias for a simplified User type that matches UserProfile

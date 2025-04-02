@@ -52,7 +52,5 @@ export interface PremiumSoundPackDetails {
   previewSound: string;
   sounds: string[];
   features: string[];
-  enabled: boolean; // Add enabled property which was missing
+  enabled: boolean;
 }
-
-// Do not use 'export' for TypeScript isolatedModules compatibility

@@ -9,7 +9,7 @@ export interface LeaderboardFilter {
   skip?: number;
   search?: string;
   sortBy?: string;
-  sortDirection?: 'asc' | 'desc'; // Add sortDirection
+  sortDirection?: 'asc' | 'desc';
   userId?: string;
   minRank?: number;
   maxRank?: number;
@@ -45,7 +45,7 @@ export const defaultLeaderboardFilter: LeaderboardFilter = {
   limit: 50,
   skip: 0,
   sortBy: 'rank',
-  sortDirection: 'asc' // Add default sortDirection
+  sortDirection: 'asc'
 };
 
 // Define the LeaderboardUser interface with all necessary properties
@@ -67,17 +67,17 @@ export interface LeaderboardUser {
   spendStreak: number;
   spendChange?: number;
   rankChange?: number;
-  avatarUrl?: string; // Added for compatibility
-  joinedDate?: string; // Add joinedDate
-  joinDate?: string; // Add joinDate
+  avatarUrl?: string;
+  joinedDate?: string;
+  joinDate?: string;
 }
 
 // Define typed version of the filter with more specific types
 export interface TypedLeaderboardFilter extends Omit<LeaderboardFilter, 'timeframe' | 'team'> {
   sortBy: string;
-  timeframe: string; // Changed from strict type to string for flexibility
+  timeframe: string;
   team: string;
-  sortDirection?: 'asc' | 'desc'; // Added for compatibility
+  sortDirection?: 'asc' | 'desc';
 }
 
 // Define other needed types for OnChain and SolanaTransaction
@@ -87,8 +87,9 @@ export interface OnChainLeaderboardEntry {
   totalSpent: number;
   rank: number;
   lastTx: string;
-  publicKey?: string; // Added for compatibility
-  amount?: number; // Add amount for compatibility
+  publicKey?: string;
+  amount?: number;
+  timestamp?: number;
 }
 
 export interface SolanaTransaction {
@@ -101,5 +102,5 @@ export interface SolanaTransaction {
   status: 'confirmed' | 'pending' | 'failed';
   sender: string;
   receiver?: string;
-  slot?: number; // Added for compatibility
+  slot?: number;
 }

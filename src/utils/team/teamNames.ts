@@ -1,5 +1,5 @@
 
-import { TeamColor } from '@/types/team';
+import { TeamColor } from '@/types/mockery-types';
 
 export const teamNames: Record<TeamColor, string> = {
   red: 'Red Team',
@@ -10,5 +10,6 @@ export const teamNames: Record<TeamColor, string> = {
   none: 'Unaffiliated',
   neutral: 'Neutral',
   silver: 'Silver Team',
-  bronze: 'Bronze Team'
+  bronze: 'Bronze Team',
+  crimson: 'Crimson Team'
 };
