@@ -47,7 +47,7 @@ const RoyalBoutique = () => {
     }
   };
 
-  // Create sample cosmetic items with correct properties
+  // Create sample cosmetic items with correct properties and fixed type values
   const bordersCategory: CosmeticItem[] = [
     {
       id: 'border-1',
@@ -58,7 +58,7 @@ const RoyalBoutique = () => {
       category: 'border',
       cssClass: 'border-gold',
       rarity: 'rare',
-      type: 'premium',
+      type: 'border', // Changed from 'premium' to 'border'
       enabled: true,
       previewUrl: '/images/cosmetics/border-gold.png'
     },
@@ -71,7 +71,7 @@ const RoyalBoutique = () => {
       category: 'border',
       cssClass: 'border-silver',
       rarity: 'uncommon',
-      type: 'standard',
+      type: 'border', // Changed from 'standard' to 'border'
       enabled: true,
       previewUrl: '/images/cosmetics/border-silver.png'
     },
@@ -84,7 +84,7 @@ const RoyalBoutique = () => {
       category: 'border',
       cssClass: 'border-dragon-scale',
       rarity: 'epic',
-      type: 'exclusive',
+      type: 'border', // Changed from 'exclusive' to 'border'
       enabled: true,
       previewUrl: '/images/cosmetics/border-dragon.png'
     },
@@ -99,7 +99,7 @@ const RoyalBoutique = () => {
       category: 'color',
       cssClass: 'text-royal-purple',
       rarity: 'epic',
-      type: 'premium',
+      type: 'color', // Changed from 'premium' to 'color'
       enabled: true,
       previewUrl: '/images/cosmetics/color-purple.png'
     },
@@ -111,7 +111,7 @@ const RoyalBoutique = () => {
       category: 'color',
       cssClass: 'text-emerald-green',
       rarity: 'uncommon',
-      type: 'standard',
+      type: 'color', // Changed from 'standard' to 'color'
       enabled: true,
       previewUrl: '/images/cosmetics/color-emerald.png'
     },
@@ -123,7 +123,7 @@ const RoyalBoutique = () => {
       category: 'color',
       cssClass: 'text-golden-yellow',
       rarity: 'rare',
-      type: 'exclusive',
+      type: 'color', // Changed from 'exclusive' to 'color'
       enabled: true,
       previewUrl: '/images/cosmetics/color-gold.png'
     },
@@ -138,7 +138,7 @@ const RoyalBoutique = () => {
       category: 'font',
       cssClass: 'font-medieval',
       rarity: 'legendary',
-      type: 'premium',
+      type: 'font', // Changed from 'premium' to 'font'
       enabled: true,
       previewUrl: '/images/cosmetics/font-medieval.png'
     },
@@ -150,7 +150,7 @@ const RoyalBoutique = () => {
       category: 'font',
       cssClass: 'font-elegant-serif',
       rarity: 'rare',
-      type: 'standard',
+      type: 'font', // Changed from 'standard' to 'font'
       enabled: true,
       previewUrl: '/images/cosmetics/font-serif.png'
     },
@@ -162,7 +162,7 @@ const RoyalBoutique = () => {
       category: 'font',
       cssClass: 'font-bold-sans',
       rarity: 'uncommon',
-      type: 'standard',
+      type: 'font', // Changed from 'standard' to 'font'
       enabled: true,
       previewUrl: '/images/cosmetics/font-sans.png'
     },

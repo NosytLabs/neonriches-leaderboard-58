@@ -6,6 +6,7 @@ import { IconProps } from '@/types/ui/icon-types';
 
 export interface IconComponentProps extends React.SVGProps<SVGSVGElement> {
   iconName: string;
+  name?: string; // Added for backward compatibility
   size?: string | number;
   color?: string;
   className?: string;
@@ -18,12 +19,21 @@ export interface IconComponentProps extends React.SVGProps<SVGSVGElement> {
 export const Icon = React.forwardRef<SVGSVGElement, IconComponentProps>((props, ref) => {
   const { 
     iconName, 
+    name, // For backward compatibility
     size = 'md',
     color = 'default', 
     className, 
     animated = false,
     ...restProps 
   } = props;
+
+  // Use either iconName or name
+  const iconToUse = iconName || name;
+
+  if (!iconToUse) {
+    console.warn('Icon component requires either iconName or name prop');
+    return null;
+  }
 
   // Size mapping
   const sizeMap = {
@@ -74,16 +84,16 @@ export const Icon = React.forwardRef<SVGSVGElement, IconComponentProps>((props, 
 
   // Find the matching Lucide icon component
   // Format iconName to match Lucide export names (PascalCase)
-  const formattedIconName = iconName
+  const formattedIconName = iconToUse
     .split('-')
     .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
     .join('');
 
   // Get the icon component
-  const LucideIcon = (LucideIcons as Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>)[formattedIconName];
+  const LucideIcon = (LucideIcons as unknown as Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>)[formattedIconName];
 
   if (!LucideIcon) {
-    console.warn(`Icon not found: ${iconName}`);
+    console.warn(`Icon not found: ${iconToUse}`);
     return null;
   }
 

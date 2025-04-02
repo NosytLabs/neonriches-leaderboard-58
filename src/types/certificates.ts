@@ -9,7 +9,7 @@ export interface Certificate {
   dateIssued?: string;
   issuedAt: string; // Added for compatibility
   status: string; // Added for compatibility
-  type: string;
+  type: CertificateType | string; // Allow strings for flexibility
   tier: string;
   createdAt?: string; // Added for compatibility
   isMinted?: boolean; // Added for compatibility
@@ -50,9 +50,9 @@ export type CertificateTeam =
 export interface CertificateTemplate {
   id: string;
   name: string;
-  type: CertificateType;
-  style: CertificateStyle;
-  team: CertificateTeam;
+  type: CertificateType | string; // Allow string to accommodate more types
+  style: CertificateStyle | string; // Allow string for flexibility
+  team: CertificateTeam | string; // Allow string for more teams
   previewUrl: string;
   imageUrl: string;
   description: string;

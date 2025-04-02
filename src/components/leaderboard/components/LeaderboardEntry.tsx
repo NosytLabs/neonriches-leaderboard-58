@@ -26,7 +26,10 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
   onShameUser
 }) => {
   const isCurrentUser = user.userId === currentUserId;
-  const rankChange = user.rankChange || 0;
+  // Use rankChange or calculate from previous rank if not available
+  const rankChange = user.rankChange !== undefined 
+    ? user.rankChange
+    : (user.previousRank ? user.previousRank - user.rank : 0);
   
   return (
     <div
@@ -50,7 +53,7 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
             )}
           >
             <AvatarImage 
-              src={user.profileImage || user.avatarUrl} 
+              src={user.profileImage || user.avatarUrl || ''} 
               alt={user.username} 
             />
             <AvatarFallback>

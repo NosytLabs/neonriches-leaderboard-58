@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useParams } from 'react-router-dom';
@@ -19,7 +18,7 @@ const Profile = () => {
           <CardTitle className="text-2xl font-bold">Profile Page</CardTitle>
           {user?.tier === 'royal' && (
             <div className="badge-royal">
-              <Icon name="Crown" size="sm" color="gold" />
+              <Icon iconName="Crown" size="sm" color="gold" />
               <span className="ml-1">Royal</span>
             </div>
           )}
@@ -32,15 +31,15 @@ const Profile = () => {
               <div className="mt-4 space-y-2">
                 <h3 className="text-xl font-bold">{user.displayName}</h3>
                 <div className="flex items-center">
-                  <Icon name="Trophy" size="sm" className="mr-2 text-yellow-500" />
+                  <Icon iconName="Trophy" size="sm" className="mr-2 text-yellow-500" />
                   <p>Rank: #{user.rank}</p>
                 </div>
                 <div className="flex items-center">
-                  <Icon name="Users" size="sm" className="mr-2 text-blue-500" />
+                  <Icon iconName="Users" size="sm" className="mr-2 text-blue-500" />
                   <p>Team: {user.team}</p>
                 </div>
                 <div className="flex items-center">
-                  <Icon name="Wallet" size="sm" className="mr-2 text-green-500" />
+                  <Icon iconName="Wallet" size="sm" className="mr-2 text-green-500" />
                   <p>Total Spent: {formatDollarAmount(user.totalSpent)}</p>
                 </div>
               </div>

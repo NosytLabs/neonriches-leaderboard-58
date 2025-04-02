@@ -1,124 +1,48 @@
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useContext } from 'react';
+import { SoundContext } from '@/contexts/sound';
 import { SoundType, SoundOptions } from '@/types/sound-types';
-import getSoundPath from '@/utils/getSoundPath';
 
-export interface UseSoundReturn {
+interface UseSoundHook {
   playSound: (sound: SoundType, options?: SoundOptions) => void;
-  play: (sound: SoundType, options?: SoundOptions) => void;
-  stopSound: (sound?: SoundType) => void;
+  stopSound: (fade?: boolean) => void;
+  pauseSound: () => void;
+  resumeSound: () => void;
   isPlaying: boolean;
   currentSound: SoundType | null;
+  mute: () => void;
+  unmute: () => void;
+  isMuted: boolean;
+  setVolume: (volume: number) => void;
+  volume: number;
 }
 
 /**
- * Hook for playing sounds
- * @returns Sound control functions
+ * Hook to play sound effects in the application
  */
-export const useSound = (): UseSoundReturn => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentSound, setCurrentSound] = useState<SoundType | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+export const useSound = (): UseSoundHook => {
+  const soundContext = useContext(SoundContext);
   
-  useEffect(() => {
-    // Cleanup function to stop sound when component unmounts
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
+  if (!soundContext) {
+    console.warn('useSound must be used within a SoundProvider');
+    
+    // Return a dummy implementation that does nothing
+    return {
+      playSound: () => {},
+      stopSound: () => {},
+      pauseSound: () => {},
+      resumeSound: () => {},
+      isPlaying: false,
+      currentSound: null,
+      mute: () => {},
+      unmute: () => {},
+      isMuted: false,
+      setVolume: () => {},
+      volume: 1
     };
-  }, []);
+  }
   
-  /**
-   * Play a sound
-   * @param type Sound type
-   * @param options Sound options
-   */
-  const playSound = useCallback((type: SoundType, options?: SoundOptions) => {
-    const soundPath = getSoundPath(type);
-    
-    if (!soundPath) {
-      console.warn(`Sound path not found for type: ${type}`);
-      return;
-    }
-    
-    // Stop any currently playing sound
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-    
-    // Create a new audio element
-    const audio = new Audio(soundPath);
-    audioRef.current = audio;
-    
-    // Apply options
-    if (options) {
-      if (options.volume !== undefined) {
-        audio.volume = options.volume;
-      }
-      
-      if (options.loop !== undefined) {
-        audio.loop = options.loop;
-      }
-      
-      if (options.playbackRate !== undefined) {
-        audio.playbackRate = options.playbackRate;
-      }
-    }
-    
-    // Set up event listeners
-    audio.onplay = () => {
-      setIsPlaying(true);
-      setCurrentSound(type);
-    };
-    
-    audio.onended = () => {
-      setIsPlaying(false);
-      setCurrentSound(null);
-      if (options?.onEnd) {
-        options.onEnd();
-      }
-    };
-    
-    // Play the sound and handle any errors
-    try {
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          console.error('Error playing sound:', error);
-          setIsPlaying(false);
-          setCurrentSound(null);
-        });
-      }
-    } catch (error) {
-      console.error('Error playing sound:', error);
-      setIsPlaying(false);
-      setCurrentSound(null);
-    }
-  }, []);
-  
-  /**
-   * Stop the current sound
-   */
-  const stopSound = useCallback((sound?: SoundType) => {
-    if (audioRef.current && (!sound || sound === currentSound)) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setIsPlaying(false);
-      setCurrentSound(null);
-    }
-  }, [currentSound]);
-  
-  return {
-    playSound,
-    play: playSound, // Alias for playSound for backwards compatibility
-    stopSound,
-    isPlaying,
-    currentSound
-  };
+  return soundContext;
 };
 
-// Default export for backwards compatibility
 export default useSound;

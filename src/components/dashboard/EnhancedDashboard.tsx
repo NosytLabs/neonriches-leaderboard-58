@@ -8,12 +8,12 @@ import TeamStatusCard from '@/components/dashboard/TeamStatusCard';
 import CashThroneUpgrade from '@/components/dashboard/CashThroneUpgrade';
 import { DashboardWelcome } from '@/components/dashboard/DashboardWelcome';
 import { useToast } from '@/hooks/use-toast';
-import { useSound } from '@/hooks/use-sound';
+import { useSound } from '@/hooks/sounds/use-sound';
 import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { adaptToUserProfile } from '@/utils/userAdapter';
-import { UserProfile } from '@/types/user';
+import { UserProfile } from '@/types/user-consolidated'; // Changed import to use consolidated type
 import { toTeamColor } from '@/utils/typeConverters';
 
 const EnhancedDashboard = () => {
@@ -75,12 +75,12 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Create a user object that satisfies the UserProfile type requirements
-  const userForComponents = {
+  // Create a user object that satisfies the UserProfile type requirements from user-consolidated
+  const userForComponents: UserProfile = {
     ...user,
-    // Ensure required properties are present
+    // Ensure required properties are present with non-optional values
     profileImage: user.profileImage || '',
-    team: toTeamColor(user.team),
+    team: toTeamColor(user.team || 'none'),
     previousRank: user.previousRank || 0,
     // Add missing properties for UserProfile type
     settings: user.settings || {
@@ -108,7 +108,7 @@ const EnhancedDashboard = () => {
       badge: [],
       theme: []
     }
-  } as UserProfile;
+  };
 
   const handleSpend = () => {
     toast({

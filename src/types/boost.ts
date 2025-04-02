@@ -19,7 +19,8 @@ export type BoostEffectType =
   | 'appearance'
   | 'badge'
   | 'aura'
-  | 'enhancement';
+  | 'enhancement'
+  | 'general';  // Added for compatibility with authUtils.ts
 
 export interface BoostEffect {
   id: string;
@@ -50,7 +51,7 @@ export interface ProfileBoost {
   id: string;
   userId: string;
   effectId: string; // Used by ProfileBoostDisplay
-  type: BoostEffectType;
+  type: BoostEffectType | string; // Allow string for backward compatibility
   startTime: string;
   endTime: string;
   active: boolean;

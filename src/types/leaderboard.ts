@@ -1,68 +1,55 @@
 
-/**
- * Leaderboard type definitions
- */
+import { TeamColor, UserTier } from './mockery-types';
 
-import { TeamColor, UserTier, LeaderboardUser, LeaderboardFilter } from './mockery-types';
-
-// Re-export types for backwards compatibility
-export type { LeaderboardUser, LeaderboardFilter };
-
-export interface LeaderboardState {
-  users: LeaderboardUser[];
-  loading: boolean;
-  error: string | null;
-  filter: string;
-  sortBy: string;
-  page: number;
-  itemsPerPage: number;
-}
-
-export interface LeaderboardStats {
-  totalUsers: number;
+export interface LeaderboardUser {
+  id: string;
+  userId: string;
+  username: string;
+  displayName?: string;
+  profileImage: string;
+  avatarUrl?: string; // Added for compatibility
+  tier: UserTier | string;
+  team: TeamColor | string;
+  rank: number;
+  previousRank: number;
   totalSpent: number;
-  topSpender: {
-    username: string;
-    amount: number;
-  };
-  averageSpent: number;
-  recentActivity: {
-    username: string;
-    action: string;
-    amount: number;
-    timestamp: string;
-  }[];
+  walletBalance: number;
+  isVerified?: boolean;
+  isProtected?: boolean;
+  spendStreak?: number;
+  // Added properties to fix errors
+  rankChange?: number;
+  spendChange?: number;
+  amountSpent?: number;
+  spentAmount?: number;
+  joinDate?: string;
 }
 
-export interface SortByOptions {
-  value: string;
-  label: string;
-}
-
-export interface TypedLeaderboardFilter extends LeaderboardFilter {
-  sort?: string;
-  sortBy?: string;
+export interface LeaderboardFilter {
+  team: string | null;
+  tier: UserTier | 'all';
+  timeframe: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all'; // Added 'all' for compatibility
+  sortBy: 'rank' | 'spent' | 'username';
+  // Added to fix errors
   sortDirection?: 'asc' | 'desc';
 }
 
-export interface OnChainLeaderboardEntry {
-  address: string;
-  username: string;
-  amount: number;
-  rank: number;
-  timestamp: number;
+export interface LeaderboardConfig {
+  title: string;
+  filters: LeaderboardFilter;
+  showTeam: boolean;
+  compact: boolean;
+  limit: number;
 }
 
-export interface SolanaTransaction {
-  id: string;
-  signature: string;
-  sender: string;
-  receiver?: string; // Added for compatibility
-  amount: number;
-  timestamp: string;
-  status: 'confirmed' | 'pending' | 'failed';
-  type: 'deposit' | 'withdraw' | 'transfer' | 'spend';
-  blockHeight?: number;
-  fee?: number;
-  metadata?: Record<string, any>;
+export interface LeaderboardProps {
+  config?: Partial<LeaderboardConfig>;
+  onUserClick?: (userId: string, username: string) => void;
+  onFilterChange?: (filters: LeaderboardFilter) => void;
+  className?: string;
+}
+
+// Extend for typed filters while maintaining backward compatibility
+export interface TypedLeaderboardFilter extends LeaderboardFilter {
+  sortBy: string; // Allow any string for backward compatibility
 }

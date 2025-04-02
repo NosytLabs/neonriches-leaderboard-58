@@ -15,7 +15,7 @@ import {
 } from './mockery-types';
 
 // Re-export all the types for use in other files
-export {
+export type { 
   MockeryAction,
   MockeryTier,
   TeamColor,

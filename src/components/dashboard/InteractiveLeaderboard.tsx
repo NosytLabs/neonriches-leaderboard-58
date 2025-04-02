@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -6,6 +7,7 @@ import { ArrowUp, ArrowDown, Minus } from 'lucide-react';
 import { LeaderboardUser } from '@/types/leaderboard';
 import LeaderboardActions from './leaderboard/LeaderboardActions';
 
+// Update to include spendChange, rankChange, and other required properties
 const mockLeaderboardData: LeaderboardUser[] = [
   {
     id: "1",
@@ -18,12 +20,13 @@ const mockLeaderboardData: LeaderboardUser[] = [
     rank: 1,
     previousRank: 2,
     totalSpent: 15000,
-    spendChange: 2500,
-    rankChange: 1,
     walletBalance: 5000,
     isVerified: true,
     spendStreak: 5,
-    isProtected: true
+    isProtected: true,
+    // Added properties
+    rankChange: 1,
+    spendChange: 2500
   },
   {
     id: "2",
@@ -36,12 +39,13 @@ const mockLeaderboardData: LeaderboardUser[] = [
     rank: 2,
     previousRank: 1,
     totalSpent: 12000,
-    spendChange: 1000,
-    rankChange: -1,
     walletBalance: 3000,
     isVerified: true,
     spendStreak: 8,
-    isProtected: false
+    isProtected: false,
+    // Added properties
+    rankChange: -1,
+    spendChange: 1000
   },
   {
     id: "3",
@@ -54,12 +58,13 @@ const mockLeaderboardData: LeaderboardUser[] = [
     rank: 3,
     previousRank: 3,
     totalSpent: 10000,
-    spendChange: 1500,
-    rankChange: 0,
     walletBalance: 2500,
     isVerified: false,
     spendStreak: 3,
-    isProtected: false
+    isProtected: false,
+    // Added properties
+    rankChange: 0,
+    spendChange: 1500
   }
 ];
 

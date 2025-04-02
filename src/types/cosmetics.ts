@@ -17,8 +17,12 @@ export type CosmeticType =
   | 'profile'
   | 'appearance'
   | 'interaction'
-  | 'animation';
+  | 'animation'
+  | 'premium'    // Added for compatibility
+  | 'standard'   // Added for compatibility
+  | 'exclusive'; // Added for compatibility
 
+// Type alias for backward compatibility
 export type CosmeticCategory = CosmeticType;
 
 export type CosmeticRarity = 
@@ -66,6 +70,7 @@ export interface SocialLink {
   primary?: boolean;
 }
 
+// Updated interface to allow for string indices and handle active* properties
 export interface UserCosmetics {
   border: string[];
   color: string[];
@@ -76,7 +81,7 @@ export interface UserCosmetics {
   effect: string[];
   badge: string[];
   theme: string[];
-  [key: string]: string[]; // Index signature to allow accessing by string key
+  [key: string]: string[] | string | undefined; // Index signature to allow accessing by string key AND string values for active properties
   // Compatibility with user-consolidated
   activeBorder?: string;
   activeTitle?: string;

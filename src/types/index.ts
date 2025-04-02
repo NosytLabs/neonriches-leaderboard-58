@@ -5,56 +5,92 @@
  */
 
 // Core types - using renamed exports to avoid conflicts
-export * from './mockery-types';
+export type { 
+  MockeryAction,
+  MockeryTier,
+  TeamData
+} from './mockery-types';
 
 // User types - these override mockery-types when there's a conflict
-export * from './user-consolidated';
-export * from './auth-context';
+export type {
+  UserProfile,
+  UserSettings,
+  TeamColor,
+  Gender,
+  TeamType
+} from './user-consolidated';
+
+export type {
+  AuthState,
+  AuthAction,
+  AuthContextType,
+  RegisterResponse,
+  LoginResponse,
+  AuthProviderProps
+} from './auth-context';
 
 // Feature-specific types
-export * from './certificates';
-export * from './cosmetics';
-export * from './boost';
-export * from './team';
-export * from './leaderboard';
+export type {
+  Certificate,
+  CertificateType,
+  CertificateStyle,
+  CertificateTeam,
+  CertificateTemplate,
+  CertificateRepository
+} from './certificates';
+
+export type {
+  CosmeticType,
+  CosmeticCategory,
+  CosmeticRarity,
+  CosmeticItem,
+  SocialLink,
+  UserCosmetics,
+  UserCosmeticState,
+  CosmeticStoreSection,
+  CosmeticPurchaseResult
+} from './cosmetics';
+
+export type {
+  BoostEffectType,
+  BoostEffect,
+  ProfileBoost,
+  BoostService
+} from './boost';
+
+export type {
+  TeamColor as TeamColorEnum,
+  TeamMember,
+  TeamRole,
+  TeamStats,
+  TeamBenefits,
+  TeamInvite,
+  TeamDataCompat
+} from './team';
+
+export type {
+  LeaderboardUser,
+  LeaderboardFilter,
+  LeaderboardConfig,
+  LeaderboardProps
+} from './leaderboard';
 
 // UI types
-export * from './ui/icon-types';
-export * from './sound-types';
+export type { IconProps } from './ui/icon-types';
+export type { SoundType, SoundOptions } from './sound-types';
 
 // For backwards compatibility
 import { UserProfile } from './user-consolidated';
 export type User = UserProfile;
 
-// Export aliases to avoid conflicts with duplicate exports
-// Use named exports to make it clear which module each type comes from
-import { 
-  TeamColor as MockeryTeamColor, 
-  TeamType as MockeryTeamType,
-  SoundOptions as MockerySoundOptions,
-  SoundType as MockerySoundType,
-  UserProfile as MockeryUserProfile,
-  UserSettings as MockeryUserSettings
-} from './mockery-types';
+// No more direct re-exports of conflicting types
+// Instead, using named types above to avoid conflicts
 
-import {
-  UserCosmetics as ConsolidatedUserCosmetics,
-  SocialLink as ConsolidatedSocialLink,
-  ProfileBoost as ConsolidatedProfileBoost
-} from './user-consolidated';
-
-// Export all the aliased types
-export type {
-  MockeryTeamColor,
-  MockeryTeamType,
-  MockerySoundOptions,
-  MockerySoundType,
-  MockeryUserProfile,
-  MockeryUserSettings,
-  ConsolidatedUserCosmetics,
-  ConsolidatedSocialLink,
-  ConsolidatedProfileBoost
-};
+// Don't re-export the mockery-types that cause conflicts
+// Use explicit named exports instead
 
 // Re-export types from mocktypes.ts to ensure consistency
-export * from './mocktypes';
+export type { 
+  MockeryNotification,
+  MockerySettings
+} from './mocktypes';

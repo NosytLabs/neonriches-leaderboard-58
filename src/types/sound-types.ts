@@ -1,10 +1,5 @@
-/**
- * Sound system type definitions
- */
 
-// Complete list of all valid sound types in the application
 export type SoundType = 
-  // Core sounds
   | 'success'
   | 'error'
   | 'notification'
@@ -14,6 +9,7 @@ export type SoundType =
   | 'withdrawal'
   | 'rank_up'
   | 'level_up'
+  | 'levelUp'
   | 'coin'
   | 'shame'
   | 'mockery'
@@ -26,7 +22,10 @@ export type SoundType =
   | 'chime'
   | 'fanfare'
   | 'coinDrop'
-  // Premium sound pack sounds
+  | 'sparkle'
+  | 'protection'
+  | 'transfer'
+  | 'unlock'
   | 'royal_preview'
   | 'royal_bell'
   | 'royal_fanfare'
@@ -42,100 +41,33 @@ export type SoundType =
   | 'minimal_success'
   | 'minimal_alert'
   | 'minimal_action'
-  // Other specific sounds
-  | 'levelUp'
-  | 'sparkle'
-  | 'protection'
-  | 'transfer'
-  | 'unlock';
+  // Additional sound types to fix errors
+  | 'alert'
+  | 'badge'
+  | 'toggle'
+  | 'upgrade'
+  | 'down'
+  | 'up'
+  | 'withdraw';
 
 export interface SoundOptions {
   volume?: number;
-  interrupt?: boolean;
   loop?: boolean;
+  autoplay?: boolean;
+  once?: boolean;
+  format?: string;
   fadeIn?: boolean;
   fadeOut?: boolean;
-  onStart?: () => void;
-  onPause?: () => void;
-  onResume?: () => void;
-  onEnd?: () => void;
-  playbackRate?: number;
-  delay?: number;
-}
-
-export interface SoundConfig {
-  enabled: boolean;
-  volume: number;
-  pack: string;
-  muted: boolean;
-}
-
-export interface Sound {
-  id: string;
-  type: SoundType;
-  url: string;
-  volume?: number;
   duration?: number;
-  pack?: string;
 }
-
-export interface SoundPack {
-  id: string;
-  name: string;
-  description: string;
-  author: string;
-  sounds: Record<SoundType, string>;
-  isDefault?: boolean;
-  isPremium?: boolean;
-  price?: number;
-}
-
-export interface SoundState {
-  isPlaying: boolean;
-  currentSound: string | null;
-  volume: number;
-  muted: boolean;
-}
-
-export type PlaySoundFunction = (
-  sound: SoundType,
-  options?: SoundOptions
-) => void;
-
-export type StopSoundFunction = (sound?: SoundType) => void;
 
 export interface PremiumSoundPackDetails {
-  id?: string;
+  id: string;
   name: string;
   description: string;
+  previewSound: SoundType;
   price: number;
-  sounds: SoundType[];
-  previewSound?: SoundType;
-}
-
-// Backwards compatibility types
-export type NotificationSoundOptions = SoundOptions;
-
-export interface AudioOptions {
-  volume?: number;
-  interrupt?: boolean;
-  loop?: boolean;
-  delay?: number;
-}
-
-export interface AudioLoaderReturn {
-  audio: Record<SoundType, HTMLAudioElement>;
-  volume: number;
-  setVolume: (volume: number) => void;
-  isEnabled: boolean;
-  setEnabled: (enabled: boolean) => void;
-  isPremium: boolean;
-  setPremium: (premium: boolean) => void;
-  isLoaded: boolean;
-}
-
-export interface UseSoundReturn {
-  play: (sound: SoundType, options?: AudioOptions) => void;
-  stop: (sound: SoundType) => void;
-  stopAll: () => void;
+  tier: string;
+  // Added for compatibility
+  icon?: string;
 }

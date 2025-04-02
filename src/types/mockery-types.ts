@@ -1,4 +1,3 @@
-
 /**
  * Core mockery types for the application
  */
@@ -100,23 +99,29 @@ export interface LeaderboardFilter {
   page?: number;
 }
 
+// Extend the LeaderboardUser interface to include rankChange, spendChange, and avatarUrl
 export interface LeaderboardUser {
   id: string;
   userId: string;
   username: string;
   displayName?: string;
   profileImage: string;
-  tier: UserTier;
-  team: TeamColor;
+  avatarUrl?: string; // Added for components that reference this
+  tier: UserTier | string;
+  team: TeamColor | string | null;
   rank: number;
-  previousRank?: number;
-  walletBalance?: number;
+  previousRank: number;
   totalSpent: number;
-  amountSpent?: number;
-  spendStreak?: number;
+  walletBalance: number;
   isVerified?: boolean;
-  isProtected: boolean;
+  isProtected?: boolean;
+  spendStreak?: number;
+  // New properties to fix errors
+  rankChange?: number;
+  spendChange?: number;
   joinDate?: string;
+  amountSpent?: number;
+  spentAmount?: number;
 }
 
 // SoundTypes
