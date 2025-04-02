@@ -9,16 +9,34 @@ export interface ProjectMetrics {
     totalSize: number;
     totalLines: number;
     dependencies: number;
+    projectSize?: number;
+    fileCount?: number;
+    dependencyCount?: number;
   };
   afterCleanup?: {
     totalFiles: number;
     totalSize: number;
     totalLines: number;
     dependencies: number;
+    projectSize?: number;
+    fileCount?: number;
+    dependencyCount?: number;
   };
-  sizeSavings?: number;
-  fileSavings?: number;
-  dependencySavings?: number;
+  sizeSavings?: {
+    absolute: number;
+    percentage: number;
+    bytes: number;
+  };
+  fileSavings?: {
+    absolute: number;
+    percentage: number;
+    count: number;
+  };
+  dependencySavings?: {
+    absolute: number;
+    percentage: number;
+    count: number;
+  };
   sizePercentage?: number;
   codeDuplication?: number;
   unusedCode?: number;

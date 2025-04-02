@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Shell from '@/components/Shell';
+import Shell from '@/components/Shell'; // Fixed import casing
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const Community = () => {

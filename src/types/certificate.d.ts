@@ -1,27 +1,29 @@
 
-export type CertificateType = 'achievement' | 'spending' | 'membership' | 'team' | 'nobility' | 'special';
-export type CertificateStyle = 'royal' | 'premium' | 'standard' | 'basic' | 'special';
-export type CertificateTeam = 'red' | 'green' | 'blue' | 'gold' | 'purple' | 'all' | 'none';
-export type CertificateStatus = 'issued' | 'minted' | 'pending' | 'revoked' | 'expired';
+export type CertificateType = 'achievement' | 'membership' | 'spending' | 'team' | 'nobility' | 'royal';
+export type CertificateStyle = 'standard' | 'premium' | 'royal' | 'legendary';
+export type CertificateTeam = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'all';
+export type CertificateStatus = 'pending' | 'issued' | 'minted' | 'revoked' | 'expired';
 
 export interface Certificate {
   id: string;
+  userId: string;
   title: string;
   description: string;
   imageUrl: string;
-  userId: string;
-  dateIssued: string;
-  mintAddress: string;
   type: CertificateType;
   style: CertificateStyle;
   team: CertificateTeam;
-  rarity: string;
+  dateIssued: string;
+  mintAddress?: string;
   status: CertificateStatus;
+  expiresAt?: string;
+  mintDate?: string;
+  rarity?: string;
 }
 
 export interface CertificateTemplate {
   id: string;
-  title: string; // Required field
+  title: string;
   name: string;
   description: string;
   previewUrl: string;
@@ -32,8 +34,15 @@ export interface CertificateTemplate {
   available: boolean;
 }
 
-export interface CertificateNFT {
-  mintAddress: string;
-  mintDate: string;
-  dateIssued?: string;
+export interface CertificateView {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  dateIssued: string;
+  userId: string;
+  team: CertificateTeam;
+  style: CertificateStyle;
+  mintAddress?: string;
+  status: CertificateStatus;
 }

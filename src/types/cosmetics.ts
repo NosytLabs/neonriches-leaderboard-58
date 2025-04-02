@@ -28,7 +28,7 @@ export type SocialLink = SocialLinkInterface;
 export type ProfileLink = ProfileLinkInterface;
 
 export type CosmeticType = 'border' | 'color' | 'font' | 'emoji' | 'title' | 'background' | 'effect' | 'badge' | 'theme' |
-  'premium' | 'standard' | 'exclusive'; // Added for backward compatibility
+  'premium' | 'standard' | 'exclusive' | 'profile' | 'appearance'; // Added for backward compatibility
 
 export type CosmeticCategory = 
   | 'border' 
@@ -77,6 +77,7 @@ export interface CosmeticItem {
   type?: CosmeticType; // Added for backward compatibility
   imageSrc?: string; // Added for backward compatibility
   image?: string; // Added for backward compatibility
+  enabled?: boolean; // Added for backward compatibility
 }
 
 export interface UserCosmetics {

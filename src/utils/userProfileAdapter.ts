@@ -1,61 +1,49 @@
 
-import { UserProfile } from '@/types/user-consolidated';
-import { UserProfile as UserProfileLegacy } from '@/types/user';
+import { UserProfile } from '@/types/user';
 import { TeamColor } from '@/types/mockery-types';
-import { toTeamColor } from '@/utils/typeConverters';
+import { toTeamColor } from './typeConverters';
 
 /**
- * Adapts a user profile update object to ensure it has the correct types
- * This makes it easier to update user profiles with proper type checking
+ * Adapts a subscription object to ensure compatibility
  */
-export const adaptUserProfileUpdate = (updateData: Partial<UserProfile>): Partial<UserProfile> => {
-  // Create a cleaned update object
-  const updatedProfile: Partial<UserProfile> = { ...updateData };
+export const adaptSubscription = (subscription: any) => {
+  if (!subscription) return null;
   
-  // Ensure team is a valid TeamColor if present
-  if (updatedProfile.team) {
-    updatedProfile.team = toTeamColor(updatedProfile.team);
-  }
-  
-  // Ensure required fields have default values
-  if (updatedProfile.displayName === undefined && updateData.username) {
-    updatedProfile.displayName = updateData.username;
-  }
-  
-  if (updatedProfile.totalSpent === undefined && updateData.amountSpent !== undefined) {
-    updatedProfile.totalSpent = updateData.amountSpent;
-  }
-  
-  if (updatedProfile.amountSpent === undefined && updateData.totalSpent !== undefined) {
-    updatedProfile.amountSpent = updateData.totalSpent;
-  }
-  
-  if (updatedProfile.walletBalance === undefined) {
-    updatedProfile.walletBalance = 0;
-  }
-  
-  return updatedProfile;
+  return {
+    planId: subscription.planId || subscription.id || '',
+    nextBillingDate: subscription.nextBillingDate || subscription.endDate || '',
+    status: subscription.status || 'active',
+    tier: subscription.tier || 'basic'
+  };
 };
 
 /**
- * Converts between user profile types safely
+ * Adapts user profile data to ensure compatibility across different parts of the app
  */
-export const convertUserProfile = (user: any): UserProfile => {
+export const adaptUserProfile = (user: any): UserProfile => {
+  if (!user) return null as any;
+  
   return {
     id: user.id || '',
     username: user.username || '',
     displayName: user.displayName || user.username || '',
     email: user.email || '',
-    profileImage: user.profileImage || '',
+    profileImage: user.profileImage || '/assets/default-avatar.png',
     bio: user.bio || '',
     joinedDate: user.joinedDate || user.joinDate || user.createdAt || new Date().toISOString(),
+    team: toTeamColor(user.team || 'none') as TeamColor,
     tier: user.tier || 'basic',
-    team: user.team || 'none',
     rank: user.rank || 0,
     previousRank: user.previousRank || 0,
     totalSpent: user.totalSpent || user.amountSpent || 0,
     amountSpent: user.amountSpent || user.totalSpent || 0,
     walletBalance: user.walletBalance || 0,
+    spendStreak: user.spendStreak || 0,
+    isVerified: !!user.isVerified,
+    isProtected: !!user.isProtected,
+    isVIP: !!user.isVIP,
+    isFounder: !!user.isFounder,
+    isAdmin: !!user.isAdmin,
     settings: user.settings || {
       profileVisibility: 'public',
       allowProfileLinks: true,
@@ -70,7 +58,6 @@ export const convertUserProfile = (user: any): UserProfile => {
       showTeam: true,
       showSpending: true
     },
-    profileBoosts: user.profileBoosts || [],
     cosmetics: user.cosmetics || {
       border: [],
       color: [],
@@ -82,13 +69,11 @@ export const convertUserProfile = (user: any): UserProfile => {
       badge: [],
       theme: []
     },
-    spendStreak: user.spendStreak || 0,
-    isVerified: Boolean(user.isVerified),
-    isProtected: Boolean(user.isProtected),
-    isVIP: Boolean(user.isVIP),
-    isFounder: Boolean(user.isFounder),
-    isAdmin: Boolean(user.isAdmin)
+    profileBoosts: user.profileBoosts || []
   };
 };
 
-export default adaptUserProfileUpdate;
+export default {
+  adaptSubscription,
+  adaptUserProfile
+};

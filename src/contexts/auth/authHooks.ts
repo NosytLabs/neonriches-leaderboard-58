@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { UserProfile } from '@/types/user';
@@ -111,19 +110,19 @@ export const useAuthMethods = (
     try {
       if (!user) throw new Error('No user to update');
       
-      // Ensure displayName is not undefined
-      const userWithDisplayName = {
+      // Ensure displayName and required fields are not undefined
+      const userWithRequiredFields = {
         ...user,
         displayName: user.displayName || user.username,
-        // Ensure totalSpent is set
-        totalSpent: user.totalSpent || user.amountSpent || 0
+        totalSpent: user.totalSpent || user.amountSpent || 0,
+        walletBalance: user.walletBalance || 0 // Ensure walletBalance is set
       };
       
       // Update user metadata in Supabase Auth
       const { error: authUpdateError } = await supabase.auth.updateUser({
         data: {
-          username: updatedUser.username || userWithDisplayName.username,
-          display_name: updatedUser.displayName || userWithDisplayName.displayName,
+          username: updatedUser.username || userWithRequiredFields.username,
+          display_name: updatedUser.displayName || userWithRequiredFields.displayName,
           avatar_url: updatedUser.profileImage,
           team: updatedUser.team,
           tier: updatedUser.tier,
@@ -137,24 +136,24 @@ export const useAuthMethods = (
       const { error: profileUpdateError } = await supabase
         .from('users')
         .update({
-          username: updatedUser.username || userWithDisplayName.username,
-          display_name: updatedUser.displayName || userWithDisplayName.displayName,
+          username: updatedUser.username || userWithRequiredFields.username,
+          display_name: updatedUser.displayName || userWithRequiredFields.displayName,
           profile_image: updatedUser.profileImage,
           bio: updatedUser.bio,
           team: updatedUser.team,
           tier: updatedUser.tier,
           gender: updatedUser.gender,
         })
-        .eq('id', userWithDisplayName.id);
+        .eq('id', userWithRequiredFields.id);
       
       if (profileUpdateError) throw profileUpdateError;
       
       // Update local state with ensured displayName and totalSpent
       const newUser = { 
-        ...userWithDisplayName, 
+        ...userWithRequiredFields, 
         ...updatedUser, 
-        totalSpent: userWithDisplayName.totalSpent || userWithDisplayName.amountSpent || 0,
-        displayName: updatedUser.displayName || userWithDisplayName.displayName || userWithDisplayName.username
+        totalSpent: userWithRequiredFields.totalSpent || userWithRequiredFields.amountSpent || 0,
+        displayName: updatedUser.displayName || userWithRequiredFields.displayName || userWithRequiredFields.username
       };
       
       setUser(newUser);
@@ -184,11 +183,12 @@ export const useAuthMethods = (
       // Convert days to string for the API
       const daysStr = String(days);
       
-      // Ensure user has displayName and totalSpent
+      // Ensure user has displayName and required fields
       const userWithRequiredFields = {
         ...user,
         displayName: user.displayName || user.username,
         totalSpent: user.totalSpent || user.amountSpent || 0,
+        walletBalance: user.walletBalance || 0 // Add walletBalance
       };
       
       const newBoosts = addProfileBoostWithDays(userWithRequiredFields, days, level);

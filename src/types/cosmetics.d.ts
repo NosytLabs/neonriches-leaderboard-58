@@ -15,6 +15,8 @@ export interface CosmeticItem {
   price?: number;
   previewUrl?: string;
   enabled?: boolean;
+  isAvailable?: boolean;
+  isOwned?: boolean;
 }
 
 export interface UserCosmetics {
