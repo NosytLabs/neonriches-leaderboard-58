@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Crown } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { TeamColor } from '@/types/mockery-types';
+import { TeamColor } from '@/types/team';
 import { toTeamColor } from '@/utils/typeConverters';
 
 // Temporary types until we implement real chat functionality
@@ -50,7 +50,7 @@ const Chat: React.FC = () => {
         profileImage: 'https://randomuser.me/api/portraits/women/2.jpg',
         text: 'Hello everyone! Who's ready to spend today?',
         timestamp: new Date(Date.now() - 30000).toISOString(),
-        team: toTeamColor('purple'), // Use toTeamColor to ensure it's a valid TeamColor
+        team: toTeamColor('purple'),
         isRoyal: true
       },
       {
@@ -61,7 +61,7 @@ const Chat: React.FC = () => {
         profileImage: 'https://randomuser.me/api/portraits/men/3.jpg',
         text: 'Just bought my premium membership! Feeling royal already.',
         timestamp: new Date(Date.now() - 15000).toISOString(),
-        team: toTeamColor('blue'), // Use toTeamColor to ensure it's a valid TeamColor
+        team: toTeamColor('blue'),
         isRoyal: false
       }
     ];
@@ -80,7 +80,7 @@ const Chat: React.FC = () => {
       profileImage: user.profileImage,
       text: message,
       timestamp: new Date().toISOString(),
-      team: toTeamColor(user.team) as TeamColor, // Cast to ensure it's a TeamColor
+      team: toTeamColor(user.team) as TeamColor,
       isRoyal: user.tier === 'royal'
     };
     
