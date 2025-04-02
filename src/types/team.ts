@@ -5,11 +5,9 @@
 
 import { TeamColor as MockeryTeamColor, TeamData as MockeryTeamData } from './mockery-types';
 
-// Re-export TeamData for backward compatibility
-export type { MockeryTeamData as TeamData };
-
-// Export TeamColor - this is critical for fixing many errors
+// Export the required types
 export type TeamColor = MockeryTeamColor;
+export type { MockeryTeamData as TeamData };
 
 export interface TeamMember {
   id: string;
@@ -53,4 +51,17 @@ export interface TeamInvite {
   timestamp: string;
   status: 'pending' | 'accepted' | 'declined' | 'expired';
   expiresAt: string;
+}
+
+// Add compat properties for TeamData that were causing issues
+export interface TeamDataCompat extends MockeryTeamData {
+  members?: number;
+  memberCount?: number;
+  totalSpent?: number;
+  totalContribution?: number;
+  rank?: number;
+  previousRank?: number;
+  description?: string;
+  bannerImage?: string;
+  logoUrl?: string;
 }

@@ -1,176 +1,156 @@
 
-/**
- * Team utility functions
- */
-
 import { TeamColor } from '@/types/team';
 
 /**
- * Get Tailwind background color class for a team color
- * @param team Team color
- * @returns Tailwind class string
+ * Get the tailwind color class for a team
  */
-export const getTeamTailwindBgColor = (team: TeamColor | string | null): string => {
+export const getTeamColor = (team: TeamColor): string => {
   switch (team) {
-    case 'red':
-      return 'bg-red-600';
-    case 'blue':
-      return 'bg-blue-600';
-    case 'green':
-      return 'bg-green-600';
-    case 'gold':
-      return 'bg-yellow-500';
-    case 'purple':
-      return 'bg-purple-600';
-    case 'silver':
-      return 'bg-gray-400';
-    case 'bronze':
-      return 'bg-amber-700';
-    case 'crimson':
-      return 'bg-red-800';
-    case 'neutral':
-      return 'bg-gray-600';
-    case 'none':
-      return 'bg-gray-800';
-    default:
-      return 'bg-gray-700';
+    case 'red': return 'text-red-500';
+    case 'blue': return 'text-blue-500';
+    case 'green': return 'text-green-500';
+    case 'gold': return 'text-yellow-400';
+    case 'purple': return 'text-purple-500';
+    case 'silver': return 'text-gray-300';
+    case 'bronze': return 'text-amber-600';
+    case 'crimson': return 'text-red-600';
+    default: return 'text-gray-400'; // For none or neutral
   }
 };
 
 /**
- * Get Tailwind text color class for a team color
- * @param team Team color
- * @returns Tailwind class string
+ * Get the background color class for a team
  */
-export const getTeamColor = (team: TeamColor | string | null): string => {
+export const getTeamTailwindBgColor = (team: TeamColor): string => {
   switch (team) {
-    case 'red':
-      return 'text-red-500';
-    case 'blue':
-      return 'text-blue-500';
-    case 'green':
-      return 'text-green-500';
-    case 'gold':
-      return 'text-yellow-400';
-    case 'purple':
-      return 'text-purple-500';
-    case 'silver':
-      return 'text-slate-400';
-    case 'bronze':
-      return 'text-amber-600';
-    case 'crimson':
-      return 'text-red-600';
-    default:
-      return 'text-gray-400';
+    case 'red': return 'bg-red-500';
+    case 'blue': return 'bg-blue-500';
+    case 'green': return 'bg-green-500';
+    case 'gold': return 'bg-yellow-400';
+    case 'purple': return 'bg-purple-500';
+    case 'silver': return 'bg-gray-300';
+    case 'bronze': return 'bg-amber-600';
+    case 'crimson': return 'bg-red-600';
+    default: return 'bg-gray-400'; // For none or neutral
   }
 };
 
 /**
- * Get team name
- * @param team Team color
- * @returns Team name
+ * Get the team name from its color code
  */
-export const getTeamName = (team: TeamColor | string | null): string => {
+export const getTeamName = (team: TeamColor): string => {
   switch (team) {
-    case 'red':
-      return 'Red Team';
-    case 'blue':
-      return 'Blue Team';
-    case 'green':
-      return 'Green Team';
-    case 'gold':
-      return 'Gold Team';
-    case 'purple':
-      return 'Purple Team';
-    case 'silver':
-      return 'Silver Team';
-    case 'bronze':
-      return 'Bronze Team';
-    case 'crimson':
-      return 'Crimson Team';
-    default:
-      return 'Unaffiliated';
+    case 'red': return 'Red Team';
+    case 'blue': return 'Blue Team';
+    case 'green': return 'Green Team';
+    case 'gold': return 'Gold Team';
+    case 'purple': return 'Purple Team';
+    case 'silver': return 'Silver Team';
+    case 'bronze': return 'Bronze Team';
+    case 'crimson': return 'Crimson Team';
+    case 'neutral': return 'Neutral';
+    default: return 'Unaffiliated';
   }
 };
 
 /**
- * Get team motto
- * @param team Team color
- * @returns Team motto
+ * Get the team motto from its color code
  */
-export const getTeamMotto = (team: TeamColor | string | null): string => {
+export const getTeamMotto = (team: TeamColor): string => {
   switch (team) {
-    case 'red':
-      return 'Fortune Favors the Bold';
-    case 'blue':
-      return 'Loyalty Above All';
-    case 'green':
-      return 'Grow Together, Rise Together';
-    case 'gold':
-      return 'Excellence is Our Standard';
-    case 'purple':
-      return 'Wisdom and Power Combined';
-    case 'silver':
-      return 'Honor in All Things';
-    case 'bronze':
-      return 'Strength Through Persistence';
-    case 'crimson':
-      return 'Passion Fuels Progress';
-    default:
-      return 'Choose Your Path';
+    case 'red': return 'Strength and Power';
+    case 'blue': return 'Wisdom and Loyalty';
+    case 'green': return 'Growth and Prosperity';
+    case 'gold': return 'Wealth and Ambition';
+    case 'purple': return 'Mystery and Royalty';
+    case 'silver': return 'Elegance and Grace';
+    case 'bronze': return 'Foundation and History';
+    case 'crimson': return 'Blood and Glory';
+    case 'neutral': return 'Balance in All Things';
+    default: return 'Independent and Free';
   }
 };
 
 /**
- * Get team benefits
- * @param team Team color
- * @returns Array of benefit descriptions
+ * Get team benefits from its color code
  */
-export const getTeamBenefits = (team: TeamColor | string | null): string[] => {
+export const getTeamBenefits = (team: TeamColor): string[] => {
   switch (team) {
-    case 'red':
-      return [
-        'Bonus for aggressive spending',
-        'Special red team cosmetics',
-        'Access to Red Court events'
-      ];
-    case 'blue':
-      return [
-        'Discount on premium features',
-        'Special blue team cosmetics',
-        'Loyalty rewards for long-term members'
-      ];
-    case 'green':
-      return [
-        'Bonus for consistent daily spending',
-        'Special green team cosmetics',
-        'Team growth bonuses'
-      ];
-    case 'gold':
-      return [
-        'Increased visibility on leaderboards',
-        'Exclusive gold cosmetics',
-        'Access to elite community events'
-      ];
-    case 'purple':
-      return [
-        'Special mockery abilities',
-        'Royal purple cosmetics',
-        'Unique profile decorations'
-      ];
-    default:
-      return [
-        'Choose a team to view team benefits',
-        'Each team offers unique advantages',
-        'Team selection affects your experience'
-      ];
+    case 'red': return [
+      'Damage bonus in team competitions',
+      'Early access to combat events',
+      'Loyalty rewards for long-term members'
+    ];
+    case 'blue': return [
+      'Cooldown reduction on abilities',
+      'Bonus reputation with scholars',
+      'Access to exclusive knowledge bases'
+    ];
+    case 'green': return [
+      'Resource gathering bonus',
+      'Growth-related achievements unlock faster',
+      'Environmentally-friendly status effects'
+    ];
+    case 'gold': return [
+      'Increased currency drops',
+      'Merchant discounts in the marketplace',
+      'Bonus rewards from treasure events'
+    ];
+    case 'purple': return [
+      'Exclusive cosmetic items',
+      'Enhanced stealth capabilities',
+      'Rare item drop rate increase'
+    ];
+    case 'silver': return [
+      'Enhanced defense capabilities',
+      'Resistance to negative status effects',
+      'Bonuses during night cycles'
+    ];
+    case 'bronze': return [
+      'Bonus experience gain',
+      'Crafting cost reduction',
+      'Improved durability for equipment'
+    ];
+    case 'crimson': return [
+      'Blood magic abilities',
+      'Intimidation bonus in negotiations',
+      'Sacrifice-based power enhancements'
+    ];
+    case 'neutral': return [
+      'Diplomatic immunity in certain zones',
+      'Access to neutral-only quests',
+      'Flexible alliance options'
+    ];
+    default: return [
+      'No faction restrictions',
+      'Neutral status in faction conflicts',
+      'Balanced stat distribution'
+    ];
   }
 };
 
+// Export helper functions to get specific teams
+export const getAllTeams = (): TeamColor[] => {
+  return ['red', 'blue', 'green', 'gold', 'purple', 'silver', 'bronze', 'crimson', 'neutral', 'none'];
+};
+
+export const getTeamById = (id: string): TeamColor | null => {
+  const validTeams: TeamColor[] = getAllTeams();
+  return validTeams.includes(id as TeamColor) ? id as TeamColor : null;
+};
+
+export const getTeamByColor = (color: string): TeamColor | null => {
+  return getTeamById(color);
+};
+
+// Export default for backward compatibility
 export default {
-  getTeamTailwindBgColor,
   getTeamColor,
   getTeamName,
   getTeamMotto,
-  getTeamBenefits
+  getTeamBenefits,
+  getTeamTailwindBgColor,
+  getAllTeams,
+  getTeamById,
+  getTeamByColor
 };

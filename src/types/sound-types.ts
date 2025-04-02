@@ -1,10 +1,10 @@
-
 /**
  * Sound system type definitions
  */
 
-// Add 'message', 'reward', 'chime', 'fanfare' and other missing types
+// Complete list of all valid sound types in the application
 export type SoundType = 
+  // Core sounds
   | 'success'
   | 'error'
   | 'notification'
@@ -26,6 +26,7 @@ export type SoundType =
   | 'chime'
   | 'fanfare'
   | 'coinDrop'
+  // Premium sound pack sounds
   | 'royal_preview'
   | 'royal_bell'
   | 'royal_fanfare'
@@ -40,7 +41,13 @@ export type SoundType =
   | 'minimal_notification'
   | 'minimal_success'
   | 'minimal_alert'
-  | 'minimal_action';
+  | 'minimal_action'
+  // Other specific sounds
+  | 'levelUp'
+  | 'sparkle'
+  | 'protection'
+  | 'transfer'
+  | 'unlock';
 
 export interface SoundOptions {
   volume?: number;
@@ -104,4 +111,31 @@ export interface PremiumSoundPackDetails {
   price: number;
   sounds: SoundType[];
   previewSound?: SoundType;
+}
+
+// Backwards compatibility types
+export type NotificationSoundOptions = SoundOptions;
+
+export interface AudioOptions {
+  volume?: number;
+  interrupt?: boolean;
+  loop?: boolean;
+  delay?: number;
+}
+
+export interface AudioLoaderReturn {
+  audio: Record<SoundType, HTMLAudioElement>;
+  volume: number;
+  setVolume: (volume: number) => void;
+  isEnabled: boolean;
+  setEnabled: (enabled: boolean) => void;
+  isPremium: boolean;
+  setPremium: (premium: boolean) => void;
+  isLoaded: boolean;
+}
+
+export interface UseSoundReturn {
+  play: (sound: SoundType, options?: AudioOptions) => void;
+  stop: (sound: SoundType) => void;
+  stopAll: () => void;
 }

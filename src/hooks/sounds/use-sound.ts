@@ -3,11 +3,19 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { SoundType, SoundOptions } from '@/types/sound-types';
 import getSoundPath from '@/utils/getSoundPath';
 
+export interface UseSoundReturn {
+  playSound: (sound: SoundType, options?: SoundOptions) => void;
+  play: (sound: SoundType, options?: SoundOptions) => void;
+  stopSound: (sound?: SoundType) => void;
+  isPlaying: boolean;
+  currentSound: SoundType | null;
+}
+
 /**
  * Hook for playing sounds
  * @returns Sound control functions
  */
-export const useSound = () => {
+export const useSound = (): UseSoundReturn => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSound, setCurrentSound] = useState<SoundType | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -76,7 +84,14 @@ export const useSound = () => {
     
     // Play the sound and handle any errors
     try {
-      audio.play();
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.error('Error playing sound:', error);
+          setIsPlaying(false);
+          setCurrentSound(null);
+        });
+      }
     } catch (error) {
       console.error('Error playing sound:', error);
       setIsPlaying(false);
@@ -87,18 +102,18 @@ export const useSound = () => {
   /**
    * Stop the current sound
    */
-  const stopSound = useCallback(() => {
-    if (audioRef.current) {
+  const stopSound = useCallback((sound?: SoundType) => {
+    if (audioRef.current && (!sound || sound === currentSound)) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       setIsPlaying(false);
       setCurrentSound(null);
     }
-  }, []);
+  }, [currentSound]);
   
   return {
     playSound,
-    play: playSound,
+    play: playSound, // Alias for playSound for backwards compatibility
     stopSound,
     isPlaying,
     currentSound

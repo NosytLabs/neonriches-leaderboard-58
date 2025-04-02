@@ -17,7 +17,9 @@ export type BoostEffectType =
   | 'effect'
   | 'animation'
   | 'appearance'
-  | 'badge';
+  | 'badge'
+  | 'aura'
+  | 'enhancement';
 
 export interface BoostEffect {
   id: string;
@@ -35,6 +37,13 @@ export interface BoostEffect {
   stackable?: boolean;
   effectId?: string; // Added for compatibility with ProfileBoostDisplay
   cssClass?: string; // Added for styling support
+  // Additional fields for compatibility
+  durationDays?: number;
+  previewImage?: string;
+  strength?: number;
+  allowStacking?: boolean;
+  minTier?: string;
+  iconName?: string;
 }
 
 export interface ProfileBoost {
@@ -48,7 +57,16 @@ export interface ProfileBoost {
   value?: number | string;
   metadata?: Record<string, any>;
   level?: number;
-  endDate?: string; // For backwards compatibility
+  // For compatibility with user-consolidated
+  startDate?: string;
+  endDate?: string; 
+  isActive?: boolean;
+  strength?: number;
+  appliedBy?: string;
+  name?: string;
+  icon?: string;
+  duration?: number;
+  price?: number;
 }
 
 export interface BoostService {

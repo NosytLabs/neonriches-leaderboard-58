@@ -80,7 +80,7 @@ export const Icon = React.forwardRef<SVGSVGElement, IconComponentProps>((props, 
     .join('');
 
   // Get the icon component
-  const LucideIcon = (LucideIcons as any)[formattedIconName];
+  const LucideIcon = (LucideIcons as Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>)[formattedIconName];
 
   if (!LucideIcon) {
     console.warn(`Icon not found: ${iconName}`);

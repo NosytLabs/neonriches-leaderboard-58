@@ -4,10 +4,10 @@
  * This consolidates all type exports to minimize import conflicts
  */
 
-// Core types
+// Core types - using renamed exports to avoid conflicts
 export * from './mockery-types';
 
-// User types
+// User types - these override mockery-types when there's a conflict
 export * from './user-consolidated';
 export * from './auth-context';
 
@@ -27,9 +27,10 @@ import { UserProfile } from './user-consolidated';
 export type User = UserProfile;
 
 // Export aliases to avoid conflicts with duplicate exports
+// Use named exports to make it clear which module each type comes from
 import { 
-  TeamType as MockeryTeamType, 
-  TeamColor as MockeryTeamColor,
+  TeamColor as MockeryTeamColor, 
+  TeamType as MockeryTeamType,
   SoundOptions as MockerySoundOptions,
   SoundType as MockerySoundType,
   UserProfile as MockeryUserProfile,
@@ -44,8 +45,8 @@ import {
 
 // Export all the aliased types
 export type {
-  MockeryTeamType,
   MockeryTeamColor,
+  MockeryTeamType,
   MockerySoundOptions,
   MockerySoundType,
   MockeryUserProfile,
@@ -54,3 +55,6 @@ export type {
   ConsolidatedSocialLink,
   ConsolidatedProfileBoost
 };
+
+// Re-export types from mocktypes.ts to ensure consistency
+export * from './mocktypes';

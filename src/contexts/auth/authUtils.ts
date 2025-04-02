@@ -1,111 +1,115 @@
 
 import { UserProfile } from '@/types/user-consolidated';
-import { TeamColor, UserTier } from '@/types/mockery-types';
+import { ProfileBoost } from '@/types/boost';
+import { UserCosmetics } from '@/types/cosmetics';
+import { TeamColor } from '@/types/team';
 
 /**
- * Creates a demo user profile for testing purposes
+ * Add a profile boost with duration in days
+ * @param user The user to add the boost to
+ * @param boostType The type of boost to add
+ * @param durationDays The duration in days
+ * @returns The updated user profile
  */
-export const createDemoUserProfile = (): UserProfile => {
-  const demoUser: UserProfile = {
-    id: 'demo-user-123',
-    username: 'demo_user',
-    displayName: 'Demo User',
-    email: 'demo@example.com',
-    profileImage: '/assets/images/avatars/default.png',
-    bio: 'This is a demo user for testing purposes.',
-    joinedDate: new Date().toISOString(),
-    tier: 'basic',
-    team: 'blue' as TeamColor,
-    rank: 999,
-    previousRank: 1000,
-    totalSpent: 0,
-    amountSpent: 0,
-    walletBalance: 100,
-    isVerified: false,
-    isProtected: false,
-    spendStreak: 0,
-    settings: {
-      profileVisibility: 'public',
-      allowProfileLinks: true,
-      theme: 'dark',
-      notifications: true,
-      emailNotifications: false,
-      marketingEmails: false,
-      showRank: true,
-      darkMode: true,
-      soundEffects: true,
-      showBadges: true,
-      showTeam: true,
-      showSpending: true
-    },
-    cosmetics: {
-      border: [],
-      color: [],
-      font: [],
-      emoji: [],
-      title: [],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    }
+export const addProfileBoostWithDays = (
+  user: UserProfile,
+  boostType: string,
+  durationDays: number = 30
+): UserProfile => {
+  if (!user) return user;
+
+  const now = new Date();
+  const endDate = new Date();
+  endDate.setDate(now.getDate() + durationDays);
+
+  const newBoost: ProfileBoost = {
+    id: `boost-${boostType}-${Date.now()}`,
+    type: boostType,
+    startDate: now.toISOString(),
+    endDate: endDate.toISOString(),
+    level: 1,
+    isActive: true,
+    strength: 1,
+    appliedBy: 'system',
+    // Added fields for compatibility
+    userId: user.id,
+    effectId: boostType,
+    startTime: now.toISOString(),
+    endTime: endDate.toISOString(),
+    active: true
   };
+
+  const existingBoosts = user.profileBoosts || [];
   
-  return demoUser;
+  return {
+    ...user,
+    profileBoosts: [...existingBoosts, newBoost]
+  };
 };
 
 /**
- * Normalize user data to ensure it meets UserProfile requirements
+ * Add a cosmetic item by category and ID
+ * @param user The user to add the cosmetic to
+ * @param category The cosmetic category
+ * @param itemId The cosmetic item ID
+ * @returns The updated user profile
  */
-export const normalizeUserProfile = (user: any): UserProfile => {
-  // Ensure all required fields are present
+export const addCosmeticByCategoryString = (
+  user: UserProfile,
+  category: string,
+  itemId: string
+): UserProfile => {
+  if (!user) return user;
+
+  // Initialize cosmetics if it doesn't exist
+  const userCosmetics: UserCosmetics = user.cosmetics || {
+    border: [],
+    color: [],
+    font: [],
+    emoji: [],
+    title: [],
+    background: [],
+    effect: [],
+    badge: [],
+    theme: []
+  };
+  
+  // Ensure the category exists
+  if (!userCosmetics[category]) {
+    userCosmetics[category] = [];
+  }
+  
+  // Only add if it doesn't already exist
+  if (!userCosmetics[category].includes(itemId)) {
+    userCosmetics[category] = [...userCosmetics[category], itemId];
+  }
+  
   return {
-    id: user.id || '',
-    username: user.username || '',
-    displayName: user.displayName || user.username || '',
-    email: user.email || '',
-    profileImage: user.profileImage || user.avatarUrl || '',
-    bio: user.bio || '',
-    joinedDate: user.joinedDate || user.joinDate || user.createdAt || new Date().toISOString(),
-    tier: user.tier || 'basic',
-    team: user.team || 'none',
-    rank: user.rank || 0,
-    previousRank: user.previousRank || 0,
-    totalSpent: user.totalSpent || user.amountSpent || 0,
-    amountSpent: user.amountSpent || user.totalSpent || 0,
-    walletBalance: user.walletBalance || 0,
-    isVerified: Boolean(user.isVerified),
-    isProtected: Boolean(user.isProtected),
-    spendStreak: user.spendStreak || 0,
-    settings: user.settings || {
-      profileVisibility: 'public',
-      allowProfileLinks: true,
-      theme: 'dark',
-      notifications: true,
-      emailNotifications: false,
-      marketingEmails: false,
-      showRank: true,
-      darkMode: true,
-      soundEffects: true,
-      showBadges: true,
-      showTeam: true,
-      showSpending: true
-    },
-    cosmetics: user.cosmetics || {
-      border: [],
-      color: [],
-      font: [],
-      emoji: [],
-      title: [],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    }
+    ...user,
+    cosmetics: userCosmetics
+  };
+};
+
+/**
+ * Set the user's team
+ * @param user The user to update
+ * @param team The team to set
+ * @returns The updated user profile
+ */
+export const setUserTeam = (
+  user: UserProfile,
+  team: TeamColor
+): UserProfile => {
+  if (!user) return user;
+  
+  return {
+    ...user,
+    team
   };
 };
 
 export default {
-  createDemoUserProfile,
-  normalizeUserProfile
+  addProfileBoostWithDays,
+  addCosmeticByCategoryString,
+  setUserTeam
 };

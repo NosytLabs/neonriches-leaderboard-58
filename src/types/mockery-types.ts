@@ -202,3 +202,6 @@ export interface OnChainLeaderboardEntry {
   signature: string;
   timestamp: string;
 }
+
+// Add Gender for user-consolidated
+export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';

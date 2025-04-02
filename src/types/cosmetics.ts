@@ -3,6 +3,7 @@
  * Cosmetic items and related types
  */
 
+// All valid cosmetic types in the application
 export type CosmeticType = 
   | 'border'
   | 'color'
@@ -54,10 +55,18 @@ export interface SocialLink {
   displayName?: string;
   icon?: string;
   active?: boolean;
+  // Extra properties from user-consolidated
+  platform?: string;
+  title?: string;
+  verified?: boolean;
+  username?: string;
+  label?: string;
+  clicks?: number;
+  display?: string;
+  primary?: boolean;
 }
 
 export interface UserCosmetics {
-  [key: string]: string[];
   border: string[];
   color: string[];
   font: string[];
@@ -67,6 +76,17 @@ export interface UserCosmetics {
   effect: string[];
   badge: string[];
   theme: string[];
+  [key: string]: string[]; // Index signature to allow accessing by string key
+  // Compatibility with user-consolidated
+  activeBorder?: string;
+  activeTitle?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string;
+  activeBadge?: string;
+  activeTheme?: string;
 }
 
 export type UserCosmeticState = Record<CosmeticType, string | null>;
@@ -82,4 +102,11 @@ export interface CosmeticStoreSection {
   id: string;
   title: string;
   items: CosmeticItem[];
+}
+
+export interface CosmeticPurchaseResult {
+  success: boolean;
+  message: string;
+  item?: CosmeticItem;
+  updatedCosmetics?: UserCosmeticState;
 }

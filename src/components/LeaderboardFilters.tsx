@@ -31,7 +31,7 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
     { value: 'purple', label: 'Purple Team' }
   ];
   
-  // Tier options
+  // Tier options - now correctly typed
   const tierOptions = [
     { value: 'all', label: 'All Tiers' },
     { value: 'basic', label: 'Basic' },
@@ -99,7 +99,7 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
             </SelectTrigger>
             <SelectContent>
               {tierOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem key={option.value} value={option.value as 'all' | UserTier}>
                   {option.label}
                 </SelectItem>
               ))}
