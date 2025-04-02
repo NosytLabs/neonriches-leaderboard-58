@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useRouter } from 'next/router';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Shell } from '@/components/ui/Shell'; // Fixed casing
 import { Separator } from '@/components/ui/separator';
@@ -12,7 +12,7 @@ import { getMockeryDescription } from '@/utils/mockeryUtils';
 import { MockeryAction } from '@/types/mockery-types';
 
 const MockeryPage = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   
   const mockeryActions: MockeryAction[] = [
     'tomato',
@@ -66,7 +66,7 @@ const MockeryPage = () => {
                 <Button 
                   variant="outline" 
                   className="w-full" 
-                  onClick={() => router.push(`/mockery/${action}`)}
+                  onClick={() => navigate(`/mockery/${action}`)}
                 >
                   Select
                 </Button>
