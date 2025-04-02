@@ -1,6 +1,6 @@
 
 export type UserTier = 'free' | 'basic' | 'premium' | 'gold' | 'silver' | 'bronze' | 'elite' | 'pro' | 'royal' | 'legendary' | 'diamond' | 'platinum' | 'founder' | 'vip' | 'whale' | 'standard' | 'shark' | 'dolphin' | 'noble';
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'silver' | 'bronze' | 'neutral' | 'none';
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'silver' | 'bronze' | 'neutral' | 'none' | 'crimson';
 export type Gender = 'male' | 'female' | 'other' | 'none';
 
 export interface UserSettings {
@@ -95,7 +95,7 @@ export interface UserProfile {
   boostCount?: number;
   purchasedFeatures?: string[];
   teamRank?: number;
-  isProtected?: boolean; // Add missing property from the LeaderboardUser
+  isProtected?: boolean;
   certificateNFT?: {
     mintAddress: string;
     mintDate: string;
@@ -113,6 +113,7 @@ export interface UserProfile {
   createdAt?: string;
 }
 
-// Use 'export' instead of 'export type' to avoid conflicts
-export { UserTier, TeamColor, TeamColor as TeamType };
+// Use 'export type' instead of 'export' to avoid conflicts
+export type { UserTier as UserTierType, TeamColor as TeamColorType };
+export type TeamType = TeamColor;
 export type User = UserProfile;

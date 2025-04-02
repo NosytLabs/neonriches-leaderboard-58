@@ -8,8 +8,8 @@ import { Egg, Flame, Laugh, Fish, ThumbsDown } from 'lucide-react';
 import { getInitials } from '@/utils/stringUtils';
 import { MockeryAction } from '@/types/mockery-types';
 import { 
-  getMockeryActionDescription, 
-  getMockeryTierColor 
+  getMockeryDescription, 
+  getMockeryTierColorClass 
 } from '@/utils/mockeryUtils';
 
 const PublicShamingFeature = () => {

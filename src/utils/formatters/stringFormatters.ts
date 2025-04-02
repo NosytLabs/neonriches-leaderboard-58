@@ -1,23 +1,24 @@
 
+// String formatting utility functions
+
 /**
- * Format username with special handling for long usernames
+ * Format username for display
  */
-export const formatUsername = (username: string, maxLength: number = 15): string => {
+export const formatUsername = (username: string): string => {
   if (!username) return '';
-  if (username.length <= maxLength) return username;
-  return `${username.substring(0, maxLength)}...`;
+  return username.startsWith('@') ? username : `@${username}`;
 };
 
 /**
- * Truncate a string with ellipsis if it exceeds maxLength
+ * Truncate string to specified length with ellipsis
  */
-export const truncateString = (str: string, maxLength: number): string => {
-  if (!str) return '';
-  return str.length > maxLength ? `${str.substring(0, maxLength)}...` : str;
+export const truncateString = (str: string, maxLength: number = 30): string => {
+  if (!str || str.length <= maxLength) return str || '';
+  return `${str.substring(0, maxLength)}...`;
 };
 
 /**
- * Capitalize the first letter of a string
+ * Capitalize first letter of a string
  */
 export const capitalizeFirstLetter = (str: string): string => {
   if (!str) return '';
@@ -25,63 +26,49 @@ export const capitalizeFirstLetter = (str: string): string => {
 };
 
 /**
- * Convert a string to title case
+ * Convert string to title case
  */
 export const toTitleCase = (str: string): string => {
   if (!str) return '';
   return str.replace(
     /\w\S*/g,
-    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+    (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
   );
 };
 
 /**
- * Remove HTML tags from a string
+ * Strip HTML tags from string
  */
-export const stripHtmlTags = (html: string): string => {
-  if (!html) return '';
-  return html.replace(/<[^>]*>/g, '');
+export const stripHtmlTags = (str: string): string => {
+  if (!str) return '';
+  return str.replace(/<[^>]*>?/gm, '');
 };
 
 /**
- * Get initials from a name or username
+ * Get initials from a name (up to specified number of chars)
  */
-export const getInitials = (name: string, maxChars: number = 2): string => {
+export const getInitials = (name: string, chars: number = 2): string => {
   if (!name) return '';
   
-  const parts = name.split(/[\s-_]+/);
+  const parts = name.trim().split(/\s+/);
   if (parts.length === 1) {
-    // If single word, take first N characters
-    return name.substring(0, maxChars).toUpperCase();
+    return name.substring(0, chars).toUpperCase();
   }
   
-  // Take first character of each word
-  return parts
-    .slice(0, maxChars)
-    .map(part => part.charAt(0))
-    .join('')
-    .toUpperCase();
+  let initials = '';
+  for (let i = 0; i < Math.min(parts.length, chars); i++) {
+    initials += parts[i].charAt(0);
+  }
+  
+  return initials.toUpperCase();
 };
 
-/**
- * Format a dollar amount
- */
-export const formatDollarAmount = (value: number): string => {
+// Format dollar amount (separate from formatCurrency in index.ts)
+export const formatDollarAmount = (amount: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).format(value);
-};
-
-// Export explicitly to ensure these are available
-export {
-  formatUsername,
-  truncateString,
-  capitalizeFirstLetter,
-  toTitleCase,
-  stripHtmlTags,
-  getInitials,
-  formatDollarAmount
+  }).format(amount);
 };

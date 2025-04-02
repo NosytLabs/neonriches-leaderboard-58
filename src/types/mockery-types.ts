@@ -135,6 +135,7 @@ export interface LeaderboardUser {
   spendStreak?: number;
   joinedDate?: string;
   joinDate?: string;
+  sortDirection?: 'asc' | 'desc';
 }
 
 // Define LeaderboardFilter type

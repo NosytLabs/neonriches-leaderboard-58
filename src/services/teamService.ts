@@ -1,5 +1,5 @@
 
-import { TeamColor } from '@/types/team';
+import { TeamColor } from '@/types/mockery-types';
 
 class TeamService {
   private teamColors: Record<TeamColor, string> = {
@@ -11,7 +11,8 @@ class TeamService {
     none: 'text-gray-400',
     neutral: 'text-gray-400',
     silver: 'text-slate-400',
-    bronze: 'text-amber-600'
+    bronze: 'text-amber-600',
+    crimson: 'text-red-600'
   };
 
   private teamNames: Record<TeamColor, string> = {
@@ -23,7 +24,8 @@ class TeamService {
     none: 'Unaffiliated',
     neutral: 'Neutral',
     silver: 'Silver Team',
-    bronze: 'Bronze Team'
+    bronze: 'Bronze Team',
+    crimson: 'Crimson Team'
   };
 
   private teamMottos: Record<TeamColor, string> = {
@@ -35,7 +37,8 @@ class TeamService {
     none: 'Independent and Free',
     neutral: 'Balance in All Things',
     silver: 'Elegance and Grace',
-    bronze: 'Foundation and History'
+    bronze: 'Foundation and History',
+    crimson: 'Blood and Glory'
   };
 
   private teamBenefits: Record<TeamColor, string[]> = {
@@ -83,6 +86,11 @@ class TeamService {
       'Bonus experience gain',
       'Crafting cost reduction',
       'Improved durability for equipment'
+    ],
+    crimson: [
+      'Blood magic abilities',
+      'Intimidation bonus in negotiations',
+      'Sacrifice-based power enhancements'
     ]
   };
 

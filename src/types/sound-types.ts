@@ -12,7 +12,10 @@ export type SoundType =
   | 'royal'
   | 'claim'
   | 'coin'
-  | 'swoosh';
+  | 'swoosh'
+  | 'message'
+  | 'reward'
+  | 'fanfare';
 
 export type SoundPackType = 
   | 'default'
@@ -50,11 +53,4 @@ export interface PremiumSoundPackDetails {
   enabled: boolean;
 }
 
-// Re-export types using export type for TypeScript isolatedModules compatibility
-export type { 
-  SoundType, 
-  SoundPackType, 
-  SoundOptions, 
-  SoundConfig, 
-  PremiumSoundPackDetails 
-};
+// Use 'export type' for TypeScript isolatedModules compatibility
