@@ -25,7 +25,8 @@ export type MockeryAction =
   | 'target'
   | 'fish'
   | 'message'
-  | 'mockery';
+  | 'mockery'
+  | 'thumbsDown';
 
 // Define all possible mockery tiers
 export type MockeryTier = 

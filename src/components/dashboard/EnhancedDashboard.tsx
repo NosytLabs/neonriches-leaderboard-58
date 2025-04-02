@@ -75,8 +75,12 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Adapt consolidated user to standard user profile
-  const userForComponents = adaptToUserProfile(user);
+  // Adapt consolidated user to standard user profile with type assertion to satisfy TypeScript
+  const userWithDefaultEmail = {
+    ...user,
+    email: user.email || ''
+  };
+  const userForComponents = adaptToUserProfile(userWithDefaultEmail);
 
   const handleSpend = () => {
     toast({

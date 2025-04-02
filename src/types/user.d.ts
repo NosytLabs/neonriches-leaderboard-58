@@ -62,6 +62,7 @@ export interface ProfileImage {
   url: string;
   isPrimary: boolean;
   caption?: string;
+  type?: string;
 }
 
 export interface UserSettings {

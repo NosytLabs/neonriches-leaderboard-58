@@ -39,8 +39,8 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
       ...props
     };
 
-    // Render the icon using createElement
-    return React.createElement(IconComponent, iconProps);
+    // Render the icon using createElement with proper type casting
+    return React.createElement(IconComponent as React.ComponentType<any>, iconProps);
   }
 );
 

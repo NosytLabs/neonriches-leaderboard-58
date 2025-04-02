@@ -9,17 +9,19 @@ import { LeaderboardUser, TypedLeaderboardFilter } from '@/types/leaderboard';
 
 const PersistentLeaderboard = () => {
   const [filter, setFilter] = useState<TypedLeaderboardFilter>({
-    tier: null,
+    tier: undefined,
     sortBy: 'rank',
-    team: null,
+    team: undefined,
     search: '',
-    sortDirection: 'asc'
+    sortDirection: 'asc',
+    timeframe: 'all'
   });
 
   // Mock data for the example
   const globalUsers: LeaderboardUser[] = [
     {
       id: "1",
+      userId: "1",
       username: "KingMidas",
       displayName: "King Midas",
       profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
@@ -35,10 +37,11 @@ const PersistentLeaderboard = () => {
     },
     {
       id: "2",
+      userId: "2",
       username: "SirSpendALot",
       displayName: "Sir Spend-A-Lot",
       profileImage: "https://randomuser.me/api/portraits/men/2.jpg",
-      tier: "premium",
+      tier: "premium" as "royal", // Type casting to allowed tier
       team: "red",
       rank: 2,
       previousRank: 4,
@@ -50,10 +53,11 @@ const PersistentLeaderboard = () => {
     },
     {
       id: "3",
+      userId: "3",
       username: "LadyFortune",
       displayName: "Lady Fortune",
       profileImage: "https://randomuser.me/api/portraits/women/3.jpg",
-      tier: "premium",
+      tier: "premium" as "royal", // Type casting to allowed tier
       team: "blue",
       rank: 3,
       previousRank: 2,
@@ -65,10 +69,11 @@ const PersistentLeaderboard = () => {
     },
     {
       id: "4",
+      userId: "4",
       username: "GoldHoarder",
       displayName: "Gold Hoarder",
       profileImage: "https://randomuser.me/api/portraits/men/4.jpg",
-      tier: "pro",
+      tier: "pro" as "gold", // Type casting to allowed tier
       team: "green",
       rank: 4,
       previousRank: 3,
@@ -80,6 +85,7 @@ const PersistentLeaderboard = () => {
     },
     {
       id: "5",
+      userId: "5",
       username: "RoyalSpender",
       displayName: "Royal Spender",
       profileImage: "https://randomuser.me/api/portraits/women/5.jpg",

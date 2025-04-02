@@ -46,3 +46,6 @@ export interface TeamStats {
   growthRate: number;
   weeklyChange: number;
 }
+
+// Export TeamData for use in other components
+export type { TeamData };

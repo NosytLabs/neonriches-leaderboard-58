@@ -32,9 +32,9 @@ const AnalysisLayout: React.FC<AnalysisLayoutProps> = ({
                 <span className="text-lg font-medium">
                   {formatFileSize((metrics.beforeCleanup.projectSize || 0) * 1024)}
                 </span>
-                {metrics.sizeSavings && metrics.sizeSavings > 0 && (
+                {metrics.sizeSavings && metrics.sizeSavings.bytes > 0 && (
                   <span className="ml-2 text-xs text-emerald-500">
-                    -{formatFileSize((metrics.sizeSavings || 0) * 1024)}
+                    -{formatFileSize(metrics.sizeSavings.bytes * 1024)}
                   </span>
                 )}
               </div>
@@ -46,9 +46,9 @@ const AnalysisLayout: React.FC<AnalysisLayoutProps> = ({
                 <span className="text-lg font-medium">
                   {metrics.beforeCleanup.fileCount}
                 </span>
-                {metrics.fileSavings && metrics.fileSavings > 0 && (
+                {metrics.fileSavings && metrics.fileSavings.count > 0 && (
                   <span className="ml-2 text-xs text-emerald-500">
-                    -{metrics.fileSavings}
+                    -{metrics.fileSavings.count}
                   </span>
                 )}
               </div>
@@ -60,9 +60,9 @@ const AnalysisLayout: React.FC<AnalysisLayoutProps> = ({
                 <span className="text-lg font-medium">
                   {metrics.beforeCleanup.dependencyCount}
                 </span>
-                {metrics.dependencySavings && metrics.dependencySavings > 0 && (
+                {metrics.dependencySavings && metrics.dependencySavings.count > 0 && (
                   <span className="ml-2 text-xs text-emerald-500">
-                    -{metrics.dependencySavings}
+                    -{metrics.dependencySavings.count}
                   </span>
                 )}
               </div>

@@ -64,4 +64,5 @@ export interface ProjectMetrics {
   resources: ResourceMetrics;
 }
 
+// Using export type for proper isolation
 export type { ProjectMetrics };

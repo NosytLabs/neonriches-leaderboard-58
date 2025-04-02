@@ -1,3 +1,4 @@
+
 import { LeaderboardUser } from '@/types/leaderboard';
 import { TeamColor } from '@/types/team';
 import { toTeamColor } from '@/utils/typeConverters';
@@ -9,6 +10,7 @@ export type { LeaderboardUser };
 export const mockLeaderboardData: LeaderboardUser[] = [
   {
     id: "1",
+    userId: "1",
     username: "KingMidas",
     displayName: "King Midas",
     profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
@@ -24,10 +26,11 @@ export const mockLeaderboardData: LeaderboardUser[] = [
   },
   {
     id: "2",
+    userId: "2",
     username: "SirSpendALot",
     displayName: "Sir Spend-A-Lot",
     profileImage: "https://randomuser.me/api/portraits/men/2.jpg",
-    tier: "premium",
+    tier: "premium" as "royal", // Type cast to allowed tier
     team: toTeamColor("red"),
     rank: 2,
     previousRank: 4,
@@ -39,10 +42,11 @@ export const mockLeaderboardData: LeaderboardUser[] = [
   },
   {
     id: "3",
+    userId: "3",
     username: "LadyFortune",
     displayName: "Lady Fortune",
     profileImage: "https://randomuser.me/api/portraits/women/3.jpg",
-    tier: "premium",
+    tier: "premium" as "royal", // Type cast to allowed tier
     team: toTeamColor("blue"),
     rank: 3,
     previousRank: 2,
@@ -54,10 +58,11 @@ export const mockLeaderboardData: LeaderboardUser[] = [
   },
   {
     id: "4",
+    userId: "4",
     username: "GoldHoarder",
     displayName: "Gold Hoarder",
     profileImage: "https://randomuser.me/api/portraits/men/4.jpg",
-    tier: "pro",
+    tier: "pro" as "gold", // Type cast to allowed tier
     team: toTeamColor("green"),
     rank: 4,
     previousRank: 3,
@@ -69,6 +74,7 @@ export const mockLeaderboardData: LeaderboardUser[] = [
   },
   {
     id: "5",
+    userId: "5",
     username: "RoyalSpender",
     displayName: "Royal Spender",
     profileImage: "https://randomuser.me/api/portraits/women/5.jpg",

@@ -8,11 +8,12 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UserCircle, Users, TrendingUp, Medal, Crown, Trophy, Coins } from "lucide-react";
 import LeaderboardList from "./components/LeaderboardList";
-import { UserProfile, TeamColor } from '@/types/user';
+import { UserProfile, TeamColor } from '@/types/user-consolidated';
 import { useAuth } from '@/hooks/useAuth';
 import { useSound } from '@/hooks/use-sound';
 import { MockeryAction } from '@/types/mockery-types';
 import { toTeamColor } from '@/utils/typeConverters';
+import { adaptToConsolidatedProfile } from '@/utils/userAdapter';
 
 interface CombinedLeaderboardProps {
   maxVisible?: number;
@@ -53,27 +54,58 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
       try {
         // In a real app, this would fetch from an API
         setTimeout(() => {
-          const mockData = Array.from({ length: 10 }).map((_, index) => ({
-            id: `user-${index + 1}`,
-            username: `noble${index + 1}`,
-            displayName: `Noble User ${index + 1}`,
-            profileImage: `https://source.unsplash.com/random/?portrait&${index}`,
-            tier: index < 3 ? 'royal' : index < 6 ? 'premium' : 'basic',
-            team: toTeamColor(['red', 'blue', 'green', 'gold', 'purple'][index % 5]),
-            rank: index + 1,
-            totalSpent: Math.floor(10000 / (index + 1)), 
-            amountSpent: Math.floor(10000 / (index + 1)),
-            previousRank: index + 3 > 10 ? index - 2 : index + 3,
-            joinedDate: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
-            isVerified: index < 3,
-            walletBalance: Math.floor(Math.random() * 1000),
-            spendStreak: index < 5 ? index + 1 : 0,
-            badges: [],
-            achievements: [],
-            socialLinks: [],
-            followers: [],
-            following: []
-          } as UserProfile));
+          const mockData = Array.from({ length: 10 }).map((_, index) => {
+            const userData = {
+              id: `user-${index + 1}`,
+              username: `noble${index + 1}`,
+              displayName: `Noble User ${index + 1}`,
+              profileImage: `https://source.unsplash.com/random/?portrait&${index}`,
+              tier: index < 3 ? 'royal' : index < 6 ? 'premium' : 'basic',
+              team: toTeamColor(['red', 'blue', 'green', 'gold', 'purple'][index % 5]),
+              rank: index + 1,
+              totalSpent: Math.floor(10000 / (index + 1)), 
+              amountSpent: Math.floor(10000 / (index + 1)),
+              previousRank: index + 3 > 10 ? index - 2 : index + 3,
+              joinedDate: new Date(Date.now() - Math.random() * 10000000000).toISOString(),
+              isVerified: index < 3,
+              walletBalance: Math.floor(Math.random() * 1000),
+              spendStreak: index < 5 ? index + 1 : 0,
+              badges: [],
+              achievements: [],
+              socialLinks: [],
+              followers: [],
+              following: [],
+              email: `user${index + 1}@example.com`, // Add required email for UserProfile
+              bio: `Bio for user ${index + 1}`,      // Add required bio for UserProfile
+              settings: {                           // Add required settings for UserProfile
+                profileVisibility: 'public',
+                allowProfileLinks: true,
+                theme: 'dark',
+                notifications: true,
+                emailNotifications: false,
+                marketingEmails: false,
+                showRank: true,
+                darkMode: true,
+                soundEffects: true,
+                showBadges: true,
+                showTeam: true,
+                showSpending: true
+              },
+              cosmetics: {                         // Add required cosmetics for UserProfile
+                border: [],
+                color: [],
+                font: [],
+                emoji: [],
+                title: [],
+                background: [],
+                effect: [],
+                badge: [],
+                theme: []
+              }
+            } as UserProfile;
+            
+            return userData;
+          });
           
           setLeaderboardData(mockData);
           setLoading(false);
@@ -104,7 +136,12 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
   
   const handleConfirmShame = (userId: string) => {
     setShowModal(false);
-    sound.playSound('mockery');
+    try {
+      // Use playSound with a string that matches SoundType
+      sound.playSound('notification');
+    } catch (error) {
+      console.error('Error playing sound:', error);
+    }
     console.log(`Applied ${shameAction} to user ${userId}`);
   };
   

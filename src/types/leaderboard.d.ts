@@ -18,6 +18,8 @@ export interface LeaderboardUser {
   isProtected: boolean;
   spendStreak?: number;
   joinedAt?: string;     // Add joinedAt as an optional property
+  spendChange?: number;  // Add additional fields from error messages
+  rankChange?: number;
 }
 
 export interface LeaderboardFilter {
@@ -38,5 +40,7 @@ export interface SortByOptions {
 
 export interface TypedLeaderboardFilter extends LeaderboardFilter {
   sort?: string;
+  sortBy?: string;
   sortDirection?: 'asc' | 'desc';
+  timeframe?: string;
 }

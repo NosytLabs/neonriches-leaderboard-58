@@ -83,16 +83,5 @@ export interface CosmeticFilter {
   owned?: boolean;
 }
 
-// Adding SocialLink for the components requiring it
-export interface SocialLink {
-  id?: string;
-  platform: string;
-  url: string;
-  title?: string;
-  displayText?: string;
-  icon?: string; 
-  label?: string;
-}
-
 // Create UserCosmeticState for compatibility
 export type UserCosmeticState = UserCosmetics;
