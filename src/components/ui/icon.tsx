@@ -10,9 +10,9 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
     const iconName = (icon || name) as keyof typeof LucideIcons;
     
     // Get the Lucide icon component
-    const LucideIcon = LucideIcons[iconName as keyof typeof LucideIcons];
+    const IconComponent = (LucideIcons as any)[iconName];
 
-    if (!LucideIcon) {
+    if (!IconComponent) {
       console.warn(`Icon "${iconName}" not found`);
       return null;
     }
@@ -31,15 +31,13 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
     // Determine animation class
     const animatedClass = animated ? 'animate-pulse' : '';
 
-    // Render the Lucide icon
-    return (
-      <LucideIcon
-        ref={ref}
-        className={cn(sizeClass, colorClass, animatedClass, className)}
-        aria-hidden="true"
-        {...props}
-      />
-    );
+    // Render the Lucide icon using createElement to avoid type issues
+    return React.createElement(IconComponent, {
+      ref,
+      className: cn(sizeClass, colorClass, animatedClass, className),
+      'aria-hidden': 'true',
+      ...props
+    });
   }
 );
 

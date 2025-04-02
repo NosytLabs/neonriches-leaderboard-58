@@ -41,9 +41,9 @@ const IconSystem: React.FC<IconSystemProps> = ({
   }
   
   // Handle Lucide icons
-  const LucideIcon = LucideIcons[icon as keyof typeof LucideIcons];
+  const IconComponent = (LucideIcons as any)[icon];
   
-  if (!LucideIcon) {
+  if (!IconComponent) {
     console.warn(`Icon not found: ${icon}`);
     return null;
   }
@@ -54,9 +54,10 @@ const IconSystem: React.FC<IconSystemProps> = ({
   // Color class for Lucide
   const colorClass = typeof color === 'string' ? (iconColorMap[color] || color) : 'text-current';
   
-  return (
-    <LucideIcon className={cn(sizeClass, colorClass, className)} style={typeof style === 'object' ? style : undefined} />
-  );
+  return React.createElement(IconComponent, {
+    className: cn(sizeClass, colorClass, className),
+    style: typeof style === 'object' ? style : undefined
+  });
 };
 
 export default IconSystem;

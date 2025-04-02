@@ -22,7 +22,10 @@ export type MockeryAction =
   | 'protection'
   | 'downvote'
   | 'gift'
-  | 'target';
+  | 'target'
+  | 'fish'  // Added missing actions used in the app
+  | 'message'  // Added for sound compatibility
+  | 'mockery';  // Added for sound compatibility
 
 // Define all possible mockery tiers
 export type MockeryTier = 
@@ -88,25 +91,8 @@ export interface MockeryProfile {
   activeMockeryOutgoing: MockeryReaction[];
 }
 
-export interface LeaderboardUser {
-  id: string;
-  userId: string;
-  username: string;
-  displayName: string;
-  profileImage: string;
-  tier: string;
-  team: TeamColor;
-  rank: number;
-  previousRank: number;
-  totalSpent: number;
-  spentAmount?: number; // Alias for totalSpent
-  walletBalance: number;
-  isVerified: boolean;
-  isProtected: boolean;
-  spendStreak: number;
-  spendChange?: number;
-  rankChange?: number;
-}
+// Fixed LeaderboardUser import to come from leaderboard.ts instead of redefining
+export { LeaderboardUser } from './leaderboard';
 
 export interface MockeryEvent {
   id: string;
@@ -117,6 +103,7 @@ export interface MockeryEvent {
   isAnonymous: boolean;
   message?: string;
   duration?: number;
+  appliedBy?: string; // Added for compatibility
 }
 
 // Export type for compatibility with isolated modules

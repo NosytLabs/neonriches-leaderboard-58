@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -7,10 +6,10 @@ import { ArrowUp, ArrowDown, Minus } from 'lucide-react';
 import { LeaderboardUser } from '@/types/leaderboard';
 import LeaderboardActions from './leaderboard/LeaderboardActions';
 
-// Mock data for leaderboard
 const mockLeaderboardData: LeaderboardUser[] = [
   {
     id: "1",
+    userId: "user1",
     username: "KingMidas",
     displayName: "King Midas",
     profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
@@ -28,6 +27,7 @@ const mockLeaderboardData: LeaderboardUser[] = [
   },
   {
     id: "2",
+    userId: "user2",
     username: "EliteSpender",
     displayName: "Elite Spender",
     profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
@@ -45,6 +45,7 @@ const mockLeaderboardData: LeaderboardUser[] = [
   },
   {
     id: "3",
+    userId: "user3",
     username: "RoyalCollector",
     displayName: "Royal Collector",
     profileImage: "https://randomuser.me/api/portraits/men/3.jpg",

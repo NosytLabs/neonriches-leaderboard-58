@@ -46,7 +46,7 @@ export const defaultLeaderboardFilter: LeaderboardFilter = {
   sortBy: 'rank'
 };
 
-// Define the LeaderboardUser interface
+// Define the LeaderboardUser interface with all necessary properties
 export interface LeaderboardUser {
   id: string;
   userId: string;
@@ -65,13 +65,15 @@ export interface LeaderboardUser {
   spendStreak: number;
   spendChange?: number;
   rankChange?: number;
+  avatarUrl?: string; // Added for compatibility
 }
 
-// Define typed version of the filter
-export interface TypedLeaderboardFilter extends LeaderboardFilter {
+// Define typed version of the filter with more specific types
+export interface TypedLeaderboardFilter extends Omit<LeaderboardFilter, 'timeframe' | 'team'> {
   sortBy: string;
-  timeframe: string;
+  timeframe: string; // Changed from strict type to string for flexibility
   team: string;
+  sortDirection?: 'asc' | 'desc'; // Added for compatibility
 }
 
 // Define other needed types for OnChain and SolanaTransaction
@@ -81,6 +83,7 @@ export interface OnChainLeaderboardEntry {
   totalSpent: number;
   rank: number;
   lastTx: string;
+  publicKey?: string; // Added for compatibility
 }
 
 export interface SolanaTransaction {
@@ -93,4 +96,5 @@ export interface SolanaTransaction {
   status: 'confirmed' | 'pending' | 'failed';
   sender: string;
   receiver?: string;
+  slot?: number; // Added for compatibility
 }

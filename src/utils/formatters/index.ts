@@ -11,7 +11,7 @@ export * from './addressFormatters';
 export * from './fileFormatters';
 
 // Re-export specific formatters for backward compatibility
-import { formatCurrency, formatDollarAmount, formatWithUnit, formatCompactNumber, formatPercent } from './currencyFormatters';
+import { formatCurrency, formatDollarAmount, formatWithUnit, formatCompactNumber, formatPercent, formatCompactDollar, formatHistoricalValue } from './currencyFormatters';
 import { formatNumber } from './numberFormatters';
 import { formatDate, formatTimeAgo, formatRelativeTime } from './dateFormatters';
 import { formatFileSize } from './fileFormatters';
@@ -22,6 +22,8 @@ export {
   formatWithUnit,
   formatCompactNumber,
   formatPercent,
+  formatCompactDollar,
+  formatHistoricalValue,
   formatNumber,
   formatDate,
   formatTimeAgo,
@@ -35,6 +37,8 @@ export default {
   formatWithUnit,
   formatCompactNumber,
   formatPercent,
+  formatCompactDollar,
+  formatHistoricalValue,
   formatNumber,
   formatDate,
   formatTimeAgo,

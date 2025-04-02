@@ -15,7 +15,11 @@ export type SoundType =
   | 'coin'
   | 'chime'
   | 'alert'
-  | 'fanfare';
+  | 'fanfare'
+  | 'achievement' // Added for compatibility
+  | 'message'     // Added for compatibility
+  | 'royal'       // Added for compatibility
+  | 'mockery';    // Added for compatibility
 
 export interface SoundOptions {
   volume?: number;
@@ -66,5 +70,9 @@ export const DEFAULT_SOUND_MAPPING: Record<SoundType, string> = {
   coin: '/sounds/coin.mp3',
   chime: '/sounds/chime.mp3',
   alert: '/sounds/alert.mp3',
-  fanfare: '/sounds/fanfare.mp3'
+  fanfare: '/sounds/fanfare.mp3',
+  achievement: '/sounds/achievement.mp3',
+  message: '/sounds/message.mp3',
+  royal: '/sounds/royal.mp3',
+  mockery: '/sounds/mockery.mp3'
 };

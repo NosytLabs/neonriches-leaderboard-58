@@ -31,6 +31,9 @@ export interface ProjectMetrics {
     totalLines: number;
     codeSize: number;
     dependencies: number;
+    projectSize?: number; // Added for compatibility
+    fileCount?: number;   // Added for compatibility
+    dependencyCount?: number; // Added for compatibility
   };
   
   afterCleanup: {
@@ -38,6 +41,7 @@ export interface ProjectMetrics {
     totalLines: number;
     codeSize: number;
     dependencies: number;
+    projectSize?: number; // Added for compatibility
   };
   
   sizeSavings: {
@@ -61,5 +65,5 @@ export interface ProjectMetrics {
   resources: ResourceMetrics;
 }
 
-// Export to avoid conflicts
+// Use export type for type-only exports when using isolatedModules
 export type { ProjectMetrics };

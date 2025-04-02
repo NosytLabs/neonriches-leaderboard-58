@@ -33,7 +33,9 @@ export type CosmeticRarity =
   | 'rare'
   | 'epic'
   | 'legendary'
-  | 'royal';
+  | 'royal'
+  | 'mythic'  // Added for compatibility
+  | 'unique'; // Added for compatibility
 
 export interface CosmeticItem {
   id: string;
@@ -47,7 +49,8 @@ export interface CosmeticItem {
   type: CosmeticType | string;
   enabled: boolean;
   previewUrl?: string;
-  imageSrc?: string;
+  imageSrc?: string; // Added for compatibility
+  image?: string;    // Added for compatibility
 }
 
 export interface UserCosmetics {
@@ -84,3 +87,6 @@ export interface SocialLink {
   icon?: string; 
   label?: string;
 }
+
+// Create UserCosmeticState for compatibility
+export type UserCosmeticState = UserCosmetics;

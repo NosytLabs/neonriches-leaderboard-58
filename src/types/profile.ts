@@ -5,6 +5,7 @@ export interface ProfileImage {
   isPrimary: boolean;
   caption?: string;
   type?: string; // Added for compatibility
+  imageSrc?: string; // Added for compatibility
 }
 
 export interface ProfileLink {

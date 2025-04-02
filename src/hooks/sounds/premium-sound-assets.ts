@@ -1,58 +1,19 @@
+import { SoundType } from '@/types/sound-types';
 
-import { SoundType } from './types';
-
-// Premium sound packs available
-export const premiumSoundPacks = [
-  {
-    id: 'royal',
-    name: 'Royal Court',
-    description: 'Elegant sounds fit for nobility',
-    price: 5.99,
-    icon: '/images/sound-packs/royal.png',
-    preview: '/sounds/previews/royal-preview.mp3',
-    previewSound: 'royalAnnouncement' as SoundType,
-    sounds: ['royalAnnouncement', 'trumpet', 'medallion', 'seal'] as SoundType[],
-    features: ['4 premium sounds', 'High quality audio', 'Exclusive to nobility']
-  },
-  {
-    id: 'medieval',
-    name: 'Medieval Tavern',
-    description: 'Rustic sounds from a bygone era',
-    price: 3.99,
-    icon: '/images/sound-packs/medieval.png',
-    preview: '/sounds/previews/medieval-preview.mp3',
-    previewSound: 'coinDrop' as SoundType,
-    sounds: ['coinDrop', 'swordClash', 'noblesLaugh'] as SoundType[],
-    features: ['3 premium sounds', 'Ambient background options', 'Authentic medieval feel']
-  }
-];
-
-// Premium sound assets with improved quality
-export const premiumSoundAssets: Record<string, string> = {
-  'royal.royalAnnouncement': '/sounds/premium/royal-announcement-hq.mp3',
-  'royal.trumpet': '/sounds/premium/trumpet-hq.mp3',
-  'royal.medallion': '/sounds/premium/medallion-hq.mp3',
-  'royal.seal': '/sounds/premium/seal-hq.mp3',
-  'medieval.coinDrop': '/sounds/premium/coin-drop-hq.mp3',
-  'medieval.swordClash': '/sounds/premium/sword-clash-hq.mp3',
-  'medieval.noblesLaugh': '/sounds/premium/nobles-laugh-hq.mp3'
-};
-
-// Volume presets for premium sounds
-export const premiumVolumePresets: Partial<Record<SoundType, number>> = {
-  coinDrop: 0.6,
-  reward: 0.5,
-  notification: 0.4,
+// Rest of file contents
+const volumeSettings: Partial<Record<SoundType, number>> = {
   click: 0.3,
-  success: 0.5,
-  error: 0.4,
-  royalAnnouncement: 0.5,
-  levelUp: 0.6,
-  purchase: 0.5,
-  shame: 0.5,
-  swordClash: 0.5,
-  noblesLaugh: 0.7,
-  trumpet: 0.8,
-  medallion: 0.7,
-  seal: 0.6
+  success: 0.4,
+  error: 0.3,
+  notification: 0.5,
+  purchase: 0.6,
+  transfer: 0.5,
+  level_up: 0.7,  // Fixed from 'levelUp' to 'level_up'
+  reward: 0.6,
+  coin: 0.4,
+  chime: 0.5,
+  alert: 0.5,
+  fanfare: 0.6
 };
+
+export { volumeSettings };

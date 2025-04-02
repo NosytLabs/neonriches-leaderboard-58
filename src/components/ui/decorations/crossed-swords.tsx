@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import MedievalIcon from '@/components/ui/medieval-icon';
 import { BaseDecorationProps } from '@/types/ui/decorations/types';
 import { adaptIconSize, adaptIconColor } from '@/utils/iconTypeAdapter';
-import { IconSize } from '@/types/ui/icon-types';
+import { MedievalIconSize } from '@/types/ui/icon-types';
 
 const CrossedSwords: React.FC<BaseDecorationProps> = ({
   color = 'gold',
@@ -17,11 +17,11 @@ const CrossedSwords: React.FC<BaseDecorationProps> = ({
   
   // Define size classes directly
   const sizeClasses = {
-    xs: { container: 'w-6 h-6', border: 'border-1', icon: 'xs' as IconSize },
-    sm: { container: 'w-8 h-8', border: 'border-1', icon: 'sm' as IconSize },
-    md: { container: 'w-12 h-12', border: 'border-2', icon: 'md' as IconSize },
-    lg: { container: 'w-16 h-16', border: 'border-2', icon: 'lg' as IconSize },
-    xl: { container: 'w-24 h-24', border: 'border-3', icon: 'xl' as IconSize }
+    xs: { container: 'w-6 h-6', border: 'border-1', icon: 'xs' as MedievalIconSize },
+    sm: { container: 'w-8 h-8', border: 'border-1', icon: 'sm' as MedievalIconSize },
+    md: { container: 'w-12 h-12', border: 'border-2', icon: 'md' as MedievalIconSize },
+    lg: { container: 'w-16 h-16', border: 'border-2', icon: 'lg' as MedievalIconSize },
+    xl: { container: 'w-24 h-24', border: 'border-3', icon: 'xl' as MedievalIconSize }
   };
   
   const sizeClass = sizeClasses[size as keyof typeof sizeClasses];
@@ -39,7 +39,7 @@ const CrossedSwords: React.FC<BaseDecorationProps> = ({
         <MedievalIcon 
           name="sword" 
           size={sizeClass.icon} 
-          color={adaptIconColor(color)} 
+          color={adaptIconColor(color) as any} 
         />
       </div>
       
@@ -47,7 +47,7 @@ const CrossedSwords: React.FC<BaseDecorationProps> = ({
         <MedievalIcon 
           name="sword" 
           size={sizeClass.icon} 
-          color={adaptIconColor(color)} 
+          color={adaptIconColor(color) as any} 
         />
       </div>
     </div>

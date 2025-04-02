@@ -7,7 +7,23 @@ export type IconStyle = 'default' | 'medieval' | 'royal' | 'vintage';
 
 // Extended MedievalIconSize to include the value used in the codebase
 export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type MedievalIconColor = 'default' | 'primary' | 'secondary' | 'gold' | 'royal' | 'accent';
+
+export type MedievalIconColor = 
+  | 'default' 
+  | 'primary' 
+  | 'secondary' 
+  | 'gold' 
+  | 'royal' 
+  | 'accent'
+  | 'silver'
+  | 'crimson'
+  | 'emerald'
+  | 'bronze'
+  | 'red'
+  | 'blue'
+  | 'green'
+  | 'purple';
+
 export type MedievalIconName = 
   | 'crown' 
   | 'sword' 
@@ -19,10 +35,34 @@ export type MedievalIconName =
   | 'knight' 
   | 'king' 
   | 'queen' 
-  | 'treasure-chest';
+  | 'treasure-chest'
+  | 'flag'
+  | 'throne'
+  | 'tower'
+  | 'banner'
+  | 'coin'
+  | 'coins'
+  | 'key'
+  | 'dagger'
+  | 'potion'
+  | 'goblet'
+  | 'fleur'
+  | 'horse'
+  | 'wizard'
+  | 'jester'
+  | 'treasure'
+  | 'crossed-swords'
+  | 'helmet'
+  | 'bow'
+  | 'arrow'
+  | 'candle'
+  | 'torch'
+  | 'flag'
+  | 'axe'
+  | 'mace';
 
-// Make IconProps extend LucideProps but allow for IconStyle
-export interface IconProps extends Omit<LucideProps, 'ref'> {
+// Use CSSProperties for the style properties when needed
+export interface IconProps extends LucideProps {
   icon?: string;
   name?: string;
   size?: string | number;
@@ -40,6 +80,10 @@ export interface MedievalIconProps {
   animated?: boolean;
 }
 
+// Export IconSize for use in other types
+export type IconSize = MedievalIconSize;
+export type IconColor = MedievalIconColor;
+
 export const iconSizeMap: Record<string, string> = {
   xs: 'w-3 h-3',
   sm: 'w-4 h-4',
@@ -55,5 +99,13 @@ export const iconColorMap: Record<string, string> = {
   secondary: 'text-secondary',
   gold: 'text-royal-gold',
   royal: 'text-royal-purple',
-  accent: 'text-accent'
+  accent: 'text-accent',
+  silver: 'text-gray-300',
+  crimson: 'text-royal-crimson',
+  emerald: 'text-emerald-500',
+  bronze: 'text-amber-600',
+  red: 'text-red-500',
+  blue: 'text-blue-500',
+  green: 'text-green-500',
+  purple: 'text-purple-500'
 };

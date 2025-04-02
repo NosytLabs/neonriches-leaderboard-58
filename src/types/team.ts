@@ -35,4 +35,5 @@ export interface TeamJoinRequest {
   status: 'pending' | 'approved' | 'rejected';
 }
 
-export { TeamColor };
+// Use export type for type-only exports when using isolatedModules
+export type { TeamColor };
