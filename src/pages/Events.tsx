@@ -11,6 +11,7 @@ import { events, eventDetails } from '@/components/events/data';
 import { useToast } from '@/hooks/use-toast';
 import { EventDetails } from '@/types/events';
 import { toTeamColor } from '@/utils/typeConverters';
+import { LeaderboardUser } from '@/types/leaderboard';
 
 export default function EventsPage() {
   const allEvents = events;
@@ -68,28 +69,28 @@ export default function EventsPage() {
   }));
   
   // When creating event participants, convert the team strings to TeamColor
-  const eventParticipants: LeaderboardUser[] = [
+  const mockParticipants: LeaderboardUser[] = [
     {
       id: 'user1',
       userId: 'user1',
-      username: 'KingSpender',
-      profileImage: '/images/avatars/royal1.jpg',
-      totalSpent: 15000,
+      username: 'royalspender',
+      profileImage: '/avatars/user1.png',
+      totalSpent: 5000,
       rank: 1,
       team: toTeamColor('red'),
       tier: 'royal',
-      spendStreak: 7,
-      displayName: 'King Spender',
-      walletBalance: 5000,
-      previousRank: 1,
-      joinDate: '2023-01-01',
+      spendStreak: 12,
+      displayName: 'Royal Spender',
+      walletBalance: 1000,
+      previousRank: 2,
+      joinDate: '2023-01-15',
       isVerified: true
     },
     {
       id: 'user2',
       userId: 'user2',
-      username: 'QueenGambler',
-      profileImage: '/images/avatars/royal2.jpg',
+      username: 'queengambler',
+      profileImage: '/avatars/user2.png',
       totalSpent: 20000,
       rank: 2,
       team: toTeamColor('blue'),

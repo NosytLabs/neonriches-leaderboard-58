@@ -1,4 +1,3 @@
-
 /**
  * Format a date string into a user-friendly format
  */
@@ -71,11 +70,22 @@ export const formatTimeAgo = (dateString: string): string => {
   return `${Math.floor(diffSeconds / 31536000)} years ago`;
 };
 
+/**
+ * Truncates a blockchain address for display (e.g. 0x1234...5678)
+ */
+export const truncateAddress = (address: string, startChars: number = 6, endChars: number = 4): string => {
+  if (!address) return '';
+  if (address.length <= startChars + endChars) return address;
+  
+  return `${address.substring(0, startChars)}...${address.substring(address.length - endChars)}`;
+};
+
 export default {
   formatDate,
   formatNumber,
   formatCurrency,
   formatDollarAmount,
   formatFileSize,
-  formatTimeAgo
+  formatTimeAgo,
+  truncateAddress
 };

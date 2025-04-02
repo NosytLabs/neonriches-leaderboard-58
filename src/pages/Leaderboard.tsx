@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import LeaderboardFilters from '@/components/LeaderboardFilters';
@@ -15,14 +14,15 @@ const Leaderboard = () => {
   const { user } = auth;
   const { loading, mockLeaderboardData } = useMockLeaderboard?.() || { loading: true, mockLeaderboardData: [] };
   
-  // Initialize filter state with sortDirection
+  // Initialize filter state with sortDirection and limit
   const [filter, setFilter] = useState<LeaderboardFilter>({
     team: 'all',
     tier: 'all',
     timeframe: 'all-time',
     search: '',
     sortBy: 'rank',
-    sortDirection: 'asc'
+    sortDirection: 'asc',
+    limit: 50
   });
   
   const [filteredUsers, setFilteredUsers] = useState<LeaderboardUser[]>([]);

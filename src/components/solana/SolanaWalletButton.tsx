@@ -6,7 +6,7 @@ import { truncateAddress } from '@/utils/formatters';
 
 // Wallet button component
 const SolanaWalletButton: React.FC = () => {
-  const { connected, walletAddress, connect, disconnect, isLoading } = useSolana();
+  const { connected, publicKey, connect, disconnect, isLoading } = useSolana();
 
   const handleClick = async () => {
     if (connected) {
@@ -15,6 +15,9 @@ const SolanaWalletButton: React.FC = () => {
       await connect();
     }
   };
+
+  // Get wallet address from publicKey
+  const walletAddress = publicKey ? publicKey.toString() : null;
 
   return (
     <Button

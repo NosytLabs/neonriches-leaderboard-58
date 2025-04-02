@@ -39,7 +39,7 @@ export type {
   CertificateStyle,
   CertificateTeam,
   CertificateTemplate,
-  CertificateRepository
+  CertificateRepository  // Add this to fix the missing export
 } from './certificates';
 
 export type {

@@ -1,41 +1,28 @@
 
-import { TeamColor } from '@/types/mockery-types';
+import { TeamColor } from './mockery-types';
 
 export type CertificateType = 
-  | 'achievement'
-  | 'spending'
-  | 'ranking'
-  | 'victory'
-  | 'nobility'
-  | 'royal'
-  | 'team'
-  | 'participation'
-  | 'completion';
-
-export type CertificateStatus = 
-  | 'pending' 
-  | 'minted' 
-  | 'rejected' 
-  | 'approved'
-  | 'revoked'
-  | 'expired';
+  | 'nobility' 
+  | 'achievement' 
+  | 'spending' 
+  | 'rank' 
+  | 'team' 
+  | 'founder' 
+  | 'membership' 
+  | 'participation' 
+  | 'contest';
 
 export type CertificateStyle = 
-  | 'royal'
-  | 'classic'
-  | 'medieval'
-  | 'modern'
-  | 'elegant'
-  | 'simple'
-  | 'ornate'
-  | 'gold'
-  | 'silver'
-  | 'bronze'
-  | 'platinum'
-  | 'diamond'
-  | 'standard';
+  | 'standard' 
+  | 'royal' 
+  | 'luxury' 
+  | 'modern' 
+  | 'vintage' 
+  | 'minimalist' 
+  | 'ornate' 
+  | 'parchment';
 
-export type CertificateTeam = TeamColor | 'all';
+export type CertificateTeam = TeamColor | 'neutral';
 
 export interface Certificate {
   id: string;
@@ -43,18 +30,19 @@ export interface Certificate {
   description: string;
   imageUrl: string;
   dateIssued: string;
-  issuedAt?: string; // Alias for dateIssued for backward compatibility
-  mintAddress?: string;
-  status: CertificateStatus;
+  issuedAt?: string; // Alias for dateIssued
+  status: 'pending' | 'minted' | 'revoked' | 'expired';
   type: CertificateType;
-  tier?: string;
+  userId: string;
+  mintAddress?: string;
+  mintDate?: string;
+  isMinted?: boolean;
   style: CertificateStyle;
   issuerName: string;
   recipientName: string;
   recipientId: string;
-  userId: string;
-  team?: TeamColor;
-  isMinted?: boolean;
+  team?: CertificateTeam;
+  tier?: string;
 }
 
 export interface CertificateTemplate {
@@ -64,16 +52,19 @@ export interface CertificateTemplate {
   previewUrl: string;
   imageUrl: string;
   type: CertificateType;
-  team: TeamColor | string;
+  team: CertificateTeam;
   style: CertificateStyle;
   available: boolean;
 }
 
-export interface CertificateIssuance {
-  templateId: string;
-  userId: string;
-  title?: string;
-  description?: string;
-  customFields?: Record<string, string>;
-  metadata?: Record<string, any>;
+// Add CertificateRepository interface to fix the missing type
+export interface CertificateRepository {
+  getUserCertificates: (userId: string) => Promise<Certificate[]>;
+  getCertificateById: (id: string) => Promise<Certificate>;
+  getCertificateTemplates: () => Promise<CertificateTemplate[]>;
+  getTemplateById: (id: string) => Promise<CertificateTemplate>;
+  getAvailableCertificateTemplates: () => Promise<CertificateTemplate[]>;
+  mintCertificateAsNFT: (certificateId: string) => Promise<{ success: boolean; transactionHash?: string; message?: string }>;
+  claimCertificate: (templateId: string, userId: string) => Promise<Certificate>;
+  generateShareableImage: (certificateId: string) => Promise<string>;
 }

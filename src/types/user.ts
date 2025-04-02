@@ -1,4 +1,3 @@
-
 import { TeamColor } from './mockery-types';
 import { SocialLink } from './cosmetics';
 
@@ -40,15 +39,15 @@ export interface ProfileBoost {
 }
 
 export interface UserCosmetics {
-  border: string[];
-  color: string[];
-  font: string[];
-  emoji: string[];
-  title: string[];
-  background: string[];
-  effect: string[];
-  badge: string[];
-  theme: string[];
+  border?: string[];
+  color?: string[];
+  font?: string[];
+  emoji?: string[];
+  title?: string[];
+  background?: string[];
+  effect?: string[];
+  badge?: string[];
+  theme?: string[];
   [key: string]: string[] | string | undefined;
   activeTitle?: string;
   activeBorder?: string;

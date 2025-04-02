@@ -5,6 +5,22 @@ import { TeamColor } from '@/types/mockery-types';
 import { toTeamColor } from '@/utils/typeConverters';
 
 /**
+ * Adapts a user profile update object to ensure it has the correct types
+ * This makes it easier to update user profiles with proper type checking
+ */
+export const adaptUserProfileUpdate = (updateData: Partial<UserProfile>): Partial<UserProfile> => {
+  // Create a cleaned update object
+  const updatedProfile: Partial<UserProfile> = { ...updateData };
+  
+  // Ensure team is a valid TeamColor if present
+  if (updatedProfile.team) {
+    updatedProfile.team = toTeamColor(updatedProfile.team);
+  }
+  
+  return updatedProfile;
+};
+
+/**
  * Converts a consolidated UserProfile to a legacy UserProfile type
  */
 export function convertToLegacyUserProfile(user: UserProfile): UserProfileLegacy {
@@ -115,8 +131,10 @@ export function adaptSubscription(subscription: any): UserProfile['subscription'
   };
 }
 
+// Default export all utility functions for convenience
 export default {
   convertToLegacyUserProfile,
   convertToConsolidatedUserProfile,
-  adaptSubscription
+  adaptSubscription,
+  adaptUserProfileUpdate
 };

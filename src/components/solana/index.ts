@@ -1,8 +1,3 @@
 
-import { useSolana } from '@/contexts/SolanaContext';
-import { SolanaWalletButton } from './SolanaWalletButton';
-
-export {
-  useSolana,
-  SolanaWalletButton
-};
+export { default as SolanaWalletButton } from './SolanaWalletButton';
+export { useSolana, SolanaContext, type SolanaContextType } from './SolanaContext';

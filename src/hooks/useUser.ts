@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useProfileData } from './useProfileData';
 import { UserProfile } from '@/types/user';
+import { toTeamColor } from '@/utils/typeConverters';
 
 interface UseUserResult {
   userProfile: UserProfile | null;
@@ -25,8 +26,14 @@ export const useUser = (userId?: string): UseUserResult => {
     }
   }, [userId, profile]);
 
+  // Convert the profile to ensure team is TeamColor type
+  const adaptedProfile = profile ? {
+    ...profile,
+    team: toTeamColor(profile.team)
+  } as UserProfile : null;
+
   return {
-    userProfile: profile,
+    userProfile: adaptedProfile,
     isLoading: loading,
     error: error ? new Error(error) : null,
     isOwnProfile

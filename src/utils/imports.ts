@@ -5,15 +5,22 @@
  */
 
 // Badge component export (handles badge.tsx vs Badge.tsx casing issues)
+// Use explicit path to avoid casing issues
 export { Badge } from '@/components/ui/Badge';
 
-// Shell component export (handles shell.tsx vs Shell.tsx casing issues)
-export { default as Shell } from '@/components/Shell';
-export { default as UIShell } from '@/components/ui/Shell';
+// Import Shell and UIShell with casing that works cross-platform
+import ShellComponent from '@/components/Shell';
+import UIShellComponent from '@/components/ui/Shell';
+
+// Re-export with consistent names
+export const Shell = ShellComponent;
+export const UIShell = UIShellComponent;
 
 // Import teamService and re-export it with proper casing
-import teamService from '@/services/teamService';
-export { teamService };
+import teamServiceModule from '@/services/TeamService';
+
+// Re-export the service
+export const teamService = teamServiceModule;
 
 // Utility function to safely get required exports from teamService to handle missing exports
 export const getTeams = () => teamService.getAllTeams ? teamService.getAllTeams() : [];

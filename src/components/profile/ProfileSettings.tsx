@@ -7,7 +7,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/auth';
 import { showSuccessToast, showErrorToast } from '@/utils/toastUtils';
-import { adaptUserProfileUpdate } from '@/utils/userProfileAdapter';
 import { adaptSubscription } from '@/utils/userProfileAdapter';
 
 interface ProfileSettingsProps {

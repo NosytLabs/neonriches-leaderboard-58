@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import useAuth from '@/hooks/useAuth';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -21,9 +22,6 @@ import { toTeamColor } from '@/utils/typeConverters';
  * that expect the user.UserProfile type
  */
 function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfileType {
-  // Create a proper TeamColor from the string team value
-  const teamColor = toTeamColor(user.team);
-  
   return {
     id: user.id,
     username: user.username,
@@ -37,7 +35,8 @@ function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfi
     isVIP: user.isVIP,
     isFounder: user.isFounder,
     isAdmin: user.isAdmin,
-    team: teamColor,
+    // Ensure team is a valid TeamColor instead of a string
+    team: toTeamColor(user.team),
     tier: user.tier,
     rank: user.rank,
     previousRank: user.previousRank,
