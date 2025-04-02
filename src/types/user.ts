@@ -35,6 +35,8 @@ export interface ProfileBoost {
   duration?: number;
   price?: number;
   icon?: string;
+  // Added for compatibility with boost.ts
+  active?: boolean;
 }
 
 export interface UserCosmetics {
@@ -91,6 +93,68 @@ export interface UserProfile {
   socialLinks?: SocialLink[];
   spendStreak?: number;
   gender?: string;
+  profileViews?: number;
+  profileClicks?: number;
+  activeTitle?: string;
+  lastActive?: string;
+  purchasedFeatures?: string[];
+  boostCount?: number;
+  subscription?: {
+    planId: string;
+    nextBillingDate: string;
+    status?: 'active' | 'cancelled' | 'paused';
+    tier?: string;
+  };
+  certificateNFT?: {
+    mintAddress: string;
+    mintDate: string;
+    dateIssued?: string;
+  };
 }
 
 export type User = UserProfile;
+
+// Export TeamColor so it can be imported from this module
+export type { TeamColor };
+
+// Export UserTier for compatibility
+export type UserTier = 
+  | 'free'
+  | 'basic'
+  | 'pro'
+  | 'premium'
+  | 'royal'
+  | 'founder'
+  | 'platinum'
+  | 'diamond'
+  | 'gold'
+  | 'silver'
+  | 'bronze'
+  | 'vip'
+  | 'whale'
+  | 'shark'
+  | 'dolphin'
+  | 'noble'
+  | 'standard'
+  | 'elite'
+  | 'legendary';
+
+// Export ProfileImage type
+export interface ProfileImage {
+  id?: string;
+  url: string;
+  isPrimary: boolean;
+  caption?: string;
+  type?: string;
+}
+
+// Export ProfileLink type
+export interface ProfileLink {
+  id?: string;
+  platform: string;
+  url: string;
+  title?: string;
+  displayText?: string;
+  icon?: string;
+  label?: string;
+}

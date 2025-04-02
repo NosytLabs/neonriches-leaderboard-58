@@ -6,7 +6,8 @@ export type BoostEffectType =
   | 'badge'
   | 'appearance'
   | 'animation'
-  | 'effect';
+  | 'effect'
+  | 'general'; // Added for addProfileBoostWithDays compatibility
 
 export interface BoostEffect {
   type: BoostEffectType;
@@ -19,17 +20,29 @@ export interface BoostEffect {
   price?: number;
   durationDays?: number;
   effectId?: string;
-  cssClass?: string; // Added to support existing code
+  cssClass?: string;
+  // Add missing properties
+  icon?: string;
+  previewImage?: string;
 }
 
 export interface ProfileBoost {
   id: string;
-  type: BoostEffectType;
+  type: BoostEffectType | string; // Allow string for compatibility
   startDate: string;
   endDate: string;
   level: number;
   active: boolean;
   effectId?: string;
+  // Add properties needed for user.ts ProfileBoost
+  isActive?: boolean;
+  strength?: number;
+  appliedBy?: string;
+  name?: string;
+  description?: string;
+  duration?: number;
+  price?: number;
+  icon?: string;
 }
 
 export interface BoostService {

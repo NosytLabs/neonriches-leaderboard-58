@@ -5,10 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LeaderboardUser, TypedLeaderboardFilter } from '@/types/leaderboard';
+import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
 
 const PersistentLeaderboard = () => {
-  const [filter, setFilter] = useState<TypedLeaderboardFilter>({
+  const [filter, setFilter] = useState<LeaderboardFilter>({
     tier: undefined,
     sortBy: 'rank',
     team: undefined,
@@ -41,7 +41,7 @@ const PersistentLeaderboard = () => {
       username: "SirSpendALot",
       displayName: "Sir Spend-A-Lot",
       profileImage: "https://randomuser.me/api/portraits/men/2.jpg",
-      tier: "premium" as "royal", // Type casting to allowed tier
+      tier: "premium",
       team: "red",
       rank: 2,
       previousRank: 4,
@@ -57,7 +57,7 @@ const PersistentLeaderboard = () => {
       username: "LadyFortune",
       displayName: "Lady Fortune",
       profileImage: "https://randomuser.me/api/portraits/women/3.jpg",
-      tier: "premium" as "royal", // Type casting to allowed tier
+      tier: "premium", 
       team: "blue",
       rank: 3,
       previousRank: 2,
@@ -73,7 +73,7 @@ const PersistentLeaderboard = () => {
       username: "GoldHoarder",
       displayName: "Gold Hoarder",
       profileImage: "https://randomuser.me/api/portraits/men/4.jpg",
-      tier: "pro" as "gold", // Type casting to allowed tier
+      tier: "pro",
       team: "green",
       rank: 4,
       previousRank: 3,
@@ -145,15 +145,18 @@ const PersistentLeaderboard = () => {
                 
                 <div className="flex items-center space-x-2">
                   {user.isVerified && (
-                    <Badge variant="outline" className="bg-blue-500/10 text-blue-400 border-blue-500/20">
-                      Verified
-                    </Badge>
+                    <Badge variant="outline" className="bg-primary/20">Verified</Badge>
                   )}
-                  {user.isProtected && (
-                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
-                      Protected
-                    </Badge>
-                  )}
+                  <Badge variant="outline" className={
+                    user.team === 'gold' ? "bg-yellow-500/20 text-yellow-400" :
+                    user.team === 'red' ? "bg-red-500/20 text-red-400" :
+                    user.team === 'blue' ? "bg-blue-500/20 text-blue-400" :
+                    user.team === 'green' ? "bg-green-500/20 text-green-400" :
+                    user.team === 'purple' ? "bg-purple-500/20 text-purple-400" :
+                    "bg-gray-500/20 text-gray-400"
+                  }>
+                    {user.team.charAt(0).toUpperCase() + user.team.slice(1)}
+                  </Badge>
                 </div>
               </div>
             ))}

@@ -47,6 +47,9 @@ export interface SocialLink {
   url: string;
   icon: string;
   enabled: boolean;
+  title?: string; // Added for compatibility
+  displayText?: string;
+  label?: string;
 }
 
 export interface UserCosmetics {
@@ -60,6 +63,16 @@ export interface UserCosmetics {
   badge?: string[];
   theme?: string[];
   [key: string]: string[] | undefined;
+  // Properties from user.d.ts for backwards compatibility
+  activeTitle?: string;
+  activeBorder?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string;
+  activeBadge?: string;
+  activeTheme?: string;
 }
 
 export interface UserCosmeticState {

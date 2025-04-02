@@ -1,79 +1,39 @@
 
-import { TeamColor } from '@/types/mockery-types';
+/**
+ * Utility functions for type conversion and validation
+ */
+
+import { TeamColor } from '@/types/team';
 
 /**
- * Convert a string to a valid TeamColor
- * @param color The string to convert
- * @returns A valid TeamColor or 'none' if the input is invalid
+ * Convert a string to a valid TeamColor or return a default value
+ * @param team - Team color string
+ * @param defaultColor - Default color to return if invalid
+ * @returns Valid TeamColor
  */
-export const toTeamColor = (color: string | undefined | null): TeamColor => {
-  if (!color) return 'none';
-  
-  const validColors: TeamColor[] = [
-    'red', 'blue', 'green', 'gold', 'purple', 
-    'none', 'neutral', 'silver', 'bronze', 'crimson'
+export const toTeamColor = (team?: string | null): TeamColor => {
+  const validTeamColors: TeamColor[] = [
+    'red', 'blue', 'green', 'gold', 'purple', 'none', 
+    'neutral', 'silver', 'bronze', 'crimson'
   ];
   
-  const normalizedColor = color.toLowerCase() as TeamColor;
+  if (!team) return 'none';
   
-  if (validColors.includes(normalizedColor)) {
-    return normalizedColor;
-  }
-  
-  return 'none';
+  const normalizedTeam = team.toLowerCase() as TeamColor;
+  return validTeamColors.includes(normalizedTeam) ? normalizedTeam : 'none';
 };
 
 /**
- * Convert a string to a valid UserTier
- * @param tier The string to convert
- * @returns A valid UserTier or 'basic' if the input is invalid
+ * Ensures a value is a string
+ * @param id - Any value
+ * @returns String representation of the value
  */
-export const toUserTier = (tier: string | undefined | null): string => {
-  if (!tier) return 'basic';
-  
-  const validTiers = [
-    'free', 'basic', 'premium', 'elite', 'royal', 
-    'founder', 'pro', 'gold', 'silver', 'bronze',
-    'platinum', 'diamond', 'vip', 'whale', 'shark',
-    'dolphin', 'noble', 'standard', 'legendary'
-  ];
-  
-  const normalizedTier = tier.toLowerCase();
-  
-  if (validTiers.includes(normalizedTier)) {
-    return normalizedTier;
-  }
-  
-  return 'basic';
-};
-
-/**
- * Convert a string to a valid CosmeticType
- * @param type The string to convert
- * @returns A valid CosmeticType or 'cosmetic' if the input is invalid
- */
-export const toCosmeticType = (type: string | undefined | null): string => {
-  if (!type) return 'cosmetic';
-  
-  const validTypes = [
-    'border', 'color', 'font', 'emoji', 'title',
-    'badge', 'background', 'effect', 'theme', 
-    'profile', 'appearance', 'interaction', 'animation',
-    'premium', 'standard', 'exclusive', 'aura', 
-    'cosmetic', 'feature'
-  ];
-  
-  const normalizedType = type.toLowerCase();
-  
-  if (validTypes.includes(normalizedType)) {
-    return normalizedType;
-  }
-  
-  return 'cosmetic';
+export const ensureStringId = (id: any): string => {
+  if (id === null || id === undefined) return '';
+  return String(id);
 };
 
 export default {
   toTeamColor,
-  toUserTier,
-  toCosmeticType
+  ensureStringId
 };

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import DashboardStatsOverview from '../DashboardStatsOverview';
 import { UserProfile as User } from '@/types/user-consolidated';
@@ -19,6 +18,12 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ user, onSpend, onPaymentSucce
   
   // Calculate progress to next rank (simplified for demo)
   const progressToNextRank = Math.min(85, Math.floor(Math.random() * 100));
+  
+  // Modify the isActiveBoost function to handle both 'active' and 'isActive' properties
+  const isActiveBoost = (boost: ProfileBoost): boolean => {
+    // Check both properties for compatibility with different types
+    return boost.active || (boost.isActive ?? false);
+  };
   
   return (
     <div className="space-y-6">
@@ -106,7 +111,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ user, onSpend, onPaymentSucce
               
               <div className="flex items-center justify-between">
                 <span className="text-white/70">Boosts Active</span>
-                <span className="text-white/90">{user.profileBoosts?.filter(b => b.isActive)?.length || 0}</span>
+                <span className="text-white/90">{user.profileBoosts?.filter(b => isActiveBoost(b))?.length || 0}</span>
               </div>
               
               <Button 

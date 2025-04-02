@@ -32,7 +32,27 @@ export type SoundType =
   | 'minimal_success'
   | 'minimal_alert'
   | 'minimal_action'
-  | 'throne';
+  | 'throne'
+  // Add missing sound types
+  | 'deposit'
+  | 'withdrawal'
+  | 'rank_up'
+  | 'mockery'
+  | 'royal'
+  | 'message'
+  | 'coin'
+  | 'level_up'
+  | 'boost'
+  | 'shame'
+  | 'reward'
+  | 'chime'
+  | 'fanfare'
+  | 'coinDrop'
+  | 'withdraw'
+  | 'unlock'
+  | 'team'
+  | 'trumpet'
+  | 'medallion';
 
 // Sound configuration options
 export interface SoundOptions {
@@ -59,7 +79,7 @@ export interface SoundConfig {
 // Sound hook return type
 export interface SoundHook {
   playSound: (type: SoundType, options?: SoundOptions) => void;
-  stopSound: (type?: SoundType) => void;
+  stopSound: (type?: SoundType | boolean) => void; // Updated to accept both SoundType and boolean
   play: (type: SoundType, options?: SoundOptions) => void;
   isSoundEnabled: boolean;
   currentVolume: number;
@@ -91,4 +111,14 @@ export interface UseNotificationSoundsReturn {
   unmute: () => void;
   isMuted: boolean;
   playNotificationSound: (type?: SoundType, options?: SoundOptions) => void;
+}
+
+// Premium sound pack details
+export interface PremiumSoundPackDetails {
+  id?: string;
+  name: string;
+  description: string;
+  price: number;
+  sounds: SoundType[];
+  previewSound?: SoundType;
 }

@@ -16,6 +16,7 @@ export interface UserProfile {
   createdAt?: string;
   isVerified?: boolean;
   isProtected?: boolean;
+  isVIP?: boolean; // Added for compatibility
   tier: string;
   team: string;
   rank: number;
@@ -40,6 +41,13 @@ export interface UserProfile {
     dateIssued?: string;
   };
   gender?: string;
+  // Add missing properties for type compatibility
+  following?: string[];
+  followers?: string[];
+  achievements?: string[];
+  badges?: string[];
+  boostCount?: number; // Added for KingmakerFeature
+  socialLinks?: SocialLink[];
 }
 
 export interface UserSettings {
@@ -55,6 +63,11 @@ export interface UserSettings {
   showBadges: boolean;
   showTeam: boolean;
   showSpending: boolean;
+  // Added missing properties
+  showEmailOnProfile?: boolean;
+  rankChangeAlerts?: boolean;
+  newFollowerAlerts?: boolean;
+  teamNotifications?: boolean;
 }
 
 export interface UserSubscription {
@@ -67,6 +80,8 @@ export interface UserSubscription {
   price: number;
   interval: 'monthly' | 'yearly';
   features: string[];
+  planId?: string; // Added for compatibility
+  nextBillingDate?: string; // Added for compatibility
 }
 
 export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say';
@@ -74,3 +89,4 @@ export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to
 // Export the TeamColor type for compatibility
 export type { TeamColor };
 export type { SocialLink } from './cosmetics';
+export type TeamType = TeamColor; // Re-export TeamType for compatibility

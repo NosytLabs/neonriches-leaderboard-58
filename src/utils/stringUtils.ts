@@ -68,11 +68,21 @@ export const toKebabCase = (str: string): string => {
     .replace(/[^\w-]/g, '');
 };
 
+/**
+ * Safely convert any value to string, returning an empty string for null/undefined
+ */
+export const safeToString = (value: any): string => {
+  if (value === null || value === undefined) return '';
+  return String(value);
+};
+
+// Export both as named exports and as default object
 export default {
   getInitials,
   truncateString,
   toTitleCase,
   generateId,
   toSnakeCase,
-  toKebabCase
+  toKebabCase,
+  safeToString
 };

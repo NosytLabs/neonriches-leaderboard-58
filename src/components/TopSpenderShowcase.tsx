@@ -15,7 +15,7 @@ interface TopSpenderShowcaseProps {
 const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className = '' }) => {
   // Calculate custom values that might not exist on user
   const spendStreak = user.spendStreak || 0;
-  const followers = user.followers?.length || 0;
+  const followerCount = user.followers?.length || 0;
 
   return (
     <div className={`max-w-lg mx-auto ${className}`}>
@@ -85,7 +85,7 @@ const TopSpenderShowcase: React.FC<TopSpenderShowcaseProps> = ({ user, className
                     <Users className="h-5 w-5 text-purple-400 mr-2" />
                     <div>
                       <div className="text-sm text-white/60">Followers</div>
-                      <div className="text-xl font-bold">{followers}</div>
+                      <div className="text-xl font-bold">{followerCount}</div>
                     </div>
                   </div>
                 </div>
