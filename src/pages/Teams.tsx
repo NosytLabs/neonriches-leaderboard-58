@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Container } from '@/components/ui/container';
 import { Shell } from '@/components/ui/Shell'; // Fixed casing
@@ -7,7 +8,6 @@ import TeamBenefitsDisplay from '@/components/teams/TeamBenefitsDisplay';
 import TeamMembersTable from '@/components/teams/TeamMembersTable';
 import TeamJoinButton from '@/components/teams/TeamJoinButton';
 import { useTeam } from '@/hooks/useTeam';
-import { Button } from '@/components/ui/button';
 import { TeamColor } from '@/types/team';
 
 const Teams = () => {
@@ -34,6 +34,7 @@ const Teams = () => {
           <CardContent>
             <TeamSelector 
               onTeamChange={handleTeamChange}
+              team={selectedTeam}
             />
             {error && <p className="text-red-500">{error}</p>}
             {isLoading && <p>Loading...</p>}
