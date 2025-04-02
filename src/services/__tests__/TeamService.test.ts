@@ -9,7 +9,7 @@ describe('TeamService', () => {
     render(<div>Team Service Test</div>);
     
     // Check if the component rendered
-    expect(screen.getByText(/Team Service Test/)).toBeInTheDocument();
+    expect(screen.getByText("Team Service Test")).toBeInTheDocument();
     
     // Verify that teamService is defined
     expect(teamService).toBeDefined();
