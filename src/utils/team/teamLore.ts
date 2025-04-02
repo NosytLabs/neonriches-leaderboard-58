@@ -1,30 +1,30 @@
 
-import { TeamColor } from '@/types/mockery-types';
+import { TeamColor } from '@/types/user-consolidated';
+
+// Team lore for each team
+export const teamLore: Record<TeamColor, string> = {
+  red: "The Royal Order of Reckless Spending traces its lineage to ancient royal treasurers who believed that wealth was meant to be flaunted, not hoarded. Members pride themselves on financial extravagance.",
+  blue: "The Cobalt Credit Cartel emerged from the shadows of merchant banking, creating a sophisticated network of influence through calculated spending. Their financial maneuvers are legendary.",
+  green: "The Emerald Exchequer Cabaret began as court jesters who mockingly imitated the spending habits of nobility, only to discover they enjoyed the lifestyle more than the jest.",
+  gold: "The Gold Dynasty claims descent from the original royal treasurers who mastered the art of appearing wealthy while maximizing every coin. Their golden touch is renowned throughout the realm.",
+  purple: "The Purple Realm represents those with noble blood but limited coffers, who perfected the art of strategic spending to maintain their social position despite dwindling resources.",
+  none: "Those without team allegiance wander the financial wilderness, neither burdened nor blessed by factional obligations.",
+  neutral: "The neutral path offers freedom from team rivalry, allowing individuals to chart their own course through the treacherous waters of conspicuous consumption.",
+  silver: "The Silver Alliance formed when pragmatic merchants realized that coordinated spending yielded greater influence than individual extravagance. Their networks span kingdoms.",
+  bronze: "The Bronze Brigade celebrates the honest value of hard-earned coin, believing that true worth comes not from gold plating but from substance beneath.",
+  crimson: "The Crimson Court specializes in purchasing the finest luxuries that draw attention and inspire envy, believing that the value of wealth lies primarily in others witnessing it."
+};
 
 // Team origin stories
 export const teamOrigins: Record<TeamColor, string> = {
-  red: 'The Red Team was formed by a group of warriors who believed in strength above all else. They were the first to challenge the established order and demand recognition based on power alone.',
-  blue: 'The Blue Team emerged from a council of scholars who valued knowledge and strategy. They established themselves as the thinking elite, using their collective wisdom to gain influence.',
-  green: 'The Green Team began as a collection of naturalists and farmers who mastered the art of sustainable growth. Their patience and nurturing approach allowed them to flourish over time.',
-  gold: 'The Gold Team was founded by merchants and traders who recognized the power of wealth. They built their influence through economic dominance and resource control.',
-  purple: 'The Purple Team was established by a secretive group that valued exclusivity and mystery. They cultivated rare skills and guarded their knowledge closely.',
-  none: 'Those who choose to remain unaffiliated have a long tradition of independence, valuing personal freedom above team allegiance.',
-  neutral: 'The Neutral faction emerged from diplomats and peacemakers who saw value in balance between the competing teams.',
-  silver: 'The Silver Team was formed by artisans and craftspeople who valued precision and elegance in all things.',
-  bronze: 'The Bronze Team traces its roots to historians and traditionalists who believed in building upon the foundations of the past.',
-  crimson: 'The Crimson Team arose from those willing to make blood sacrifices for power, establishing a cult-like following based on intimidation and dark rituals.'
-};
-
-// Team legends and myths
-export const teamLegends: Record<TeamColor, string> = {
-  red: 'Legend says the Red Team once defeated an army three times their size through sheer determination and ferocity. Their battle cry still echoes in the halls of history.',
-  blue: 'The Blue Team's greatest legend tells of how they once solved an impossible riddle that had stumped the greatest minds for centuries, revealing secrets that changed the course of history.',
-  green: 'Green Team mythology speaks of a time when they transformed a barren wasteland into a lush paradise through patience and careful tending, demonstrating their mastery of growth.',
-  gold: 'The Gold Team's most famous tale recounts how they once acquired enough wealth to buy an entire kingdom, showcasing their economic prowess.',
-  purple: 'Purple Team legends tell of members who could become invisible at will, moving unseen among their rivals and gathering secrets that gave them unparalleled advantage.',
-  none: 'Stories of unaffiliated heroes who succeeded against impossible odds without team support are passed down as inspiration for individual excellence.',
-  neutral: 'Neutral faction myths tell of mediators who prevented catastrophic wars between teams, saving countless lives through diplomatic skill.',
-  silver: 'Silver Team lore includes tales of members creating defenses so perfect that no enemy could breach them, protecting entire communities from harm.',
-  bronze: 'Bronze Team stories honor ancestors who preserved crucial knowledge during dark times, ensuring that civilization could rebuild from solid foundations.',
-  crimson: 'Crimson Team mythology speaks of members who made blood pacts with ancient powers, gaining supernatural abilities at terrible personal cost.'
+  red: "Founded by a bankrupt duke who discovered he could maintain his social status simply by continuing to spend lavishly, despite having no actual wealth remaining.",
+  blue: "Established by a consortium of merchants who realized the power of coordinated spending to influence royal politics without requiring noble titles.",
+  green: "Began as a satirical theater troupe mocking nobility's spending habits, before gradually transforming into the very thing they once ridiculed.",
+  gold: "Descended from the royal treasury guardians who skimmed just enough to build their own fortunes while maintaining plausible deniability.",
+  purple: "Created by impoverished nobility who pooled their resources to maintain appearances collectively when they could no longer do so individually.",
+  none: "The path of the unaligned, who reject the notion that spending habits should define social identity or worth.",
+  neutral: "Represents those who observe the team rivalries with bemused detachment, preferring financial independence to factional loyalty.",
+  silver: "Formed by practical wealth managers who saw the mathematical advantage in coordinated market manipulation through synchronized spending.",
+  bronze: "Emerged from the guilds and craftspeople who built real value before spending it, believing wealth should reflect contribution rather than inheritance.",
+  crimson: "Originated among courtiers who specialized in capturing attention through spectacular purchases, understanding that perception often outweighs substance."
 };

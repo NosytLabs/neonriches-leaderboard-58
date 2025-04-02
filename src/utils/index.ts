@@ -1,7 +1,9 @@
 
 // Re-export utility functions to make them easier to import
 export * from './formatters';
-export { formatDollarAmount, getInitials } from './formatters/stringFormatters';
+
+// Remove the redundant exports to prevent name collisions
+// export { formatDollarAmount, getInitials } from './formatters/stringFormatters';
 
 // Comment out non-existent modules to prevent errors
 // export * from './validation';
