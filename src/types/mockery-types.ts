@@ -6,9 +6,9 @@
 export type MockeryAction = 
   | 'shame'
   | 'mock'
-  | 'praise' // Ensuring praise is included
+  | 'praise' 
   | 'taunt'
-  | 'carrot' // Ensuring carrot is included
+  | 'carrot' 
   | 'honor'
   | 'applaud'
   | 'laugh'
@@ -40,7 +40,9 @@ export type MockeryAction =
   | 'joust'
   | 'duel'
   | 'fish'
-  | 'thumbsDown';
+  | 'thumbsDown'
+  | 'alert'
+  | 'warning';
 
 export type MockeryTier = 
   | 'common'
@@ -49,9 +51,9 @@ export type MockeryTier =
   | 'epic'
   | 'legendary'
   | 'royal'
-  | 'unique'    // Added missing tier
-  | 'mythic'    // Added missing tier
-  | 'gold'      // Added missing tier
+  | 'unique'
+  | 'mythic'
+  | 'gold'
   | 'basic'
   | 'premium'
   | 'standard'
@@ -99,15 +101,16 @@ export type LeaderboardUser = {
   isProtected?: boolean;
   joinDate?: string;
   createdAt?: string;
-  rankChange?: number; // Added for InteractiveLeaderboard.tsx
-  spendChange?: number; // Added for InteractiveLeaderboard.tsx
+  rankChange?: number;
+  spendChange?: number;
 };
 
 export type LeaderboardFilter = {
   team: TeamColor | 'all';
   tier: UserTier | 'all';
-  timeframe: 'day' | 'week' | 'month' | 'all';
-  sortBy: 'rank' | 'spent' | 'streak';
+  timeframe: 'day' | 'week' | 'month' | 'all' | 'today' | 'all-time' | 'week' | 'month' | 'year';
+  sortBy: 'rank' | 'spent' | 'streak' | 'username';
+  search?: string;
 };
 
 export type MockeryEvent = {
@@ -131,7 +134,7 @@ export type MockedUser = {
   tier?: UserTier;
   team?: TeamColor;
   rank?: number;
-  action?: MockeryAction; // Add the missing action property
+  action?: MockeryAction;
   totalSpent?: number;
   amountSpent?: number;
   mockCount?: number;

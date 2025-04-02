@@ -18,15 +18,15 @@ export type CosmeticType =
   | 'appearance'
   | 'interaction'
   | 'animation'
-  | 'premium'    // Added for compatibility
-  | 'standard'   // Added for compatibility
-  | 'exclusive'  // Added for compatibility
-  | 'aura'       // Added for compatibility with boost.ts
-  | 'cosmetic'   // Added for compatibility with boost.ts
-  | 'feature';   // Added for compatibility with boost.ts
+  | 'premium'
+  | 'standard'
+  | 'exclusive'
+  | 'aura'
+  | 'cosmetic'
+  | 'feature';
 
 // String literal type for category
-export type CosmeticCategory = string;
+export type CosmeticCategory = CosmeticType | string;
 
 // No conflicting exports
 export { CosmeticType };
@@ -110,14 +110,14 @@ export interface UserCosmetics {
   themes?: string[];
 }
 
-export type UserCosmeticState = Record<CosmeticType, string | null>;
-
-export interface CosmeticCategory {
+export interface CosmeticCategorySection {
   id: string;
   name: string;
   description: string;
   items: CosmeticItem[];
 }
+
+export type UserCosmeticState = Record<CosmeticType, string | null>;
 
 export interface CosmeticStoreSection {
   id: string;

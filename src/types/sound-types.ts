@@ -1,102 +1,79 @@
 
+/**
+ * Sound system type definitions
+ */
+
 export type SoundType = 
-  | 'success'
-  | 'error'
-  | 'notification'
-  | 'purchase'
-  | 'achievement'
-  | 'deposit'
-  | 'withdrawal'
-  | 'rank_up'
-  | 'level_up'
-  | 'levelUp'
-  | 'coin'
-  | 'shame'
-  | 'mockery'
-  | 'boost'
-  | 'throne'
-  | 'royal'
+  | 'success' 
+  | 'error' 
+  | 'notification' 
+  | 'purchase' 
+  | 'achievement' 
+  | 'deposit' 
+  | 'withdrawal' 
+  | 'rank_up' 
+  | 'level_up' 
+  | 'coin' 
+  | 'shame' 
+  | 'mockery' 
+  | 'boost' 
+  | 'throne' 
+  | 'royal' 
   | 'click'
-  | 'message'
-  | 'reward'
-  | 'chime'
-  | 'fanfare'
+  | 'message' 
+  | 'reward' 
+  | 'chime' 
+  | 'fanfare' 
   | 'coinDrop'
-  | 'sparkle'
+  | 'withdraw'
+  | 'swordClash'
+  | 'noblesLaugh'
   | 'protection'
+  | 'sparkle'
+  | 'royalAnnouncement'
+  | 'trumpet'
+  | 'medallion'
+  | 'seal'
+  | 'team'
   | 'transfer'
   | 'unlock'
-  | 'royal_preview'
-  | 'royal_bell'
-  | 'royal_fanfare'
-  | 'royal_announcement'
-  | 'royal_success'
-  | 'epic_preview'
-  | 'epic_victory'
-  | 'epic_defeat'
-  | 'epic_discovery'
-  | 'epic_challenge'
-  | 'minimal_preview'
-  | 'minimal_notification'
-  | 'minimal_success'
-  | 'minimal_alert'
-  | 'minimal_action'
+  | 'parchmentUnfurl'
+  | 'pageChange'
+  | 'wish'
+  | 'inkScribble'
+  | 'hover'
+  | 'advertisement'
   | 'alert'
   | 'badge'
   | 'toggle'
   | 'upgrade'
   | 'down'
   | 'up'
-  | 'withdraw'
-  | 'thumbsDown'
-  | 'advertisement'
-  | 'wish'
-  | 'inkScribble'
-  | 'hover'
-  | 'parchmentUnfurl'
-  | 'pageChange'
-  | 'noblesLaugh'
-  | 'swordClash'
-  | 'medallion'
-  | 'trumpet'
-  | 'seal'
-  | 'team'
-  | 'royalAnnouncement'
-  | 'warning'; // Added missing warning type for compatibility
+  | 'warning';
 
 export interface SoundOptions {
   volume?: number;
   loop?: boolean;
-  autoplay?: boolean;
-  once?: boolean;
-  format?: string;
+  playbackRate?: number;
+  onEnd?: () => void;
+  interrupt?: boolean;
   fadeIn?: boolean;
   fadeOut?: boolean;
-  duration?: number;
-  playbackRate?: number; // Added for compatibility with hooks/useSound.ts
-  onEnd?: () => void; // Added for compatibility with hooks/useSound.ts
-  interrupt?: boolean; // Added for compatibility with hooks/sounds/types.ts
-  onStart?: () => void; // Added for compatibility with hooks/sounds/types.ts
-  onPause?: () => void; // Added for compatibility with hooks/sounds/types.ts
-  onResume?: () => void; // Added for compatibility with hooks/sounds/types.ts
-  delay?: number; // Added for compatibility with sound-types.d.ts
+  onStart?: () => void;
+  onPause?: () => void;
+  onResume?: () => void;
+  delay?: number;
 }
 
-export interface PremiumSoundPackDetails {
-  id: string;
-  name: string;
-  description: string;
-  previewSound: SoundType;
-  preview?: string; // Added missing property
-  price: number;
-  tier: string;
-  icon?: string;
-  sounds?: SoundType[];
-}
-
-// For backward compatibility with sound-types.d.ts
 export type NotificationSoundOptions = SoundOptions;
-export type AudioOptions = SoundOptions;
+
+export interface SoundConfig {
+  enabled: boolean;
+  muted: boolean;
+  volume: number;
+  premium: boolean;
+  theme: 'standard' | 'royal' | 'minimal' | 'epic';
+}
 
 export interface AudioLoaderReturn {
   audio: Record<SoundType, HTMLAudioElement>;
@@ -109,19 +86,11 @@ export interface AudioLoaderReturn {
   isLoaded: boolean;
 }
 
-export interface UseSoundReturn {
-  play: (sound: SoundType, options?: SoundOptions) => void;
-  stop: (sound: SoundType) => void;
-  stopAll: () => void;
-}
-
-// Add SoundConfig for use in settings
-export interface SoundConfig {
-  enabled: boolean;
-  muted: boolean;
-  volume: number;
-  premium: boolean;
-  theme?: 'royal' | 'standard' | 'minimal' | 'epic';
-  pack?: string;
-  customSounds?: Record<SoundType, string>;
+export interface PremiumSoundPackDetails {
+  id?: string;
+  name: string;
+  description: string;
+  price: number;
+  sounds: SoundType[];
+  previewSound?: SoundType;
 }

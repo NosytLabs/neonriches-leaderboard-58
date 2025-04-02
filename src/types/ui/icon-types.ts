@@ -74,3 +74,15 @@ export const iconColorMap = {
 export type LucideIcon = React.ForwardRefExoticComponent<
   Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
 >;
+
+// Medieval icon types
+export type MedievalIconName = string;
+export type MedievalIconColor = IconColor;
+
+export interface MedievalIconProps {
+  name: MedievalIconName;
+  size?: IconSize;
+  color?: MedievalIconColor;
+  className?: string;
+  animated?: boolean;
+}

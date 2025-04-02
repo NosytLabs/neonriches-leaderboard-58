@@ -31,7 +31,7 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
     { value: 'purple', label: 'Purple Team' }
   ];
   
-  // Tier options - now correctly typed
+  // Tier options
   const tierOptions = [
     { value: 'all', label: 'All Tiers' },
     { value: 'basic', label: 'Basic' },
@@ -76,7 +76,7 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
           
           <Select
             value={filter.team}
-            onValueChange={(value: 'all' | TeamColor) => onFilterChange({ team: value })}
+            onValueChange={(value: string) => onFilterChange({ team: value as 'all' | TeamColor })}
           >
             <SelectTrigger className="bg-black/40 border-white/10">
               <SelectValue placeholder="Team" />
@@ -92,14 +92,14 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
           
           <Select
             value={filter.tier}
-            onValueChange={(value: 'all' | UserTier) => onFilterChange({ tier: value })}
+            onValueChange={(value: string) => onFilterChange({ tier: value as 'all' | UserTier })}
           >
             <SelectTrigger className="bg-black/40 border-white/10">
               <SelectValue placeholder="Tier" />
             </SelectTrigger>
             <SelectContent>
               {tierOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value as 'all' | UserTier}>
+                <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>
               ))}
@@ -108,7 +108,7 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
           
           <Select
             value={filter.timeframe}
-            onValueChange={(value: "all-time" | "today" | "week" | "month" | "year") => onFilterChange({ timeframe: value })}
+            onValueChange={(value: string) => onFilterChange({ timeframe: value as LeaderboardFilter['timeframe'] })}
           >
             <SelectTrigger className="bg-black/40 border-white/10">
               <SelectValue placeholder="Time Frame" />
@@ -124,7 +124,7 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
           
           <Select
             value={filter.sortBy}
-            onValueChange={(value: "rank" | "spent" | "username") => onFilterChange({ sortBy: value })}
+            onValueChange={(value: string) => onFilterChange({ sortBy: value as LeaderboardFilter['sortBy'] })}
           >
             <SelectTrigger className="bg-black/40 border-white/10">
               <SelectValue placeholder="Sort By" />

@@ -14,10 +14,12 @@ const MedievalIcon: React.FC<MedievalIconProps> = ({
   const iconPath = `/assets/icons/medieval/${name}.svg`;
   
   // Get size class
-  const sizeClass = iconSizeMap[size] || iconSizeMap.md;
+  const sizeClass = typeof size === 'string' 
+    ? (iconSizeMap[size] || iconSizeMap.md)
+    : `h-${size} w-${size}`;
   
   // Get color class
-  const colorClass = iconColorMap[color] || 'text-current';
+  const colorClass = iconColorMap[color as keyof typeof iconColorMap] || 'text-current';
   
   // Animation class
   const animationClass = animated ? 'animate-pulse' : '';

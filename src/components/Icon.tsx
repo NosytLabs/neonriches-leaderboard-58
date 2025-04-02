@@ -3,7 +3,7 @@ import React from 'react';
 import { IconProps } from '@/types/ui/icon-types';
 import { Icon as IconComponent } from '@/components/ui/icon';
 
-const Icon = React.forwardRef<SVGSVGElement, IconProps & { name?: string, icon?: string }>(
+const Icon = React.forwardRef<SVGSVGElement, IconProps>(
   ({ icon, name, size = 'md', color = 'default', className, animated, style = 'default', ...props }, ref) => {
     // Ensure either icon or name is provided
     const iconName = icon || name;
@@ -16,7 +16,7 @@ const Icon = React.forwardRef<SVGSVGElement, IconProps & { name?: string, icon?:
     return (
       <IconComponent
         ref={ref}
-        iconName={iconName} // Changed from icon to iconName to avoid type issues
+        iconName={iconName}
         size={size}
         color={color}
         className={className}
