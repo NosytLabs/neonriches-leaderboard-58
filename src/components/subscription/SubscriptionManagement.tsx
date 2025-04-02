@@ -1,205 +1,270 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
+import { useAuth } from '@/contexts/auth';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import {
+  AlertTriangle,
+  Calendar,
+  CheckCircle,
+  Clock,
+  CreditCard,
+  Edit,
+  RefreshCcw,
+  Star
+} from 'lucide-react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import { formatDate } from '@/utils/formatters';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/auth';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Check, ChevronsUpDown } from 'lucide-react';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
-import { UserProfile } from '@/types/user';
+import { adaptSubscription } from '@/utils/userProfileAdapter';
 
-interface SubscriptionManagementProps {
-  open: boolean;
-  onClose: () => void;
+interface SubscriptionPlan {
+  id: string;
+  name: string;
+  price: number;
+  interval: string;
 }
 
-const plans = [
-  {
-    id: 'basic-plan',
-    name: 'Basic',
-    price: 0,
-    interval: 'monthly',
-    description: 'Free plan with limited features',
-    features: ['Limited access', 'Standard support'],
-    color: 'text-gray-500',
-    maxLinks: 5,
-    maxProfiles: 1,
-    analyticsAccess: false,
-    customization: false,
-    protectionDuration: 0,
-    priceMonthly: 0,
-    priceYearly: 0
-  },
-  {
-    id: 'pro-plan',
-    name: 'Pro',
-    price: 19,
-    interval: 'monthly',
-    description: 'Professional plan with enhanced features',
-    features: ['Unlimited access', 'Priority support', 'Advanced analytics'],
-    color: 'text-blue-500',
-    maxLinks: 50,
-    maxProfiles: 5,
-    analyticsAccess: true,
-    customization: true,
-    protectionDuration: 7,
-    priceMonthly: 19,
-    priceYearly: 199
-  },
-  {
-    id: 'royal-plan',
-    name: 'Royal',
-    price: 49,
-    interval: 'monthly',
-    description: 'Royal plan with exclusive benefits',
-    features: ['Everything in Pro', 'Dedicated support', 'Exclusive content'],
-    color: 'text-royal-gold',
-    maxLinks: 100,
-    maxProfiles: 10,
-    analyticsAccess: true,
-    customization: true,
-    protectionDuration: 30,
-    priceMonthly: 49,
-    priceYearly: 499
-  }
-];
-
-const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({ open, onClose }) => {
+const SubscriptionManagement: React.FC = () => {
   const { user, updateUserProfile } = useAuth();
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState(plans.find(plan => plan.name.toLowerCase() === user?.tier) || plans[0]);
-  const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    if (user?.subscription?.planId) {
-      const plan = plans.find(p => p.id === user.subscription?.planId);
-      setSelectedPlan(plan || plans[0]);
+  const [open, setOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<string>('');
+  const [isUpdating, setIsUpdating] = useState(false);
+  
+  // Mock plans
+  const plans: SubscriptionPlan[] = [
+    {
+      id: 'basic',
+      name: 'Basic',
+      price: 9.99,
+      interval: 'monthly'
+    },
+    {
+      id: 'premium',
+      name: 'Premium',
+      price: 19.99,
+      interval: 'monthly'
+    },
+    {
+      id: 'royal',
+      name: 'Royal',
+      price: 49.99,
+      interval: 'monthly'
     }
-  }, [user?.subscription?.planId]);
-
-  const filteredPlans = plans.filter((plan) => {
-    return plan.name.toLowerCase().includes(search.toLowerCase());
-  });
-
-  const updateSubscription = async () => {
+  ];
+  
+  if (!user || !user.subscription) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Subscription</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="mb-4">You don't have an active subscription.</p>
+          <Button>Subscribe Now</Button>
+        </CardContent>
+      </Card>
+    );
+  }
+  
+  const currentSubscription = user.subscription;
+  
+  const handleChangePlan = async () => {
+    if (!selectedPlan) return;
+    
+    setIsUpdating(true);
+    
+    // Find selected plan
+    const plan = plans.find(p => p.id === selectedPlan);
+    
     try {
-      setLoading(true);
-    
-      // Create a proper subscription object with all required fields
-      await updateProfile({
-        subscription: {
-          id: user.subscription?.id || `sub-${Date.now()}`,
-          planId: selectedPlan?.id || 'basic-plan',
-          nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-          tier: selectedPlan?.name.toLowerCase() || 'basic',
-          status: 'active',
-          startDate: new Date().toISOString()
-        }
+      // Use adaptSubscription to create a compatible subscription object
+      const updatedSubscription = adaptSubscription({
+        ...currentSubscription,
+        planId: selectedPlan,
+        tier: plan?.name.toLowerCase() || 'basic',
+        nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        status: 'active',
       });
-    
-      setLoading(false);
+      
+      await updateUserProfile({
+        subscription: updatedSubscription
+      });
+      
       toast({
-        title: 'Subscription Updated',
-        description: `You are now subscribed to the ${selectedPlan?.name} plan.`,
-        variant: 'success'
+        title: "Subscription Updated",
+        description: `Your subscription has been updated to ${plan?.name}`,
+        variant: "success"
       });
-      onClose();
+      
+      setOpen(false);
     } catch (error) {
-      setLoading(false);
       console.error('Error updating subscription:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to update subscription. Please try again.',
-        variant: 'destructive'
+        title: "Error",
+        description: "Failed to update subscription. Please try again.",
+        variant: "destructive"
       });
+    } finally {
+      setIsUpdating(false);
     }
   };
-
-  const updateProfile = async (updates: Partial<UserProfile>) => {
-    if (!user) {
-      toast({
-        title: 'Error',
-        description: 'No user found. Please log in again.',
-        variant: 'destructive'
-      });
-      return;
-    }
-
-    try {
-      await updateUserProfile(updates);
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to update profile. Please try again.',
-        variant: 'destructive'
-      });
+  
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return 'text-green-500';
+      case 'cancelled': return 'text-red-500';
+      case 'paused': return 'text-yellow-500';
+      default: return 'text-gray-500';
     }
   };
-
+  
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[625px]">
-        <DialogHeader>
-          <DialogTitle>Manage Subscription</DialogTitle>
-          <DialogDescription>
-            Choose a plan that fits your needs.
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
-          {plans.map((plan) => (
-            <Card
-              key={plan.id}
-              className={cn(
-                "glass-morphism border-white/10 cursor-pointer",
-                selectedPlan.id === plan.id ? "ring-2 ring-primary" : "hover:bg-secondary/50"
-              )}
-              onClick={() => setSelectedPlan(plan)}
-            >
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold">{plan.name}</CardTitle>
-                <CardDescription>{plan.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="text-2xl font-bold">
-                  ${plan.price} <span className="text-sm text-muted-foreground">/{plan.interval}</span>
-                </div>
-                <ul className="list-disc pl-4 space-y-1">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="text-sm text-muted-foreground">{feature}</li>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Star className="h-5 w-5 text-yellow-500" />
+            Subscription
+          </div>
+          <Badge variant="outline" className={getStatusColor(currentSubscription.status || 'active')}>
+            {currentSubscription.status || 'active'}
+          </Badge>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-6">
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="text-lg font-semibold">
+                {currentSubscription.tier || 'Basic'} Plan
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {currentSubscription.planId || 'basic-plan'}
+              </p>
+            </div>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Edit className="h-4 w-4 mr-2" />
+                  Change Plan
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Change Subscription Plan</DialogTitle>
+                  <DialogDescription>
+                    Select the plan that works best for you.
+                  </DialogDescription>
+                </DialogHeader>
+                
+                <RadioGroup value={selectedPlan} onValueChange={setSelectedPlan} className="my-4">
+                  {plans.map(plan => (
+                    <div key={plan.id} className="flex items-center space-x-2 border rounded-md p-3 my-2">
+                      <RadioGroupItem value={plan.id} id={plan.id} />
+                      <Label htmlFor={plan.id} className="flex-1 cursor-pointer">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <div className="font-medium">{plan.name}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {plan.interval}
+                            </div>
+                          </div>
+                          <div className="font-semibold">
+                            ${plan.price.toFixed(2)}
+                          </div>
+                        </div>
+                      </Label>
+                    </div>
                   ))}
-                </ul>
-              </CardContent>
-            </Card>
-          ))}
+                </RadioGroup>
+                
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleChangePlan} disabled={!selectedPlan || isUpdating}>
+                    {isUpdating ? (
+                      <>
+                        <RefreshCcw className="h-4 w-4 mr-2 animate-spin" />
+                        Updating...
+                      </>
+                    ) : (
+                      'Confirm Change'
+                    )}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+          
+          <Separator />
+          
+          <div className="space-y-3">
+            <div className="flex items-center">
+              <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
+              <span className="text-sm">
+                Started on {formatDate(currentSubscription.startDate || new Date().toISOString())}
+              </span>
+            </div>
+            
+            <div className="flex items-center">
+              <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
+              <span className="text-sm">
+                Next billing on {formatDate(currentSubscription.nextBillingDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString())}
+              </span>
+            </div>
+            
+            <div className="flex items-center">
+              <CreditCard className="h-4 w-4 mr-2 text-muted-foreground" />
+              <span className="text-sm">
+                Payment method: Card ending in **** 4242
+              </span>
+            </div>
+          </div>
+          
+          <Separator />
+          
+          {currentSubscription.status === 'active' && (
+            <div className="flex items-center text-sm text-muted-foreground">
+              <CheckCircle className="h-4 w-4 mr-2 text-green-500" />
+              Your subscription is active and will automatically renew.
+            </div>
+          )}
+          
+          {currentSubscription.status === 'cancelled' && (
+            <div className="flex items-start text-sm text-muted-foreground">
+              <AlertTriangle className="h-4 w-4 mr-2 text-yellow-500 flex-shrink-0 mt-0.5" />
+              <div>
+                Your subscription has been cancelled and will expire on {formatDate(currentSubscription.endDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString())}. 
+                <Button variant="link" className="p-0 h-auto ml-1">
+                  Reactivate
+                </Button>
+              </div>
+            </div>
+          )}
+          
+          {currentSubscription.status === 'active' && (
+            <Button variant="outline" className="w-full">
+              Cancel Subscription
+            </Button>
+          )}
         </div>
-
-        <div className="flex justify-end space-x-2">
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={updateSubscription} disabled={loading}>
-            {loading ? "Updating..." : "Update Subscription"}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+      </CardContent>
+    </Card>
   );
 };
 

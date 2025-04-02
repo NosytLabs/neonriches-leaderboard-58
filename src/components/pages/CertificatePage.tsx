@@ -18,6 +18,9 @@ const CertificatePage: React.FC = () => {
     type: 'achievement',
     tier: 'gold',
     style: 'royal',
+    issuerName: 'Royal Court',
+    recipientName: 'Noble Citizen',
+    recipientId: 'user123'
   });
 
   return (

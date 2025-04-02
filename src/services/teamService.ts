@@ -98,11 +98,31 @@ class TeamService {
   getAllTeams(): TeamColor[] {
     return ['red', 'blue', 'green', 'gold', 'purple', 'silver', 'bronze', 'crimson', 'neutral', 'none'];
   }
+
+  getTeamById(id: string): any {
+    // Mock implementation
+    const teams = [
+      { id: 'team-1', color: 'red', name: 'Red Team' },
+      { id: 'team-2', color: 'blue', name: 'Blue Team' },
+      { id: 'team-3', color: 'green', name: 'Green Team' }
+    ];
+    return teams.find(team => team.id === id) || null;
+  }
+
+  getTeamByColor(color: string): any {
+    // Mock implementation
+    const teams = [
+      { id: 'team-1', color: 'red', name: 'Red Team' },
+      { id: 'team-2', color: 'blue', name: 'Blue Team' },
+      { id: 'team-3', color: 'green', name: 'Green Team' }
+    ];
+    return teams.find(team => team.color === color) || null;
+  }
 }
 
 // Create singleton instance
 const teamService = new TeamService();
 
-// Export default and named exports
+// Export default and named export
 export default teamService;
 export { teamService };

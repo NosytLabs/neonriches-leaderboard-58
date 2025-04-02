@@ -12,9 +12,64 @@ import { useSound } from '@/hooks/sounds/use-sound';
 import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
-import { adaptToUserProfile } from '@/utils/userAdapter';
-import { UserProfile } from '@/types/user-consolidated'; // Import from user-consolidated
+import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
+import { UserProfile as UserProfileType } from '@/types/user';
 import { toTeamColor } from '@/utils/typeConverters';
+
+/**
+ * Converts a consolidated user profile to a format compatible with components
+ * that expect the user.UserProfile type
+ */
+function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfileType {
+  return {
+    id: user.id,
+    username: user.username,
+    displayName: user.displayName,
+    email: user.email,
+    profileImage: user.profileImage,
+    bio: user.bio || '',
+    joinedDate: user.joinedDate,
+    isVerified: user.isVerified,
+    isProtected: user.isProtected,
+    isVIP: user.isVIP,
+    isFounder: user.isFounder,
+    isAdmin: user.isAdmin,
+    team: toTeamColor(user.team),
+    tier: user.tier,
+    rank: user.rank,
+    previousRank: user.previousRank,
+    totalSpent: user.totalSpent,
+    amountSpent: user.amountSpent,
+    walletBalance: user.walletBalance || 0,
+    settings: {
+      profileVisibility: 'public', // Use a valid literal value from UserSettings
+      allowProfileLinks: Boolean(user.settings?.allowProfileLinks),
+      theme: 'dark', // Use a valid literal value from UserSettings
+      notifications: Boolean(user.settings?.notifications),
+      emailNotifications: Boolean(user.settings?.emailNotifications),
+      marketingEmails: Boolean(user.settings?.marketingEmails),
+      showRank: Boolean(user.settings?.showRank),
+      darkMode: Boolean(user.settings?.darkMode),
+      soundEffects: Boolean(user.settings?.soundEffects),
+      showBadges: Boolean(user.settings?.showBadges),
+      showTeam: Boolean(user.settings?.showTeam),
+      showSpending: Boolean(user.settings?.showSpending)
+    },
+    profileBoosts: user.profileBoosts || [],
+    cosmetics: user.cosmetics || {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    },
+    spendStreak: user.spendStreak || 0
+  };
+}
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -75,14 +130,11 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Create a compatible user profile object with non-optional displayName
-  const adaptedUser = adaptToUserProfile(user);
+  // Adapt the user to a version that components can use
+  const adaptedUser = user as ConsolidatedUserProfile;
   
   // Create a UserProfile compatible with the user.UserProfile type
-  const userForComponents = {
-    ...adaptedUser,
-    team: toTeamColor(adaptedUser.team || 'none'),
-  };
+  const userForComponents = adaptUserProfileForComponents(adaptedUser);
 
   const handleSpend = () => {
     toast({

@@ -56,7 +56,7 @@ export const adaptToUserProfile = (user: any): UserProfile => {
     profileClicks: user.profileClicks || 0,
     subscription: user.subscription || null,
     purchasedFeatures: user.purchasedFeatures || [],
-    certificates: user.certificates || [],
+    certificateNFT: user.certificateNFT || undefined,
     gender: user.gender || 'prefer-not-to-say'
   };
 };

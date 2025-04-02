@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/auth';
 import { showSuccessToast, showErrorToast } from '@/utils/toastUtils';
 import { adaptUserProfileUpdate } from '@/utils/userProfileAdapter';
+import { adaptSubscription } from '@/utils/userProfileAdapter';
 
 interface ProfileSettingsProps {
   user: UserProfile;
@@ -32,10 +33,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
 
   const handleSave = async () => {
     try {
-      // Create a partial update and adapt it for type safety
-      const updateData = adaptUserProfileUpdate({
-        ...formData
-      });
+      // Create a partial update with strong type safety
+      const updateData = {
+        ...formData,
+        // If there's a subscription, adapt it to ensure type compatibility
+        subscription: user.subscription ? adaptSubscription(user.subscription) : undefined
+      };
       
       await updateUserProfile(updateData);
       setIsEditing(false);

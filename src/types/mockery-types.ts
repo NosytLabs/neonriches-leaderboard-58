@@ -42,13 +42,16 @@ export type MockeryAction =
   | 'courtJester'
   | 'smokeBomb'
   | 'protection'
-  | 'thumbsDown';
+  | 'thumbsDown'
+  | 'laugh'
+  | 'fish';
 
 // Legacy alias support
 export type LegacyMockeryAction = 
   | 'tomatoes' 
   | 'eggs' 
-  | 'putridEggs';
+  | 'putridEggs'
+  | 'carrot';
 
 export type MockeryTier = 
   | 'common' 
@@ -81,6 +84,7 @@ export function normalizeMockeryAction(action: MockeryAction | LegacyMockeryActi
   if (action === 'tomatoes') return 'tomato';
   if (action === 'eggs') return 'egg';
   if (action === 'putridEggs') return 'putridEgg';
+  if (action === 'carrot') return 'laugh';
   return action as MockeryAction;
 }
 
@@ -153,6 +157,7 @@ export function convertLegacyAction(action: MockeryAction | LegacyMockeryAction)
   if (action === 'tomatoes') return 'tomato';
   if (action === 'eggs') return 'egg';
   if (action === 'putridEggs') return 'putridEgg';
+  if (action === 'carrot') return 'laugh';
   return action as MockeryAction;
 }
 

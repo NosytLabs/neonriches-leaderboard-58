@@ -1,165 +1,184 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Egg, Flame, Laugh, Fish, ThumbsDown } from 'lucide-react';
-import { getInitials } from '@/utils/stringUtils';
-import { MockeryAction } from '@/types/mockery-types';
-import { 
-  getMockeryDescription, 
-  getMockeryTierColorClass 
-} from '@/utils/mockeryUtils';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Eye, Target, TrendingUp, Trophy, User } from 'lucide-react';
+import { LeaderboardUser } from '@/types/mockery-types';
+import { formatCurrency } from '@/utils/formatters';
+import { useToast } from '@/hooks/use-toast';
+import { MockeryAction, VALID_MOCKERY_ACTIONS } from '@/utils/mockeryActionUtils';
 
-const PublicShamingFeature = () => {
-  // Mock data for demonstration
-  const mockedUsers = [
-    {
-      id: '1',
-      username: 'spender123',
-      displayName: 'Big Spender',
-      avatarUrl: '/avatars/user1.png',
-      rank: 3,
-      totalSpent: 5200,
-      mockeryCount: {
-        tomato: 12,
-        egg: 5,
-        thumbsDown: 3,
-        laugh: 1,
-        fish: 2
-      }
-    },
-    {
-      id: '2',
-      username: 'royalMoney',
-      displayName: 'Royal Money',
-      avatarUrl: '/avatars/user2.png',
-      rank: 7,
-      totalSpent: 3800,
-      mockeryCount: {
-        tomato: 8,
-        egg: 2,
-        thumbsDown: 7,
-        laugh: 4,
-        fish: 1
-      }
-    }
-  ];
-  
-  const [userMockery, setUserMockery] = useState<Record<string, Partial<Record<MockeryAction, number>>>>({
-    '1': {
-      tomato: 12,
-      egg: 5,
-      thumbsDown: 3,
-      laugh: 1,
-      fish: 2
-    },
-    '2': {
-      tomato: 8,
-      egg: 2,
-      thumbsDown: 7,
-      laugh: 4,
-      fish: 1
-    }
-  });
-  
-  // Apply mockery to a user
-  const handleApplyMockery = (userId: string, action: MockeryAction) => {
-    setUserMockery(prev => {
-      const userMockeries = prev[userId] || {};
-      const currentCount = userMockeries[action] || 0;
-      
-      return {
-        ...prev,
-        [userId]: {
-          ...userMockeries,
-          [action]: currentCount + 1
-        }
-      };
-    });
+interface PublicShamingFeatureProps {
+  users: LeaderboardUser[];
+  onShame?: (userId: string, action: MockeryAction) => void;
+}
+
+// Define a type for valid mockery actions
+type ValidMockeryAction = Extract<MockeryAction, 'tomato' | 'egg' | 'putridEgg'>;
+
+const PublicShamingFeature: React.FC<PublicShamingFeatureProps> = ({ 
+  users = [], 
+  onShame 
+}) => {
+  const { toast } = useToast();
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // Define the mockery action costs
+  const actionCosts: Partial<Record<MockeryAction, number>> = {
+    'tomato': 10,
+    'egg': 25,
+    'putridEgg': 50,
+    'thumbsDown': 5,
+    'mock': 15,
+    'jester': 35,
+    'taunt': 20
   };
-  
+
+  // Define more consistent mockery action costs for the user interface
+  const displayActionCosts: Partial<Record<MockeryAction, number>> = {
+    'tomato': 10,
+    'egg': 25,
+    'putridEgg': 50,
+    'thumbsDown': 5,
+    'mock': 15,
+    'jester': 35,
+    'taunt': 20
+  };
+
+  const handleSelectUser = (userId: string) => {
+    setSelectedUserId(userId === selectedUserId ? null : userId);
+  };
+
+  const handleShameUser = async (userId: string, action: MockeryAction) => {
+    setLoading(true);
+
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Call the callback if provided
+    if (onShame) {
+      onShame(userId, action);
+    }
+
+    // Show toast notification
+    toast({
+      title: "Mockery Deployed",
+      description: `You have successfully shamed this user with ${action}.`,
+      variant: "default"
+    });
+
+    setLoading(false);
+    setSelectedUserId(null);
+  };
+
+  if (users.length === 0) {
+    return (
+      <Card className="glass-morphism border-white/10">
+        <CardHeader>
+          <CardTitle>Public Shaming</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-center py-8 text-white/60">
+            No users available for shaming at this time.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card className="bg-black/20 border-white/10">
+    <Card className="glass-morphism border-white/10">
       <CardHeader>
-        <CardTitle className="text-lg font-medium flex items-center">
-          <Flame className="h-5 w-5 mr-2 text-red-500" />
-          Public Shaming Leaderboard
+        <CardTitle className="flex items-center">
+          <Target className="h-5 w-5 mr-2 text-red-500" />
+          Public Shaming
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {mockedUsers.map(user => (
-          <div 
-            key={user.id} 
-            className="p-3 border border-white/10 rounded-lg bg-black/30 hover:bg-black/40 transition-colors"
-          >
-            <div className="flex items-center">
-              <Avatar className="h-10 w-10 mr-3">
-                <AvatarImage src={user.avatarUrl} alt={user.username} />
-                <AvatarFallback>{getInitials(user.displayName || user.username)}</AvatarFallback>
-              </Avatar>
-              
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
+      <CardContent>
+        <p className="text-white/60 mb-4">
+          Mock those who spend less than you! Choose a user below to shame.
+        </p>
+
+        <div className="space-y-3">
+          {users.slice(0, 5).map(user => (
+            <div 
+              key={user.id || user.userId} 
+              className={`p-3 rounded-lg border ${
+                selectedUserId === (user.id || user.userId) 
+                  ? 'bg-black/40 border-royal-gold/20' 
+                  : 'bg-black/20 border-white/5 hover:bg-black/30 hover:border-white/10'
+              } transition-all cursor-pointer`}
+              onClick={() => handleSelectUser(user.id || user.userId || '')}
+            >
+              <div className="flex justify-between items-center">
+                <div className="flex items-center space-x-3">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={user.profileImage} />
+                    <AvatarFallback>
+                      {user.username?.substring(0, 2).toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
                   <div>
-                    <h3 className="font-medium text-sm">{user.displayName || user.username}</h3>
-                    <p className="text-xs text-white/60">Rank #{user.rank} • ${user.totalSpent.toLocaleString()}</p>
-                  </div>
-                  
-                  <div className="flex items-center space-x-1">
-                    {Object.entries(userMockery[user.id] || {}).map(([key, count]) => (
-                      <Badge 
-                        key={key} 
-                        variant="outline" 
-                        className="bg-black/30 text-xs px-1.5"
-                      >
-                        {key === 'tomato' && <Flame className="h-3 w-3 mr-1 text-red-500" />}
-                        {key === 'egg' && <Egg className="h-3 w-3 mr-1 text-yellow-500" />}
-                        {key === 'thumbsDown' && <ThumbsDown className="h-3 w-3 mr-1 text-blue-500" />}
-                        {key === 'laugh' && <Laugh className="h-3 w-3 mr-1 text-orange-500" />}
-                        {key === 'fish' && <Fish className="h-3 w-3 mr-1 text-cyan-500" />}
-                        {count}
-                      </Badge>
-                    ))}
+                    <div className="font-medium flex items-center">
+                      {user.displayName || user.username}
+                      {user.isVerified && (
+                        <Badge variant="outline" className="ml-2 h-5 px-1.5">
+                          <TrendingUp className="h-3 w-3 mr-1" />
+                          #{user.rank}
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="text-xs text-white/60">
+                      Spent: {formatCurrency(user.totalSpent || user.amountSpent || 0)}
+                    </div>
                   </div>
                 </div>
+                
+                {selectedUserId !== (user.id || user.userId) && (
+                  <Button size="sm" variant="ghost" className="text-white/70 hover:text-white">
+                    <Eye className="h-4 w-4 mr-1" />
+                    Details
+                  </Button>
+                )}
               </div>
+
+              {selectedUserId === (user.id || user.userId) && (
+                <div className="mt-4 grid grid-cols-3 gap-2">
+                  <Button 
+                    size="sm"
+                    variant="outline"
+                    className="bg-black/30"
+                    onClick={() => handleShameUser(user.id || user.userId || '', 'tomato')}
+                    disabled={loading}
+                  >
+                    Tomato (${displayActionCosts['tomato']})
+                  </Button>
+                  <Button 
+                    size="sm"
+                    variant="outline"
+                    className="bg-black/30"
+                    onClick={() => handleShameUser(user.id || user.userId || '', 'egg')}
+                    disabled={loading}
+                  >
+                    Egg (${displayActionCosts['egg']})
+                  </Button>
+                  <Button 
+                    size="sm"
+                    variant="outline"
+                    className="bg-black/30"
+                    onClick={() => handleShameUser(user.id || user.userId || '', 'mock')}
+                    disabled={loading}
+                  >
+                    Mock (${displayActionCosts['mock']})
+                  </Button>
+                </div>
+              )}
             </div>
-            
-            <div className="flex justify-between mt-3 gap-2">
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="w-full border-red-500/20 hover:border-red-500/40 hover:bg-red-500/10 text-xs"
-                onClick={() => handleApplyMockery(user.id, 'tomato')}
-              >
-                <Flame className="h-3.5 w-3.5 mr-1.5 text-red-500" />
-                Tomato
-              </Button>
-              
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="w-full border-yellow-500/20 hover:border-yellow-500/40 hover:bg-yellow-500/10 text-xs"
-                onClick={() => handleApplyMockery(user.id, 'egg')}
-              >
-                <Egg className="h-3.5 w-3.5 mr-1.5 text-yellow-500" />
-                Egg
-              </Button>
-              
-              <Button 
-                size="sm" 
-                variant="outline" 
-                className="w-full border-blue-500/20 hover:border-blue-500/40 hover:bg-blue-500/10 text-xs"
-                onClick={() => handleApplyMockery(user.id, 'thumbsDown')}
-              >
-                <ThumbsDown className="h-3.5 w-3.5 mr-1.5 text-blue-500" />
-                Thumbs Down
-              </Button>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </CardContent>
     </Card>
   );

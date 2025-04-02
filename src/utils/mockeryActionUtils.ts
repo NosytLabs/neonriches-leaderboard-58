@@ -8,8 +8,7 @@ export const LEGACY_TO_STANDARD_MAPPING: Record<string, MockeryAction> = {
   'tomatoes': 'tomato',
   'eggs': 'egg',
   'putridEggs': 'putridEgg',
-  'carrot': 'laugh',
-  'fish': 'fish'
+  'carrot': 'laugh'
 };
 
 /**

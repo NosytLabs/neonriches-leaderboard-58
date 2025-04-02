@@ -11,8 +11,9 @@ export { Badge } from '@/components/ui/badge';
 export { default as Shell } from '@/components/Shell';
 export { default as UIShell } from '@/components/ui/Shell';
 
-// Re-export TeamService to handle casing issues
-export { default as teamService } from '@/services/teamService';
+// Import teamService and re-export it
+import teamService from '@/services/teamService';
+export { teamService };
 
 // Utility function to safely get required exports from teamService to handle missing exports
 export const getTeams = teamService.getAllTeams || (() => []);

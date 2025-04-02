@@ -5,6 +5,13 @@ import { Certificate, CertificateType, CertificateTemplate } from '@/types/certi
  * Adapter function to ensure a certificate has all required properties
  */
 export function adaptCertificate(partialCertificate: Partial<Certificate>): Certificate {
+  // Extract values or set defaults
+  const issuerName = partialCertificate.issuerName || 'Royal Court';
+  const recipientName = partialCertificate.recipientName || 'Royal Subject';
+  const style = partialCertificate.style || 'standard';
+  const recipientId = partialCertificate.recipientId || partialCertificate.userId || '';
+  const userId = partialCertificate.userId || partialCertificate.recipientId || '';
+  
   return {
     id: partialCertificate.id || `cert-${Date.now()}`,
     title: partialCertificate.title || 'Certificate',
@@ -16,11 +23,11 @@ export function adaptCertificate(partialCertificate: Partial<Certificate>): Cert
     status: partialCertificate.status || 'pending',
     type: partialCertificate.type || 'achievement',
     tier: partialCertificate.tier || 'silver',
-    style: partialCertificate.style || 'standard',
-    issuerName: partialCertificate.issuerName || 'Royal Court',
-    recipientName: partialCertificate.recipientName || 'Royal Subject',
-    recipientId: partialCertificate.recipientId || partialCertificate.userId || '',
-    userId: partialCertificate.userId || partialCertificate.recipientId || ''
+    style: style as any, // Force cast to avoid type issues
+    issuerName,
+    recipientName,
+    recipientId,
+    userId
   };
 }
 
@@ -28,6 +35,8 @@ export function adaptCertificate(partialCertificate: Partial<Certificate>): Cert
  * Adapter function to ensure a certificate template has all required properties
  */
 export function adaptCertificateTemplate(partialTemplate: Partial<CertificateTemplate>): CertificateTemplate {
+  const style = partialTemplate.style || 'standard';
+  
   return {
     id: partialTemplate.id || `template-${Date.now()}`,
     name: partialTemplate.name || 'Certificate Template',
@@ -36,7 +45,7 @@ export function adaptCertificateTemplate(partialTemplate: Partial<CertificateTem
     imageUrl: partialTemplate.imageUrl || '/images/certificates/template.png',
     type: partialTemplate.type || 'achievement',
     team: partialTemplate.team || 'neutral',
-    style: partialTemplate.style || 'standard',
+    style: style as any, // Force cast to avoid type issues
     available: partialTemplate.available !== false
   };
 }

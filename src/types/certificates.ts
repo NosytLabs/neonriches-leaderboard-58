@@ -1,35 +1,62 @@
 
-import { TeamColor } from './team';
+import { TeamColor } from '@/types/mockery-types';
 
-// Certificate types
-export type CertificateType = 'achievement' | 'reward' | 'nobility' | 'spending' | 'honor';
-export type CertificateStyle = 'classic' | 'royal' | 'elegant' | 'modern' | 'vintage' | 'gold' | 'silver' | 'bronze';
+export type CertificateType = 
+  | 'achievement'
+  | 'spending'
+  | 'ranking'
+  | 'victory'
+  | 'nobility'
+  | 'royal'
+  | 'team'
+  | 'participation'
+  | 'completion';
 
-// Use union of string literals instead of enum for better TS compatibility
-export type CertificateTeam = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none';
+export type CertificateStatus = 
+  | 'pending' 
+  | 'minted' 
+  | 'rejected' 
+  | 'approved'
+  | 'revoked'
+  | 'expired';
 
-// Certificate interface
+export type CertificateStyle = 
+  | 'royal'
+  | 'classic'
+  | 'medieval'
+  | 'modern'
+  | 'elegant'
+  | 'simple'
+  | 'ornate'
+  | 'gold'
+  | 'silver'
+  | 'bronze'
+  | 'platinum'
+  | 'diamond'
+  | 'standard';
+
+export type CertificateTeam = TeamColor | 'all';
+
 export interface Certificate {
   id: string;
   title: string;
   description: string;
   imageUrl: string;
   dateIssued: string;
-  issuedAt?: string; // Alias for compatibility
-  style: CertificateStyle;
+  issuedAt?: string; // Alias for dateIssued for backward compatibility
+  mintAddress?: string;
+  status: CertificateStatus;
   type: CertificateType;
+  tier?: string;
+  style: CertificateStyle;
   issuerName: string;
   recipientName: string;
   recipientId: string;
-  userId?: string; // Alias for compatibility
-  mintAddress?: string;
-  status?: 'pending' | 'minted' | 'revoked';
-  team?: CertificateTeam | TeamColor | string;
-  tier?: string;
-  isMinted?: boolean; // Added for compatibility
+  userId: string;
+  team?: TeamColor;
+  isMinted?: boolean;
 }
 
-// Certificate Template interface
 export interface CertificateTemplate {
   id: string;
   name: string;
@@ -37,7 +64,16 @@ export interface CertificateTemplate {
   previewUrl: string;
   imageUrl: string;
   type: CertificateType;
-  team: CertificateTeam | TeamColor | string;
+  team: TeamColor | string;
   style: CertificateStyle;
   available: boolean;
+}
+
+export interface CertificateIssuance {
+  templateId: string;
+  userId: string;
+  title?: string;
+  description?: string;
+  customFields?: Record<string, string>;
+  metadata?: Record<string, any>;
 }
