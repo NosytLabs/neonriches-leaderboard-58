@@ -12,9 +12,8 @@ import { useSound } from '@/hooks/use-sound';
 import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
-import { adaptToStandardUserProfile, ensureTotalSpent } from '@/utils/userTypeAdapter';
-import { UserProfile, TeamColor } from '@/types/user';
-import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
+import { adaptToUserProfile } from '@/utils/userAdapter';
+import { UserProfile } from '@/types/user';
 import { toTeamColor } from '@/utils/typeConverters';
 
 const EnhancedDashboard = () => {
@@ -76,28 +75,8 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // First ensure totalSpent and amountSpent properties are present
-  // We need to cast as any first to avoid type errors, since user is from user-consolidated.ts
-  // but we're treating it as a user.ts UserProfile
-  const userWithRequired = ensureTotalSpent(user as any);
-  
-  // Then adapt to ensure all other properties are correctly set
-  const standardUser = adaptToStandardUserProfile(userWithRequired);
-
-  // Now enhance the profile boosts with required properties
-  const enhancedUserForProps = {
-    ...standardUser,
-    // Convert team to proper TeamColor if it exists
-    team: standardUser.team ? toTeamColor(standardUser.team as string) : null,
-    profileBoosts: standardUser.profileBoosts?.map(boost => ({
-      ...boost,
-      // Make sure required properties are present to satisfy both interfaces
-      strength: boost.strength || 1,
-      isActive: boost.isActive ?? true,
-      level: boost.level || 1,
-      appliedBy: boost.appliedBy || 'system' // Ensure appliedBy is always present
-    })) || []
-  };
+  // Adapt consolidated user to standard user profile
+  const userForComponents = adaptToUserProfile(user);
 
   const handleSpend = () => {
     toast({
@@ -115,10 +94,6 @@ const EnhancedDashboard = () => {
     });
     sound.playSound('success');
   };
-
-  // Explicitly cast to UserProfile type to ensure compatibility with component props
-  // This bridge between the two UserProfile types
-  const userForComponents = enhancedUserForProps as unknown as UserProfile;
 
   return (
     <div className="container mx-auto px-4 py-6">

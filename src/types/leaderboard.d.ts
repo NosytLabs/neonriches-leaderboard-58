@@ -1,6 +1,7 @@
 
 export interface LeaderboardUser {
   id: string;
+  userId: string;
   username: string;
   displayName?: string;
   profileImage?: string;
@@ -14,6 +15,7 @@ export interface LeaderboardUser {
   spentAmount?: number;  // Legacy field - use totalSpent instead
   amountSpent?: number;  // Legacy field - use totalSpent instead
   isVerified?: boolean;
+  isProtected: boolean;
   spendStreak?: number;
   joinedAt?: string;     // Add joinedAt as an optional property
 }
@@ -36,4 +38,5 @@ export interface SortByOptions {
 
 export interface TypedLeaderboardFilter extends LeaderboardFilter {
   sort?: string;
+  sortDirection?: 'asc' | 'desc';
 }

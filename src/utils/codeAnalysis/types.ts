@@ -25,15 +25,14 @@ export interface ProjectMetrics {
   complexity: number;
   maintainability: number;
   
-  // Properties that were missing
   beforeCleanup: {
     totalFiles: number;
     totalLines: number;
     codeSize: number;
     dependencies: number;
-    projectSize?: number; // Added for compatibility
-    fileCount?: number;   // Added for compatibility
-    dependencyCount?: number; // Added for compatibility
+    projectSize: number;
+    fileCount: number;
+    dependencyCount: number;
   };
   
   afterCleanup: {
@@ -41,7 +40,7 @@ export interface ProjectMetrics {
     totalLines: number;
     codeSize: number;
     dependencies: number;
-    projectSize?: number; // Added for compatibility
+    projectSize: number;
   };
   
   sizeSavings: {
@@ -65,5 +64,4 @@ export interface ProjectMetrics {
   resources: ResourceMetrics;
 }
 
-// Use export type for type-only exports when using isolatedModules
 export type { ProjectMetrics };

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -262,6 +261,195 @@ const ProfileCustomization: React.FC<ProfileCustomizationProps> = ({
   const getItemsForCategory = (category: string): CosmeticItem[] => {
     return availableItems.filter(item => item.category === category);
   };
+
+  // Sample cosmetic items
+  const themeItems: CosmeticItem[] = [
+    {
+      id: 'theme-royal',
+      name: 'Royal Theme',
+      description: 'A majestic theme fit for royalty',
+      price: 500,
+      type: 'premium',
+      rarity: 'legendary',
+      category: 'theme',
+      enabled: true,
+      cssClass: 'theme-royal'
+    },
+    {
+      id: 'theme-gold',
+      name: 'Gold Theme',
+      description: 'A luxurious gold-accented theme',
+      price: 350,
+      type: 'premium',
+      rarity: 'epic',
+      category: 'theme',
+      enabled: true,
+      cssClass: 'theme-gold'
+    },
+    {
+      id: 'theme-silver',
+      name: 'Silver Theme',
+      description: 'An elegant silver-accented theme',
+      price: 250,
+      type: 'standard',
+      rarity: 'rare',
+      category: 'theme',
+      enabled: true,
+      cssClass: 'theme-silver'
+    },
+    {
+      id: 'theme-bronze',
+      name: 'Bronze Theme',
+      description: 'A classic bronze-accented theme',
+      price: 150,
+      type: 'standard',
+      rarity: 'uncommon',
+      category: 'theme',
+      enabled: true,
+      cssClass: 'theme-bronze'
+    }
+  ];
+
+  const backgroundItems: CosmeticItem[] = [
+    {
+      id: 'bg-castle',
+      name: 'Castle Background',
+      description: 'A majestic castle background',
+      price: 300,
+      type: 'premium',
+      rarity: 'epic',
+      category: 'background',
+      enabled: true,
+      cssClass: 'bg-castle'
+    },
+    {
+      id: 'bg-throne',
+      name: 'Throne Room Background',
+      description: 'An opulent throne room background',
+      price: 400,
+      type: 'premium',
+      rarity: 'legendary',
+      category: 'background',
+      enabled: true,
+      cssClass: 'bg-throne'
+    },
+    {
+      id: 'bg-night',
+      name: 'Night Sky Background',
+      description: 'A beautiful starry night sky',
+      price: 200,
+      type: 'standard',
+      rarity: 'rare',
+      category: 'background',
+      enabled: true,
+      cssClass: 'bg-night'
+    },
+    {
+      id: 'bg-forest',
+      name: 'Enchanted Forest Background',
+      description: 'A mystical forest background',
+      price: 150,
+      type: 'standard',
+      rarity: 'uncommon',
+      category: 'background',
+      enabled: true,
+      cssClass: 'bg-forest'
+    }
+  ];
+
+  const effectItems: CosmeticItem[] = [
+    {
+      id: 'effect-glow',
+      name: 'Royal Glow Effect',
+      description: 'A subtle golden glow around your profile',
+      price: 350,
+      type: 'premium',
+      rarity: 'epic',
+      category: 'effect',
+      enabled: true,
+      cssClass: 'effect-glow'
+    },
+    {
+      id: 'effect-sparkle',
+      name: 'Sparkle Effect',
+      description: 'Subtle sparkles around your profile',
+      price: 250,
+      type: 'premium',
+      rarity: 'rare',
+      category: 'effect',
+      enabled: true,
+      cssClass: 'effect-sparkle'
+    },
+    {
+      id: 'effect-shadow',
+      name: 'Royal Shadow Effect',
+      description: 'A dramatic shadow effect for your profile',
+      price: 200,
+      type: 'standard',
+      rarity: 'uncommon',
+      category: 'effect',
+      enabled: true,
+      cssClass: 'effect-shadow'
+    },
+    {
+      id: 'effect-pulse',
+      name: 'Pulsing Aura Effect',
+      description: 'A gently pulsing aura around your profile',
+      price: 300,
+      type: 'premium',
+      rarity: 'rare',
+      category: 'effect',
+      enabled: true,
+      cssClass: 'effect-pulse'
+    }
+  ];
+
+  const titleItems: CosmeticItem[] = [
+    {
+      id: 'title-royal',
+      name: 'Royal Spender',
+      description: 'Show off your royal spending status',
+      price: 500,
+      type: 'premium',
+      rarity: 'legendary',
+      category: 'title',
+      enabled: true,
+      cssClass: 'title-royal'
+    },
+    {
+      id: 'title-big-spender',
+      name: 'Big Spender',
+      description: 'Let everyone know you spend big',
+      price: 300,
+      type: 'premium',
+      rarity: 'epic',
+      category: 'title',
+      enabled: true,
+      cssClass: 'title-big-spender'
+    },
+    {
+      id: 'title-generous',
+      name: 'The Generous',
+      description: 'Show off your generous nature',
+      price: 200,
+      type: 'standard',
+      rarity: 'rare',
+      category: 'title',
+      enabled: true,
+      cssClass: 'title-generous'
+    },
+    {
+      id: 'title-elite',
+      name: 'Elite Patron',
+      description: 'Display your elite patron status',
+      price: 400,
+      type: 'premium',
+      rarity: 'epic',
+      category: 'title',
+      enabled: true,
+      cssClass: 'title-elite'
+    }
+  ];
 
   return (
     <Card className="glass-morphism border-white/10">

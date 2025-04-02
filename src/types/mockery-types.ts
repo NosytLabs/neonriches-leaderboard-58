@@ -23,9 +23,9 @@ export type MockeryAction =
   | 'downvote'
   | 'gift'
   | 'target'
-  | 'fish'  // Added missing actions used in the app
-  | 'message'  // Added for sound compatibility
-  | 'mockery';  // Added for sound compatibility
+  | 'fish'
+  | 'message'
+  | 'mockery';
 
 // Define all possible mockery tiers
 export type MockeryTier = 
@@ -78,7 +78,7 @@ export interface MockedUser {
   totalSpent: number;
   rank: number;
   spendStreak: number;
-  reason?: string; // Added to fix property error
+  reason?: string;
 }
 
 export interface MockeryProfile {
@@ -103,7 +103,7 @@ export interface MockeryEvent {
   isAnonymous: boolean;
   message?: string;
   duration?: number;
-  appliedBy?: string; // Added for compatibility
+  appliedBy?: string;
 }
 
 // Export type for compatibility with isolated modules

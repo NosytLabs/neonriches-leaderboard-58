@@ -1,5 +1,6 @@
 
-// Define all the necessary cosmic types to match what's used in the code
+import { UserProfile as ConsolidatedUserProfile } from './user-consolidated';
+
 export type CosmeticCategory = 
   | 'border'
   | 'color'
@@ -34,8 +35,8 @@ export type CosmeticRarity =
   | 'epic'
   | 'legendary'
   | 'royal'
-  | 'mythic'  // Added for compatibility
-  | 'unique'; // Added for compatibility
+  | 'mythic'
+  | 'unique';
 
 export interface CosmeticItem {
   id: string;
@@ -49,8 +50,8 @@ export interface CosmeticItem {
   type: CosmeticType | string;
   enabled: boolean;
   previewUrl?: string;
-  imageSrc?: string; // Added for compatibility
-  image?: string;    // Added for compatibility
+  imageSrc?: string;
+  image?: string;
 }
 
 export interface UserCosmetics {
@@ -67,6 +68,11 @@ export interface UserCosmetics {
   equipped?: {
     [key in CosmeticCategory]?: string;
   };
+  // Legacy fields for backward compatibility
+  activeTitle?: string;
+  activeBorder?: string;
+  activeBackground?: string;
+  activeEffect?: string;
 }
 
 export interface CosmeticFilter {
@@ -82,7 +88,7 @@ export interface SocialLink {
   id?: string;
   platform: string;
   url: string;
-  title: string;
+  title?: string;
   displayText?: string;
   icon?: string; 
   label?: string;

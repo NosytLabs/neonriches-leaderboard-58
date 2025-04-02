@@ -9,7 +9,7 @@ export const useMockery = () => {
   const [mockedUsers, setMockedUsers] = useState<MockedUser[]>([
     {
       id: "1",
-      userId: "user1",  // Added required field
+      userId: "user1",
       username: "EliteSpender",
       displayName: "Elite Spender",
       profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
@@ -19,13 +19,13 @@ export const useMockery = () => {
       appliedBy: "system",
       appliedAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 3600000).toISOString(),
-      totalSpent: 15000,  // Added required field
-      rank: 1,            // Added required field
-      spendStreak: 7      // Added required field
+      totalSpent: 15000,
+      rank: 1,
+      spendStreak: 7
     },
     {
       id: "2",
-      userId: "user2",  // Added required field
+      userId: "user2",
       username: "MoneyThrone",
       displayName: "Money Throne",
       profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
@@ -35,9 +35,9 @@ export const useMockery = () => {
       appliedBy: "user123",
       appliedAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 7200000).toISOString(),
-      totalSpent: 12000,  // Added required field
-      rank: 2,            // Added required field
-      spendStreak: 5      // Added required field
+      totalSpent: 12000,
+      rank: 2,
+      spendStreak: 5
     }
   ]);
   
@@ -48,7 +48,7 @@ export const useMockery = () => {
   const applyMockery = useCallback((userId: string, action: MockeryAction, reason?: string) => {
     const mockUser: MockedUser = {
       id: userId,
-      userId: userId,  // Added required field
+      userId: userId,
       username: "MockedUser",
       displayName: "Mocked User",
       profileImage: "https://randomuser.me/api/portraits/men/3.jpg",
@@ -59,9 +59,9 @@ export const useMockery = () => {
       appliedAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 3600000).toISOString(),
       reason: reason,
-      totalSpent: 5000,  // Added required field
-      rank: 15,          // Added required field
-      spendStreak: 3     // Added required field
+      totalSpent: 5000,
+      rank: 15,
+      spendStreak: 3
     };
     
     setMockedUsers(prev => [...prev, mockUser]);
@@ -97,7 +97,7 @@ export const useMockery = () => {
       timestamp: new Date().toISOString(),
       isAnonymous: false,
       message: "You got tomatoes!",
-      appliedBy: "user123"  // Added for compatibility
+      appliedBy: "user123"
     },
     {
       id: "event2",
@@ -106,7 +106,7 @@ export const useMockery = () => {
       fromId: "currentUser",
       timestamp: new Date(Date.now() - 86400000).toISOString(),
       isAnonymous: true,
-      appliedBy: "user456"  // Added for compatibility
+      appliedBy: "user456"
     }
   ];
   

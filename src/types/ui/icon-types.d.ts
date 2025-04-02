@@ -37,13 +37,19 @@ export type MedievalIconName =
   | 'Sparkles'
   | 'Trophy'
   | 'Users'
-  | 'User';
+  | 'User'
+  | 'banner'
+  | 'dagger'
+  | 'coin'
+  | 'potion'
+  | 'treasure-chest';
 
-export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
+export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 export type MedievalIconColor = 'gold' | 'silver' | 'crimson' | 'emerald' | 'royal' | 'default';
 
 export interface IconProps {
-  name: MedievalIconName;
+  icon?: string;
+  name: string;
   size?: MedievalIconSize | number;
   color?: MedievalIconColor;
   className?: string;
@@ -57,7 +63,7 @@ export interface MedievalIconProps {
   size?: MedievalIconSize;
   color?: MedievalIconColor;
   className?: string;
-  animate?: boolean;
+  animated?: boolean;
 }
 
 // Icon size mapping
@@ -68,7 +74,8 @@ export const iconSizeMap: Record<MedievalIconSize, string> = {
   'lg': 'w-8 h-8',
   'xl': 'w-10 h-10',
   '2xl': 'w-12 h-12',
-  '3xl': 'w-16 h-16'
+  '3xl': 'w-16 h-16',
+  '4xl': 'w-20 h-20'
 };
 
 // Icon color mapping

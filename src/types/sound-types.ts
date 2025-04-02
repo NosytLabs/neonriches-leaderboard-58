@@ -1,5 +1,4 @@
 
-// Centralized sound types to fix cross-reference issues
 export type SoundType = 
   | 'click'
   | 'success'
@@ -16,15 +15,16 @@ export type SoundType =
   | 'chime'
   | 'alert'
   | 'fanfare'
-  | 'achievement' // Added for compatibility
-  | 'message'     // Added for compatibility
-  | 'royal'       // Added for compatibility
-  | 'mockery';    // Added for compatibility
+  | 'achievement'
+  | 'message'
+  | 'mockery'
+  | 'royal';
 
 export interface SoundOptions {
   volume?: number;
+  playbackRate?: number;
+  onEnd?: () => void;
   loop?: boolean;
-  rate?: number;
 }
 
 export interface PremiumSoundPackDetails {
@@ -37,42 +37,7 @@ export interface PremiumSoundPackDetails {
   previewSound: SoundType;
   sounds: SoundType[];
   features: string[];
-  enabled: boolean;  // Required property
+  enabled: boolean;
 }
 
-export interface WebVitalMetric {
-  id: string;
-  name: string;
-  value: number;
-  label: 'good' | 'needs-improvement' | 'poor';
-  delta?: number;
-  entries?: PerformanceEntry[];
-}
-
-export const DEFAULT_SOUND_OPTIONS: SoundOptions = {
-  volume: 0.5,
-  loop: false,
-  rate: 1.0
-};
-
-export const DEFAULT_SOUND_MAPPING: Record<SoundType, string> = {
-  click: '/sounds/click.mp3',
-  success: '/sounds/success.mp3',
-  error: '/sounds/error.mp3',
-  notification: '/sounds/notification.mp3',
-  purchase: '/sounds/purchase.mp3',
-  transfer: '/sounds/transfer.mp3',
-  level_up: '/sounds/level_up.mp3',
-  'level-up': '/sounds/level_up.mp3',
-  rank_up: '/sounds/rank_up.mp3',
-  'rank-up': '/sounds/rank_up.mp3',
-  reward: '/sounds/reward.mp3',
-  coin: '/sounds/coin.mp3',
-  chime: '/sounds/chime.mp3',
-  alert: '/sounds/alert.mp3',
-  fanfare: '/sounds/fanfare.mp3',
-  achievement: '/sounds/achievement.mp3',
-  message: '/sounds/message.mp3',
-  royal: '/sounds/royal.mp3',
-  mockery: '/sounds/mockery.mp3'
-};
+export type SoundCategory = 'effects' | 'music' | 'ambient' | 'ui' | 'voice';
