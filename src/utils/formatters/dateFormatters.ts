@@ -55,6 +55,12 @@ export const formatTimeAgo = (dateString: string): string => {
 };
 
 /**
+ * Format a date as a relative time string
+ * Alias of formatTimeAgo for compatibility
+ */
+export const formatRelativeTime = formatTimeAgo;
+
+/**
  * Format a number as currency
  */
 export const formatCurrency = (amount: number | string): string => {
@@ -73,5 +79,6 @@ export const formatCurrency = (amount: number | string): string => {
 export default {
   formatDate,
   formatTimeAgo,
+  formatRelativeTime,
   formatCurrency
 };

@@ -35,7 +35,7 @@ const SubscriptionPage = () => {
     }
   }, [user]);
   
-  const handlePlanSelect = (planId: string) => {
+  const handleSelectPlan = (planId: string) => {
     setSelectedPlan(planId);
     console.log(`Selected plan: ${planId} with billing interval: ${billingInterval}`);
   };
@@ -173,8 +173,8 @@ const SubscriptionPage = () => {
             <SubscriptionPlanCard
               key={plan.id}
               plan={plan}
-              onSelect={handlePlanSelect}
-              selected={selectedPlan === plan.id}
+              selected={selectedPlan?.id === plan.id}
+              onSelect={handleSelectPlan}
               billingInterval={billingInterval}
             />
           ))}

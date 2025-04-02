@@ -8,31 +8,22 @@ import { MockeryAction } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
 
 // Import from the updated utility files
-import { getMockeryActionDisplayName } from '@/utils/mockeryActionUtils';
+import { getMockeryActionDisplayName, getMockeryActionIcon } from '@/utils/mockeryActionUtils';
 import { mockeryActionIcons } from '@/utils/mockeryActionUtils';
-import { getMockeryCost } from '@/utils/mockeryUtils';
-import { getMockeryTier } from '@/utils/mockeryUtils';
-import { getMockeryName } from '@/utils/mockeryUtils';
+import { getMockeryCost, getMockeryTier, getMockeryName, mockeryDescriptions } from '@/utils/mockeryUtils';
 
 // Add mock utility functions that can be implemented later properly
 const getMockeryDescription = (action: MockeryAction): string => {
-  const descriptions: Record<string, string> = {
-    tomato: 'Throw a tomato at the target',
-    egg: 'Throw an egg at the target',
-    crown: 'Pretend to crown the target mockingly',
-    stocks: 'Put the target in virtual stocks',
-    jester: 'Designate the target as a court jester'
-  };
-  return descriptions[action] || 'Mock the target';
+  return mockeryDescriptions[action] || 'Mock the target';
 };
 
 const getMockeryTierColorClass = (tier: string): string => {
   const colorClasses: Record<string, string> = {
-    common: 'text-gray-300',
-    uncommon: 'text-green-300',
-    rare: 'text-blue-300',
-    epic: 'text-purple-300',
-    legendary: 'text-orange-300'
+    'common': 'text-gray-300',
+    'uncommon': 'text-green-300',
+    'rare': 'text-blue-300',
+    'epic': 'text-purple-300',
+    'legendary': 'text-orange-300'
   };
   return colorClasses[tier] || 'text-gray-300';
 };

@@ -41,18 +41,17 @@ const ShameUserCard: React.FC<ShameUserCardProps> = ({
   const userId = typeof user.id === 'string' ? parseInt(user.id, 10) : user.id;
   const spentAmount = user.totalSpent || user.amountSpent || 0;
   
-  const handleShameAction = (action: string) => {
+  const handleShameAction = (action: MockeryAction) => {
     if (isOnCooldown) return;
-    // Normalize the action before passing it to onShame
-    const normalizedAction = normalizeMockeryAction(action);
-    onShame(userId, normalizedAction);
+    // Use the correct MockeryAction type
+    onShame(userId, action);
   };
   
   // Use normalized comparison for effects
   const getShamedEffectClass = () => {
     if (!isShamed) return "";
     
-    const normalizedType = normalizeMockeryAction(isShamed.type as string);
+    const normalizedType = normalizeMockeryAction(isShamed.type);
     
     if (normalizedType === 'tomato') {
       return "shame-effect-tomatoes";

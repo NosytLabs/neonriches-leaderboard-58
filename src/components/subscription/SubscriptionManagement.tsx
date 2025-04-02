@@ -1,336 +1,329 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { Shell } from '@/components/ui/shell';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { formatDate } from '@/utils/formatters';
-import { Coins, Crown, ShieldCheck, Star, CheckCircle2 } from 'lucide-react';
+import { Check, Crown, Wallet, CreditCard, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { UserProfile } from '@/types/user-consolidated';
-import SubscriptionPlanCard from './SubscriptionPlanCard';
+import { useNavigate } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
+import { adaptSubscription } from '@/utils/userProfileAdapter';
+import { UserSubscription } from '@/types/user-consolidated';
+import SubscriptionPlanCard, { SubscriptionPlanProps } from './SubscriptionPlanCard';
 
-interface SubscriptionPlan {
-  id: string;
-  name: string;
-  description: string;
-  features: string[];
-  price: {
-    monthly: number;
-    yearly: number;
-  };
-  tier: string;
-  badge: string;
-  popular?: boolean;
-}
-
-interface SubscriptionManagementProps {
-  user: UserProfile;
-  onSubscribe?: (plan: string) => Promise<void>;
-  onCancel?: () => Promise<void>;
-}
-
-const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({
-  user,
-  onSubscribe,
-  onCancel
-}) => {
+const SubscriptionManagement = () => {
+  const { user, updateUserProfile } = useAuth();
   const { toast } = useToast();
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
-  const [isProcessing, setIsProcessing] = useState(false);
+  const navigate = useNavigate();
+  const buttonRef = useRef<HTMLButtonElement>(null);
   
-  const subscriptionPlans: SubscriptionPlan[] = [
+  const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlanProps | null>(null);
+  const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'wallet'>('card');
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
+  const [isSubscriptionActive, setIsSubscriptionActive] = useState(false);
+  const [nextBillingDate, setNextBillingDate] = useState('');
+  const [subscriptionStatus, setSubscriptionStatus] = useState('');
+  
+  useEffect(() => {
+    if (user && user.subscription) {
+      const adaptedSubscription = adaptSubscription(user.subscription);
+      setIsSubscriptionActive(adaptedSubscription.status === 'active');
+      setNextBillingDate(adaptedSubscription.nextBillingDate || '');
+      setSubscriptionStatus(adaptedSubscription.status);
+    }
+  }, [user]);
+  
+  const plans: SubscriptionPlanProps[] = [
     {
       id: 'basic',
       name: 'Basic',
-      description: 'The entry level tier for loyal subjects.',
-      features: [
-        'Bronze team access',
-        'Basic profile customization',
-        'Participate in public events',
-        'Standard mockery actions',
-      ],
-      price: {
-        monthly: 4.99,
-        yearly: 49.99
-      },
-      tier: 'basic',
-      badge: 'Bronze'
+      description: 'Essential features for getting started.',
+      price: 9.99,
+      features: ['Access to core features', 'Standard support'],
+      tier: 'basic'
     },
     {
       id: 'premium',
       name: 'Premium',
-      description: 'Enhanced features for aspiring nobility.',
-      features: [
-        'Silver team access',
-        'Advanced profile customization',
-        'Exclusive mockery actions',
-        'Priority in leaderboards',
-        'Reduced fees on spending',
-      ],
-      price: {
-        monthly: 9.99,
-        yearly: 99.99
-      },
+      description: 'Enhanced features for serious users.',
+      price: 19.99,
+      features: ['All basic features', 'Priority support', 'Advanced analytics'],
       tier: 'premium',
-      badge: 'Silver',
-      popular: true
+      recommended: true
     },
     {
       id: 'royal',
       name: 'Royal',
-      description: 'The pinnacle of throne status with maximum privileges.',
-      features: [
-        'Gold team access',
-        'Complete profile customization',
-        'All mockery actions',
-        'Royal badges and titles',
-        'Exclusive royal events',
-        'No fees on spending',
-        'Personal royal certificate',
-      ],
+      description: 'Exclusive features for the elite.',
       price: {
-        monthly: 19.99,
-        yearly: 199.99
+        monthly: 49.99,
+        yearly: 499.99
       },
+      features: ['All premium features', 'Dedicated support', 'Exclusive content', 'Royal Badge'],
       tier: 'royal',
-      badge: 'Gold'
+      highlight: true
     }
   ];
   
-  const handleSubscribe = async () => {
-    if (!selectedPlan) return;
-    
-    try {
-      setIsProcessing(true);
-      
-      // In a real app, we would call a payment processing API here
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Create a subscription object
-      const plan = subscriptionPlans.find(p => p.id === selectedPlan);
-      const subscription = {
-        planId: selectedPlan,
-        nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        status: 'active' as const,
-        tier: plan?.tier || 'basic'
-      };
-      
-      // Call the onSubscribe prop if provided
-      if (onSubscribe) {
-        await onSubscribe(selectedPlan);
-      }
-      
-      toast({
-        title: 'Subscription activated',
-        description: `You now have ${plan?.name} privileges!`,
-        variant: 'success'
-      });
-      
-    } catch (error) {
-      console.error('Subscription error:', error);
-      toast({
-        title: 'Subscription failed',
-        description: 'There was an error processing your subscription.',
-        variant: 'destructive'
-      });
-    } finally {
-      setIsProcessing(false);
-    }
+  const handleSelectPlan = (planId: string) => {
+    const selected = plans.find(plan => plan.id === planId);
+    setSelectedPlan(selected || null);
   };
   
-  const handleCancel = async () => {
-    try {
-      setIsProcessing(true);
-      
-      // In a real app, we would call an API to cancel the subscription
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Call the onCancel prop if provided
-      if (onCancel) {
-        await onCancel();
-      }
-      
+  const handleBillingIntervalChange = (interval: 'monthly' | 'yearly') => {
+    setBillingInterval(interval);
+  };
+  
+  const handlePaymentMethodChange = (method: 'card' | 'wallet') => {
+    setPaymentMethod(method);
+  };
+  
+  const handleSubscribe = async () => {
+    if (!selectedPlan) {
       toast({
-        title: 'Subscription cancelled',
-        description: 'Your subscription has been cancelled.',
-        variant: 'default'
+        title: "No Plan Selected",
+        description: "Please select a subscription plan.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsSubscribing(true);
+    
+    // Simulate payment processing
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Set the next billing date
+    const today = new Date();
+    const nextBilling = new Date(today.setMonth(today.getMonth() + 1));
+    const nextBillingDate = nextBilling.toISOString();
+    
+    // Create a subscription object
+    const subscription = {
+      id: `sub_${Date.now()}`,
+      planId: selectedPlan.id,
+      nextBillingDate: nextBillingDate,
+      status: 'active',
+      tier: selectedPlan.tier,
+      startDate: new Date().toISOString()
+    };
+    
+    // Update user profile with subscription details
+    const success = await updateUserProfile({ subscription });
+    
+    if (success) {
+      toast({
+        title: "Subscription Successful",
+        description: `You have successfully subscribed to the ${selectedPlan.name} plan.`,
+        variant: "success"
       });
       
-    } catch (error) {
-      console.error('Cancellation error:', error);
+      setIsSubscriptionActive(true);
+      setNextBillingDate(nextBillingDate);
+      setSubscriptionStatus('active');
+      
+      // Redirect to success page
+      navigate('/dashboard');
+    } else {
       toast({
-        title: 'Cancellation failed',
-        description: 'There was an error cancelling your subscription.',
-        variant: 'destructive'
+        title: "Subscription Failed",
+        description: "There was an error processing your subscription. Please try again.",
+        variant: "destructive"
       });
-    } finally {
-      setIsProcessing(false);
+    }
+    
+    setIsSubscribing(false);
+  };
+  
+  const handleCancelSubscription = async () => {
+    setIsCancelling(true);
+    
+    // Simulate cancellation processing
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Update user profile to remove subscription
+    const success = await updateUserProfile({ subscription: null });
+    
+    if (success) {
+      toast({
+        title: "Subscription Cancelled",
+        description: "Your subscription has been successfully cancelled.",
+        variant: "success"
+      });
+      
+      setIsSubscriptionActive(false);
+      setNextBillingDate('');
+      setSubscriptionStatus('cancelled');
+    } else {
+      toast({
+        title: "Cancellation Failed",
+        description: "There was an error cancelling your subscription. Please try again.",
+        variant: "destructive"
+      });
+    }
+    
+    setIsCancelling(false);
+  };
+  
+  const handlePayment = () => {
+    if (buttonRef.current) {
+      buttonRef.current.click();
     }
   };
   
   return (
-    <div className="space-y-6">
-      <Card>
+    <Shell>
+      <Card className="glass-morphism border-white/10">
         <CardHeader>
           <CardTitle className="flex items-center">
-            <Crown className="h-5 w-5 mr-2 text-royal-gold" />
+            <Crown className="mr-2 h-5 w-5 text-royal-gold" />
             Subscription Management
           </CardTitle>
           <CardDescription>
-            Manage your royal privileges and subscription status
+            Manage your SpendThrone subscription and unlock exclusive features.
           </CardDescription>
         </CardHeader>
         
-        <CardContent>
-          <Tabs defaultValue="plans">
-            <TabsList className="grid grid-cols-2 mb-4">
-              <TabsTrigger value="plans">Available Plans</TabsTrigger>
-              <TabsTrigger value="current">Current Subscription</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="plans" className="space-y-4">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">Select a Plan</h3>
-                <div className="flex items-center p-1 bg-secondary rounded-md">
-                  <Button
-                    variant={billingInterval === 'monthly' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setBillingInterval('monthly')}
-                    className="text-xs"
-                  >
-                    Monthly
-                  </Button>
-                  <Button
-                    variant={billingInterval === 'yearly' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setBillingInterval('yearly')}
-                    className="text-xs"
-                  >
-                    Yearly (10% off)
-                  </Button>
-                </div>
+        <CardContent className="space-y-6">
+          {isSubscriptionActive ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-medium">
+                  Current Subscription: <Badge variant="default">{selectedPlan?.name || 'Unknown'}</Badge>
+                </h3>
+                <Badge variant="success">Active</Badge>
               </div>
               
-              <div className="grid gap-4 md:grid-cols-3">
-                {subscriptionPlans.map((plan) => (
-                  <div key={plan.id} onClick={() => setSelectedPlan(plan.id)}>
-                    <SubscriptionPlanCard
-                      plan={plan}
-                      billingInterval={billingInterval}
-                      isSelected={selectedPlan === plan.id}
-                    />
-                  </div>
+              <p className="text-white/70">
+                Your subscription is active and will renew on {new Date(nextBillingDate).toLocaleDateString()}.
+              </p>
+              
+              <Button
+                variant="destructive"
+                className="w-full"
+                onClick={handleCancelSubscription}
+                disabled={isCancelling}
+              >
+                {isCancelling ? (
+                  <>
+                    <div className="h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                    Cancelling...
+                  </>
+                ) : (
+                  <>
+                    <AlertTriangle className="h-4 w-4 mr-2" />
+                    Cancel Subscription
+                  </>
+                )}
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium">Choose Your Plan</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {plans.map((plan) => (
+                  <SubscriptionPlanCard
+                    key={plan.id}
+                    plan={plan}
+                    selected={selectedPlan?.id === plan.id}
+                    onSelect={handleSelectPlan}
+                    billingInterval={billingInterval}
+                  />
                 ))}
               </div>
               
               {selectedPlan && (
-                <div className="mt-6">
-                  <Button 
-                    className="w-full bg-royal-gold hover:bg-royal-gold/90 text-black"
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-md font-medium">
+                      Selected Plan: {selectedPlan.name}
+                    </h4>
+                    <Badge variant="secondary">{selectedPlan.tier}</Badge>
+                  </div>
+                  
+                  <div className="flex items-center space-x-4">
+                    <Button
+                      variant="outline"
+                      className={billingInterval === 'monthly' ? 'bg-primary text-primary-foreground' : ''}
+                      onClick={() => handleBillingIntervalChange('monthly')}
+                    >
+                      Monthly
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className={billingInterval === 'yearly' ? 'bg-primary text-primary-foreground' : ''}
+                      onClick={() => handleBillingIntervalChange('yearly')}
+                    >
+                      Yearly
+                    </Button>
+                  </div>
+                  
+                  <div className="flex items-center space-x-4">
+                    <Button
+                      variant="outline"
+                      className={paymentMethod === 'card' ? 'bg-primary text-primary-foreground' : ''}
+                      onClick={() => handlePaymentMethodChange('card')}
+                    >
+                      <CreditCard className="h-4 w-4 mr-2" />
+                      Credit Card
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className={paymentMethod === 'wallet' ? 'bg-primary text-primary-foreground' : ''}
+                      onClick={() => handlePaymentMethodChange('wallet')}
+                    >
+                      <Wallet className="h-4 w-4 mr-2" />
+                      Wallet
+                    </Button>
+                  </div>
+                  
+                  <Button
+                    className="w-full"
                     onClick={handleSubscribe}
-                    disabled={isProcessing}
+                    disabled={isSubscribing}
                   >
-                    {isProcessing ? (
+                    {isSubscribing ? (
                       <>
                         <div className="h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                        Processing...
+                        Subscribing...
                       </>
                     ) : (
                       <>
-                        <ShieldCheck className="h-4 w-4 mr-2" />
+                        <CheckCircle className="h-4 w-4 mr-2" />
                         Subscribe Now
                       </>
                     )}
                   </Button>
                 </div>
               )}
-            </TabsContent>
-            
-            <TabsContent value="current">
-              {user.subscription ? (
-                <div className="space-y-4">
-                  <div className="p-4 bg-black/20 rounded-md">
-                    <div className="flex justify-between items-center mb-2">
-                      <h3 className="text-lg font-medium flex items-center">
-                        <Star className="h-4 w-4 mr-2 text-royal-gold" />
-                        Current Plan
-                      </h3>
-                      <Badge variant={user.subscription.tier === 'royal' ? 'gold' : (user.subscription.tier === 'premium' ? 'secondary' : 'outline')}>
-                        {user.subscription.tier.charAt(0).toUpperCase() + user.subscription.tier.slice(1)}
-                      </Badge>
-                    </div>
-                    
-                    <div className="grid gap-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-white/70">Status:</span>
-                        <span className="font-medium">
-                          {user.subscription.status === 'active' ? (
-                            <span className="text-green-400 flex items-center">
-                              <CheckCircle2 className="h-3 w-3 mr-1" />
-                              Active
-                            </span>
-                          ) : (
-                            user.subscription.status
-                          )}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-white/70">Plan ID:</span>
-                        <span className="font-medium">{user.subscription.planId}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-white/70">Next billing:</span>
-                        <span className="font-medium">
-                          {user.subscription.nextBillingDate ? formatDate(user.subscription.nextBillingDate) : 'N/A'}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-white/70">Auto-renew:</span>
-                        <span className="font-medium">{user.subscription.autoRenew ? 'Yes' : 'No'}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <Button 
-                    variant="outline" 
-                    className="w-full" 
-                    onClick={handleCancel}
-                    disabled={isProcessing}
-                  >
-                    {isProcessing ? (
-                      <>
-                        <div className="h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                        Processing...
-                      </>
-                    ) : (
-                      'Cancel Subscription'
-                    )}
-                  </Button>
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <div className="mb-4">
-                    <Crown className="h-12 w-12 mx-auto text-white/30" />
-                  </div>
-                  <h3 className="text-lg font-medium mb-2">No Active Subscription</h3>
-                  <p className="text-white/60 mb-4">
-                    You don't have an active subscription. Subscribe to a plan to gain royal privileges.
-                  </p>
-                  <Button 
-                    variant="default" 
-                    onClick={() => document.querySelector('[data-value="plans"]')?.click()}
-                  >
-                    View Plans
-                  </Button>
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
+            </div>
+          )}
         </CardContent>
       </Card>
-    </div>
+      
+      <form
+        action="https://www.paypal.com/cgi-bin/webscr"
+        method="post"
+        target="_top"
+        className="hidden"
+      >
+        <input type="hidden" name="cmd" value="_s-xclick" />
+        <input type="hidden" name="hosted_button_id" value="XXXXXXXXXXXXX" />
+        <Button ref={buttonRef} type="submit">
+          Pay with PayPal
+        </Button>
+        <img
+          alt=""
+          border="0"
+          src="https://www.paypal.com/en_US/i/scr/pixel.gif"
+          width="1"
+          height="1"
+        />
+      </form>
+    </Shell>
   );
 };
 

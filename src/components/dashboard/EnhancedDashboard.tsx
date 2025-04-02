@@ -12,10 +12,9 @@ import { useSound } from '@/hooks/sounds/use-sound';
 import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
-import { adaptUserProfile } from '@/utils/userProfileAdapter';
-import { toThemeValue } from '@/utils/typeConverter';
-import { convertToUserProfile } from '@/utils/userProfileAdapter';
+import { UserProfile } from '@/types/user';
 import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
+import { toTeamColor } from '@/utils/typeConverter';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -76,23 +75,36 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Convert basic user object to properly typed UserProfile with required fields
-  const processedUser = {
+  // Ensure displayName is always set
+  const processedUser: UserProfile = {
     ...user,
     displayName: user.displayName || user.username || 'Anonymous User',
+    profileImage: user.profileImage || '/placeholder.png',
+    bio: user.bio || '',
     settings: {
       ...user.settings,
-      theme: toThemeValue(user.settings?.theme)
+      theme: (user.settings?.theme as "royal" | "dark" | "light" | "system") || 'system',
+      profileVisibility: user.settings?.profileVisibility || 'public',
+      allowProfileLinks: user.settings?.allowProfileLinks !== false,
+      notifications: user.settings?.notifications !== false,
+      emailNotifications: user.settings?.emailNotifications || false,
+      marketingEmails: user.settings?.marketingEmails || false,
+      showRank: user.settings?.showRank !== false,
+      darkMode: user.settings?.darkMode !== false,
+      soundEffects: user.settings?.soundEffects !== false,
+      showBadges: user.settings?.showBadges !== false,
+      showTeam: user.settings?.showTeam !== false,
+      showSpending: user.settings?.showSpending !== false
     }
   };
 
-  // Adapt the user to ensure it has all required fields with valid values
-  const adaptedUser = adaptUserProfile(processedUser);
-  // Create a copy for components requiring ConsolidatedUserProfile
-  const consolidatedUser = {
-    ...adaptedUser,
-    team: adaptedUser.team.toString()
-  } as ConsolidatedUserProfile;
+  // Create a consolidated user for components that require it
+  const consolidatedUser: ConsolidatedUserProfile = {
+    ...processedUser,
+    team: processedUser.team?.toString() || 'none', 
+    displayName: processedUser.displayName || processedUser.username,
+    joinedDate: processedUser.joinedDate || new Date().toISOString()
+  };
 
   const handleSpend = () => {
     toast({
@@ -142,7 +154,7 @@ const EnhancedDashboard = () => {
         <div className="mt-6">
           <TabsContent value="overview">
             <OverviewTab 
-              user={adaptedUser}
+              user={processedUser}
               onSpend={handleSpend} 
               onPaymentSuccess={handlePaymentSuccess} 
             />
@@ -153,7 +165,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="team">
-            <TeamStatusCard user={adaptedUser} />
+            <TeamStatusCard user={processedUser} />
           </TabsContent>
           
           <TabsContent value="achievements">
@@ -161,7 +173,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="upgrade">
-            <CashThroneUpgrade user={adaptedUser} />
+            <CashThroneUpgrade user={processedUser} />
           </TabsContent>
         </div>
       </Tabs>
@@ -170,4 +182,3 @@ const EnhancedDashboard = () => {
 };
 
 export default EnhancedDashboard;
-

@@ -114,7 +114,7 @@ export interface LeaderboardUser {
   id: string;
   userId: string;
   username: string;
-  displayName?: string;
+  displayName: string;
   profileImage?: string;
   isVerified?: boolean;
   rank: number;
@@ -124,10 +124,10 @@ export interface LeaderboardUser {
   totalSpent?: number;
   amountSpent?: number;
   spendStreak?: number;
+  walletBalance?: number;
   rankChange?: number;
   spendChange?: number;
   isProtected?: boolean;
-  walletBalance?: number;
   avatarUrl?: string;
 }
 
@@ -143,6 +143,27 @@ export interface LeaderboardFilter {
   sortDirection?: 'asc' | 'desc';
 }
 
-// Use proper export type syntax
-export type { MockeryAction, MockeryTier, TeamColor, Gender, UserTier, TeamData };
+// Mockery result interface
+export interface MockeryResult {
+  success: boolean;
+  message?: string;
+  cost?: number;
+  targetUser?: string;
+  action?: MockeryAction;
+  timestamp?: string;
+}
 
+// Export using 'export type' syntax to avoid conflicts
+export type { 
+  MockeryAction, 
+  MockeryTier, 
+  TeamColor, 
+  Gender, 
+  UserTier, 
+  TeamData, 
+  MockeryEvent, 
+  MockeryUser, 
+  LeaderboardUser, 
+  LeaderboardFilter, 
+  MockeryResult 
+};

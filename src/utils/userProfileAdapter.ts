@@ -1,5 +1,5 @@
 
-import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
+import { UserProfile as ConsolidatedUserProfile, UserSettings, UserSubscription } from '@/types/user-consolidated';
 import { UserProfile as UserProfileType } from '@/types/user';
 import { TeamColor } from '@/types/mockery-types';
 import { toTeamColor } from './typeConverter';
@@ -89,4 +89,36 @@ export const adaptUserProfile = (user: any): UserProfileType => {
   return convertToUserProfile(consolidatedUser);
 };
 
-export default adaptUserProfile;
+/**
+ * Adapt a subscription object to ensure it contains all required fields
+ */
+export const adaptSubscription = (subscription: any): UserSubscription => {
+  if (!subscription) {
+    return {
+      id: '',
+      tier: 'basic',
+      status: 'expired',
+      startDate: new Date().toISOString(),
+      planId: '',
+      nextBillingDate: ''
+    };
+  }
+
+  return {
+    id: subscription.id || `sub_${Date.now()}`,
+    tier: subscription.tier || 'basic',
+    status: subscription.status || 'active',
+    startDate: subscription.startDate || new Date().toISOString(),
+    endDate: subscription.endDate,
+    autoRenew: subscription.autoRenew,
+    planId: subscription.planId || '',
+    nextBillingDate: subscription.nextBillingDate || '',
+    cancelAtPeriodEnd: subscription.cancelAtPeriodEnd
+  };
+};
+
+export default {
+  convertToUserProfile,
+  adaptUserProfile,
+  adaptSubscription
+};
