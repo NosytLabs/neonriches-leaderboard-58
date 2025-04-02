@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { SoundContext } from '@/contexts/SoundContext';
 import { SoundType, SoundOptions } from '@/types/sound-types';
@@ -19,6 +20,7 @@ export const SoundProvider: React.FC<SoundProviderProps> = ({
   const [muted, setMuted] = useState<boolean>(initialMuted);
   const [volume, setVolume] = useState<number>(initialVolume);
   const [isEnabled, setIsEnabled] = useState<boolean>(enabled);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
   // Create a complete sound map with all required SoundType values
@@ -98,6 +100,7 @@ export const SoundProvider: React.FC<SoundProviderProps> = ({
 
     const audio = new Audio(soundFile);
     audioRef.current = audio;
+    setIsPlaying(true);
 
     if (options) {
       audio.volume = options.volume || volume;
@@ -106,42 +109,66 @@ export const SoundProvider: React.FC<SoundProviderProps> = ({
         audio.playbackRate = options.playbackRate;
       }
       if (options.onEnd) {
-        audio.addEventListener('ended', options.onEnd);
+        audio.addEventListener('ended', () => {
+          setIsPlaying(false);
+          options.onEnd?.();
+        });
+      } else {
+        audio.addEventListener('ended', () => {
+          setIsPlaying(false);
+        });
       }
     } else {
       audio.volume = volume;
+      audio.addEventListener('ended', () => {
+        setIsPlaying(false);
+      });
     }
 
     audio.muted = muted;
 
     audio.play()
-      .catch(error => console.error("Failed to play sound:", error));
+      .catch(error => {
+        console.error("Failed to play sound:", error);
+        setIsPlaying(false);
+      });
 
   }, [isEnabled, muted, volume, soundAssets]);
+
+  // Alias for compatibility
+  const play = useCallback((sound: SoundType, options?: SoundOptions) => {
+    playSound(sound, options);
+  }, [playSound]);
 
   const stopSound = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
+      setIsPlaying(false);
     }
   }, []);
 
   const pauseSound = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
+      setIsPlaying(false);
     }
   }, []);
 
   const resumeSound = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.play();
+    if (audioRef.current && !muted && isEnabled) {
+      audioRef.current.play()
+        .catch(error => console.error("Failed to resume sound:", error));
+      setIsPlaying(true);
     }
-  }, []);
+  }, [muted, isEnabled]);
 
   const toggleMute = useCallback(() => {
     setMuted(prev => !prev);
     return !muted;
   }, [muted]);
+
+  const toggleMuted = toggleMute; // Alias for compatibility
 
   const setVolumeLevel = useCallback((newVolume: number) => {
     setVolume(newVolume);
@@ -158,6 +185,7 @@ export const SoundProvider: React.FC<SoundProviderProps> = ({
   return (
     <SoundContext.Provider value={{
       playSound,
+      play,
       stopSound,
       pauseSound,
       resumeSound,
@@ -169,15 +197,19 @@ export const SoundProvider: React.FC<SoundProviderProps> = ({
       toggleEnabled,
       mute: () => setMuted(true),
       unmute: () => setMuted(false),
-      toggleMuted: toggleMute,
+      toggleMuted,
       currentVolume: volume,
       soundConfig: {
         enabled: isEnabled,
         volume: volume,
         muted: muted
-      }
+      },
+      isPlaying,
+      isSoundEnabled: isEnabled && !muted
     }}>
       {children}
     </SoundContext.Provider>
   );
 };
+
+export default SoundProvider;

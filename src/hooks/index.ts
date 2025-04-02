@@ -1,10 +1,11 @@
-
 // Auth
 export { default as useAuth } from './useAuth';
 
 // Sounds
 export { useSound } from './sounds/use-sound';
-export { default as useNotificationSounds } from './sounds/use-notification-sounds';
+export { SoundProvider } from './sounds/SoundProvider';
+export { useSoundContext } from './sounds/useSoundContext';
+export { default as useSoundsConfig } from './sounds/use-sounds-config';
 
 // UI Hooks
 export { useToast } from './use-toast';

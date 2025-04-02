@@ -1,55 +1,51 @@
 
+import { useCallback } from 'react';
 import { useSound } from './use-sound';
 import { SoundType, SoundOptions, UseNotificationSoundsReturn } from '@/types/sound-types';
 
+/**
+ * Custom hook for notification sounds
+ * @returns Methods to play notification sounds
+ */
 export const useNotificationSounds = (): UseNotificationSoundsReturn => {
-  const { playSound, toggleMuted, soundConfig, mute, unmute, setVolume, currentVolume } = useSound();
+  const sound = useSound();
 
-  const playNotificationSound = (type: string = 'notification', options?: SoundOptions) => {
-    const soundOptions: SoundOptions = {
-      volume: 0.5,
-      ...options
-    };
+  const playNotificationSound = useCallback((type: string = 'notification', options?: SoundOptions) => {
+    const soundType = mapNotificationTypeToSound(type);
+    sound.playSound(soundType, options);
+  }, [sound]);
 
-    // Map common notification types to valid sound types
-    const soundTypeMap: Record<string, SoundType> = {
-      notification: 'notification',
-      achievement: 'achievement',
-      message: 'message',
-      alert: 'alert' as SoundType,
-      success: 'success',
-      error: 'error',
-      reward: 'reward',
-      chime: 'chime' as SoundType,
-      badge: 'badge' as SoundType,
-      toggle: 'toggle' as SoundType,
-      upgrade: 'upgrade' as SoundType,
-      down: 'down' as SoundType,
-      up: 'up' as SoundType,
-      withdraw: 'withdraw' as SoundType,
-      warning: 'warning' as SoundType,
-      team: 'team',
-      royalAnnouncement: 'royalAnnouncement',
-      fanfare: 'fanfare',
-      trumpet: 'trumpet',
-      medallion: 'medallion'
-    };
-
-    // Use the mapped sound type or fallback to notification
-    const soundType = soundTypeMap[type] || 'notification';
-
-    playSound(soundType, soundOptions);
+  // Maps notification types to sound types
+  const mapNotificationTypeToSound = (type: string): SoundType => {
+    switch (type) {
+      case 'success':
+        return 'success';
+      case 'error':
+        return 'error';
+      case 'warning':
+        return 'warning';
+      case 'achievement':
+        return 'achievement';
+      case 'purchase':
+        return 'purchase';
+      case 'message':
+        return 'message';
+      case 'royal':
+        return 'royal';
+      default:
+        return 'notification';
+    }
   };
 
-  return { 
-    playSound, 
-    mute, 
-    unmute, 
-    isMuted: soundConfig?.muted || false, 
-    toggleMuted: toggleMuted || (() => false), 
-    setVolume, 
-    currentVolume: currentVolume || 0.5,
-    playNotificationSound 
+  return {
+    playSound: sound.playSound,
+    playNotificationSound,
+    mute: sound.mute,
+    unmute: sound.unmute,
+    isMuted: sound.isMuted,
+    toggleMuted: sound.toggleMuted,
+    setVolume: sound.setVolume,
+    currentVolume: sound.currentVolume
   };
 };
 

@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { UserProfile } from '@/types/user';
 import { Award, CheckCircle, XCircle, HelpCircle, Medal, Download } from 'lucide-react';
-import { useSound } from '@/hooks/use-sound';
+import { useSound } from '@/hooks/sounds/use-sound';
 import RoyalButton from '@/components/ui/royal-button';
 import { safeToString } from '@/utils/safeToString';
 

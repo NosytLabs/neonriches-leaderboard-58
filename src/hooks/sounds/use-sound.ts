@@ -1,6 +1,6 @@
 
-import { useCallback } from 'react';
-import { useSoundContext } from './SoundProvider';
+import { useContext } from 'react';
+import { SoundContext } from '@/contexts/SoundContext';
 import { SoundType, SoundOptions, SoundHook } from '@/types/sound-types';
 
 /**
@@ -9,49 +9,39 @@ import { SoundType, SoundOptions, SoundHook } from '@/types/sound-types';
  * @returns Sound control methods and state
  */
 export const useSound = (): SoundHook => {
-  const soundContext = useSoundContext();
-
-  // Normalize methods to match the SoundHook interface
-  const toggleMuted = useCallback((): boolean => {
-    return soundContext.toggleMute();
-  }, [soundContext]);
-
-  const isMuted = soundContext.isMuted;
-
-  const mute = useCallback(() => {
-    soundContext.mute();
-  }, [soundContext]);
-
-  const unmute = useCallback(() => {
-    soundContext.unmute();
-  }, [soundContext]);
-
-  const setVolume = useCallback((volume: number) => {
-    soundContext.setVolume(volume);
-  }, [soundContext]);
-
-  const currentVolume = soundContext.currentVolume;
-
-  const soundConfig: SoundHook["soundConfig"] = {
-    enabled: soundContext.isEnabled,
-    volume: soundContext.currentVolume,
-    muted: soundContext.isMuted
-  };
-
-  // Return a properly formatted SoundHook object
-  return {
-    ...soundContext,
-    toggleMuted,
-    isMuted,
-    mute,
-    unmute,
-    setVolume,
-    currentVolume,
-    soundConfig,
-    getVolume: soundContext.getVolume,
-    isEnabled: soundContext.isEnabled,
-    toggleEnabled: soundContext.toggleEnabled
-  };
+  const context = useContext(SoundContext);
+  
+  if (!context) {
+    console.warn('useSound must be used within a SoundProvider');
+    
+    // Return a fallback implementation when used outside of context
+    return {
+      playSound: () => {},
+      stopSound: () => {},
+      pauseSound: () => {},
+      resumeSound: () => {},
+      toggleMute: () => false,
+      isMuted: false,
+      setVolume: () => {},
+      getVolume: () => 0,
+      isEnabled: false,
+      toggleEnabled: () => {},
+      soundConfig: {
+        enabled: false,
+        volume: 0,
+        muted: true
+      },
+      mute: () => {},
+      unmute: () => {},
+      toggleMuted: () => false,
+      currentVolume: 0,
+      play: () => {},
+      isPlaying: false,
+      isSoundEnabled: false
+    };
+  }
+  
+  return context;
 };
 
 export default useSound;

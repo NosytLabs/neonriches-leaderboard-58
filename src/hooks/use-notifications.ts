@@ -1,19 +1,15 @@
-
-import { useCallback, useState, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { useSound } from '@/hooks/use-sound';
-import { SoundType } from '@/types/sound-types';
+import { useState, useCallback, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useAuth } from '@/hooks/useAuth';
+import { formatDistanceToNow } from 'date-fns';
+import { useNotificationSounds } from './sounds/use-notification-sounds';
 
 export interface Notification {
   id: string;
   title: string;
   message: string;
-  type: 'rank_change' | 'achievement' | 'royal' | 'event' | 'poke' | 'system' | 'milestone' | 'deposit';
+  type: 'rank_change' | 'achievement' | 'royal' | 'event' | 'deposit' | 'poke' | 'system' | 'milestone';
   read: boolean;
   timestamp: Date;
-  data?: any;
   actions?: Array<{
     label: string;
     action: () => void;
@@ -30,15 +26,14 @@ interface UseNotificationsReturn {
   handleMarkAsRead: (id: string) => void;
   handleDeleteNotification: (id: string) => void;
   formatTimestamp: (timestamp: Date) => string;
-  playSound: (sound: SoundType, volume?: number) => void;
+  playSound: (type: string, volume?: number) => void;
 }
 
-export const useNotifications = (): UseNotificationsReturn => {
+export const useNotifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [open, setOpen] = useState(false);
-  const sound = useSound();
-  const { user } = useAuth();
-  const { toast } = useToast();
+  const sound = useNotificationSounds();
 
   useEffect(() => {
     if (user) {
@@ -75,7 +70,6 @@ export const useNotifications = (): UseNotificationsReturn => {
 
     setNotifications(prev => [newNotification, ...prev].slice(0, 50));
 
-    // Map notification types to sounds
     const notificationSounds: Record<string, SoundType> = {
       'rank_change': 'rank_up',
       'achievement': 'achievement',
@@ -87,7 +81,6 @@ export const useNotifications = (): UseNotificationsReturn => {
       'system': 'notification'
     };
 
-    // Play the appropriate sound
     const soundType = notificationSounds[notification.type] || 'notification';
     sound.playSound(soundType, { volume: 0.4 });
   };
@@ -111,32 +104,13 @@ export const useNotifications = (): UseNotificationsReturn => {
     setNotifications(prev => prev.filter(notification => notification.id !== id));
   };
 
-  const formatTimestamp = (timestamp: Date) => {
-    const now = new Date();
-    const diff = now.getTime() - timestamp.getTime();
-    const seconds = Math.floor(diff / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    if (seconds < 60) {
-      return 'Just now';
-    } else if (minutes < 60) {
-      return `${minutes}m ago`;
-    } else if (hours < 24) {
-      return `${hours}h ago`;
-    } else if (days < 7) {
-      return `${days}d ago`;
-    } else {
-      return timestamp.toLocaleDateString();
-    }
+  const formatTimestamp = (timestamp: Date): string => {
+    return formatDistanceToNow(timestamp, { addSuffix: true });
   };
 
-  const playSound = (soundType: SoundType, volume?: number) => {
-    sound.playSound(soundType, { volume });
+  const playSound = (type: string = 'notification', volume: number = 0.5) => {
+    sound.playNotificationSound(type, { volume });
   };
-
-  const unreadCount = notifications.filter(n => !n.read).length;
 
   return {
     notifications,

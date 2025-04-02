@@ -68,6 +68,7 @@ export interface SoundConfig {
   enabled: boolean;
   volume: number;
   muted: boolean;
+  premium?: boolean;
 }
 
 export interface SoundHook {
@@ -82,6 +83,8 @@ export interface SoundHook {
   isEnabled: boolean;
   toggleEnabled: () => void;
   play?: (sound: SoundType, options?: SoundOptions) => void;
+  isPlaying: boolean;
+  isSoundEnabled: boolean;
   
   // Additional properties for compatibility
   toggleMuted: () => boolean;
@@ -93,7 +96,7 @@ export interface SoundHook {
 
 export type { SoundHook as UseSoundHook };
 
-// For compatibility with the notification sounds hook
+// For compatibility with notification sounds
 export interface UseNotificationSoundsReturn {
   playSound: (sound: SoundType, options?: SoundOptions) => void;
   mute: () => void;

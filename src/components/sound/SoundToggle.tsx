@@ -1,15 +1,14 @@
 
-// Fix SoundToggle to use updated UseSoundHook
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Volume2, VolumeX } from 'lucide-react';
-import { useSound } from '@/hooks/use-sound';
+import { useSound } from '@/hooks/sounds/use-sound';
 
 const SoundToggle: React.FC = () => {
   const sound = useSound();
   
   const toggleSound = () => {
-    sound.toggleMuted?.();
+    sound.toggleMuted();
   };
   
   return (
