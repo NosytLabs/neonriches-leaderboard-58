@@ -76,42 +76,12 @@ const EnhancedDashboard = () => {
   }
 
   // Create a compatible user profile object with non-optional displayName
-  const userForComponents: UserProfile = {
-    ...user,
-    // Ensure required properties are present with non-optional values
-    displayName: user.displayName || user.username,
-    profileImage: user.profileImage || '',
-    team: toTeamColor(user.team || 'none'),
-    previousRank: user.previousRank || 0,
-    // Add missing properties for UserProfile type
-    bio: user.bio || '',
-    settings: user.settings || {
-      profileVisibility: 'public',
-      allowProfileLinks: true,
-      theme: 'dark',
-      notifications: true,
-      emailNotifications: false,
-      marketingEmails: false,
-      showRank: true,
-      darkMode: true,
-      soundEffects: true,
-      showBadges: true,
-      showTeam: true,
-      showSpending: true
-    },
-    cosmetics: user.cosmetics || {
-      border: [],
-      color: [],
-      font: [],
-      emoji: [],
-      title: [],
-      background: [],
-      effect: [],
-      badge: [],
-      theme: []
-    },
-    // Required by user-consolidated UserProfile
-    profileBoosts: user.profileBoosts || []
+  const adaptedUser = adaptToUserProfile(user);
+  
+  // Create a UserProfile compatible with the user.UserProfile type
+  const userForComponents = {
+    ...adaptedUser,
+    team: toTeamColor(adaptedUser.team || 'none'),
   };
 
   const handleSpend = () => {
@@ -133,7 +103,7 @@ const EnhancedDashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <DashboardWelcome user={userForComponents} />
+      <DashboardWelcome user={adaptedUser} />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid grid-cols-5 w-full bg-black/20">
@@ -162,7 +132,7 @@ const EnhancedDashboard = () => {
         <div className="mt-6">
           <TabsContent value="overview">
             <OverviewTab 
-              user={userForComponents}
+              user={adaptedUser}
               onSpend={handleSpend} 
               onPaymentSuccess={handlePaymentSuccess} 
             />

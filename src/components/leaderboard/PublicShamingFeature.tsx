@@ -26,7 +26,7 @@ const PublicShamingFeature = () => {
         tomato: 12,
         egg: 5,
         thumbsDown: 3,
-        carrot: 1,
+        laugh: 1,
         fish: 2
       }
     },
@@ -41,7 +41,7 @@ const PublicShamingFeature = () => {
         tomato: 8,
         egg: 2,
         thumbsDown: 7,
-        carrot: 4,
+        laugh: 4,
         fish: 1
       }
     }
@@ -52,14 +52,14 @@ const PublicShamingFeature = () => {
       tomato: 12,
       egg: 5,
       thumbsDown: 3,
-      carrot: 1,
+      laugh: 1,
       fish: 2
     },
     '2': {
       tomato: 8,
       egg: 2,
       thumbsDown: 7,
-      carrot: 4,
+      laugh: 4,
       fish: 1
     }
   });
@@ -117,7 +117,7 @@ const PublicShamingFeature = () => {
                         {key === 'tomato' && <Flame className="h-3 w-3 mr-1 text-red-500" />}
                         {key === 'egg' && <Egg className="h-3 w-3 mr-1 text-yellow-500" />}
                         {key === 'thumbsDown' && <ThumbsDown className="h-3 w-3 mr-1 text-blue-500" />}
-                        {key === 'carrot' && <Laugh className="h-3 w-3 mr-1 text-orange-500" />}
+                        {key === 'laugh' && <Laugh className="h-3 w-3 mr-1 text-orange-500" />}
                         {key === 'fish' && <Fish className="h-3 w-3 mr-1 text-cyan-500" />}
                         {count}
                       </Badge>
@@ -135,7 +135,7 @@ const PublicShamingFeature = () => {
                 onClick={() => handleApplyMockery(user.id, 'tomato')}
               >
                 <Flame className="h-3.5 w-3.5 mr-1.5 text-red-500" />
-                Tomatoes
+                Tomato
               </Button>
               
               <Button 
@@ -145,7 +145,7 @@ const PublicShamingFeature = () => {
                 onClick={() => handleApplyMockery(user.id, 'egg')}
               >
                 <Egg className="h-3.5 w-3.5 mr-1.5 text-yellow-500" />
-                Eggs
+                Egg
               </Button>
               
               <Button 

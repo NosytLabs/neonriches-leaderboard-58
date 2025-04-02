@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/auth';
 import { showSuccessToast, showErrorToast } from '@/utils/toastUtils';
+import { adaptUserProfileUpdate } from '@/utils/userProfileAdapter';
 
 interface ProfileSettingsProps {
   user: UserProfile;
@@ -31,10 +32,12 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
 
   const handleSave = async () => {
     try {
-      await updateUserProfile({
-        ...user,
+      // Create a partial update and adapt it for type safety
+      const updateData = adaptUserProfileUpdate({
         ...formData
       });
+      
+      await updateUserProfile(updateData);
       setIsEditing(false);
       showSuccessToast('Profile updated successfully');
     } catch (error) {

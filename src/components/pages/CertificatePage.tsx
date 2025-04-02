@@ -2,26 +2,23 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Certificate } from '@/types/certificates';
+import { adaptCertificate } from '@/utils/certificateAdapter';
 
 const CertificatePage: React.FC = () => {
-  // Example certificate data
-  const certificate: Certificate = {
+  // Example certificate data with adapter to ensure all required fields
+  const certificate = adaptCertificate({
     id: '123456',
     userId: 'user123',
     title: 'Royal Achievement',
     description: 'For outstanding contributions to the kingdom',
     imageUrl: '/images/certificates/royal-achievement.png',
     issuedAt: new Date().toISOString(),
-    dateIssued: new Date().toISOString(),
     mintAddress: '0x1234567890abcdef',
     status: 'minted',
     type: 'achievement',
     tier: 'gold',
     style: 'royal',
-    issuerName: 'The Royal Court',
-    recipientName: 'John Doe',
-    recipientId: 'user123'
-  };
+  });
 
   return (
     <div className="container mx-auto py-12">

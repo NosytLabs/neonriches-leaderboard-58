@@ -1,214 +1,205 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { formatDate, formatCurrency } from '@/utils/formatters';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/contexts/auth';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Check, ChevronsUpDown } from 'lucide-react';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { UserProfile } from '@/types/user';
 
-interface SubscriptionPlan {
-  id: string;
-  name: string;
-  price: number;
-  features: string[];
+interface SubscriptionManagementProps {
+  open: boolean;
+  onClose: () => void;
 }
 
-const mockSubscriptionPlans: SubscriptionPlan[] = [
+const plans = [
   {
-    id: 'basic',
+    id: 'basic-plan',
     name: 'Basic',
-    price: 9.99,
-    features: ['Ad-free browsing', 'Priority support']
+    price: 0,
+    interval: 'monthly',
+    description: 'Free plan with limited features',
+    features: ['Limited access', 'Standard support'],
+    color: 'text-gray-500',
+    maxLinks: 5,
+    maxProfiles: 1,
+    analyticsAccess: false,
+    customization: false,
+    protectionDuration: 0,
+    priceMonthly: 0,
+    priceYearly: 0
   },
   {
-    id: 'premium',
-    name: 'Premium',
-    price: 19.99,
-    features: ['All Basic features', 'Exclusive content', 'Early access']
+    id: 'pro-plan',
+    name: 'Pro',
+    price: 19,
+    interval: 'monthly',
+    description: 'Professional plan with enhanced features',
+    features: ['Unlimited access', 'Priority support', 'Advanced analytics'],
+    color: 'text-blue-500',
+    maxLinks: 50,
+    maxProfiles: 5,
+    analyticsAccess: true,
+    customization: true,
+    protectionDuration: 7,
+    priceMonthly: 19,
+    priceYearly: 199
   },
   {
-    id: 'royal',
+    id: 'royal-plan',
     name: 'Royal',
-    price: 49.99,
-    features: ['All Premium features', 'Dedicated support', 'Custom badge']
+    price: 49,
+    interval: 'monthly',
+    description: 'Royal plan with exclusive benefits',
+    features: ['Everything in Pro', 'Dedicated support', 'Exclusive content'],
+    color: 'text-royal-gold',
+    maxLinks: 100,
+    maxProfiles: 10,
+    analyticsAccess: true,
+    customization: true,
+    protectionDuration: 30,
+    priceMonthly: 49,
+    priceYearly: 499
   }
 ];
 
-const SubscriptionManagement: React.FC = () => {
+const SubscriptionManagement: React.FC<SubscriptionManagementProps> = ({ open, onClose }) => {
   const { user, updateUserProfile } = useAuth();
   const { toast } = useToast();
-  const [currentPlan, setCurrentPlan] = useState<SubscriptionPlan | null>(null);
-  const [nextBillingDate, setNextBillingDate] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(plans.find(plan => plan.name.toLowerCase() === user?.tier) || plans[0]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    // Mock subscription status retrieval
-    const fetchSubscriptionStatus = async () => {
-      setIsLoading(true);
-      try {
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 500));
+    if (user?.subscription?.planId) {
+      const plan = plans.find(p => p.id === user.subscription?.planId);
+      setSelectedPlan(plan || plans[0]);
+    }
+  }, [user?.subscription?.planId]);
 
-        // Mock data: User has a "premium" subscription
-        const mockUserSubscription = {
-          planId: 'premium',
-          nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
-        };
+  const filteredPlans = plans.filter((plan) => {
+    return plan.name.toLowerCase().includes(search.toLowerCase());
+  });
 
-        const plan = mockSubscriptionPlans.find(p => p.id === mockUserSubscription.planId) || null;
-        setCurrentPlan(plan);
-        setNextBillingDate(mockUserSubscription.nextBillingDate);
-      } catch (error) {
-        console.error("Error fetching subscription status:", error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch subscription status. Please try again later.",
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSubscriptionStatus();
-  }, [toast]);
-
-  const handleUpgradeSubscription = async (planId: string) => {
-    setIsLoading(true);
+  const updateSubscription = async () => {
     try {
-      // Simulate API call to upgrade subscription
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      const selectedPlan = mockSubscriptionPlans.find(p => p.id === planId);
-
-      if (!selectedPlan) {
-        throw new Error("Selected plan not found");
-      }
-
-      // Mock successful upgrade
-      const mockUpdatedUser = {
+      setLoading(true);
+    
+      // Create a proper subscription object with all required fields
+      await updateProfile({
         subscription: {
-          planId: selectedPlan.id,
-          nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+          id: user.subscription?.id || `sub-${Date.now()}`,
+          planId: selectedPlan?.id || 'basic-plan',
+          nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          tier: selectedPlan?.name.toLowerCase() || 'basic',
+          status: 'active',
+          startDate: new Date().toISOString()
         }
-      };
-
-      const success = await updateUserProfile(mockUpdatedUser);
-
-      if (success) {
-        setCurrentPlan(selectedPlan);
-        setNextBillingDate(mockUpdatedUser.subscription.nextBillingDate);
-
-        toast({
-          title: "Subscription Upgraded",
-          description: `You have successfully upgraded to the ${selectedPlan.name} plan.`,
-        });
-      } else {
-        throw new Error("Failed to update profile");
-      }
-    } catch (error: any) {
-      console.error("Subscription upgrade error:", error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to upgrade subscription. Please try again later.",
-        variant: "destructive"
       });
-    } finally {
-      setIsLoading(false);
+    
+      setLoading(false);
+      toast({
+        title: 'Subscription Updated',
+        description: `You are now subscribed to the ${selectedPlan?.name} plan.`,
+        variant: 'success'
+      });
+      onClose();
+    } catch (error) {
+      setLoading(false);
+      console.error('Error updating subscription:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update subscription. Please try again.',
+        variant: 'destructive'
+      });
     }
   };
 
-  const handleCancelSubscription = async () => {
-    setIsLoading(true);
-    try {
-      // Simulate API call to cancel subscription
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Mock successful cancellation
-      const mockUpdatedUser = {
-        subscription: null
-      };
-
-      const success = await updateUserProfile(mockUpdatedUser);
-
-      if (success) {
-        setCurrentPlan(null);
-        setNextBillingDate(null);
-
-        toast({
-          title: "Subscription Cancelled",
-          description: "Your subscription has been successfully cancelled.",
-        });
-      } else {
-        throw new Error("Failed to update profile");
-      }
-    } catch (error: any) {
-      console.error("Subscription cancellation error:", error);
+  const updateProfile = async (updates: Partial<UserProfile>) => {
+    if (!user) {
       toast({
-        title: "Error",
-        description: error.message || "Failed to cancel subscription. Please try again later.",
-        variant: "destructive"
+        title: 'Error',
+        description: 'No user found. Please log in again.',
+        variant: 'destructive'
       });
-    } finally {
-      setIsLoading(false);
+      return;
+    }
+
+    try {
+      await updateUserProfile(updates);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update profile. Please try again.',
+        variant: 'destructive'
+      });
     }
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Subscription Management</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {isLoading ? (
-          <p>Loading subscription information...</p>
-        ) : (
-          <>
-            {currentPlan ? (
-              <>
-                <p>
-                  You are currently subscribed to the <strong>{currentPlan.name}</strong> plan.
-                </p>
-                <p>
-                  Your next billing date is: {formatDate(nextBillingDate || new Date().toISOString())} (
-                  {formatCurrency(currentPlan.price)}).
-                </p>
-                <Button variant="destructive" onClick={handleCancelSubscription} className="mt-4">
-                  Cancel Subscription
-                </Button>
-              </>
-            ) : (
-              <p>You do not have an active subscription.</p>
-            )}
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[625px]">
+        <DialogHeader>
+          <DialogTitle>Manage Subscription</DialogTitle>
+          <DialogDescription>
+            Choose a plan that fits your needs.
+          </DialogDescription>
+        </DialogHeader>
 
-            <h3 className="text-lg font-semibold mt-6">Upgrade Subscription</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-              {mockSubscriptionPlans.map((plan) => (
-                <Card key={plan.id} className="border-2 border-muted hover:border-primary transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-lg font-semibold">{plan.name}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">Price: {formatCurrency(plan.price)}</p>
-                    <ul className="list-disc pl-4 mt-2">
-                      {plan.features.map((feature, index) => (
-                        <li key={index}>{feature}</li>
-                      ))}
-                    </ul>
-                    <Button
-                      onClick={() => handleUpgradeSubscription(plan.id)}
-                      disabled={currentPlan?.id === plan.id}
-                      className="mt-4 w-full"
-                    >
-                      {currentPlan?.id === plan.id ? "Current Plan" : "Upgrade"}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </>
-        )}
-      </CardContent>
-    </Card>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
+          {plans.map((plan) => (
+            <Card
+              key={plan.id}
+              className={cn(
+                "glass-morphism border-white/10 cursor-pointer",
+                selectedPlan.id === plan.id ? "ring-2 ring-primary" : "hover:bg-secondary/50"
+              )}
+              onClick={() => setSelectedPlan(plan)}
+            >
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">{plan.name}</CardTitle>
+                <CardDescription>{plan.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="text-2xl font-bold">
+                  ${plan.price} <span className="text-sm text-muted-foreground">/{plan.interval}</span>
+                </div>
+                <ul className="list-disc pl-4 space-y-1">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="text-sm text-muted-foreground">{feature}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="flex justify-end space-x-2">
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button onClick={updateSubscription} disabled={loading}>
+            {loading ? "Updating..." : "Update Subscription"}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
