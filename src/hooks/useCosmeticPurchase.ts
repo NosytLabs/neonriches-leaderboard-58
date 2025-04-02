@@ -8,7 +8,7 @@ import { useSound } from '@/hooks/sounds/use-sound';
 export const useCosmeticPurchase = () => {
   const { user, updateUser } = useAuth();
   const { toast } = useToast();
-  const { play } = useSound();
+  const { playSound } = useSound();
   
   const purchaseCosmetic = useCallback((item: CosmeticItem) => {
     if (!user) {
@@ -27,7 +27,7 @@ export const useCosmeticPurchase = () => {
         description: `You need ${item.price} coins to purchase this item`,
         variant: 'destructive'
       });
-      play('error');
+      playSound('error');
       return false;
     }
     
@@ -37,7 +37,7 @@ export const useCosmeticPurchase = () => {
     const newBalance = (user.walletBalance || 0) - item.price;
     
     // Initialize user's cosmetics if they don't exist
-    const currentCosmetics: UserCosmetics = user.cosmetics || {
+    const currentCosmetics: any = user.cosmetics || {
       border: [],
       color: [],
       font: [],
@@ -53,15 +53,15 @@ export const useCosmeticPurchase = () => {
     const category = item.category;
     
     // Get the current items array or initialize an empty array if it doesn't exist
-    const currentItems = (currentCosmetics[category as keyof UserCosmetics] as string[]) || [];
+    const currentItems = (currentCosmetics[category] as string[]) || [];
     
-    // Update the appropriate category with type assertion
-    const updatedCosmetics: UserCosmetics = {
+    // Update the appropriate category
+    const updatedCosmetics = {
       ...currentCosmetics
     };
     
     // Use proper type assertion when updating the array
-    (updatedCosmetics[category as keyof UserCosmetics] as string[]) = [...currentItems, item.id];
+    (updatedCosmetics[category] as string[]) = [...currentItems, item.id];
     
     updateUser({
       ...user,
@@ -70,7 +70,7 @@ export const useCosmeticPurchase = () => {
     });
     
     // Play a success sound
-    play('purchase');
+    playSound('purchase');
     
     // Show a toast
     toast({
@@ -80,7 +80,7 @@ export const useCosmeticPurchase = () => {
     });
     
     return true;
-  }, [user, toast, play, updateUser]);
+  }, [user, toast, playSound, updateUser]);
   
   return { purchaseCosmetic };
 };

@@ -1,112 +1,31 @@
 
-import React, { CSSProperties } from 'react';
 import { LucideProps } from 'lucide-react';
+import { ElementRef, ComponentPropsWithoutRef } from 'react';
 
-// Extended type for IconStyle to include 'default' and 'medieval'
-export type IconStyle = 'default' | 'medieval' | 'royal' | 'vintage';
-
-// Extended MedievalIconSize to include the value used in the codebase
-export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-
-export type MedievalIconColor = 
-  | 'default' 
-  | 'primary' 
-  | 'secondary' 
-  | 'gold' 
-  | 'royal' 
-  | 'accent'
-  | 'silver'
-  | 'crimson'
-  | 'emerald'
-  | 'bronze'
-  | 'red'
-  | 'blue'
-  | 'green'
-  | 'purple';
-
-export type MedievalIconName = 
-  | 'crown' 
-  | 'sword' 
-  | 'shield' 
-  | 'scroll' 
-  | 'chalice' 
-  | 'castle' 
-  | 'dragon' 
-  | 'knight' 
-  | 'king' 
-  | 'queen' 
-  | 'treasure-chest'
-  | 'flag'
-  | 'throne'
-  | 'tower'
-  | 'banner'
-  | 'coin'
-  | 'coins'
-  | 'key'
-  | 'dagger'
-  | 'potion'
-  | 'goblet'
-  | 'fleur'
-  | 'horse'
-  | 'wizard'
-  | 'jester'
-  | 'treasure'
-  | 'crossed-swords'
-  | 'helmet'
-  | 'bow'
-  | 'arrow'
-  | 'candle'
-  | 'torch'
-  | 'flag'
-  | 'axe'
-  | 'mace';
-
-// Updated IconProps to avoid extending LucideProps to prevent conflicts
-export interface IconProps {
-  icon?: string;
-  name?: string;
-  size?: string | number;
+export interface IconAdapterProps {
   color?: string;
-  style?: IconStyle | CSSProperties;
-  className?: string;
-  animated?: boolean;
-  [key: string]: any; // To allow additional props to be passed through
+  size?: string | number;
+  strokeWidth?: number;
 }
 
-export interface MedievalIconProps {
-  name: MedievalIconName | string;
-  size?: MedievalIconSize;
-  color?: MedievalIconColor;
-  className?: string;
+export interface IconProps extends LucideProps, IconAdapterProps {
+  iconName?: string;
+  name?: string;
+  icon?: string;
   animated?: boolean;
+  style?: 'default' | 'outline' | 'solid' | 'royal' | 'minimalist';
 }
 
-// Export IconSize for use in other types
-export type IconSize = MedievalIconSize;
-export type IconColor = MedievalIconColor;
+export interface IconVariants {
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  color?: 'default' | 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'royal' | string;
+  animated?: boolean;
+  style?: 'default' | 'outline' | 'solid' | 'royal' | 'minimalist';
+}
 
-export const iconSizeMap: Record<string, string> = {
-  xs: 'w-3 h-3',
-  sm: 'w-4 h-4',
-  md: 'w-5 h-5',
-  lg: 'w-6 h-6',
-  xl: 'w-8 h-8',
-  '2xl': 'w-10 h-10'
-};
+export type IconElement = ElementRef<'svg'>;
+export type IconElementProps = ComponentPropsWithoutRef<'svg'>;
 
-export const iconColorMap: Record<string, string> = {
-  default: 'text-current',
-  primary: 'text-primary',
-  secondary: 'text-secondary',
-  gold: 'text-royal-gold',
-  royal: 'text-royal-purple',
-  accent: 'text-accent',
-  silver: 'text-gray-300',
-  crimson: 'text-royal-crimson',
-  emerald: 'text-emerald-500',
-  bronze: 'text-amber-600',
-  red: 'text-red-500',
-  blue: 'text-blue-500',
-  green: 'text-green-500',
-  purple: 'text-purple-500'
-};
+export interface IconComponentProps extends IconElementProps, IconVariants {
+  iconName: string;
+}

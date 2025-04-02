@@ -3,57 +3,77 @@ import { TeamColor, UserTier } from './mockery-types';
 
 export interface LeaderboardUser {
   id: string;
-  userId: string;
+  userId: string; // Required field
   username: string;
-  displayName?: string;
+  displayName: string;
   profileImage: string;
-  avatarUrl?: string; // Added for compatibility
-  tier: UserTier | string;
-  team: TeamColor | string;
+  tier: string;
+  team: TeamColor;
   rank: number;
   previousRank: number;
-  totalSpent: number;
   walletBalance: number;
+  totalSpent: number;
+  amountSpent: number;
   isVerified?: boolean;
-  isProtected?: boolean;
   spendStreak?: number;
-  // Added properties to fix errors
-  rankChange?: number;
-  spendChange?: number;
-  amountSpent?: number;
-  spentAmount?: number;
+  isProtected?: boolean;
   joinDate?: string;
   createdAt?: string;
+  joinedDate?: string; // Added for compatibility
 }
 
 export interface LeaderboardFilter {
-  team: string | null;
+  team: TeamColor | 'all';
   tier: UserTier | 'all';
-  timeframe: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all'; // Added 'all' for compatibility
-  sortBy: 'rank' | 'spent' | 'username';
-  // Added to fix errors
-  sortDirection?: 'asc' | 'desc';
-  search?: string;
-  limit?: number;
-  page?: number;
+  timeframe: 'day' | 'week' | 'month' | 'all';
+  sortBy: 'rank' | 'spent' | 'streak';
 }
 
-export interface LeaderboardConfig {
-  title: string;
+export interface LeaderboardEntry extends LeaderboardUser {
+  change?: number;
+  avatarUrl?: string;
+  amount?: number;
+  totalAmount?: number;
+}
+
+export interface LeaderboardState {
+  users: LeaderboardUser[];
+  loading: boolean;
+  error: string | null;
   filters: LeaderboardFilter;
-  showTeam: boolean;
-  compact: boolean;
-  limit: number;
 }
 
-export interface LeaderboardProps {
-  config?: Partial<LeaderboardConfig>;
-  onUserClick?: (userId: string, username: string) => void;
-  onFilterChange?: (filters: LeaderboardFilter) => void;
-  className?: string;
+export type SortDirection = 'asc' | 'desc';
+
+export interface SortOptions {
+  field: keyof LeaderboardUser;
+  direction: SortDirection;
 }
 
-// TypedLeaderboardFilter should extend but allow string sortBy
-export interface TypedLeaderboardFilter extends Omit<LeaderboardFilter, 'sortBy'> {
-  sortBy: string; // Allow any string for backward compatibility
+// Added missing types from imports
+export interface OnChainLeaderboardEntry {
+  address: string;
+  username: string;
+  displayName: string;
+  profileImage: string;
+  rank: number;
+  totalSpent: number;
+  signature: string;
+  timestamp: number;
+}
+
+export interface SolanaTransaction {
+  id: string;
+  signature: string;
+  sender: string;
+  recipient?: string;
+  receiver?: string; // Add this property for compatibility
+  amount: number;
+  status: 'confirmed' | 'pending' | 'failed';
+  timestamp: string;
+  type: 'transfer' | 'spend' | 'deposit' | 'mint' | 'burn' | 'swap' | 'trade';
+  blockHeight?: number;
+  confirmations?: number;
+  memo?: string;
+  fee?: number;
 }

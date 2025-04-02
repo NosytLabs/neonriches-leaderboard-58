@@ -1,15 +1,14 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CosmeticItem, CosmeticCategory } from '@/types/cosmetics';
+import { CosmeticItem, CosmeticType } from '@/types/cosmetics';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useSound } from '@/hooks/use-sound';
 import { Grid, Diamond, Sparkles, Award } from 'lucide-react';
 
 const ProfileCustomization = () => {
-  const [activeTab, setActiveTab] = useState<CosmeticCategory>('theme');
+  const [activeTab, setActiveTab] = useState<string>('theme');
   const { toast } = useToast();
   const sound = useSound();
 
@@ -205,7 +204,7 @@ const ProfileCustomization = () => {
     }
   ];
 
-  const getItemsForCategory = (category: CosmeticCategory) => {
+  const getItemsForCategory = (category: string): CosmeticItem[] => {
     switch (category) {
       case 'theme':
         return themes;
@@ -265,7 +264,7 @@ const ProfileCustomization = () => {
           </p>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="theme" value={activeTab} onValueChange={(value) => setActiveTab(value as CosmeticCategory)}>
+          <Tabs defaultValue="theme" value={activeTab} onValueChange={(value) => setActiveTab(value)}>
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="theme" className="flex items-center gap-1.5">
                 <Grid className="h-4 w-4" />

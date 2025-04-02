@@ -1,219 +1,212 @@
-
-/**
- * Core performance monitoring and optimization utilities
- */
-import { useEffect, useRef } from 'react';
-
-// Web Vitals measurement categories
-type WebVitalMetric = {
-  name: string;
-  value: number;
-  rating: 'good' | 'needs-improvement' | 'poor';
-};
-
-// Initialize performance monitoring
-export const initPerformanceMonitoring = (): void => {
-  if (typeof window === 'undefined') return;
-  
-  // Record Core Web Vitals when browser supports it
-  if ('PerformanceObserver' in window) {
-    // LCP (Largest Contentful Paint)
-    try {
-      const lcpObserver = new PerformanceObserver((list) => {
-        const entries = list.getEntries();
-        const lastEntry = entries[entries.length - 1];
-        const lcp = lastEntry.startTime;
-        
-        // Categorize the result
-        const rating = lcp < 2500 ? 'good' : lcp < 4000 ? 'needs-improvement' : 'poor';
-        
-        console.info(`[CWV] LCP: ${lcp.toFixed(2)}ms (${rating})`);
-        saveWebVitalMetric('LCP', lcp, rating);
-      });
-      
-      lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
-    } catch (e) {
-      console.warn('LCP measurement not supported', e);
-    }
-    
-    // FID (First Input Delay)
-    try {
-      const fidObserver = new PerformanceObserver((list) => {
-        list.getEntries().forEach((entry) => {
-          const fid = entry.processingStart - entry.startTime;
-          const rating = fid < 100 ? 'good' : fid < 300 ? 'needs-improvement' : 'poor';
-          
-          console.info(`[CWV] FID: ${fid.toFixed(2)}ms (${rating})`);
-          saveWebVitalMetric('FID', fid, rating);
-        });
-      });
-      
-      fidObserver.observe({ type: 'first-input', buffered: true });
-    } catch (e) {
-      console.warn('FID measurement not supported', e);
-    }
-    
-    // CLS (Cumulative Layout Shift)
-    try {
-      let clsValue = 0;
-      let clsEntries = 0;
-      
-      const clsObserver = new PerformanceObserver((list) => {
-        list.getEntries().forEach((entry) => {
-          // Only count layout shifts without recent user input
-          if (!(entry as any).hadRecentInput) {
-            clsValue += (entry as any).value;
-            clsEntries++;
-            
-            const rating = clsValue < 0.1 ? 'good' : clsValue < 0.25 ? 'needs-improvement' : 'poor';
-            
-            console.info(`[CWV] CLS: ${clsValue.toFixed(3)} (${rating})`);
-            saveWebVitalMetric('CLS', clsValue, rating);
-          }
-        });
-      });
-      
-      clsObserver.observe({ type: 'layout-shift', buffered: true });
-    } catch (e) {
-      console.warn('CLS measurement not supported', e);
-    }
-  }
-  
-  // Navigation Timing API
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      if (performance.getEntriesByType) {
-        const perfEntries = performance.getEntriesByType('navigation');
-        if (perfEntries.length > 0) {
-          const timing = perfEntries[0] as PerformanceNavigationTiming;
-          
-          // Calculate important times
-          const dnsTime = timing.domainLookupEnd - timing.domainLookupStart;
-          const connectionTime = timing.connectEnd - timing.connectStart;
-          const responseTime = timing.responseEnd - timing.responseStart;
-          const domProcessingTime = timing.domComplete - timing.domInteractive;
-          const loadEventTime = timing.loadEventEnd - timing.loadEventStart;
-          const totalPageLoadTime = timing.loadEventEnd - timing.navigationStart;
-          
-          console.info('[Performance] DNS lookup:', dnsTime.toFixed(2), 'ms');
-          console.info('[Performance] Connection time:', connectionTime.toFixed(2), 'ms');
-          console.info('[Performance] Response time:', responseTime.toFixed(2), 'ms');
-          console.info('[Performance] DOM processing:', domProcessingTime.toFixed(2), 'ms');
-          console.info('[Performance] Load event:', loadEventTime.toFixed(2), 'ms');
-          console.info('[Performance] Total page load:', totalPageLoadTime.toFixed(2), 'ms');
-        }
-      }
-    }, 0);
-  });
-};
-
-// Save metrics for later reporting/analysis
-const saveWebVitalMetric = (name: string, value: number, rating: 'good' | 'needs-improvement' | 'poor') => {
-  if (typeof window === 'undefined') return;
-  
-  window.__PERFORMANCE_METRICS = window.__PERFORMANCE_METRICS || [];
-  window.__PERFORMANCE_METRICS.push({
-    name,
-    value,
-    rating,
-    timestamp: Date.now()
-  });
-};
-
-// Declare global space for metrics
+// Modify the type of __PERFORMANCE_METRICS to be consistent
 declare global {
   interface Window {
-    __PERFORMANCE_METRICS?: WebVitalMetric[];
+    __PERFORMANCE_METRICS: any; // Use 'any' to handle different types
   }
 }
 
-// Hook for component-level performance tracking
-export const useComponentPerformance = (componentName: string) => {
-  const renderCount = useRef(0);
-  const lastRenderTime = useRef(Date.now());
-  
-  useEffect(() => {
-    renderCount.current += 1;
-    const now = Date.now();
-    const renderTime = now - lastRenderTime.current;
-    
-    // Only log slow renders (above 50ms) to avoid console spam
-    if (renderTime > 50) {
-      console.info(`[Component] ${componentName} rendered in ${renderTime}ms (render #${renderCount.current})`);
-    }
-    
-    lastRenderTime.current = now;
-    
-    return () => {
-      // Cleanup if needed
+// Fix the navigationStart property for modern browsers
+// Modern browsers use timeOrigin + startTime instead
+const getNavigationStart = (entry: PerformanceNavigationTiming): number => {
+  return entry.timeOrigin || (entry as any).navigationStart || 0;
+};
+
+// Fix the push method issue by ensuring __PERFORMANCE_METRICS is an array
+if (!window.__PERFORMANCE_METRICS || !Array.isArray(window.__PERFORMANCE_METRICS)) {
+  window.__PERFORMANCE_METRICS = [];
+}
+
+import { WebVitalMetric } from '@/types/web-vitals';
+
+export interface PerformanceMetrics {
+  fcp: number | undefined;
+  lcp: number | undefined;
+  fid: number | undefined;
+  cls: number | undefined;
+  ttfb: number | undefined;
+  fp: number | undefined;
+  domLoad: number | undefined;
+  windowLoad: number | undefined;
+  network: number | undefined;
+  domProcessing: number | undefined;
+  domInteractive: number | undefined;
+  domComplete: number | undefined;
+  navigationStart: number | undefined;
+  domContentLoadedEventStart: number | undefined;
+  domContentLoadedEventEnd: number | undefined;
+  loadEventStart: number | undefined;
+  loadEventEnd: number | undefined;
+  firstByte: number | undefined;
+  dnsLookup: number | undefined;
+  initialConnection: number | undefined;
+  sslHandshake: number | undefined;
+  requestResponse: number | undefined;
+  domElements: number | undefined;
+  resources: number | undefined;
+}
+
+/**
+ * Collect performance metrics
+ */
+export const collectPerformanceMetrics = (): PerformanceMetrics => {
+  if (typeof window === 'undefined' || !window.performance) {
+    return {
+      fcp: undefined,
+      lcp: undefined,
+      fid: undefined,
+      cls: undefined,
+      ttfb: undefined,
+      fp: undefined,
+      domLoad: undefined,
+      windowLoad: undefined,
+      network: undefined,
+      domProcessing: undefined,
+      domInteractive: undefined,
+      domComplete: undefined,
+      navigationStart: undefined,
+      domContentLoadedEventStart: undefined,
+      domContentLoadedEventEnd: undefined,
+      loadEventStart: undefined,
+      loadEventEnd: undefined,
+      firstByte: undefined,
+      dnsLookup: undefined,
+      initialConnection: undefined,
+      sslHandshake: undefined,
+      requestResponse: undefined,
+      domElements: undefined,
+      resources: undefined
     };
-  });
-  
+  }
+
+  const performance = window.performance;
+  const navigationEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+  const paintEntries = performance.getEntriesByType('paint');
+  const resourceEntries = performance.getEntriesByType('resource');
+
+  const fcpEntry = paintEntries.find(entry => entry.name === 'first-contentful-paint') as PerformanceEntry;
+  const lcpEntry = performance.getEntriesByType('largest-contentful-paint')[0] as PerformanceEntry;
+
+  const navigationStart = getNavigationStart(navigationEntry);
+
+  const ttfb = navigationEntry?.responseStart ? navigationEntry.responseStart - navigationStart : undefined;
+  const fp = paintEntries.find(entry => entry.name === 'first-paint')?.startTime;
+  const domLoad = navigationEntry?.domInteractive ? navigationEntry.domInteractive - navigationStart : undefined;
+  const windowLoad = navigationEntry?.loadEventEnd ? navigationEntry.loadEventEnd - navigationStart : undefined;
+  const network = navigationEntry?.domainLookupEnd ? navigationEntry.domainLookupEnd - navigationStart : undefined;
+  const domProcessing = navigationEntry?.domLoading ? navigationEntry.domLoading - navigationStart : undefined;
+  const domInteractive = navigationEntry?.domInteractive ? navigationEntry.domInteractive - navigationStart : undefined;
+  const domComplete = navigationEntry?.domComplete ? navigationEntry.domComplete - navigationStart : undefined;
+  const domContentLoadedEventStart = navigationEntry?.domContentLoadedEventStart ? navigationEntry.domContentLoadedEventStart - navigationStart : undefined;
+  const domContentLoadedEventEnd = navigationEntry?.domContentLoadedEventEnd ? navigationEntry.domContentLoadedEventEnd - navigationStart : undefined;
+  const loadEventStart = navigationEntry?.loadEventStart ? navigationEntry.loadEventStart - navigationStart : undefined;
+  const loadEventEnd = navigationEntry?.loadEventEnd ? navigationEntry.loadEventEnd - navigationStart : undefined;
+
+  const firstByte = navigationEntry?.responseStart ? navigationEntry.responseStart - navigationEntry.requestStart : undefined;
+  const dnsLookup = navigationEntry?.domainLookupEnd && navigationEntry?.domainLookupStart ? navigationEntry.domainLookupEnd - navigationEntry.domainLookupStart : undefined;
+  const initialConnection = navigationEntry?.connectEnd && navigationEntry.connectStart ? navigationEntry.connectEnd - navigationEntry.connectStart : undefined;
+  const sslHandshake = navigationEntry?.secureConnectionStart && navigationEntry.connectEnd ? navigationEntry.connectEnd - navigationEntry.secureConnectionStart : undefined;
+  const requestResponse = navigationEntry?.responseEnd && navigationEntry.responseStart ? navigationEntry.responseEnd - navigationEntry.responseStart : undefined;
+
+  const domElements = navigationEntry?.domComplete ? performance.getEntriesByType('mark').length : undefined;
+  const resources = resourceEntries ? resourceEntries.length : undefined;
+
   return {
-    renderCount: renderCount.current
+    fcp: fcpEntry ? fcpEntry.startTime : undefined,
+    lcp: lcpEntry ? lcpEntry.startTime : undefined,
+    fid: performance.getEntriesByType('first-input')[0]?.startTime || undefined,
+    cls: (performance.getEntriesByType('layout-shift') as PerformanceEntryList)
+      .filter(entry => !entry.hadRecentInput)
+      .reduce((total, entry) => total + entry.value, 0),
+    ttfb,
+    fp,
+    domLoad,
+    windowLoad,
+    network,
+    domProcessing,
+    domInteractive,
+    domComplete,
+    navigationStart,
+    domContentLoadedEventStart,
+    domContentLoadedEventEnd,
+    loadEventStart,
+    loadEventEnd,
+    firstByte,
+    dnsLookup,
+    initialConnection,
+    sslHandshake,
+    requestResponse,
+    domElements,
+    resources
   };
 };
 
-// Image preload utility
-export const preloadImage = (src: string): Promise<HTMLImageElement> => {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = src;
+/**
+ * Report performance metrics to a logging service
+ */
+export const reportPerformanceMetrics = async (metrics: PerformanceMetrics): Promise<void> => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  try {
+    // Log metrics to console
+    console.table(metrics);
+
+    // Send metrics to logging service (e.g., Google Analytics, Datadog)
+    // Example:
+    // await fetch('/api/log-metrics', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(metrics),
+    // });
+  } catch (error) {
+    console.error('Failed to report performance metrics:', error);
+  }
+};
+
+/**
+ * Collect and report performance metrics on window load
+ */
+export const onWindowLoad = (): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  window.addEventListener('load', async () => {
+    const metrics = collectPerformanceMetrics();
+    await reportPerformanceMetrics(metrics);
   });
 };
 
-// Resource hint utilities
-export const addPreconnect = (url: string, crossOrigin: boolean = true) => {
-  if (typeof document === 'undefined') return;
-  
-  const link = document.createElement('link');
-  link.rel = 'preconnect';
-  link.href = url;
-  if (crossOrigin) {
-    link.crossOrigin = 'anonymous';
+/**
+ * Collect and report web vitals
+ */
+export const reportWebVitals = (metric: WebVitalMetric): void => {
+  if (typeof window === 'undefined') {
+    return;
   }
-  document.head.appendChild(link);
-};
 
-export const addPrefetch = (url: string, as: string = 'image') => {
-  if (typeof document === 'undefined') return;
-  
-  const link = document.createElement('link');
-  link.rel = 'prefetch';
-  link.href = url;
-  link.as = as;
-  document.head.appendChild(link);
-};
-
-// Lazy loaded image intersection observer controller (better than browser native lazy loading)
-export const createLazyImageObserver = () => {
-  if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return null;
-  
-  return new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const lazyImage = entry.target as HTMLImageElement;
-          if (lazyImage.dataset.src) {
-            lazyImage.src = lazyImage.dataset.src;
-            delete lazyImage.dataset.src;
-          }
-          lazyImageObserver.unobserve(lazyImage);
-        }
-      });
-    },
-    { rootMargin: '200px 0px' } // Start loading when within 200px of viewport
-  );
-};
-
-// Create a singleton observer instance for reuse
-let lazyImageObserver: IntersectionObserver | null = null;
-
-export const getLazyImageObserver = () => {
-  if (!lazyImageObserver) {
-    lazyImageObserver = createLazyImageObserver();
+  if (!window.__PERFORMANCE_METRICS) {
+    window.__PERFORMANCE_METRICS = [];
   }
-  return lazyImageObserver;
+
+  if (!Array.isArray(window.__PERFORMANCE_METRICS)) {
+    console.warn('__PERFORMANCE_METRICS is not an array. Metrics may be lost.');
+    return;
+  }
+
+  window.__PERFORMANCE_METRICS.push(metric);
+
+  try {
+    // Log metric to console
+    console.log(metric);
+
+    // Send metric to logging service (e.g., Google Analytics, Datadog)
+    // Example:
+    // navigator.sendBeacon('/api/log-metric', JSON.stringify(metric));
+  } catch (error) {
+    console.error('Failed to report web vital metric:', error);
+  }
 };

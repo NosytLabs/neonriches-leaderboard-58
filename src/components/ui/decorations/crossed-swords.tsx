@@ -1,56 +1,90 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
-import MedievalIcon from '@/components/ui/medieval-icon';
-import { BaseDecorationProps } from '@/types/ui/decorations/types';
-import { adaptIconSize, adaptIconColor } from '@/utils/iconTypeAdapter';
-import { MedievalIconSize } from '@/types/ui/icon-types';
+import { cn } from '@/utils/cn';
+import { LucideProps } from 'lucide-react';
+import { IconAdapterProps } from '@/types/ui/icon-types';
 
-const CrossedSwords: React.FC<BaseDecorationProps> = ({
-  color = 'gold',
-  size = 'md',
-  animate = false,
-  animated = false,
-  className = ''
+// Import directly from iconTypeAdapter
+import iconTypeAdapter from '@/utils/iconTypeAdapter';
+const { adaptIconSize, adaptIconColor } = iconTypeAdapter;
+
+export interface CrossedSwordsProps extends LucideProps, IconAdapterProps {
+  className?: string;
+  variant?: 'default' | 'royal' | 'battle' | 'medieval';
+  angle?: number;
+}
+
+const CrossedSwords: React.FC<CrossedSwordsProps> = ({
+  className,
+  color = 'currentColor',
+  size = 24,
+  variant = 'default',
+  angle = 45,
+  ...props
 }) => {
-  const actualAnimate = animated || animate; // Support both prop names
-  
-  // Define size classes directly
-  const sizeClasses = {
-    xs: { container: 'w-6 h-6', border: 'border-1', icon: 'xs' as MedievalIconSize },
-    sm: { container: 'w-8 h-8', border: 'border-1', icon: 'sm' as MedievalIconSize },
-    md: { container: 'w-12 h-12', border: 'border-2', icon: 'md' as MedievalIconSize },
-    lg: { container: 'w-16 h-16', border: 'border-2', icon: 'lg' as MedievalIconSize },
-    xl: { container: 'w-24 h-24', border: 'border-3', icon: 'xl' as MedievalIconSize }
+  const adjustedSize = adaptIconSize(size);
+  const adjustedColor = adaptIconColor(color);
+
+  // Variant-specific styling
+  const getVariantStyles = () => {
+    switch (variant) {
+      case 'royal':
+        return {
+          primary: '#FFD700', // Gold
+          secondary: '#C0C0C0', // Silver
+          handle: '#8B4513', // SaddleBrown
+        };
+      case 'battle':
+        return {
+          primary: '#A9A9A9', // Dark Gray
+          secondary: '#696969', // Dim Gray
+          handle: '#8B0000', // Dark Red
+        };
+      case 'medieval':
+        return {
+          primary: '#B87333', // Copper
+          secondary: '#708090', // Slate Gray
+          handle: '#4B3621', // Dark Brown
+        };
+      default:
+        return {
+          primary: adjustedColor,
+          secondary: adjustedColor,
+          handle: '#8B4513', // Brown
+        };
+    }
   };
-  
-  const sizeClass = sizeClasses[size as keyof typeof sizeClasses];
-  const containerSize = sizeClass.container;
-  const animationClass = actualAnimate ? 'animate-pulse-slow' : '';
-  
+
+  const styles = getVariantStyles();
+
   return (
-    <div className={cn(
-      'relative flex items-center justify-center',
-      containerSize,
-      animationClass,
-      className
-    )}>
-      <div className="absolute transform -rotate-45 -translate-x-1">
-        <MedievalIcon 
-          name="sword" 
-          size={sizeClass.icon} 
-          color={adaptIconColor(color) as any} 
-        />
-      </div>
-      
-      <div className="absolute transform rotate-45 translate-x-1">
-        <MedievalIcon 
-          name="sword" 
-          size={sizeClass.icon} 
-          color={adaptIconColor(color) as any} 
-        />
-      </div>
-    </div>
+    <svg
+      width={adjustedSize}
+      height={adjustedSize}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={styles.primary}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={cn('crossed-swords', className)}
+      style={{ transform: `rotate(${angle}deg)` }}
+      {...props}
+    >
+      {/* First Sword */}
+      <path d="M3 21L21 3" stroke={styles.primary} strokeWidth="1.5" />
+      <path d="M5 19L7 17" stroke={styles.secondary} strokeWidth="1.5" />
+      <path d="M17 7L19 5" stroke={styles.secondary} strokeWidth="1.5" />
+      <rect x="2" y="19" width="4" height="2" rx="1" fill={styles.handle} />
+      <rect x="18" y="3" width="4" height="2" rx="1" fill={styles.handle} />
+
+      {/* Second Sword */}
+      <path d="M21 21L3 3" stroke={styles.primary} strokeWidth="1.5" />
+      <path d="M19 19L17 17" stroke={styles.secondary} strokeWidth="1.5" />
+      <path d="M7 7L5 5" stroke={styles.secondary} strokeWidth="1.5" />
+      <rect x="18" y="19" width="4" height="2" rx="1" fill={styles.handle} />
+      <rect x="2" y="3" width="4" height="2" rx="1" fill={styles.handle} />
+    </svg>
   );
 };
 

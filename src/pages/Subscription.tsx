@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Container } from '@/components/ui/container';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { SUBSCRIPTION_TIERS } from '@/config/subscriptions';
 import RoyalDivider from '@/components/ui/royal-divider';
 
-const Subscription = () => {
+const Subscription = ({ pricingFilter }) => {
   const getTierIcon = (tierId: string) => {
     switch (tierId) {
       case 'standard':
@@ -34,6 +33,9 @@ const Subscription = () => {
         return 'border-white/10';
     }
   };
+
+  const filteredTiers = Object.values(SUBSCRIPTION_TIERS)
+    .filter(tier => !pricingFilter || tier.id === pricingFilter);
 
   return (
     <Container className="py-10">
@@ -63,7 +65,7 @@ const Subscription = () => {
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
-        {SUBSCRIPTION_TIERS.filter(tier => tier.id !== 'free').map((tier) => (
+        {filteredTiers.map((tier) => (
           <Card key={tier.id} className={`relative overflow-hidden glass-morphism ${getCardClass(tier.id)}`}>
             {tier.recommended && (
               <div className="absolute top-0 right-0 bg-royal-purple text-white text-xs font-medium px-2 py-0.5 rounded-bl">

@@ -25,8 +25,11 @@ export type CosmeticType =
   | 'cosmetic'   // Added for compatibility with boost.ts
   | 'feature';   // Added for compatibility with boost.ts
 
+// String literal type alias for CosmeticCategory
+export type CosmeticCategory = CosmeticType;
+
 // Type alias for backward compatibility
-export type { CosmeticType as CosmeticCategory };
+export { CosmeticType as CosmeticCategory };
 
 export type CosmeticRarity = 
   | 'common'

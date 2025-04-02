@@ -1,4 +1,3 @@
-
 export type SoundType = 
   | 'success'
   | 'error'
@@ -87,6 +86,7 @@ export interface PremiumSoundPackDetails {
   name: string;
   description: string;
   previewSound: SoundType;
+  preview?: string; // Added missing property
   price: number;
   tier: string;
   icon?: string;
@@ -112,4 +112,15 @@ export interface UseSoundReturn {
   play: (sound: SoundType, options?: SoundOptions) => void;
   stop: (sound: SoundType) => void;
   stopAll: () => void;
+}
+
+// Add SoundConfig for use in settings
+export interface SoundConfig {
+  enabled: boolean;
+  muted: boolean;
+  volume: number;
+  premium: boolean;
+  theme?: 'royal' | 'standard' | 'minimal' | 'epic';
+  pack?: string;
+  customSounds?: Record<SoundType, string>;
 }

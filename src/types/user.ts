@@ -14,7 +14,7 @@ export interface UserProfile {
   team: TeamColor | null;
   tier: UserTier;
   rank: number;
-  previousRank: number;
+  previousRank?: number; // Make this optional to match user-consolidated
   totalSpent: number;
   amountSpent: number;
   walletBalance: number;
@@ -50,9 +50,9 @@ export interface UserProfile {
 }
 
 export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'followers';
+  profileVisibility: 'public' | 'private' | 'followers' | 'friends'; // Added 'friends' to match user-consolidated
   allowProfileLinks: boolean;
-  theme: 'light' | 'dark' | 'system';
+  theme: 'light' | 'dark' | 'system' | 'royal'; // Added 'royal' to match user-consolidated
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
@@ -78,10 +78,21 @@ export interface UserCosmetics {
   effect: string[];
   badge: string[];
   theme: string[];
+  [key: string]: string[] | string | undefined; // Add index signature to match cosmetics.ts
+  // Add compatibility fields
+  activeBorder?: string;
+  activeTitle?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  activeColor?: string;
+  activeFont?: string;
+  activeEmoji?: string;
+  activeBadge?: string;
+  activeTheme?: string;
 }
 
 export interface SocialLink {
-  id: string;
+  id?: string; // Make id optional to match user-consolidated
   platform: string;
   url: string;
   username?: string;
@@ -94,12 +105,18 @@ export interface SocialLink {
 export interface ProfileBoost {
   id: string;
   type: string;
-  startDate: string;
-  endDate: string;
+  startDate?: string; // Make optional to match boost.ts
+  endDate?: string; // Make optional to match boost.ts
   level: number;
   isActive: boolean;
   strength: number;
   appliedBy: string;
+  // Add fields from boost.ts for compatibility
+  name?: string;
+  description?: string;
+  duration?: number;
+  price?: number;
+  icon?: string;
 }
 
 // Interface for profile images
