@@ -1,53 +1,49 @@
 
-// Define BoostEffect type for profile boosts
-export interface BoostEffect {
-  id: string;
-  name: string;
-  description: string;
-  cssClass: string;
-  type: BoostEffectType;
-  tier: string;
-  price: number;
-  duration: number;
-  icon: string;
-  strength: number;
-  allowStacking?: boolean;
-  minTier?: string;
-  iconName?: string;
-  previewImage?: string;
-  durationDays?: number;
-}
-
-// Export ProfileBoost interface
 export interface ProfileBoost {
   id: string;
   type: string;
-  level: number;
   startDate: string;
   endDate: string;
-  appliedBy: string;
-  strength: number;
+  level: number;
   isActive: boolean;
+  strength: number;
+  appliedBy: string;
   name?: string;
   description?: string;
   duration?: number;
   price?: number;
   icon?: string;
-  effectId?: string;
 }
 
-// Effect types for profile boosts
-export type BoostEffectType =
+export interface BoostItem {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  level: number;
+  duration: number; // in hours
+  price: number;
+  icon: string;
+  effects: string[];
+  strength: number;
+}
+
+export interface UserBoost {
+  id: string;
+  userId: string;
+  boostId: string;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+  purchasedAt: string;
+  boost?: BoostItem;
+}
+
+export type BoostType = 
+  | 'general'
+  | 'rank'
+  | 'exposure'
+  | 'protection'
+  | 'spending'
   | 'visibility'
-  | 'highlight'
-  | 'animation'
-  | 'badge'
-  | 'particle'
-  | 'background'
-  | 'border'
-  | 'crown'
-  | 'sparkle'
-  | 'glow'
-  | 'aura'
-  | 'effect'
-  | 'appearance';
+  | 'royal';

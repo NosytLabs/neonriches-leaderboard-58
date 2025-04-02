@@ -1,6 +1,4 @@
 
-import { UserProfile as ConsolidatedUserProfile } from './user-consolidated';
-
 export type CosmeticCategory = 
   | 'border'
   | 'color'
@@ -10,23 +8,7 @@ export type CosmeticCategory =
   | 'background'
   | 'effect'
   | 'badge'
-  | 'theme'
-  | 'appearance'
-  | 'interaction'
-  | 'profile';
-
-export type CosmeticType = 
-  | 'premium'
-  | 'standard'
-  | 'exclusive'
-  | 'epic'
-  | 'legendary'
-  | 'rare'
-  | 'uncommon'
-  | 'common'
-  | 'basic'
-  | 'emoji'
-  | 'profile';
+  | 'theme';
 
 export type CosmeticRarity = 
   | 'common'
@@ -35,23 +17,23 @@ export type CosmeticRarity =
   | 'epic'
   | 'legendary'
   | 'royal'
-  | 'mythic'
-  | 'unique';
+  | 'exclusive';
 
 export interface CosmeticItem {
   id: string;
   name: string;
-  description: string;
-  price?: number;
-  cost?: number;
   category: CosmeticCategory;
-  cssClass: string; // Required field
-  rarity: CosmeticRarity | string;
-  type: CosmeticType | string;
+  rarity: CosmeticRarity;
+  description: string;
+  price: number;
+  value: string;
+  preview?: string;
+  icon?: string;
   enabled: boolean;
-  previewUrl?: string;
-  imageSrc?: string;
-  image?: string;
+  effects?: string[];
+  exclusive?: boolean;
+  date_created?: string;
+  created_at?: string;
 }
 
 export interface UserCosmetics {
@@ -64,37 +46,12 @@ export interface UserCosmetics {
   effect: string[];
   badge: string[];
   theme: string[];
-  items?: CosmeticItem[];
-  equipped?: {
-    [key in CosmeticCategory]?: string;
-  };
-  // Legacy fields for backward compatibility
   activeTitle?: string;
   activeBorder?: string;
   activeBackground?: string;
   activeEffect?: string;
 }
 
-export interface CosmeticFilter {
-  category?: CosmeticCategory;
-  rarity?: CosmeticRarity;
-  search?: string;
-  sortBy?: 'name' | 'price' | 'rarity' | 'newest';
-  owned?: boolean;
-}
-
-// Create UserCosmeticState for compatibility
-export type UserCosmeticState = UserCosmetics;
-
-// Export SocialLink interface for components that import it from cosmetics
-export interface SocialLink {
-  id?: string;
-  platform: string;
-  url: string;
-  title?: string;
-  verified?: boolean;
-  username?: string;
-  label?: string;
-  icon?: string;
-  display?: string;
-}
+// Export aliases for backward compatibility
+export type { CosmeticItem as Cosmetic };
+export type { UserCosmetics as UserCosmeticsType };

@@ -7,11 +7,14 @@ export interface LeaderboardUser {
   username: string;
   displayName?: string;
   profileImage: string;
-  team: string;
-  tier: string;
+  avatarUrl?: string; // For compatibility
+  team: string | TeamColor;
+  tier: string | UserTier;
   rank: number;
   previousRank?: number;
   totalSpent: number;
+  amountSpent?: number; // For backward compatibility
+  spentAmount?: number; // Legacy field
   isVerified?: boolean;
   isProtected: boolean; // Required property to match constraints
   walletBalance?: number;
@@ -19,9 +22,14 @@ export interface LeaderboardUser {
   // Additional fields needed across the codebase
   joinedDate?: string;
   joinDate?: string;
-  avatarUrl?: string;
-  amountSpent?: number; // Added to support various code paths
-  spendChange?: number; // Added to support various code paths
+  joinedAt?: string;
+  createdAt?: string;
+  spendChange?: number;
+  rankChange?: number;
+  thumbsDown?: number;
+  carrot?: number;
+  fish?: number;
+  sortDirection?: 'asc' | 'desc';
 }
 
 export interface LeaderboardState {
@@ -48,4 +56,28 @@ export interface LeaderboardStats {
     amount: number;
     timestamp: string;
   }[];
+}
+
+export interface LeaderboardFilter {
+  team?: string | 'all';
+  tier?: string | 'all';
+  // Use both timeframe and timeFrame for compatibility
+  timeframe?: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all' | string;
+  timeFrame?: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all' | string;
+  search?: string;
+  sort?: string;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+}
+
+// Additional types used in the codebase
+export interface SortByOptions {
+  value: string;
+  label: string;
+}
+
+export interface TypedLeaderboardFilter extends LeaderboardFilter {
+  sort?: string;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
 }

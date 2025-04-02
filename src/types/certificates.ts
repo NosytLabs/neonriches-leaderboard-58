@@ -1,90 +1,39 @@
 
+export type CertificateType = 'spending' | 'achievement' | 'rank' | 'royal' | 'team' | 'founding' | 'special';
+
+export type CertificateStyle = 'classic' | 'royal' | 'modern' | 'vintage' | 'minimalist' | 'ornate';
+
+export type CertificateTeam = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none';
+
 export interface Certificate {
   id: string;
+  userId: string;
+  type: CertificateType;
   title: string;
   description: string;
+  issueDate: string;
   imageUrl: string;
-  dateIssued: string | Date;
-  mintAddress?: string;
-  userId?: string;
-  team?: string;
-  verified?: boolean;
-  issuedAt?: string;
-  issuedBy?: string;
-  type?: string;
-  style?: string;
-  status?: 'pending' | 'minted' | 'revoked';
+  nftAddress?: string;
+  mintDate?: string;
+  style: CertificateStyle;
+  team?: CertificateTeam;
+  tier?: string;
   metadata?: Record<string, any>;
-  isMinted?: boolean;
-  createdAt?: string;
-  thumbnailUrl?: string;
-  isPublic?: boolean;
-  dateExpires?: string;
-  nftId?: string;
-  templateId?: string;
-  keywords?: string[];
-  signature?: string;
 }
 
 export interface CertificateTemplate {
   id: string;
-  name: string;
+  type: CertificateType;
+  title: string;
   description: string;
-  previewUrl: string;
+  style: CertificateStyle;
   imageUrl: string;
-  type: string;
-  team?: string;
-  requirements?: string[];
-  metadata?: Record<string, any>;
-  style?: string;
-  availableForTier?: string[];
-  availableForRank?: number[];
-  requiresFounder?: boolean;
-}
-
-// Define necessary types that are missing
-export type CertificateType = 
-  | 'achievement' 
-  | 'rank' 
-  | 'spending' 
-  | 'team' 
-  | 'founder' 
-  | 'event' 
-  | 'royal'
-  | 'nobility'
-  | 'custom';
-
-export type CertificateStyle = 
-  | 'modern'
-  | 'vintage'
-  | 'royal'
-  | 'minimalist'
-  | 'ornate'
-  | 'classic'
-  | 'medieval'
-  | 'elegant';
-
-export type CertificateTeam = 
-  | 'red'
-  | 'blue'
-  | 'green'
-  | 'gold'
-  | 'purple'
-  | 'neutral';
-
-// Interface for CertificateRepository
-export interface CertificateRepository {
-  getCertificateById: (id: string) => Promise<Certificate | null>;
-  getCertificatesForUser: (userId: string) => Promise<Certificate[]>;
-  getMintedCertificatesForUser: (userId: string) => Promise<Certificate[]>;
-  updateCertificate: (certificate: Certificate) => Promise<boolean>;
-  createCertificate: (certificate: Certificate) => Promise<Certificate>;
-  deleteCertificate: (id: string) => Promise<boolean>;
-}
-
-// Interface for CertificateTemplateFactory
-export interface CertificateTemplateFactory {
-  getTemplatesForUser: (user: any) => Promise<CertificateTemplate[]>;
-  createTemplateFromCertificate: (certificate: Certificate) => Promise<CertificateTemplate>;
-  getTemplateById: (id: string) => Promise<CertificateTemplate | null>;
+  available: boolean;
+  price?: number;
+  requirements?: {
+    minSpend?: number;
+    minRank?: number;
+    teamRequired?: boolean;
+    tierRequired?: string;
+  };
 }

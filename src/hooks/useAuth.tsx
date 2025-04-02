@@ -19,9 +19,13 @@ export function useAuth(): AuthContextType {
       isAuthenticated: false,
       isLoading: false,
       login: async () => false,
+      signIn: async () => false,
       register: async () => false,
       logout: async () => {},
-      updateUser: async () => false
+      signOut: async () => {},
+      updateUser: async () => false,
+      updateUserProfile: async () => false,
+      awardCosmetic: async () => false
     };
   }
   

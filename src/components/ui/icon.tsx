@@ -12,6 +12,7 @@ const iconSizeMap = {
   md: 'h-5 w-5',
   lg: 'h-6 w-6',
   xl: 'h-8 w-8',
+  '2xl': 'w-10 h-10'
 };
 
 // Define color map here to avoid any type issues
@@ -26,6 +27,15 @@ const iconColorMap = {
   info: 'text-blue-500',
   royal: 'text-royal-gold',
   muted: 'text-muted-foreground',
+  gold: 'text-royal-gold',
+  silver: 'text-gray-300',
+  crimson: 'text-royal-crimson',
+  emerald: 'text-emerald-500',
+  bronze: 'text-amber-600',
+  red: 'text-red-500',
+  blue: 'text-blue-500',
+  green: 'text-green-500',
+  purple: 'text-purple-500'
 };
 
 export const Icon = forwardRef<SVGSVGElement, IconProps>(

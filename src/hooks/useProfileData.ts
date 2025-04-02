@@ -17,5 +17,13 @@ const defaultSettings = {
   rankChangeAlerts: false,
   newFollowerAlerts: false,
   teamNotifications: false,
-  language: 'en'
+  language: 'en',
+  allowMessages: true,
+  publicProfile: true,
+  shameAlerts: false
 };
+
+// Add additional exports if needed
+export { defaultSettings };
+
+// If there's more code in this file, it would be kept below

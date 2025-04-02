@@ -20,6 +20,10 @@ export interface UserSettings {
   showSpending?: boolean;
   newFollowerAlerts?: boolean;
   teamNotifications?: boolean;
+  language?: string;
+  publicProfile?: boolean;
+  shameAlerts?: boolean;
+  allowMessages?: boolean;
 }
 
 export interface UserCosmetics {
@@ -47,6 +51,11 @@ export interface ProfileBoost {
   isActive: boolean;
   strength: number;
   appliedBy: string;
+  name?: string;
+  description?: string;
+  duration?: number;
+  price?: number;
+  icon?: string;
 }
 
 export interface SocialLink {
@@ -59,6 +68,9 @@ export interface SocialLink {
   label?: string;
   icon?: string;
   clicks?: number;
+  display?: string;
+  primary?: boolean;
+  type?: string;
 }
 
 export interface UserProfile {
@@ -79,6 +91,7 @@ export interface UserProfile {
   isVerified?: boolean;
   isFounder?: boolean;
   isVIP?: boolean;
+  isProtected?: boolean;
   settings: UserSettings;
   cosmetics?: UserCosmetics;
   socialLinks?: SocialLink[];
@@ -95,9 +108,9 @@ export interface UserProfile {
   boostCount?: number;
   purchasedFeatures?: string[];
   teamRank?: number;
-  isProtected?: boolean;
   joinDate?: string;
   createdAt?: string;
+  isAdmin?: boolean;
   certificateNFT?: {
     mintAddress: string;
     mintDate: string;

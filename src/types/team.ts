@@ -1,39 +1,45 @@
 
-import { TeamColor } from './user';
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'silver' | 'bronze' | 'neutral' | 'none' | 'crimson';
 
-export interface TeamData {
+export interface Team {
   id: string;
   name: string;
   color: TeamColor;
+  totalSpent: number;
+  members: number;
+  rank: number;
+  previousRank: number;
+  logoUrl: string;
   description: string;
-  motto: string;
-  icon: string;
-  memberCount: number;
-  totalSpent: number;
-  position: number;
-  banner?: string;
-  founder?: string;
-  benefits?: string[];
-  history?: string;
 }
 
-export interface TeamStanding {
-  teamId: string;
-  teamName: string;
-  teamColor: TeamColor;
-  position: number;
-  totalSpent: number;
-  memberCount: number;
-  weeklyChange: number;
-}
-
-export interface TeamJoinRequest {
+export interface TeamMember {
+  id: string;
   userId: string;
-  username: string;
   teamId: string;
-  requestDate: string;
-  status: 'pending' | 'approved' | 'rejected';
+  joinedAt: string;
+  role: 'member' | 'captain' | 'admin';
+  contribution: number;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
 }
 
-// Use export type for type-only exports when using isolatedModules
-export type { TeamColor };
+export interface TeamStats {
+  totalSpent: number;
+  memberCount: number;
+  averageSpent: number;
+  topContributor: {
+    username: string;
+    contribution: number;
+  };
+  recentActivity: {
+    username: string;
+    action: string;
+    amount: number;
+    timestamp: string;
+  }[];
+}
+
+// Export alias for compatibility
+export type TeamType = TeamColor;
