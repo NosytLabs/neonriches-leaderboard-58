@@ -1,146 +1,82 @@
-
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from '@/components/ui/dialog';
+import React from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { MockeryAction, MockeryTier } from '@/types/mockery-types';
-import { getMockeryName, getMockeryDescription } from '@/utils/mockery';
-import { getMockeryActionIcon, getMockeryTier, getMockeryCost } from '@/utils/mockeryUtils';
+import { UserProfile } from '@/types/user';
+import { MockeryAction } from '@/types/mockery-types';
+import { getMockeryActionIcon, getMockeryName, mockeryDescriptions, getMockeryCost } from '@/utils/mockeryUtils';
 
 interface MockeryModalProps {
   isOpen: boolean;
   onClose: () => void;
-  username: string;
-  avatarUrl?: string;
-  action: MockeryAction;
+  targetUser: UserProfile;
+  shameType: MockeryAction;
   onConfirm: () => void;
-  isConfirming?: boolean;
+  onCancel: () => void;
+  hasDiscount?: boolean;
 }
 
 const MockeryModal: React.FC<MockeryModalProps> = ({
   isOpen,
   onClose,
-  username,
-  avatarUrl,
-  action,
+  targetUser,
+  shameType,
   onConfirm,
-  isConfirming = false
+  onCancel,
+  hasDiscount = false
 }) => {
-  const [confirmed, setConfirmed] = useState(false);
-  
-  const handleConfirm = () => {
-    setConfirmed(true);
-    onConfirm();
-  };
-  
-  const getTierColor = (actionName: MockeryAction) => {
-    const tier = getMockeryTier(actionName);
-    const colorObj: Record<string, string> = {
-      legendary: 'text-royal-gold',
-      epic: 'text-purple-400',
-      rare: 'text-blue-400',
-      uncommon: 'text-green-400',
-      common: 'text-gray-300'
-    };
-    
-    return colorObj[tier] || 'text-gray-300';
-  };
-  
-  const ActionIcon = getMockeryActionIcon(action);
-  const actionTitle = getMockeryName(action);
-  const actionDescription = getMockeryDescription(action);
-  const actionPrice = getMockeryCost(action);
-  const actionTier = getMockeryTier(action);
-  
+  const ActionIcon = getMockeryActionIcon(shameType);
+  const mockeryName = getMockeryName(shameType);
+  const mockeryDescription = mockeryDescriptions[shameType] || 'Mock the target';
+  const mockeryCost = getMockeryCost(shameType);
+
   return (
-    <Dialog open={isOpen} onOpenChange={() => !isConfirming && onClose()}>
-      <DialogContent className="sm:max-w-md glass-morphism border-white/20">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <ActionIcon className={getTierColor(action)} />
-            <span>Confirm Mockery</span>
-          </DialogTitle>
+          <DialogTitle>Confirm Mockery</DialogTitle>
           <DialogDescription>
-            You are about to subject {username} to public mockery.
+            Are you sure you want to deploy this mockery?
           </DialogDescription>
         </DialogHeader>
         
-        <div className="flex flex-col items-center py-4">
-          <div className="mb-3 relative">
-            <div className={`absolute -inset-1 rounded-full ${
-              actionTier === 'legendary'
-                ? 'bg-royal-gold/30 animate-pulse-slow'
-                : actionTier === 'epic'
-                  ? 'bg-purple-500/30 animate-pulse-slow'
-                  : actionTier === 'rare'
-                    ? 'bg-blue-500/30 animate-pulse-slow'
-                    : 'bg-white/20'
-            }`}></div>
-            <Avatar className="w-20 h-20 border-2 border-white/20 relative">
-              <AvatarImage src={avatarUrl} alt={username} />
-              <AvatarFallback className="text-xl">{username.substring(0, 2).toUpperCase()}</AvatarFallback>
-            </Avatar>
-            <div className="absolute -bottom-2 -right-2 rounded-full p-1.5 bg-black">
-              <ActionIcon className={`h-5 w-5 ${getTierColor(action)}`} />
+        <div className="py-4">
+          <div className="flex items-center space-x-2 text-center">
+            {ActionIcon && <ActionIcon className="h-8 w-8 text-muted-foreground" />}
+            <h4 className="text-lg font-semibold">{mockeryName}</h4>
+          </div>
+          <p className="text-sm text-muted-foreground mt-2">{mockeryDescription}</p>
+          
+          <div className="mt-4">
+            <div className="flex justify-between items-center">
+              <span>Target:</span>
+              <div className="flex items-center">
+                <Badge variant="secondary" className="mr-2">
+                  {targetUser.displayName}
+                </Badge>
+                <img
+                  src={targetUser.profileImage}
+                  alt={targetUser.username}
+                  className="w-8 h-8 rounded-full"
+                />
+              </div>
+            </div>
+            <div className="flex justify-between items-center mt-2">
+              <span>Cost:</span>
+              <span className="font-semibold">
+                ${mockeryCost}
+                {hasDiscount && <span className="text-sm text-green-500"> (Discount Applied)</span>}
+              </span>
             </div>
           </div>
-          
-          <h3 className="text-lg font-semibold mb-1">{username}</h3>
-          <Badge 
-            variant="outline" 
-            className={`mb-4 ${getTierColor(action)} bg-black/20 border-0`}
-          >
-            {actionTitle}
-          </Badge>
-          
-          <div className="glass-morphism border-white/10 p-4 rounded-md mb-4 text-sm text-center max-w-xs">
-            <p>{actionDescription}</p>
-          </div>
-          
-          <div className="flex items-center gap-3 mb-2">
-            <div className="flex items-center gap-1.5">
-              <Badge
-                variant="outline"
-                className={`${getTierColor(action)} border-0 bg-black/30`}
-              >
-                {actionTier.toUpperCase()}
-              </Badge>
-            </div>
-            
-            <div className="flex items-center gap-1.5">
-              <span className="text-white/60 text-sm">Cost:</span>
-              <span className="font-bold">${actionPrice}</span>
-            </div>
-          </div>
-          
-          <p className="text-xs text-white/40 italic">
-            This is a cosmetic mockery with no functional impact
-          </p>
         </div>
-        
+
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={onClose}
-            disabled={isConfirming}
-          >
+          <Button type="button" variant="secondary" onClick={onCancel}>
             Cancel
           </Button>
-          <Button
-            onClick={handleConfirm}
-            disabled={isConfirming || confirmed}
-            className={`${
-              actionTier === 'legendary' 
-                ? 'bg-royal-gold hover:bg-royal-gold/80 text-black'
-                : actionTier === 'epic'
-                  ? 'bg-purple-500 hover:bg-purple-500/80'
-                  : actionTier === 'rare'
-                    ? 'bg-blue-500 hover:bg-blue-500/80'
-                    : 'bg-primary'
-            }`}
-          >
-            {isConfirming ? 'Processing...' : confirmed ? 'Confirmed' : 'Confirm Mockery'}
+          <Button type="button" onClick={onConfirm}>
+            Confirm Mockery
           </Button>
         </DialogFooter>
       </DialogContent>

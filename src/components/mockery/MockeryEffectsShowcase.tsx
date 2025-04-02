@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,9 +10,9 @@ import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 import { hasWeeklyDiscount, getDiscountedShamePrice } from '@/utils/shameUtils';
 import { 
   getMockeryName, 
-  getMockeryDescription, 
+  mockeryDescriptions,
   getMockeryActionIconColor,
-  getMockeryActionPrice
+  getMockeryCost
 } from '@/utils/mockeryUtils';
 
 interface MockeryEffectsShowcaseProps {
@@ -66,7 +65,7 @@ const MockeryEffectsShowcase: React.FC<MockeryEffectsShowcaseProps> = ({ onSelec
               <div className="text-2xl mb-1" style={{ color: getMockeryActionIconColor(action) }}>
                 {getMockeryName(action)}
               </div>
-              <div className="text-xs text-white/60">{getMockeryDescription(action)}</div>
+              <div className="text-xs text-white/60">{mockeryDescriptions[action]}</div>
             </Button>
           ))}
         </div>
@@ -100,14 +99,14 @@ interface MockeryConfirmationModalProps {
 }
 
 const MockeryConfirmationModal: React.FC<MockeryConfirmationModalProps> = ({ action, hasDiscount, onConfirm, onCancel }) => {
-  const regularPrice = getMockeryActionPrice(action);
+  const regularPrice = getMockeryCost(action);
   // Fix: Only pass one argument to getDiscountedShamePrice
   const discountedPrice = hasDiscount ? getDiscountedShamePrice(action) : null;
   
   return (
     <div className="glass-morphism border-white/10 p-6 rounded-lg">
       <h3 className="text-lg font-semibold mb-4">Confirm Mockery: {getMockeryName(action)}</h3>
-      <p className="text-sm text-white/70 mb-4">{getMockeryDescription(action)}</p>
+      <p className="text-sm text-white/70 mb-4">{mockeryDescriptions[action]}</p>
       
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">

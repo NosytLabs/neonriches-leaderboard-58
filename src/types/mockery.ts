@@ -1,5 +1,6 @@
 
-import { MockeryAction, MockeryTier, TeamColor, TeamData, UserTier } from './mockery-types';
+import { MockeryAction, MockeryTier, TeamColor, UserTier } from './mockery-types';
+import type { TeamData } from './mockery-types';
 
 // Re-export types correctly
 export type { MockeryAction, MockeryTier, TeamColor, TeamData, UserTier };

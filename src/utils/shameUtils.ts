@@ -1,7 +1,6 @@
-
 import { MockeryAction } from '@/types/mockery-types';
 import { UserTier } from '@/types/mockery-types';
-import { getMockeryActionPrice } from '@/utils/mockeryUtils';
+import { getMockeryCost } from '@/utils/mockeryUtils';
 import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 
 /**
@@ -10,7 +9,7 @@ import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
 export const getShameActionPrice = (action: MockeryAction): number => {
   // Normalize the action first to handle legacy names
   const normalizedAction = normalizeMockeryAction(action as string);
-  return getMockeryActionPrice(normalizedAction as MockeryAction);
+  return getMockeryCost(normalizedAction as MockeryAction);
 };
 
 /**

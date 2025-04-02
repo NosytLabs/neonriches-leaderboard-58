@@ -1,7 +1,7 @@
 
 import { MockeryTier } from '@/types/mockery-types';
 
-export const getMockeryTierLabel = (tier: MockeryTier): string => {
+export const getMockeryTierLabel = (tier: string): string => {
   switch (tier) {
     case 'common': return 'Common';
     case 'uncommon': return 'Uncommon';
@@ -18,7 +18,7 @@ export const getMockeryTierLabel = (tier: MockeryTier): string => {
   }
 };
 
-export const getMockeryTierColor = (tier: MockeryTier): { text: string, bg: string, border: string } => {
+export const getMockeryTierColor = (tier: string): { text: string, bg: string, border: string } => {
   switch (tier) {
     case 'common':
       return {
@@ -70,7 +70,7 @@ export const getMockeryTierColor = (tier: MockeryTier): { text: string, bg: stri
   }
 };
 
-export const getMockeryPrice = (tier: MockeryTier): number => {
+export const getMockeryPrice = (tier: string): number => {
   switch (tier) {
     case 'common': return 0.25;
     case 'uncommon': return 0.5;
@@ -87,7 +87,7 @@ export const getMockeryPrice = (tier: MockeryTier): number => {
   }
 };
 
-export const getMockeryDuration = (tier: MockeryTier): number => {
+export const getMockeryDuration = (tier: string): number => {
   // Return durations in hours
   switch (tier) {
     case 'common': return 24;

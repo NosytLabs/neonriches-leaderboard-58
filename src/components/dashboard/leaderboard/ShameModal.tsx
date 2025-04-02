@@ -7,7 +7,8 @@ import { Crown, ShieldCheck, Coins } from 'lucide-react';
 import { 
   getMockeryName, 
   getMockeryDescription,
-  getMockeryActionPrice
+  getMockeryActionPrice,
+  getMockeryCost
 } from '@/utils/mockeryUtils';
 import { getDiscountedShamePrice } from '@/utils/shameUtils';
 import { getInitials } from '@/utils/formatters/stringFormatters';

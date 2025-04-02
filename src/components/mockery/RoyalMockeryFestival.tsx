@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Target, Crown, Egg, Search, Shield, Info, AlertTriangle } from 'lucide-react';
-import { TomatoIcon } from '@/components/icons';
-import { useToast } from '@/hooks/use-toast';
-import { getMockeryActionIcon, getMockeryName, getMockeryDescription, getMockeryCost, getMockeryTier, getMockeryTierColorClass } from '@/utils/mockeryUtils';
+import { Crown, Laugh, Shield, Skull, Target } from 'lucide-react';
+import { MockeryAction } from '@/types/mockery-types';
+
+import { getMockeryActionIcon, getMockeryName, mockeryDescriptions } from '@/utils/mockeryUtils';
+import { getMockeryTierColorClass } from '@/components/help/mockeryHelpers';
+import { getMockeryCost } from '@/utils/mockeryUtils';
 
 interface MockeryTarget {
   id: string;
@@ -143,7 +143,7 @@ const RoyalMockeryFestival = () => {
             {selectedTarget && (
               <div>
                 <h3 className="text-lg font-medium mb-3 flex items-center">
-                  <Egg className="h-5 w-5 mr-2 text-royal-crimson" />
+                  <Laugh className="h-5 w-5 mr-2 text-royal-crimson" />
                   Choose Your Mockery
                 </h3>
                 
@@ -206,7 +206,7 @@ const RoyalMockeryFestival = () => {
                   </div>
                   
                   <div className="p-3 rounded bg-black/30 mb-3">
-                    <p className="text-sm">{getMockeryDescription(selectedAction as any)}</p>
+                    <p className="text-sm">{mockeryDescriptions[selectedAction as any]}</p>
                   </div>
                   
                   <div className="flex justify-between items-center">

@@ -1,13 +1,12 @@
-
 import { MockeryAction, MockeryTier } from '@/types/mockery';
 import { UserTier } from '@/types/user-types';
-import { getMockeryActionPrice } from '@/utils/mockeryUtils';
+import { getMockeryCost } from '@/utils/mockeryUtils';
 
 /**
  * Get shame action price based on mockery action
  */
 export const getShameActionPrice = (action: MockeryAction): number => {
-  return getMockeryActionPrice(action);
+  return getMockeryCost(action);
 };
 
 /**

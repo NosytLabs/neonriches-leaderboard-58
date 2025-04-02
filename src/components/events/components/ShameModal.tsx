@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,8 @@ import { Crown, ShieldCheck, Coins } from 'lucide-react';
 import { 
   getMockeryName, 
   getMockeryDescription,
-  getMockeryActionPrice
+  getMockeryActionPrice,
+  getMockeryCost
 } from '@/utils/mockeryUtils';
 import { getDiscountedShamePrice } from '@/utils/shameUtils';
 import { getInitials } from '@/utils/formatters/stringFormatters';

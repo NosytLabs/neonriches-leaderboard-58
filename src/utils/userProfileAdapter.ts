@@ -1,7 +1,7 @@
 
 import { UserProfile } from '@/types/user';
 import { TeamColor } from '@/types/mockery-types';
-import { toTeamColor } from './typeConverters';
+import { toTeamColor, toThemeValue, toUserTier } from './typeConverter';
 
 /**
  * Adapts a subscription object to ensure compatibility
@@ -32,7 +32,7 @@ export const adaptUserProfile = (user: any): UserProfile => {
     bio: user.bio || '',
     joinedDate: user.joinedDate || user.joinDate || user.createdAt || new Date().toISOString(),
     team: toTeamColor(user.team || 'none') as TeamColor,
-    tier: user.tier || 'basic',
+    tier: toUserTier(user.tier || 'basic'),
     rank: user.rank || 0,
     previousRank: user.previousRank || 0,
     totalSpent: user.totalSpent || user.amountSpent || 0,
@@ -44,19 +44,19 @@ export const adaptUserProfile = (user: any): UserProfile => {
     isVIP: !!user.isVIP,
     isFounder: !!user.isFounder,
     isAdmin: !!user.isAdmin,
-    settings: user.settings || {
-      profileVisibility: 'public',
-      allowProfileLinks: true,
-      theme: 'dark',
-      notifications: true,
-      emailNotifications: false,
-      marketingEmails: false,
-      showRank: true,
-      darkMode: true,
-      soundEffects: true,
-      showBadges: true,
-      showTeam: true,
-      showSpending: true
+    settings: {
+      profileVisibility: user.settings?.profileVisibility || 'public',
+      allowProfileLinks: user.settings?.allowProfileLinks !== false,
+      theme: toThemeValue(user.settings?.theme || 'dark'),
+      notifications: user.settings?.notifications !== false,
+      emailNotifications: user.settings?.emailNotifications || false,
+      marketingEmails: user.settings?.marketingEmails || false,
+      showRank: user.settings?.showRank !== false,
+      darkMode: user.settings?.darkMode !== false,
+      soundEffects: user.settings?.soundEffects !== false,
+      showBadges: user.settings?.showBadges !== false,
+      showTeam: user.settings?.showTeam !== false,
+      showSpending: user.settings?.showSpending !== false
     },
     cosmetics: user.cosmetics || {
       border: [],

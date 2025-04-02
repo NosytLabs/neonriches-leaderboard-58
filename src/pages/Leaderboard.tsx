@@ -16,13 +16,14 @@ const Leaderboard = () => {
   
   // Initialize filter state with sortDirection and limit
   const [filter, setFilter] = useState<LeaderboardFilter>({
+    period: 'weekly',
     team: 'all',
+    limit: 10,
     tier: 'all',
-    timeframe: 'all-time',
+    timeframe: 'week',
     search: '',
     sortBy: 'rank',
-    sortDirection: 'asc',
-    limit: 50
+    sortDirection: 'asc'
   });
   
   const [filteredUsers, setFilteredUsers] = useState<LeaderboardUser[]>([]);

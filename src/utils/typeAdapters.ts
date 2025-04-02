@@ -76,7 +76,7 @@ export const adaptUserProfile = (user: Partial<ConsolidatedUserProfile> | Partia
 /**
  * Adapts a leaderboard user from one type to another
  */
-export const adaptLeaderboardUser = (user: MockeryLeaderboardUser): LeaderboardUser => {
+export const adaptLeaderboardUser = (user: any): LeaderboardUser => {
   return {
     id: user.id || '',
     userId: user.userId || user.id || '',
@@ -86,15 +86,16 @@ export const adaptLeaderboardUser = (user: MockeryLeaderboardUser): LeaderboardU
     totalSpent: user.totalSpent || user.amountSpent || 0,
     amountSpent: user.amountSpent || user.totalSpent || 0,
     rank: user.rank || 0,
+    previousRank: user.previousRank || user.rank || 0,
     team: user.team || 'none',
     tier: user.tier || 'basic',
     spendStreak: user.spendStreak || 0,
     walletBalance: user.walletBalance || 0,
-    previousRank: user.previousRank || user.rank || 0,
     rankChange: user.rankChange || 0,
     spendChange: user.spendChange || 0,
     isProtected: user.isProtected || false,
     isVerified: user.isVerified || false,
+    avatarUrl: user.avatarUrl || user.profileImage || '/assets/default-avatar.png'
   };
 };
 

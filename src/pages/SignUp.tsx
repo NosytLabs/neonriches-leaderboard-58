@@ -1,175 +1,164 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useToast } from '@/hooks/use-toast';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Shell } from '@/components/ui/shell';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-import { Shell } from '@/components/ui/shell';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAuth } from '@/hooks/useAuth';
+import { Label } from '@/components/ui/label';
 import CardDescription from '@/components/ui/CardDescription';
+import { Crown, Mail, Lock, User, UserPlus } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
-const SignUp: React.FC = () => {
+const SignUpPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [referralCode, setReferralCode] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const { register, isAuthenticated, user } = useAuth();
-  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (isAuthenticated && user) {
-      navigate('/dashboard');
-    }
-  }, [isAuthenticated, user, navigate]);
+    document.title = "Sign Up | SpendThrone";
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (password !== confirmPassword) {
       toast({
-        title: "Passwords Don't Match",
-        description: "Please ensure both passwords match.",
+        title: "Error",
+        description: "Passwords do not match.",
         variant: "destructive",
       });
       return;
     }
-    
-    setIsLoading(true);
 
-    try {
-      await register(username, email, password);
-      
+    setIsSubmitting(true);
+
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitting(false);
       toast({
-        title: "Registration Successful",
-        description: "Welcome to SpendThrone! Your journey to nobility begins.",
-        variant: "default",
+        title: "Success",
+        description: "Account created successfully!",
       });
-      navigate('/dashboard');
-    } catch (error) {
-      toast({
-        title: "Registration Error",
-        description: typeof error === 'string' ? error : "An unexpected error occurred. Please try again.",
-        variant: "destructive",
-      });
-      console.error("Registration error:", error);
-    } finally {
-      setIsLoading(false);
-    }
+      navigate('/login');
+    }, 2000);
   };
 
   return (
     <Shell>
-      <PageSEO 
-        title="Join SpendThrone - Begin Your Royal Journey" 
-        description="Sign up for SpendThrone and start your climb to the top of the royal leaderboard. The more you spend, the higher you rank."
-      />
       
-      <div className="container max-w-md mx-auto py-12">
-        <Card className="glass-morphism border-white/10">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Create Your Royal Account</CardTitle>
-            <CardDescription className="text-center">
-              Begin your journey to the throne
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+      <div className="container relative flex h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+        
+        <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex">
+          <div className="absolute inset-0 bg-zinc-900/80" />
+          <div className="relative z-20 mt-auto">
+            <div className="i mb-4 flex items-center gap-2">
+              <Crown className="h-6 w-6 text-royal-gold" />
+              <h2 className="text-lg font-medium">
+                SpendThrone
+              </h2>
+            </div>
+            <p className="line-clamp-2 text-sm text-muted-foreground">
+              Create your account to join the royal court.
+            </p>
+          </div>
+        </div>
+        
+        <div className="lg:p-8">
+          <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+            
+            <div className="flex flex-col space-y-2 text-center">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                Create an account
+              </h1>
+              <CardDescription>
+                Enter your email below to create your account
+              </CardDescription>
+            </div>
+            
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
-                  placeholder="noble_knight"
+                  placeholder="Enter your username"
+                  type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  className="glass-morphism border-white/10"
                 />
               </div>
-              
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
+                  placeholder="Enter your email"
                   type="email"
-                  placeholder="noble@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="glass-morphism border-white/10"
                 />
               </div>
-              
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
+                  placeholder="Enter your password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="glass-morphism border-white/10"
                 />
               </div>
-              
               <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirm Password</Label>
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <Input
-                  id="confirm-password"
+                  id="confirmPassword"
+                  placeholder="Confirm your password"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="glass-morphism border-white/10"
                 />
               </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="referral-code">Referral Code (Optional)</Label>
-                <Input
-                  id="referral-code"
-                  placeholder="ROYAL-123456"
-                  value={referralCode}
-                  onChange={(e) => setReferralCode(e.target.value)}
-                  className="glass-morphism border-white/10"
-                />
-              </div>
-              
-              <Button 
-                type="submit" 
-                className="w-full bg-royal-gold hover:bg-royal-gold/90 text-black"
-                disabled={isLoading}
-              >
-                {isLoading ? 'Creating Account...' : 'Create Account'}
+              <Button disabled={isSubmitting} className="w-full">
+                {isSubmitting ? (
+                  <>
+                    Creating Account...
+                  </>
+                ) : (
+                  <>
+                    Create Account
+                  </>
+                )}
               </Button>
-              
-              <div className="text-center text-sm mt-4">
-                <span className="text-white/70">Already have a royal account? </span>
-                <Link to="/login" className="text-royal-gold hover:underline">
-                  Sign In
-                </Link>
-              </div>
             </form>
-          </CardContent>
-        </Card>
+            
+            <p className="px-8 text-center text-sm text-muted-foreground">
+              By clicking above, you agree to our
+              <a
+                href="/terms"
+                className="underline underline-offset-2 hover:text-royal-gold"
+              >
+                Terms of Service
+              </a>{" "}
+              and
+              <a
+                href="/privacy"
+                className="underline underline-offset-2 hover:text-royal-gold"
+              >
+                Privacy Policy
+              </a>.
+            </p>
+          </div>
+        </div>
       </div>
+    
     </Shell>
   );
 };
 
-export default SignUp;
+export default SignUpPage;

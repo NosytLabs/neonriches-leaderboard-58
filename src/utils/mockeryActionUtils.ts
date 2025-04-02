@@ -1,26 +1,100 @@
 
-import {
-  Egg,
-  FlameIcon,
-  Crown,
-  ThumbsDown,
-  Skull,
-  Heart,
-  PartyPopper, // Using PartyPopper instead of Confetti
-  MusicIcon,
-  Fish,
-  Flame,
-  Volume2,
-  Award,
-  MessageCircle,
-  Circle,
-  Scroll,
-  Shield,
-  AlertTriangle
-} from "lucide-react";
+import { 
+  AlertTriangle, 
+  Crown, 
+  Egg, 
+  Flame, 
+  Heart, 
+  Skull, 
+  ThumbsDown, 
+  Trophy, 
+  Users, 
+  Coffee, 
+  UserMinus, 
+  Feather, 
+  Music, 
+  Lightbulb, 
+  Ghost, 
+  Shield
+} from 'lucide-react';
+import { MockeryAction } from '@/types/mockery-types';
 
-// Define the mockery action types
-export const MOCKERY_ACTIONS = [
+// Icon mapping for mockery actions
+export const mockeryActionIcons = {
+  tomato: AlertTriangle,
+  egg: Egg,
+  rotten_egg: Egg,
+  flame: Flame,
+  heart: Heart,
+  thumbs_down: ThumbsDown,
+  skull: Skull,
+  crown: Crown,
+  putridEgg: AlertTriangle,
+  stocks: UserMinus,
+  jester: Coffee,
+  mock: Lightbulb,
+  challenge: AlertTriangle,
+  joust: AlertTriangle,
+  duel: AlertTriangle,
+  silence: Ghost,
+  laugh: AlertTriangle,
+  fish: AlertTriangle,
+  taunt: AlertTriangle,
+  thumbsDown: ThumbsDown,
+  trumpet: Music,
+  confetti: AlertTriangle,
+  shame: AlertTriangle,
+  courtJester: Coffee,
+  smokeBomb: AlertTriangle,
+  protection: Shield,
+  royal_decree: Crown,
+  shame_certificate: AlertTriangle,
+  insult: AlertTriangle,
+  humiliate: AlertTriangle
+};
+
+// Get a display name for a mockery action
+export const getMockeryActionDisplayName = (action: string): string => {
+  // Convert camelCase/snake_case to readable format
+  return action
+    .replace(/_/g, ' ')
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, str => str.toUpperCase());
+};
+
+// Normalize mockery action names to ensure consistent handling
+export const normalizeMockeryAction = (action: string): MockeryAction => {
+  // Map of various formats to standardized format
+  const normalizationMap: Record<string, MockeryAction> = {
+    'putrid_egg': 'putridEgg',
+    'putrid-egg': 'putridEgg',
+    'putridegg': 'putridEgg',
+    'court_jester': 'courtJester',
+    'court-jester': 'courtJester',
+    'courtjester': 'courtJester',
+    'smoke_bomb': 'smokeBomb',
+    'smoke-bomb': 'smokeBomb',
+    'smokebomb': 'smokeBomb',
+    'thumbs_down': 'thumbsDown',
+    'thumbs-down': 'thumbsDown',
+    'thumbsdown': 'thumbsDown',
+    'royal_decree': 'royal_decree',
+    'royal-decree': 'royal_decree',
+    'royaldecree': 'royal_decree',
+    'shame_certificate': 'shame_certificate',
+    'shame-certificate': 'shame_certificate',
+    'shamecertificate': 'shame_certificate',
+    'rotten_egg': 'rotten_egg',
+    'rotten-egg': 'rotten_egg',
+    'rottenegg': 'rotten_egg'
+  };
+
+  // Return the normalized form if it exists, otherwise return as is
+  return normalizationMap[action.toLowerCase()] || action as MockeryAction;
+};
+
+// Valid mockery actions for components that need a comprehensive list
+export const VALID_MOCKERY_ACTIONS: MockeryAction[] = [
   'tomato',
   'egg',
   'rotten_egg',
@@ -51,118 +125,11 @@ export const MOCKERY_ACTIONS = [
   'shame_certificate',
   'insult',
   'humiliate'
-] as const;
+];
 
-// Export normalizeMockeryAction for PublicShamingFeature
-export const normalizeMockeryAction = (action: string): string => {
-  // Convert camelCase/snake_case to readable format
-  return action
-    .replace(/_/g, ' ')
-    .replace(/([A-Z])/g, ' $1')
-    .replace(/^./, str => str.toUpperCase());
-};
-
-// Export valid mockery actions
-export const VALID_MOCKERY_ACTIONS = MOCKERY_ACTIONS;
-
-// Define the mockery action icons
-export const mockeryActionIcons: Record<string, any> = {
-  tomato: Circle,
-  egg: Egg,
-  rotten_egg: Egg,
-  flame: FlameIcon,
-  heart: Heart,
-  thumbs_down: ThumbsDown,
-  skull: Skull,
-  crown: Crown,
-  putridEgg: Egg,
-  stocks: AlertTriangle,
-  jester: Crown,
-  mock: MessageCircle,
-  challenge: Award,
-  joust: Award,
-  duel: Flame,
-  silence: Volume2,
-  laugh: PartyPopper,
-  fish: Fish,
-  taunt: MessageCircle,
-  thumbsDown: ThumbsDown,
-  trumpet: MusicIcon,
-  confetti: PartyPopper,
-  shame: AlertTriangle,
-  courtJester: Crown,
-  smokeBomb: Circle,
-  protection: Shield,
-  royal_decree: Scroll,
-  shame_certificate: Scroll,
-  insult: MessageCircle,
-  humiliate: AlertTriangle
-};
-
-// Define descriptions for each mockery action
-export const mockeryActionDescriptions: Record<string, string> = {
-  tomato: "Throw a tomato at the user",
-  egg: "Throw an egg at the user",
-  rotten_egg: "Throw a rotten egg for extra stench",
-  flame: "Flame the user in public",
-  heart: "Ironically heart their profile",
-  thumbs_down: "Show disapproval",
-  skull: "Mark them as digitally deceased",
-  crown: "Crown them as the fool",
-  putridEgg: "A specialty item that really stinks",
-  stocks: "Place them in the digital stocks for public mockery",
-  jester: "Declare them the court jester",
-  mock: "Simple mockery for simple folk",
-  challenge: "Challenge them to prove their worth",
-  joust: "Challenge them to a spending joust",
-  duel: "Declare a spending duel",
-  silence: "Temporarily silence them",
-  laugh: "Publicly laugh at their status",
-  fish: "Slap them with a digital fish",
-  taunt: "Taunt them mercilessly",
-  thumbsDown: "Express your disapproval",
-  trumpet: "Announce their failure",
-  confetti: "Ironically celebrate their spending",
-  shame: "Publicly shame them",
-  courtJester: "Name them the court's fool",
-  smokeBomb: "Leave them in a cloud of confusion",
-  protection: "Protect yourself from their mockery",
-  royal_decree: "Issue a royal decree of shame",
-  shame_certificate: "Award a certificate of shame",
-  insult: "Deliver a royal insult",
-  humiliate: "Publicly humiliate them"
-};
-
-// Define costs for mockery actions
-export const mockeryActionCosts: Record<string, number> = {
-  tomato: 5,
-  egg: 10,
-  rotten_egg: 300,
-  flame: 75,
-  heart: 100,
-  thumbs_down: 15,
-  skull: 20,
-  crown: 200,
-  putridEgg: 300,
-  stocks: 250,
-  jester: 30,
-  mock: 50,
-  challenge: 75,
-  joust: 100,
-  duel: 150,
-  silence: 350,
-  laugh: 25,
-  fish: 35,
-  taunt: 40,
-  thumbsDown: 15,
-  trumpet: 45,
-  confetti: 50,
-  shame: 150,
-  courtJester: 400,
-  smokeBomb: 450,
-  protection: 500,
-  royal_decree: 600,
-  shame_certificate: 250,
-  insult: 100,
-  humiliate: 300
+export default {
+  mockeryActionIcons,
+  getMockeryActionDisplayName,
+  normalizeMockeryAction,
+  VALID_MOCKERY_ACTIONS
 };

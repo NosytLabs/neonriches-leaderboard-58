@@ -12,7 +12,9 @@ import { useSound } from '@/hooks/sounds/use-sound';
 import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
-import { adaptUserProfile } from '@/utils/typeAdapter';
+import { adaptUserProfile } from '@/utils/userProfileAdapter';
+import { toThemeValue } from '@/utils/typeConverter';
+import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -73,8 +75,18 @@ const EnhancedDashboard = () => {
     return null;
   }
 
+  // Convert basic user object to properly typed UserProfile with required fields
+  const processedUser = {
+    ...user,
+    displayName: user.displayName || user.username || 'Anonymous User',
+    settings: {
+      ...user.settings,
+      theme: toThemeValue(user.settings?.theme)
+    }
+  };
+
   // Adapt the user to ensure it has all required fields with valid values
-  const adaptedUser = adaptUserProfile(user);
+  const adaptedUser = adaptUserProfile(processedUser) as ConsolidatedUserProfile;
 
   const handleSpend = () => {
     toast({

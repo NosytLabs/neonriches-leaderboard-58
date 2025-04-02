@@ -5,12 +5,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import MockeryComponent from '@/components/mockery/MockeryComponent';
 import { useMockery } from '@/hooks/use-mockery';
 import { MockeryAction } from '@/types/mockery-types';
+import { toTeamColor } from '@/utils/typeConverter';
 
 const MockeryPage = () => {
   const [activeTab, setActiveTab] = useState('mockery');
   const { mockUser, costForAction } = useMockery();
 
-  const handleMockUser = (actionType: MockeryAction, targetUserId: string) => {
+  const handleMockUser = async (actionType: string, targetUserId: string) => {
     // In a real implementation, this would fetch the target user data
     // and then call mockUser
     console.log(`Mocking user ${targetUserId} with action ${actionType}`);
@@ -21,7 +22,7 @@ const MockeryPage = () => {
       username: `user_${targetUserId}`,
       displayName: `User ${targetUserId}`,
       profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
-      team: "gold",
+      team: toTeamColor("gold"),
       tier: "royal",
       rank: 1,
       previousRank: 2,
@@ -29,7 +30,7 @@ const MockeryPage = () => {
       joinedDate: new Date().toISOString()
     };
     
-    mockUser(actionType, mockTargetUser);
+    return mockUser(actionType as MockeryAction, mockTargetUser);
   };
 
   return (

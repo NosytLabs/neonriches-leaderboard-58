@@ -1,10 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MockeryAction } from '@/types/mockery-types';
 import { cn } from '@/lib/utils';
 import { getMockeryDescription } from '@/utils/mockeryUtils';
 import { normalizeMockeryAction } from '@/utils/mockeryNormalizer';
+import { mockeryDescriptions } from '@/utils/mockeryUtils';
 
 interface MockeryEffectProps {
   username: string;

@@ -7,11 +7,12 @@ import { Crown, Shield, AlertTriangle } from 'lucide-react';
 import { MockeryAction } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
 
-// Import mockery utility functions - fixed import name
-import { 
-  getMockeryActionDisplayName as getMockeryName, 
-  mockeryActionIcons 
-} from '@/utils/mockeryActionUtils';
+// Import from the updated utility files
+import { getMockeryActionDisplayName } from '@/utils/mockeryActionUtils';
+import { mockeryActionIcons } from '@/utils/mockeryActionUtils';
+import { getMockeryCost } from '@/utils/mockeryUtils';
+import { getMockeryTier } from '@/utils/mockeryUtils';
+import { getMockeryName } from '@/utils/mockeryUtils';
 
 // Add mock utility functions that can be implemented later properly
 const getMockeryDescription = (action: MockeryAction): string => {
@@ -25,17 +26,6 @@ const getMockeryDescription = (action: MockeryAction): string => {
   return descriptions[action] || 'Mock the target';
 };
 
-const getMockeryTier = (action: MockeryAction): string => {
-  const tiers: Record<string, string> = {
-    tomato: 'common',
-    egg: 'common',
-    crown: 'rare',
-    stocks: 'epic',
-    jester: 'uncommon'
-  };
-  return tiers[action] || 'common';
-};
-
 const getMockeryTierColorClass = (tier: string): string => {
   const colorClasses: Record<string, string> = {
     common: 'text-gray-300',
@@ -45,17 +35,6 @@ const getMockeryTierColorClass = (tier: string): string => {
     legendary: 'text-orange-300'
   };
   return colorClasses[tier] || 'text-gray-300';
-};
-
-const getMockeryActionPrice = (action: MockeryAction): number => {
-  const prices: Record<string, number> = {
-    tomato: 5,
-    egg: 10,
-    crown: 50,
-    stocks: 75,
-    jester: 25
-  };
-  return prices[action] || 15;
 };
 
 interface MockeryComponentProps {
@@ -73,14 +52,14 @@ const MockeryComponent: React.FC<MockeryComponentProps> = ({ onMockUser, costFor
     'jester'
   ];
 
-  const handleMockery = (action: MockeryAction) => {
+  const handleMockery = async (action: MockeryAction) => {
     toast({
       title: "Mockery Deployed!",
       description: `You have successfully deployed ${getMockeryName(action)}.`,
     });
     
     // In a real implementation, this would call onMockUser with a target ID
-    onMockUser(action, 'mock-target-123');
+    await onMockUser(action, 'mock-target-123');
   };
 
   return (
@@ -103,7 +82,7 @@ const MockeryComponent: React.FC<MockeryComponentProps> = ({ onMockUser, costFor
               const tier = getMockeryTier(action);
               const price = costForAction(action);
               const tierColorClass = getMockeryTierColorClass(tier);
-              const ActionIcon = AlertTriangle; // Placeholder until we have proper icons
+              const ActionIcon = mockeryActionIcons[action] || AlertTriangle;
               
               return (
                 <div 

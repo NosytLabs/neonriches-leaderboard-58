@@ -32,8 +32,19 @@ export type MockeryAction =
   | 'insult'
   | 'humiliate';
 
-// Define mockery tier types
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+// Define mockery tier types - expanded to include all values used in components
+export type MockeryTier = 
+  | 'common' 
+  | 'uncommon' 
+  | 'rare' 
+  | 'epic' 
+  | 'legendary'
+  | 'royal'
+  | 'basic'
+  | 'premium'
+  | 'silver'
+  | 'bronze'
+  | 'standard';
 
 // Team color types
 export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze' | 'crimson';
@@ -63,6 +74,18 @@ export type UserTier =
   | 'elite'
   | 'legendary';
 
+// TeamData interface for TeamLeaderboard
+export interface TeamData {
+  id: string;
+  name: string;
+  color: TeamColor;
+  members: number;
+  rank: number;
+  totalSpent: number;
+  avatar?: string;
+  description?: string;
+}
+
 // Mockery event interface
 export interface MockeryEvent {
   id: string;
@@ -88,37 +111,37 @@ export interface MockeryUser {
 
 // Leaderboard user interface
 export interface LeaderboardUser {
-  id?: string;
+  id: string;
   userId?: string;
   username: string;
   displayName?: string;
   profileImage?: string;
   isVerified?: boolean;
   rank: number;
-  previousRank?: number;
+  previousRank: number;
   team?: TeamColor | string;
   tier?: UserTier | string;
   totalSpent?: number;
   amountSpent?: number;
   spendStreak?: number;
+  rankChange?: number;
+  spendChange?: number;
+  isProtected?: boolean;
+  walletBalance?: number;
+  avatarUrl?: string;
 }
 
-// Leaderboard filter interface
+// Leaderboard filter interface - expanded with additional properties
 export interface LeaderboardFilter {
   period: 'daily' | 'weekly' | 'monthly' | 'all-time';
   team: TeamColor | 'all' | string;
   limit: number;
+  tier?: string;
+  timeframe?: string;
+  search?: string;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
 }
 
-// Export all types
-export default {
-  MockeryAction,
-  MockeryTier,
-  TeamColor,
-  Gender,
-  UserTier,
-  MockeryEvent,
-  MockeryUser,
-  LeaderboardUser,
-  LeaderboardFilter
-};
+// Individual type exports
+export { MockeryAction, MockeryTier, TeamColor, Gender, UserTier, TeamData };
