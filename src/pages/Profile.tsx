@@ -5,14 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { formatDollarAmount } from '@/utils/formatters';
-import { Shell } from '@/components/ui/shell/Shell';
+import { Shell } from '@/components/ui/Shell';
 
 const Profile = () => {
   const { user } = useAuth();
   const { username } = useParams<{ username: string }>();
 
   return (
-    <Shell variant="centered">
+    <Shell variant="profile">
       <Card className="glass-morphism border-white/10">
         <CardHeader className="flex items-center justify-between">
           <CardTitle className="text-2xl font-bold">Profile Page</CardTitle>

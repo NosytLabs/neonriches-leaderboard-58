@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { LeaderboardUser } from '@/types/leaderboard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { formatCurrency } from '@/utils/formatters';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Crown, TrendingDown, TrendingUp } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/badge'; // Use lowercase to match index.ts
 
 interface LeaderboardListProps {
   users: LeaderboardUser[];

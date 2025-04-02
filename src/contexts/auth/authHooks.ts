@@ -7,7 +7,7 @@ import { UserSubscription } from '@/types/user-consolidated';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { addProfileBoostWithDays, addCosmeticByCategoryString } from './authUtils';
-import { adaptUserProfile, createUserSubscription } from '@/utils/typeAdapters';
+import { toUserProfile, toConsolidatedUserProfile, ensureUserProfile, ensureConsolidatedUserProfile } from '@/utils/userTypeConverter';
 
 export const useAuthState = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -112,27 +112,21 @@ export const useAuthMethods = (
     try {
       if (!user) return false;
       
-      // Ensure all required fields are present using adaptUserProfile
-      const adaptedUserData = adaptUserProfile({
+      // Make sure we have a correctly typed UserProfile
+      const userProfileData = ensureUserProfile({
         ...user,
-        ...userData,
-        // Make sure settings is provided since it's required
-        settings: userData.settings || user.settings,
-        // Make sure displayName is provided
-        displayName: userData.displayName || user.displayName || user.username,
-        // Make sure totalSpent is provided
-        totalSpent: userData.totalSpent || user.totalSpent || 0
+        ...userData
       });
       
       // Update user metadata in Supabase Auth
       const { error: authUpdateError } = await supabase.auth.updateUser({
         data: {
-          username: adaptedUserData.username,
-          display_name: adaptedUserData.displayName,
-          avatar_url: adaptedUserData.profileImage,
-          team: adaptedUserData.team,
-          tier: adaptedUserData.tier,
-          gender: adaptedUserData.gender,
+          username: userProfileData.username,
+          display_name: userProfileData.displayName,
+          avatar_url: userProfileData.profileImage,
+          team: userProfileData.team,
+          tier: userProfileData.tier,
+          gender: userProfileData.gender,
         }
       });
       
@@ -142,22 +136,19 @@ export const useAuthMethods = (
       const { error: profileUpdateError } = await supabase
         .from('users')
         .update({
-          username: adaptedUserData.username,
-          display_name: adaptedUserData.displayName,
-          profile_image: adaptedUserData.profileImage,
-          bio: adaptedUserData.bio,
-          team: adaptedUserData.team,
-          tier: adaptedUserData.tier,
-          gender: adaptedUserData.gender,
+          username: userProfileData.username,
+          display_name: userProfileData.displayName,
+          profile_image: userProfileData.profileImage,
+          bio: userProfileData.bio,
+          team: userProfileData.team,
+          tier: userProfileData.tier,
+          gender: userProfileData.gender,
         })
         .eq('id', user.id);
       
       if (profileUpdateError) throw profileUpdateError;
       
-      // Update local state with ensured displayName and totalSpent
-      const newUser = adaptedUserData;
-      
-      setUser(newUser);
+      setUser(userProfileData);
       
       toast({
         title: "Profile Updated",
@@ -263,19 +254,24 @@ export const useAuthMethods = (
     try {
       if (!user) return false;
       
-      // Create a full UserSubscription with required fields
-      const subscription = createUserSubscription(
-        subscriptionData.planId || 'default',
-        subscriptionData.nextBillingDate || new Date().toISOString(),
-        subscriptionData.status || 'active',
-        subscriptionData.tier || 'basic'
-      );
+      // Create a full subscription object
+      const subscription: UserSubscription = {
+        id: subscriptionData.id || `sub_${Math.random().toString(36).substring(2, 15)}`,
+        planId: subscriptionData.planId || 'default',
+        status: subscriptionData.status || 'active',
+        startDate: subscriptionData.startDate || new Date().toISOString(),
+        tier: subscriptionData.tier || 'basic',
+        nextBillingDate: subscriptionData.nextBillingDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        endDate: subscriptionData.endDate,
+        autoRenew: subscriptionData.autoRenew ?? true,
+        cancelAtPeriodEnd: subscriptionData.cancelAtPeriodEnd ?? false
+      };
       
-      // Use adaptUserProfile to ensure all required fields are present
-      const updatedUser = adaptUserProfile({
+      // Create a new user object with the updated subscription
+      const updatedUser = {
         ...user,
-        subscription,
-      });
+        subscription
+      };
       
       setUser(updatedUser);
       

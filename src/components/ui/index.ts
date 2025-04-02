@@ -1,14 +1,18 @@
 
-// Re-export UI components with consistent casing
+// Fix casing issues for all component imports
+// Use consistent casing for all exports
 
+// Core UI components
 export * from './accordion';
 export * from './alert';
-export * from './Badge'; // Keep consistent with the file name 
+export * from './avatar';
+export * from './badge'; // Use lowercase consistently
 export * from './button';
+export * from './calendar';
 export * from './card';
 export * from './checkbox';
-export * from './collapsible';
 export * from './command';
+export * from './context-menu';
 export * from './dialog';
 export * from './dropdown-menu';
 export * from './form';
@@ -33,5 +37,9 @@ export * from './textarea';
 export * from './toast';
 export * from './toggle';
 export * from './tooltip';
-export * from './Shell'; // Export Shell instead of importing from local file to fix case sensitivity
-export * from './avatar'; // Export avatar for components that need it
+export * from './use-toast';
+export * from './shell'; // Use lowercase for shell
+
+// Additional UI components
+export * from './loading-spinner';
+export * from './random-absurd-fact';

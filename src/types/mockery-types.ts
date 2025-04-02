@@ -129,6 +129,7 @@ export interface MockeryEvent {
   tier: MockeryTier;
   cost?: number;
   type?: string; // Required by some components
+  fromUserId?: string; // For backward compatibility
 }
 
 export interface MockeryUser {
@@ -140,4 +141,5 @@ export interface MockeryUser {
   tier: UserTier;
   team: TeamColor;
   userId?: string; // Add required by some components
+  totalSpent?: number; // Add required by some components
 }

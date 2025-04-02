@@ -12,21 +12,7 @@ import { useSound } from '@/hooks/sounds/use-sound';
 import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
-import { UserProfile as ConsolidatedUserProfile } from '@/types/user-consolidated';
-import { UserProfile as UserProfileType } from '@/types/user';
-import { TeamColor } from '@/types/mockery-types';
-import { toTeamColor } from '@/utils/typeConverters';
-import { adaptUserProfile } from '@/utils/typeAdapters';
-
-/**
- * Converts a consolidated user profile to a format compatible with components
- * that expect the user.UserProfile type
- */
-function adaptUserProfileForComponents(user: ConsolidatedUserProfile): UserProfileType {
-  if (!user) return null as any;
-  
-  return adaptUserProfile(user);
-}
+import { toUserProfile, toConsolidatedUserProfile } from '@/utils/userTypeConverter';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -87,11 +73,8 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Adapt the user to a version that components can use
-  const adaptedUser = user as unknown as ConsolidatedUserProfile;
-  
-  // Create a UserProfile compatible with the user.UserProfile type
-  const userForComponents = adaptUserProfileForComponents(adaptedUser);
+  // Convert the user to the type needed by components
+  const userForComponents = toUserProfile(user);
 
   const handleSpend = () => {
     toast({
