@@ -1,3 +1,4 @@
+
 /**
  * Central types export file
  * This consolidates all type exports to minimize import conflicts
@@ -75,8 +76,8 @@ export type {
 } from './leaderboard';
 
 // UI types
-export type { IconProps } from './ui/icon-types';
-export type { SoundType, SoundOptions } from './sound-types';
+export type { IconProps, IconSize, IconColor, IconStyle } from './ui/icon-types';
+export type { SoundType, SoundOptions, SoundConfig } from './sound-types';
 
 // For backwards compatibility
 import { UserProfile } from './user-consolidated';

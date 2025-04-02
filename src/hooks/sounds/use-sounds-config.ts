@@ -1,17 +1,8 @@
 
-import { useState, useEffect, useCallback } from 'react';
-import { useSettings } from '@/hooks/useSettings';
+import { useState, useCallback, useEffect } from 'react';
 import { SoundConfig } from '@/types/sound-types';
 
-interface UseSoundsConfigReturn {
-  soundConfig: SoundConfig;
-  toggleSounds: () => void;
-  toggleMuted: () => void;
-  togglePremium: () => void;
-  setVolume: (volume: number) => void;
-  setSoundPack: (packId: string) => void;
-}
-
+// Default sound configuration
 const defaultSoundConfig: SoundConfig = {
   enabled: true,
   muted: false,
@@ -20,82 +11,87 @@ const defaultSoundConfig: SoundConfig = {
   theme: 'standard'
 };
 
-export const useSoundsConfig = (): UseSoundsConfigReturn => {
-  const { userSettings, updateSettings } = useSettings();
+/**
+ * Hook to manage sound configuration settings
+ * @returns Sound configuration and control functions
+ */
+export const useSoundsConfig = () => {
   const [soundConfig, setSoundConfig] = useState<SoundConfig>(defaultSoundConfig);
-
-  // Initialize sound config from user settings
+  
+  // Load saved configuration from localStorage on mount
   useEffect(() => {
-    if (userSettings) {
-      // If the settings include sound settings, use those
-      if (userSettings.soundEffects !== undefined) {
-        setSoundConfig(prevConfig => ({
-          ...prevConfig,
-          enabled: userSettings.soundEffects
-        }));
+    try {
+      const savedConfig = localStorage.getItem('soundConfig');
+      if (savedConfig) {
+        setSoundConfig(JSON.parse(savedConfig));
       }
+    } catch (error) {
+      console.warn('Error loading sound config:', error);
     }
-  }, [userSettings]);
-
-  // Toggle sounds on/off
+  }, []);
+  
+  // Save configuration changes to localStorage
+  const saveSoundConfig = useCallback((config: SoundConfig) => {
+    try {
+      localStorage.setItem('soundConfig', JSON.stringify(config));
+      setSoundConfig(config);
+    } catch (error) {
+      console.warn('Error saving sound config:', error);
+    }
+  }, []);
+  
+  // Toggle sounds enabled/disabled
   const toggleSounds = useCallback(() => {
-    setSoundConfig(prevConfig => {
-      const newEnabled = !prevConfig.enabled;
-      
-      // Update user settings
-      if (updateSettings && userSettings) {
-        updateSettings({
-          ...userSettings,
-          soundEffects: newEnabled
-        });
-      }
-      
-      return {
-        ...prevConfig,
-        enabled: newEnabled
-      };
-    });
-  }, [updateSettings, userSettings]);
-
+    const newConfig = {
+      ...soundConfig,
+      enabled: !soundConfig.enabled
+    };
+    saveSoundConfig(newConfig);
+  }, [soundConfig, saveSoundConfig]);
+  
   // Toggle muted state
   const toggleMuted = useCallback(() => {
-    setSoundConfig(prevConfig => ({
-      ...prevConfig,
-      muted: !prevConfig.muted
-    }));
-  }, []);
-
-  // Toggle premium sounds
-  const togglePremium = useCallback(() => {
-    setSoundConfig(prevConfig => ({
-      ...prevConfig,
-      premium: !prevConfig.premium
-    }));
-  }, []);
-
-  // Set volume
+    const newConfig = {
+      ...soundConfig,
+      muted: !soundConfig.muted
+    };
+    saveSoundConfig(newConfig);
+  }, [soundConfig, saveSoundConfig]);
+  
+  // Set volume level
   const setVolume = useCallback((volume: number) => {
-    setSoundConfig(prevConfig => ({
-      ...prevConfig,
-      volume: Math.max(0, Math.min(1, volume))
-    }));
-  }, []);
-
-  // Set sound pack
-  const setSoundPack = useCallback((packId: string) => {
-    setSoundConfig(prevConfig => ({
-      ...prevConfig,
-      pack: packId
-    }));
-  }, []);
-
+    const newConfig = {
+      ...soundConfig,
+      volume: Math.max(0, Math.min(1, volume)) // Clamp between 0 and 1
+    };
+    saveSoundConfig(newConfig);
+  }, [soundConfig, saveSoundConfig]);
+  
+  // Set premium status
+  const setPremium = useCallback((premium: boolean) => {
+    const newConfig = {
+      ...soundConfig,
+      premium
+    };
+    saveSoundConfig(newConfig);
+  }, [soundConfig, saveSoundConfig]);
+  
+  // Set sound theme
+  const setTheme = useCallback((theme: 'royal' | 'standard' | 'minimal' | 'epic') => {
+    const newConfig = {
+      ...soundConfig,
+      theme
+    };
+    saveSoundConfig(newConfig);
+  }, [soundConfig, saveSoundConfig]);
+  
   return {
     soundConfig,
     toggleSounds,
     toggleMuted,
-    togglePremium,
     setVolume,
-    setSoundPack
+    setPremium,
+    setTheme
   };
 };
 

@@ -64,7 +64,7 @@ export const getTeamBgColor = (team: TeamColor): string => {
 /**
  * Get the Tailwind border color class for a team color
  */
-export const getTeamTailwindBgColor = (team: TeamColor): string => {
+export const getTeamBorderColor = (team: TeamColor): string => {
   const borderColorMap: Record<TeamColor, string> = {
     red: 'border-red-500',
     blue: 'border-blue-500',
@@ -85,5 +85,5 @@ export default {
   getTeamColor,
   getTeamName,
   getTeamBgColor,
-  getTeamTailwindBgColor
+  getTeamBorderColor
 };

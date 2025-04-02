@@ -1,3 +1,4 @@
+
 /**
  * Cosmetic items and related types
  */
@@ -73,7 +74,6 @@ export interface SocialLink {
   clicks?: number;
   display?: string;
   primary?: boolean;
-  type?: string;
 }
 
 // Updated interface to allow for string indices and handle active* properties

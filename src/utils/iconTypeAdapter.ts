@@ -56,8 +56,36 @@ export const adaptIconColor = (color: string | undefined): string => {
   return colorMap[color] || color;
 };
 
+// Export the size and color maps for direct access
+export const iconSizeMap = {
+  'xs': 'h-3 w-3',
+  'sm': 'h-4 w-4',
+  'md': 'h-5 w-5',
+  'lg': 'h-6 w-6',
+  'xl': 'h-8 w-8',
+  '2xl': 'h-10 w-10',
+  '3xl': 'h-12 w-12',
+  '4xl': 'h-16 w-16'
+};
+
+export const iconColorMap = {
+  'default': 'text-foreground',
+  'muted': 'text-muted-foreground',
+  'accent': 'text-accent-foreground',
+  'primary': 'text-primary',
+  'secondary': 'text-secondary',
+  'info': 'text-blue-500',
+  'success': 'text-green-500',
+  'warning': 'text-yellow-500',
+  'danger': 'text-red-500',
+  'royal': 'text-purple-500',
+  'gold': 'text-yellow-400'
+};
+
 // Also export directly as default
 export default {
   adaptIconSize,
-  adaptIconColor
+  adaptIconColor,
+  iconSizeMap,
+  iconColorMap
 };

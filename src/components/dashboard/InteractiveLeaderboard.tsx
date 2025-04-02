@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowUp, ArrowDown, Minus } from 'lucide-react';
-import { LeaderboardUser } from '@/types/leaderboard';
+import { LeaderboardUser } from '@/types/mockery-types';
 import LeaderboardActions from './leaderboard/LeaderboardActions';
 
 // Update to include spendChange, rankChange, and other required properties
@@ -21,6 +21,7 @@ const mockLeaderboardData: LeaderboardUser[] = [
     previousRank: 2,
     totalSpent: 15000,
     walletBalance: 5000,
+    amountSpent: 15000,
     isVerified: true,
     spendStreak: 5,
     isProtected: true,
@@ -40,6 +41,7 @@ const mockLeaderboardData: LeaderboardUser[] = [
     previousRank: 1,
     totalSpent: 12000,
     walletBalance: 3000,
+    amountSpent: 12000,
     isVerified: true,
     spendStreak: 8,
     isProtected: false,
@@ -59,6 +61,7 @@ const mockLeaderboardData: LeaderboardUser[] = [
     previousRank: 3,
     totalSpent: 10000,
     walletBalance: 2500,
+    amountSpent: 10000,
     isVerified: false,
     spendStreak: 3,
     isProtected: false,
@@ -138,13 +141,13 @@ const InteractiveLeaderboard: React.FC = () => {
                       ${user.totalSpent.toLocaleString()} spent
                       <span className="inline-flex items-center ml-1.5">
                         <span className={`text-[10px] ${
-                          user.spendChange > 0 ? 'text-green-400' : 'text-muted-foreground'
+                          user.spendChange && user.spendChange > 0 ? 'text-green-400' : 'text-muted-foreground'
                         }`}>
                           +${user.spendChange?.toLocaleString() || 0}
                         </span>
                       </span>
                     </div>
-                    {user.spendStreak > 0 && (
+                    {user.spendStreak && user.spendStreak > 0 && (
                       <div className="text-[10px] text-amber-400 mt-0.5">
                         🔥 {user.spendStreak} day streak
                       </div>

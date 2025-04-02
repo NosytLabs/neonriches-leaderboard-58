@@ -1,3 +1,4 @@
+
 /**
  * Define all the mockery action types
  */
@@ -98,6 +99,8 @@ export type LeaderboardUser = {
   isProtected?: boolean;
   joinDate?: string;
   createdAt?: string;
+  rankChange?: number; // Added for InteractiveLeaderboard.tsx
+  spendChange?: number; // Added for InteractiveLeaderboard.tsx
 };
 
 export type LeaderboardFilter = {
