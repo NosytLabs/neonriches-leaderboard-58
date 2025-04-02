@@ -27,7 +27,7 @@ export function ensureUserProfile(
     isVIP: userData.isVIP || false,
     isFounder: userData.isFounder || false,
     isAdmin: false, // Default value for isAdmin
-    team: ensureTeamColorFn(userData.team as string || 'none'),
+    team: ensureTeamColorFn(userData.team as string || 'none') as TeamColor,
     tier: ensureUserTierFn(userData.tier as string || 'basic'),
     rank: userData.rank || 0,
     previousRank: userData.previousRank || 0,
@@ -95,18 +95,16 @@ export function toUserProfile(userData: UserProfileTarget): UserProfileSource {
     cosmetics: userData.cosmetics || {},
     // Handle arrays and optional fields
     profileBoosts: userData.profileBoosts || [],
-    socialLinks: userData.socialLinks || [],
+    socialLinks: userData.socialLinks as any, // Type cast to fix incompatibility
     profileViews: userData.profileViews,
     profileClicks: userData.profileClicks,
     purchasedFeatures: userData.purchasedFeatures,
     // Handle subscription
     subscription: userData.subscription ? {
-      id: userData.subscription.id || `sub_${Math.random().toString(36).substring(2, 15)}`,
       planId: userData.subscription.planId || '',
       nextBillingDate: userData.subscription.nextBillingDate || '',
       status: (userData.subscription.status || 'active') as 'active' | 'cancelled' | 'paused',
       tier: userData.subscription.tier || 'basic',
-      startDate: userData.subscription.startDate || new Date().toISOString(),
     } : undefined,
     // Passthrough other fields
     lastActive: userData.lastActive,
@@ -155,10 +153,13 @@ function createUserSettings(settings?: Partial<UserSettings>): any {
   if (!settings) return defaultSettings;
 
   // Since we need to handle theme differently because of strict typing
+  let safeTheme;
   const theme = settings.theme || defaultSettings.theme;
-  const safeTheme = ['royal', 'dark', 'light', 'system'].includes(theme as string) 
-    ? theme 
-    : 'royal';
+  if (['royal', 'dark', 'light', 'system'].includes(theme as string)) {
+    safeTheme = theme;
+  } else {
+    safeTheme = 'royal';
+  }
 
   return {
     ...defaultSettings,

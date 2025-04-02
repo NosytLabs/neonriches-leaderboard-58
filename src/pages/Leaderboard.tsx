@@ -1,265 +1,208 @@
-import React, { useState, useEffect } from 'react';
-import { Shell } from '@/components/ui/shell';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent } from '@/components/ui/card';
-import { LeaderboardList } from '@/components/leaderboard/components/LeaderboardList';
-import { Badge } from '@/components/ui/badge';
-import { TeamColor } from '@/types/mockery-types';
-import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
-import { useToast } from '@/hooks/use-toast';
-import useAuth from '@/hooks/useAuth';
-import { ensureTeamColor } from '@/utils/typeUnifier';
 
-const LeaderboardPage: React.FC = () => {
+import React, { useState, useEffect } from 'react';
+import { Shell } from '@/utils/componentImports';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import LeaderboardList from '@/components/leaderboard/LeaderboardList';
+import { fetchLeaderboard } from '@/services/leaderboardService';
+import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
+import { UserProfile } from '@/types/user';
+import useAuth from '@/hooks/useAuth';
+import { toTeamColor } from '@/utils/teamUtils';
+
+const Leaderboard = () => {
   const { user } = useAuth();
-  const { toast } = useToast();
-  
-  // Define the leaderboard filter with all required properties
+  const [users, setUsers] = useState<LeaderboardUser[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState<LeaderboardFilter>({
-    timeframe: 'all-time',
+    timeframe: 'all',
     team: 'all',
     tier: 'all',
-    sortBy: 'totalSpent',
     sortDirection: 'desc',
-    limit: 50,
+    sortBy: 'totalSpent',
+    limit: 10,
     page: 1
   });
   
-  const [leaderboardUsers, setLeaderboardUsers] = useState<LeaderboardUser[]>([]);
-  const [loading, setLoading] = useState(true);
-  
-  // Mock data for demonstration
   useEffect(() => {
-    const mockLeaderboardUsers = [
-      {
-        id: '3',
-        username: 'bigSpender',
-        displayName: 'Big Spender',
-        profileImage: '/assets/default-avatar.png',
-        rank: 3,
-        previousRank: 5,
-        tier: 'premium',
-        team: 'red',
-        totalSpent: 8000,
-        amountSpent: 8000,
-        spendStreak: 20
-      },
-      {
-        id: '4',
-        username: 'loyalUser',
-        displayName: 'Loyal User',
-        profileImage: '/assets/default-avatar.png',
-        rank: 4,
-        previousRank: 4,
-        tier: 'premium',
-        team: 'blue',
-        totalSpent: 7500,
-        amountSpent: 7500,
-        spendStreak: 15
-      },
-      {
-        id: '5',
-        username: 'newComer',
-        displayName: 'New Comer',
-        profileImage: '/assets/default-avatar.png',
-        rank: 5,
-        previousRank: 8,
-        tier: 'basic',
-        team: 'green',
-        totalSpent: 2000,
-        amountSpent: 2000,
-        spendStreak: 5
-      }
-    ];
-    
-    setLeaderboardUsers(mockLeaderboardUsers);
-    setLoading(false);
-  }, []);
+    loadLeaderboard();
+  }, [filter]);
   
-  const handleProfileClick = (userId: string, username: string) => {
-    toast({
-      title: "Viewing Profile",
-      description: `Navigating to ${username}'s profile...`,
-    });
-    // In a real app, this would navigate to the profile page
-  };
-  
-  const handleShameUser = (user: LeaderboardUser) => {
-    toast({
-      title: "Shame User",
-      description: `Preparing to shame ${user.username}...`,
-    });
-    // In a real app, this would open a shame modal
-  };
-  
-  const handleFilterChange = (newFilter: Partial<LeaderboardFilter>) => {
-    setFilter(prevFilter => ({
-      ...prevFilter,
-      ...newFilter
-    }));
-  };
-  
-  const handleTeamFilterChange = (team: string) => {
-    handleFilterChange({ team: team === 'all' ? 'all' : ensureTeamColor(team) });
-  };
-  
-  const handleTimeframeChange = (timeframe: string) => {
-    if (timeframe === 'all' || timeframe === 'week' || timeframe === 'month' || 
-        timeframe === 'year' || timeframe === 'today' || timeframe === 'all-time') {
-      handleFilterChange({ timeframe });
+  const loadLeaderboard = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetchLeaderboard(filter);
+      setUsers(response.users);
+    } catch (error) {
+      console.error('Error loading leaderboard:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
   
-  const handleSortByChange = (sortBy: string) => {
-    if (sortBy === 'totalSpent' || sortBy === 'joinDate') {
-      handleFilterChange({ sortBy });
-    }
+  const handleUserClick = (userId: string) => {
+    console.log('View user profile:', userId);
+    // In a real app, you would navigate to the user's profile
   };
   
-  const handleSortDirectionToggle = () => {
-    handleFilterChange({ 
-      sortDirection: filter.sortDirection === 'asc' ? 'desc' : 'asc' 
-    });
+  const handleShameClick = (userId: string) => {
+    console.log('Shame user:', userId);
+    // In a real app, you would open the mockery modal
   };
-
+  
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    loadLeaderboard();
+  };
+  
+  const handleTimeframeChange = (value: string) => {
+    // Convert value to a valid timeframe
+    const timeframe: 'all' | 'week' | 'month' | 'year' | 'today' | 'all-time' = 
+      (value === 'today' || value === 'week' || value === 'month' || value === 'year' || value === 'all' || value === 'all-time') 
+        ? value 
+        : 'all';
+        
+    setFilter({ ...filter, timeframe });
+  };
+  
+  // Create a mock version of the current user for the leaderboard
+  const createCurrentUserLeaderboardEntry = (profile: UserProfile): LeaderboardUser => {
+    return {
+      id: profile.id,
+      userId: profile.id,
+      username: profile.username,
+      displayName: profile.displayName || profile.username,
+      profileImage: profile.profileImage,
+      rank: profile.rank,
+      previousRank: profile.previousRank,
+      tier: profile.tier,
+      team: profile.team,
+      totalSpent: profile.totalSpent || profile.amountSpent || 0,
+      amountSpent: profile.amountSpent || profile.totalSpent || 0,
+      spendStreak: profile.spendStreak || 0,
+      walletBalance: profile.walletBalance || 0,
+      isVerified: profile.isVerified || false,
+      isProtected: profile.isProtected || false
+    };
+  };
+  
   return (
     <Shell>
       <div className="container mx-auto px-4 py-6">
-        <h1 className="text-3xl font-bold mb-8">Royal Leaderboard</h1>
+        <h1 className="text-3xl font-bold mb-6">Royal Leaderboard</h1>
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="md:col-span-3">
-            <Tabs defaultValue="all-time" className="w-full">
-              <TabsList className="grid grid-cols-5 w-full bg-black/20">
-                <TabsTrigger 
-                  value="all-time" 
-                  onClick={() => handleTimeframeChange('all-time')}
-                >
-                  All Time
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="year" 
-                  onClick={() => handleTimeframeChange('year')}
-                >
-                  Year
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="month" 
-                  onClick={() => handleTimeframeChange('month')}
-                >
-                  Month
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="week" 
-                  onClick={() => handleTimeframeChange('week')}
-                >
-                  Week
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="today" 
-                  onClick={() => handleTimeframeChange('today')}
-                >
-                  Today
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <form onSubmit={handleSearch} className="flex-1 flex gap-2">
+            <Input
+              placeholder="Search by username"
+              value={filter.search || ''}
+              onChange={(e) => setFilter({ ...filter, search: e.target.value })}
+              className="flex-1"
+            />
+            <Button type="submit">Search</Button>
+          </form>
           
-          <div className="flex justify-center md:justify-end space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className={filter.sortBy === 'totalSpent' ? 'border-royal-gold' : ''}
-              onClick={() => handleSortByChange('totalSpent')}
+          <div className="flex gap-2">
+            <Select
+              value={filter.timeframe}
+              onValueChange={handleTimeframeChange}
             >
-              By Spend
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className={filter.sortBy === 'joinDate' ? 'border-royal-gold' : ''}
-              onClick={() => handleSortByChange('joinDate')}
-            >
-              By Join
-            </Button>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="md:col-span-3">
-            <Card className="bg-black/20 border-white/10">
-              <CardContent className="p-4">
-                {leaderboardUsers.length > 0 ? (
-                  <LeaderboardList
-                    users={leaderboardUsers as any}
-                    currentUserId={user?.id || ''}
-                    onProfileClick={handleProfileClick}
-                    onShameUser={handleShameUser}
-                  />
-                ) : (
-                  <div className="text-center py-8">
-                    <p className="text-white/60">No users found matching your filters.</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-          
-          <div className="space-y-6">
-            <div className="bg-black/20 border border-white/10 rounded-lg p-4">
-              <h3 className="text-lg font-semibold mb-4">Team Filter</h3>
-              <div className="space-y-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className={`w-full ${filter.team === 'all' ? 'border-royal-gold text-royal-gold' : ''}`}
-                  onClick={() => handleTeamFilterChange('all')}
-                >
-                  All Teams
-                </Button>
-                
-                {['red', 'blue', 'green', 'gold', 'purple'].map((team) => (
-                  <Button
-                    key={team}
-                    variant="outline"
-                    size="sm"
-                    className={`w-full ${filter.team === team ? 'border-royal-gold text-royal-gold' : ''}`}
-                    onClick={() => handleTeamFilterChange(team)}
-                  >
-                    <div 
-                      className="w-3 h-3 rounded-full mr-2"
-                      style={{ 
-                        backgroundColor: 
-                          team === 'red' ? '#ef4444' : 
-                          team === 'blue' ? '#3b82f6' : 
-                          team === 'green' ? '#10b981' : 
-                          team === 'gold' ? '#f59e0b' : 
-                          '#8b5cf6' 
-                      }}
-                    ></div>
-                    {team.charAt(0).toUpperCase() + team.slice(1)} Team
-                  </Button>
-                ))}
-              </div>
-            </div>
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="Timeframe" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Time</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="week">This Week</SelectItem>
+                <SelectItem value="month">This Month</SelectItem>
+                <SelectItem value="year">This Year</SelectItem>
+              </SelectContent>
+            </Select>
             
-            <div className="bg-black/20 border border-white/10 rounded-lg p-4">
-              <h3 className="text-lg font-semibold mb-4">Sorting</h3>
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full"
-                onClick={handleSortDirectionToggle}
-              >
-                {filter.sortDirection === 'desc' ? 'Highest to Lowest' : 'Lowest to Highest'}
-              </Button>
-            </div>
+            <Select
+              value={filter.team}
+              onValueChange={(value) => setFilter({ ...filter, team: value })}
+            >
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="Team" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Teams</SelectItem>
+                <SelectItem value="red">Red Team</SelectItem>
+                <SelectItem value="blue">Blue Team</SelectItem>
+                <SelectItem value="green">Green Team</SelectItem>
+                <SelectItem value="gold">Gold Team</SelectItem>
+                <SelectItem value="purple">Purple Team</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
+        
+        <Tabs defaultValue="all" className="w-full">
+          <TabsList className="mb-6">
+            <TabsTrigger value="all">All Users</TabsTrigger>
+            <TabsTrigger value="team">Team</TabsTrigger>
+            <TabsTrigger value="friends">Friends</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="all">
+            <LeaderboardList
+              users={users}
+              isLoading={isLoading}
+              showTeams={true}
+              showTiers={true}
+              showRankChange={true}
+              onUserClick={handleUserClick}
+              onShameClick={handleShameClick}
+            />
+          </TabsContent>
+          
+          <TabsContent value="team">
+            {user && user.team ? (
+              <LeaderboardList
+                users={users.filter(u => toTeamColor(u.team) === toTeamColor(user.team as string))}
+                isLoading={isLoading}
+                showTeams={false}
+                showTiers={true}
+                showRankChange={true}
+                onUserClick={handleUserClick}
+                onShameClick={handleShameClick}
+              />
+            ) : (
+              <div className="text-center py-8">
+                <p className="mb-4">You are not part of any team yet.</p>
+                <Button>Join a Team</Button>
+              </div>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="friends">
+            {user ? (
+              <LeaderboardList
+                users={[
+                  createCurrentUserLeaderboardEntry(user),
+                  ...users.slice(0, 5)
+                ]}
+                isLoading={isLoading}
+                showTeams={true}
+                showTiers={true}
+                showRankChange={true}
+                onUserClick={handleUserClick}
+                onShameClick={handleShameClick}
+              />
+            ) : (
+              <div className="text-center py-8">
+                <p className="mb-4">Login to see friends on the leaderboard.</p>
+                <Button>Login</Button>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </Shell>
   );
 };
 
-export default LeaderboardPage;
+export default Leaderboard;

@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Check, Crown } from 'lucide-react';
+import { Badge } from '@/utils/componentImports';
 
 export interface SubscriptionPlanCardProps {
   id: string;
@@ -46,71 +46,54 @@ const SubscriptionPlanCard: React.FC<SubscriptionPlanCardProps> = ({
   const displayPrice = billingInterval === 'monthly' ? price.monthly : price.yearly;
   
   return (
-    <Card 
-      className={`relative overflow-hidden ${
-        highlight 
-          ? 'border-royal-gold bg-gradient-to-b from-royal-gold/5 to-transparent' 
-          : selected 
-            ? 'border-primary' 
-            : 'border-border'
-      }`}
-    >
+    <Card className={`w-full ${highlight ? 'border-royal-gold border-2' : ''} ${selected ? 'bg-primary/10' : ''}`}>
       {popular && (
-        <div className="absolute top-0 right-0">
-          <Badge className="m-3 bg-royal-gold text-black border-none">Popular</Badge>
-        </div>
-      )}
-      
-      {badge && (
-        <div className="absolute top-0 left-0">
-          <Badge 
-            variant="outline" 
-            className="m-3 border-royal-gold/50 text-royal-gold bg-black/50"
-          >
-            {badge}
+        <div className="absolute top-0 right-0 transform translate-x-2 -translate-y-2">
+          <Badge variant="gold" className="shadow-lg">
+            Popular
           </Badge>
         </div>
       )}
       
-      <CardHeader className="pb-2">
+      <CardHeader>
         <CardTitle className="flex items-center">
-          {tier === 'royal' && <Crown className="h-5 w-5 text-royal-gold mr-2" />}
           {name}
+          {badge && (
+            <Badge variant="royal" className="ml-2">
+              {badge}
+            </Badge>
+          )}
         </CardTitle>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       
       <CardContent>
         <div className="mb-4">
-          <p className="text-3xl font-bold">${displayPrice}</p>
-          <p className="text-sm text-muted-foreground">
-            per {billingInterval === 'monthly' ? 'month' : 'year'}
-          </p>
+          <span className="text-3xl font-bold">${displayPrice}</span>
+          <span className="text-sm text-muted-foreground ml-1">
+            /{billingInterval === 'monthly' ? 'month' : 'year'}
+          </span>
         </div>
         
-        <ul className="space-y-2 mb-6">
+        <ul className="space-y-2">
           {features.map((feature, index) => (
             <li key={index} className="flex items-start">
-              <Check className="h-4 w-4 text-green-500 mr-2 mt-1 flex-shrink-0" />
-              <span className="text-sm">{feature}</span>
+              <Check className="h-4 w-4 mr-2 mt-1 text-green-500" />
+              <span>{feature}</span>
             </li>
           ))}
         </ul>
-        
+      </CardContent>
+      
+      <CardFooter>
         <Button 
           onClick={handleSelect} 
-          className={`w-full ${
-            tier === 'royal' 
-              ? 'bg-royal-gold hover:bg-royal-gold/90 text-black' 
-              : selected 
-                ? 'bg-primary' 
-                : 'bg-secondary'
-          }`}
-          variant={selected ? 'default' : 'outline'}
+          className={`w-full ${tier === 'royal' ? 'bg-royal-gold hover:bg-royal-gold/90 text-black' : ''}`}
+          variant={selected ? "default" : "outline"}
         >
           {selected ? 'Selected' : 'Choose Plan'}
         </Button>
-      </CardContent>
+      </CardFooter>
     </Card>
   );
 };

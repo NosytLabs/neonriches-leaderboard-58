@@ -74,10 +74,13 @@ const EnhancedDashboard = () => {
     return null;
   }
 
+  // Make sure the user has a displayName by adding it if it's missing
+  const displayName = user.displayName || user.username || 'Anonymous User';
+  
   // Convert the user to a standardized profile with all required fields
   const standardUser: ConsolidatedUserProfile = ensureUserProfile({
-    ...user, 
-    displayName: user.displayName || user.username || 'Anonymous User'
+    ...user,
+    displayName
   });
   
   // Convert the standardized user to the UserProfile type expected by the components

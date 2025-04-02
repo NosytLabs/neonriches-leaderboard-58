@@ -1,113 +1,116 @@
 
-import { LeaderboardFilter, LeaderboardUser } from '@/types/mockery-types';
+import { LeaderboardUser, LeaderboardFilter, LeaderboardResponse } from '@/types/leaderboard';
+import { mockLeaderboardData } from '@/data/leaderboardData';
+import { adaptLeaderboardUser } from '@/utils/typeAdapters';
+import { ensureTeamColor } from '@/utils/mockeryNormalizer';
 
-// Alias for backward compatibility
-export const getLeaderboard = fetchLeaderboard;
+// Simulate network delay for demo purposes
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-interface LeaderboardResponse {
-  users: LeaderboardUser[];
-  totalUsers: number;
-  currentPage: number;
-  totalPages: number;
-}
-
-// Mock data for leaderboard
-const generateMockLeaderboardData = (count: number): LeaderboardUser[] => {
-  const mockTeams: string[] = ['red', 'blue', 'green', 'gold', 'purple', 'none'];
-  const mockTiers: string[] = ['basic', 'premium', 'royal', 'founder'];
-
-  return Array.from({ length: count }, (_, i) => {
-    const rank = i + 1;
-    const previousRank = Math.floor(Math.random() * 100) + 1;
-    const rankChange = previousRank - rank;
-    const totalSpent = 10000 - rank * 100 + Math.floor(Math.random() * 1000);
-    const spendChange = Math.floor(Math.random() * 500) - 250;
-
-    return {
-      id: `user-${i + 1}`,
-      userId: `user-${i + 1}`,
-      username: `whale${i + 1}`,
-      displayName: `Whale User ${i + 1}`,
-      profileImage: `/assets/avatars/avatar-${(i % 8) + 1}.jpg`,
-      rank: rank,
-      previousRank: previousRank,
-      rankChange: rankChange,
-      totalSpent: totalSpent,
-      amountSpent: totalSpent,
-      spendChange: spendChange,
-      spendStreak: Math.floor(Math.random() * 10),
-      team: mockTeams[i % mockTeams.length],
-      tier: mockTiers[i % mockTiers.length],
-      isVerified: Math.random() > 0.7,
-      isProtected: Math.random() > 0.9,
-      walletBalance: Math.floor(Math.random() * 5000),
-      avatarUrl: `/assets/avatars/avatar-${(i % 8) + 1}.jpg`
-    };
-  });
-};
-
-const mockLeaderboardData = generateMockLeaderboardData(100);
-
-// Fetch leaderboard data with filters
-export async function fetchLeaderboard(filter: LeaderboardFilter): Promise<LeaderboardResponse> {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-
+// Fetch leaderboard data with filtering and pagination
+export const fetchLeaderboard = async (filter: LeaderboardFilter): Promise<LeaderboardResponse> => {
+  // Simulate API call delay
+  await delay(800);
+  
   let filteredUsers = [...mockLeaderboardData];
-
+  
   // Apply team filter
   if (filter.team && filter.team !== 'all') {
-    filteredUsers = filteredUsers.filter(user => user.team === filter.team);
+    filteredUsers = filteredUsers.filter(user => 
+      user.team.toLowerCase() === filter.team.toLowerCase()
+    );
   }
-
+  
   // Apply tier filter
   if (filter.tier && filter.tier !== 'all') {
-    filteredUsers = filteredUsers.filter(user => user.tier === filter.tier);
+    filteredUsers = filteredUsers.filter(user => 
+      user.tier.toLowerCase() === filter.tier.toLowerCase()
+    );
   }
-
+  
   // Apply timeframe filter
-  if (filter.timeframe && filter.timeframe !== 'all') {
-    // In a real implementation, this would filter based on date ranges
-    // For mock data, we'll just return a subset based on the timeframe
-    const timeframeMultiplier = {
-      'week': 0.3,
-      'month': 0.6,
-      'year': 0.9,
-      'all': 1,
-    };
-    const multiplier = timeframeMultiplier[filter.timeframe] || 1;
-    filteredUsers = filteredUsers.slice(0, Math.floor(filteredUsers.length * multiplier));
+  if (filter.timeframe && filter.timeframe !== 'all' && filter.timeframe !== 'all-time') {
+    const now = new Date();
+    let startDate: Date;
+    
+    switch(filter.timeframe) {
+      case 'week':
+        startDate = new Date(now.setDate(now.getDate() - 7));
+        break;
+      case 'month':
+        startDate = new Date(now.setMonth(now.getMonth() - 1));
+        break;
+      case 'year':
+        startDate = new Date(now.setFullYear(now.getFullYear() - 1));
+        break;
+      case 'today':
+        startDate = new Date(now.setHours(0, 0, 0, 0));
+        break;
+      default:
+        startDate = new Date(0); // Beginning of time
+        break;
+    }
+    
+    // For a real app, we would filter based on spending dates
+    // This is just a simulation for the demo
+    const randomFilter = Math.random();
+    filteredUsers = filteredUsers.filter(() => Math.random() > randomFilter * 0.3);
   }
-
+  
+  // Apply search filter
+  if (filter.search) {
+    const searchTerm = filter.search.toLowerCase();
+    filteredUsers = filteredUsers.filter(user => 
+      user.username.toLowerCase().includes(searchTerm) || 
+      (user.displayName && user.displayName.toLowerCase().includes(searchTerm))
+    );
+  }
+  
   // Sort users
   const sortBy = filter.sortBy || filter.sort || 'totalSpent';
   const sortDirection = filter.sortDirection || 'desc';
-
+  
   filteredUsers.sort((a, b) => {
-    const valueA = a[sortBy as keyof LeaderboardUser] as number;
-    const valueB = b[sortBy as keyof LeaderboardUser] as number;
+    const valueA = a[sortBy as keyof LeaderboardUser] as number | string;
+    const valueB = b[sortBy as keyof LeaderboardUser] as number | string;
+    
+    if (typeof valueA === 'number' && typeof valueB === 'number') {
+      return sortDirection === 'asc' ? valueA - valueB : valueB - valueA;
+    }
+    
+    // Default string comparison
+    const strA = String(valueA).toLowerCase();
+    const strB = String(valueB).toLowerCase();
     
     if (sortDirection === 'asc') {
-      return valueA - valueB;
+      return strA.localeCompare(strB);
     } else {
-      return valueB - valueA;
+      return strB.localeCompare(strA);
     }
   });
-
-  // Apply pagination
+  
+  // Calculate pagination
   const page = filter.page || 1;
   const limit = filter.limit || 10;
   const startIndex = (page - 1) * limit;
   const endIndex = startIndex + limit;
   const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
-
+  
+  // Adapt each user to ensure it has all the required properties
+  const adaptedUsers = paginatedUsers.map(user => {
+    return adaptLeaderboardUser({
+      ...user,
+      team: ensureTeamColor(user.team)
+    });
+  });
+  
   return {
-    users: paginatedUsers,
+    users: adaptedUsers,
     totalUsers: filteredUsers.length,
     currentPage: page,
     totalPages: Math.ceil(filteredUsers.length / limit)
   };
-}
+};
 
-// Re-exported for backward compatibility
-export { fetchLeaderboard };
+// Export the fetchLeaderboard function
+export const getLeaderboard = fetchLeaderboard;

@@ -1,184 +1,156 @@
 
 import React from 'react';
-import { Shell } from '@/components/ui/shell';
-import { RoyalEncyclopedia } from '@/components/help/RoyalEncyclopedia';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from '@/components/ui/card';
-import { 
-  ScrollText, 
-  HelpCircle, 
-  FileText, 
-  Target,
-  Crown,
-  Shield,
-  Users
-} from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import { Shell } from '@/utils/componentImports';
+import RoyalEncyclopedia from '@/components/help/RoyalEncyclopedia';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
-// For RoyalDivider
-const RoyalDivider = () => <Separator className="my-6 bg-white/10" />;
-
-const HelpPage = () => {
+const Help = () => {
   return (
-    <Shell className="container mx-auto px-4 py-6">
-      <div className="flex flex-col space-y-6">
-        <h1 className="text-3xl font-bold">Help & Support</h1>
+    <Shell>
+      <div className="container mx-auto px-4 py-6">
+        <h1 className="text-3xl font-bold mb-8">SpendThrone Help Center</h1>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="glass-morphism border border-white/10 rounded-lg p-4 flex flex-col items-center text-center hover:bg-white/5 transition cursor-pointer">
-            <div className="w-12 h-12 rounded-full bg-royal-gold/20 flex items-center justify-center mb-3">
-              <ScrollText size={24} className="text-royal-gold" />
-            </div>
-            <h3 className="font-semibold">User Guide</h3>
-            <p className="text-sm text-white/60 mt-2">Learn how to use the platform</p>
-          </div>
+        <Tabs defaultValue="encyclopedia" className="w-full">
+          <TabsList className="mb-6">
+            <TabsTrigger value="encyclopedia">Royal Encyclopedia</TabsTrigger>
+            <TabsTrigger value="faq">FAQ</TabsTrigger>
+            <TabsTrigger value="guides">Guides</TabsTrigger>
+          </TabsList>
           
-          <div className="glass-morphism border border-white/10 rounded-lg p-4 flex flex-col items-center text-center hover:bg-white/5 transition cursor-pointer">
-            <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-3">
-              <HelpCircle size={24} className="text-blue-500" />
-            </div>
-            <h3 className="font-semibold">FAQ</h3>
-            <p className="text-sm text-white/60 mt-2">Frequently asked questions</p>
-          </div>
+          <TabsContent value="encyclopedia">
+            <RoyalEncyclopedia />
+          </TabsContent>
           
-          <div className="glass-morphism border border-white/10 rounded-lg p-4 flex flex-col items-center text-center hover:bg-white/5 transition cursor-pointer">
-            <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-3">
-              <FileText size={24} className="text-green-500" />
-            </div>
-            <h3 className="font-semibold">Documentation</h3>
-            <p className="text-sm text-white/60 mt-2">Detailed platform documentation</p>
-          </div>
+          <TabsContent value="faq">
+            <Card>
+              <CardHeader>
+                <CardTitle>Frequently Asked Questions</CardTitle>
+                <CardDescription>
+                  Common questions about SpendThrone and royal mockery
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger>What is SpendThrone?</AccordionTrigger>
+                    <AccordionContent>
+                      SpendThrone is a satirical platform that gamifies spending and status. 
+                      It's designed as a tongue-in-cheek commentary on consumption culture, allowing users 
+                      to compete for status through their spending habits.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-2">
+                    <AccordionTrigger>How do I rise in rank?</AccordionTrigger>
+                    <AccordionContent>
+                      Your rank is determined by your total amount spent on the platform. 
+                      The more you spend, the higher your rank will become. You can also receive temporary 
+                      rank boosts through profile boosts.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-3">
+                    <AccordionTrigger>What are Mockery Actions?</AccordionTrigger>
+                    <AccordionContent>
+                      Mockery Actions allow you to publicly shame other users on the platform. 
+                      Different actions have different costs and effects. They're a core part of the 
+                      SpendThrone experience and represent the social competition aspect.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-4">
+                    <AccordionTrigger>What are Teams?</AccordionTrigger>
+                    <AccordionContent>
+                      Teams are factions you can join within SpendThrone. Each team has its own 
+                      leaderboard, benefits, and community. Teams compete against each other for 
+                      dominance on the global leaderboard.
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-5">
+                    <AccordionTrigger>How do I get Certificates?</AccordionTrigger>
+                    <AccordionContent>
+                      Certificates are awarded for reaching certain spending milestones, achieving 
+                      high ranks, or participating in special events. They serve as proof of your 
+                      status and achievements on the platform.
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </CardContent>
+            </Card>
+          </TabsContent>
           
-          <div className="glass-morphism border border-white/10 rounded-lg p-4 flex flex-col items-center text-center hover:bg-white/5 transition cursor-pointer">
-            <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-3">
-              <Target size={24} className="text-purple-500" />
-            </div>
-            <h3 className="font-semibold">Getting Started</h3>
-            <p className="text-sm text-white/60 mt-2">Quick start guide for new users</p>
-          </div>
-        </div>
-        
-        <Card className="bg-black/20 border-white/10">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <FileText className="mr-2 h-5 w-5 text-royal-gold" />
-              Royal Encyclopedia
-            </CardTitle>
-            <CardDescription>
-              Learn about all aspects of the Royal Court
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent>
-            <div className="prose prose-invert max-w-none">
-              <h3>What are Royal Points?</h3>
-              <p>
-                Royal Points are the currency of status within the royal court. You earn them primarily by making purchases, 
-                but also through various activities like participating in events, referring friends, and completing challenges.
-              </p>
-              
-              <h3>What are Teams?</h3>
-              <p>
-                Teams allow users to band together under a common banner. Each team has unique benefits, specialties, and a distinct 
-                visual identity. Teams compete on leaderboards for glory and real rewards.
-              </p>
-              
-              <h3>What is Mockery?</h3>
-              <p>
-                Mockery is a playful feature that allows users to interact with each other through various actions like taunts, 
-                challenges, and light-hearted jests. It's all in good fun and adds to the competitive atmosphere.
-              </p>
-              
-              <h3>How do Ranks work?</h3>
-              <p>
-                Ranks are calculated based on your total spending, activity level, and team contributions. Higher ranks grant 
-                additional benefits and visibility. You can view your current rank on the Leaderboard page.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-black/20 border-white/10">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Target className="mr-2 h-5 w-5 text-royal-gold" />
-              Quick Tips
-            </CardTitle>
-            <CardDescription>
-              Fast ways to improve your royal experience
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent>
-            <ul className="space-y-3">
-              <li className="flex items-start">
-                <span className="bg-royal-gold/20 text-royal-gold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">1</span>
-                <span>Complete your profile to increase visibility and enable all features</span>
-              </li>
-              <li className="flex items-start">
-                <span className="bg-royal-gold/20 text-royal-gold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">2</span>
-                <span>Join a team to receive team bonuses and participate in team competitions</span>
-              </li>
-              <li className="flex items-start">
-                <span className="bg-royal-gold/20 text-royal-gold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">3</span>
-                <span>Maintain a spending streak for additional bonus multipliers</span>
-              </li>
-              <li className="flex items-start">
-                <span className="bg-royal-gold/20 text-royal-gold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">4</span>
-                <span>Participate in events for exclusive rewards and rapid rank progression</span>
-              </li>
-              <li className="flex items-start">
-                <span className="bg-royal-gold/20 text-royal-gold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">5</span>
-                <span>Check the leaderboard regularly to see your position and set goals</span>
-              </li>
-            </ul>
-
-            <RoyalDivider />
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-              <div className="glass-morphism border border-white/10 rounded-lg p-4">
-                <div className="flex items-center mb-3">
-                  <div className="w-8 h-8 rounded-full bg-royal-gold/20 flex items-center justify-center mr-3">
-                    <Crown size={16} className="text-royal-gold" />
+          <TabsContent value="guides">
+            <Card>
+              <CardHeader>
+                <CardTitle>Guides & Tutorials</CardTitle>
+                <CardDescription>
+                  Learn how to make the most of your royal experience
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="p-4 rounded-lg bg-black/20">
+                    <h3 className="text-xl font-semibold mb-2">Getting Started</h3>
+                    <p className="text-white/70 mb-4">
+                      Your first steps into the royal court of SpendThrone
+                    </p>
+                    <ul className="space-y-2 list-disc list-inside">
+                      <li>Setting up your royal profile</li>
+                      <li>Understanding the leaderboard</li>
+                      <li>Making your first mockery</li>
+                      <li>Joining a team</li>
+                    </ul>
                   </div>
-                  <h4 className="font-semibold">Royal Status</h4>
-                </div>
-                <p className="text-sm text-white/70">Higher ranks give you more visibility and exclusive features</p>
-              </div>
-              
-              <div className="glass-morphism border border-white/10 rounded-lg p-4">
-                <div className="flex items-center mb-3">
-                  <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
-                    <Shield size={16} className="text-blue-500" />
+                  
+                  <div className="p-4 rounded-lg bg-black/20">
+                    <h3 className="text-xl font-semibold mb-2">Advanced Mockery</h3>
+                    <p className="text-white/70 mb-4">
+                      Master the art of publicly shaming your rivals
+                    </p>
+                    <ul className="space-y-2 list-disc list-inside">
+                      <li>Strategic mockery timing</li>
+                      <li>Combining mockery actions</li>
+                      <li>Defending against mockery</li>
+                      <li>Team mockery tactics</li>
+                    </ul>
                   </div>
-                  <h4 className="font-semibold">Team Benefits</h4>
-                </div>
-                <p className="text-sm text-white/70">Teams provide bonuses and exclusive cosmetic options</p>
-              </div>
-              
-              <div className="glass-morphism border border-white/10 rounded-lg p-4">
-                <div className="flex items-center mb-3">
-                  <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
-                    <Users size={16} className="text-green-500" />
+                  
+                  <div className="p-4 rounded-lg bg-black/20">
+                    <h3 className="text-xl font-semibold mb-2">Team Strategies</h3>
+                    <p className="text-white/70 mb-4">
+                      Maximize your team's performance and benefits
+                    </p>
+                    <ul className="space-y-2 list-disc list-inside">
+                      <li>Coordinating with team members</li>
+                      <li>Team-specific advantages</li>
+                      <li>Inter-team rivalries</li>
+                      <li>Team events participation</li>
+                    </ul>
                   </div>
-                  <h4 className="font-semibold">Community</h4>
+                  
+                  <div className="p-4 rounded-lg bg-black/20">
+                    <h3 className="text-xl font-semibold mb-2">Royal Customization</h3>
+                    <p className="text-white/70 mb-4">
+                      Stand out in the royal court with unique customizations
+                    </p>
+                    <ul className="space-y-2 list-disc list-inside">
+                      <li>Unlocking premium cosmetics</li>
+                      <li>Profile aesthetic themes</li>
+                      <li>Royal titles and badges</li>
+                      <li>Certificate customization</li>
+                    </ul>
+                  </div>
                 </div>
-                <p className="text-sm text-white/70">Engage with other users for additional rewards</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        {/* Render the RoyalEncyclopedia component */}
-        <RoyalEncyclopedia />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </Shell>
   );
 };
 
-export default HelpPage;
+export default Help;

@@ -23,7 +23,7 @@ export interface LeaderboardUser {
 }
 
 export interface LeaderboardFilter {
-  timeframe: 'all' | 'week' | 'month' | 'year';
+  timeframe: 'all' | 'week' | 'month' | 'year' | 'today' | 'all-time';
   team: string;
   tier: string;
   sortDirection: 'asc' | 'desc';
@@ -32,6 +32,7 @@ export interface LeaderboardFilter {
   page: number;
   sort?: string;
   search?: string;
+  period?: string;
 }
 
 export interface LeaderboardProps {
@@ -42,4 +43,30 @@ export interface LeaderboardProps {
   showRankChange?: boolean;
   onUserClick?: (userId: string) => void;
   onShameClick?: (userId: string) => void;
+}
+
+export interface LeaderboardResponse {
+  users: LeaderboardUser[];
+  totalUsers: number;
+  currentPage: number;
+  totalPages: number;
+}
+
+export interface LeaderboardConfig {
+  limit: number;
+  showTeams: boolean;
+  showTiers: boolean;
+  showRankChange: boolean;
+}
+
+export interface UseLeaderboardResult {
+  users: LeaderboardUser[];
+  isLoading: boolean;
+  error: Error | null;
+  filter: LeaderboardFilter;
+  setFilter: (filter: Partial<LeaderboardFilter>) => void;
+  refetch: () => void;
+  totalUsers: number;
+  currentPage: number;
+  totalPages: number;
 }

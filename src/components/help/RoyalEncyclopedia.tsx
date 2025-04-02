@@ -1,188 +1,133 @@
 
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollText, Crown, Trophy, Users, Heart, AlertCircle } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { mockeryTierLabels } from '@/utils/mockeryActionUtils';
+import { mockeryActionNames, mockeryActionCosts, mockeryActionDescriptions } from '@/utils/mockeryUtils';
 
-const RoyalEncyclopedia = () => {
+interface RoyalEncyclopediaProps {
+  className?: string;
+}
+
+const RoyalEncyclopedia: React.FC<RoyalEncyclopediaProps> = ({ className = '' }) => {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-2 flex items-center">
-          <ScrollText className="h-6 w-6 mr-2 text-royal-gold" />
-          Royal Encyclopedia
-        </h1>
+    <div className={`w-full ${className}`}>
+      <h2 className="text-2xl font-bold mb-6">Royal Encyclopedia</h2>
+      
+      <Tabs defaultValue="mockery" className="w-full">
+        <TabsList className="grid grid-cols-3 mb-6">
+          <TabsTrigger value="mockery">Royal Mockery</TabsTrigger>
+          <TabsTrigger value="teams">Royal Teams</TabsTrigger>
+          <TabsTrigger value="tiers">Royal Tiers</TabsTrigger>
+        </TabsList>
         
-        <p className="text-white/70 mb-6">
-          The complete guide to all things Royal in the Cash Kingdom.
-        </p>
-        
-        <Tabs defaultValue="mockery" className="w-full">
-          <TabsList className="grid grid-cols-5 mb-6">
-            <TabsTrigger value="mockery" className="flex items-center">
-              <Crown className="h-4 w-4 mr-2" />
-              Mockery
-            </TabsTrigger>
-            <TabsTrigger value="ranks" className="flex items-center">
-              <Trophy className="h-4 w-4 mr-2" />
-              Ranks
-            </TabsTrigger>
-            <TabsTrigger value="teams" className="flex items-center">
-              <Users className="h-4 w-4 mr-2" />
-              Teams
-            </TabsTrigger>
-            <TabsTrigger value="titles" className="flex items-center">
-              <Heart className="h-4 w-4 mr-2" />
-              Titles
-            </TabsTrigger>
-            <TabsTrigger value="faq" className="flex items-center">
-              <AlertCircle className="h-4 w-4 mr-2" />
-              FAQ
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="mockery">
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-2xl font-bold mb-4">The Royal Mockery System</h2>
-                <p className="mb-4">
-                  The Royal Mockery System allows members of the Cash Kingdom to express their opinions of others through various forms of courtly ridicule. From simple tomato throwing to the elaborate Court Jester ceremony, each mockery type serves a specific purpose in the royal hierarchy.
-                </p>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-bold mb-3">Mockery Tiers</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {Object.entries(mockeryTierLabels).slice(0, 6).map(([tier, label]) => (
-                    <div key={tier} className="p-4 bg-black/20 rounded-lg border border-white/10">
-                      <h4 className="font-medium mb-1 capitalize">{label}</h4>
-                      <p className="text-sm text-white/70">
-                        {tier === 'common' && 'Available to all users, inexpensive and playful.'}
-                        {tier === 'uncommon' && 'Slightly more impactful mockeries with moderate cost.'}
-                        {tier === 'rare' && 'Powerful mockeries that leave a lasting impression.'}
-                        {tier === 'epic' && 'High-impact mockeries reserved for significant statements.'}
-                        {tier === 'legendary' && 'The most powerful mockeries in the kingdom.'}
-                        {tier === 'royal' && 'Reserved exclusively for Royal tier members.'}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-bold mb-3">Mockery Types</h3>
-                <div className="space-y-4">
-                  <div className="p-4 bg-black/20 rounded-lg border border-white/10">
-                    <h4 className="font-medium mb-1">Tomato Throwing</h4>
-                    <p className="text-sm text-white/70">
-                      The classic expression of disapproval. Tomato throwing is a common mockery that leaves a temporary mark on the recipient's profile.
-                    </p>
-                    <div className="flex justify-between items-center mt-2">
-                      <span className="text-xs text-white/50">Cost: 5 coins</span>
-                      <span className="text-xs bg-white/10 px-2 py-1 rounded">Common</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 bg-black/20 rounded-lg border border-white/10">
-                    <h4 className="font-medium mb-1">Crown Flipping</h4>
-                    <p className="text-sm text-white/70">
-                      A rare mockery that temporarily removes the crown from a Royal user's profile, causing momentary embarrassment in the court.
-                    </p>
-                    <div className="flex justify-between items-center mt-2">
-                      <span className="text-xs text-white/50">Cost: 100 coins</span>
-                      <span className="text-xs bg-white/10 px-2 py-1 rounded">Rare</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 bg-black/20 rounded-lg border border-white/10">
-                    <h4 className="font-medium mb-1">Court Jester</h4>
-                    <p className="text-sm text-white/70">
-                      An epic mockery that designates someone as the Court Jester for 24 hours, adding a jester hat to their profile and announcements to their actions.
-                    </p>
-                    <div className="flex justify-between items-center mt-2">
-                      <span className="text-xs text-white/50">Cost: 30 coins</span>
-                      <span className="text-xs bg-white/10 px-2 py-1 rounded">Epic</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="ranks">
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Royal Rankings Explained</h2>
-              <p className="mb-6">
-                The Cash Kingdom operates on a strict hierarchy based on spending and contributions. Your rank determines your status, privileges, and respect within the royal court.
+        <TabsContent value="mockery">
+          <Card>
+            <CardHeader>
+              <CardTitle>Royal Mockery System</CardTitle>
+              <CardDescription>
+                Learn about the various mockery actions available to shame your rivals
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p>
+                Royal Mockery is the art of publicly shaming your rivals and asserting your dominance
+                in the royal court. The more you spend, the more powerful mockery actions you can perform.
               </p>
               
-              <div className="space-y-4">
-                <div className="p-4 bg-black/20 rounded-lg border border-white/10">
-                  <h4 className="font-medium mb-1">Ranking System</h4>
-                  <p className="text-sm text-white/70">
-                    Rankings are updated hourly based on total spending. The top spender holds the #1 position, with others ranked in descending order. Your ranking history is preserved for all to see.
-                  </p>
-                </div>
-                
-                <div className="p-4 bg-black/20 rounded-lg border border-white/10">
-                  <h4 className="font-medium mb-1">Rank Benefits</h4>
-                  <ul className="text-sm text-white/70 list-disc list-inside space-y-1">
-                    <li>Top 10: Special crown icon and weekly bonus coins</li>
-                    <li>Top 50: Access to exclusive events and custom profile frames</li>
-                    <li>Top 100: Reduced costs for mockery actions</li>
-                    <li>Top 500: Name highlighted in leaderboards</li>
-                  </ul>
-                </div>
-                
-                <div className="p-4 bg-black/20 rounded-lg border border-white/10">
-                  <h4 className="font-medium mb-1">Rank Protection</h4>
-                  <p className="text-sm text-white/70">
-                    Royal members can purchase Rank Protection to prevent dropping more than 5 positions in a 24-hour period, ensuring stability in the royal hierarchy.
-                  </p>
-                </div>
+              <h3 className="text-xl font-semibold mt-4">Mockery Actions</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                {Object.entries(mockeryActionNames).map(([key, name]) => (
+                  <div key={key} className="p-3 bg-black/20 rounded-lg">
+                    <div className="font-semibold">{name}</div>
+                    <div className="text-sm text-white/70">{mockeryActionDescriptions[key] || 'No description available'}</div>
+                    <div className="mt-1 text-sm text-royal-gold">Cost: ${mockeryActionCosts[key] || 'Unknown'}</div>
+                  </div>
+                ))}
               </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="teams">
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Royal Teams</h2>
-              <p className="mb-6">
-                Teams represent different factions within the Cash Kingdom, each with their own philosophy, benefits, and culture.
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="teams">
+          <Card>
+            <CardHeader>
+              <CardTitle>Royal Teams</CardTitle>
+              <CardDescription>
+                Learn about the various teams in the royal court
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>
+                Royal Teams represent different factions within the royal court, each with their
+                own benefits, traits, and specialties. Joining a team connects you with like-minded
+                royals and provides team-specific advantages.
               </p>
               
-              <div className="space-y-4">
-                <div className="p-4 bg-red-900/20 rounded-lg border border-red-900/40">
-                  <h4 className="font-medium mb-1 text-red-400">Royal Order of Reckless Spending</h4>
-                  <p className="text-sm text-white/70">
-                    Founded on the principle that money exists to be spent lavishly and spectacularly. Members pride themselves on bold, impulsive purchases.
-                  </p>
-                  <div className="mt-2 text-xs text-white/50">Motto: "Spend First, Think Never"</div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                <div className="p-3 bg-red-950/20 rounded-lg">
+                  <h4 className="font-semibold text-red-400">Red Team</h4>
+                  <p className="text-sm">The aggressive spenders, known for dominating the leaderboards through sheer spending power.</p>
                 </div>
                 
-                <div className="p-4 bg-blue-900/20 rounded-lg border border-blue-900/40">
-                  <h4 className="font-medium mb-1 text-blue-400">Cobalt Credit Cartel</h4>
-                  <p className="text-sm text-white/70">
-                    Masters of leveraging credit to maintain appearances. Members excel at maintaining a high spending profile through strategic use of credit.
-                  </p>
-                  <div className="mt-2 text-xs text-white/50">Motto: "Today's Purchases, Tomorrow's Problems"</div>
+                <div className="p-3 bg-blue-950/20 rounded-lg">
+                  <h4 className="font-semibold text-blue-400">Blue Team</h4>
+                  <p className="text-sm">Strategic spenders who focus on maximizing value and efficiency.</p>
                 </div>
                 
-                <div className="p-4 bg-green-900/20 rounded-lg border border-green-900/40">
-                  <h4 className="font-medium mb-1 text-green-400">Emerald Exchequer Cabaret</h4>
-                  <p className="text-sm text-white/70">
-                    Combines flamboyant spending with theatrical flair. Members celebrate each purchase as a performance art piece.
-                  </p>
-                  <div className="mt-2 text-xs text-white/50">Motto: "All Wealth's a Stage"</div>
+                <div className="p-3 bg-green-950/20 rounded-lg">
+                  <h4 className="font-semibold text-green-400">Green Team</h4>
+                  <p className="text-sm">Community-focused spenders who gain strength in numbers and group benefits.</p>
+                </div>
+                
+                <div className="p-3 bg-yellow-950/20 rounded-lg">
+                  <h4 className="font-semibold text-yellow-400">Gold Team</h4>
+                  <p className="text-sm">The elite royals who focus on prestige and exclusive benefits.</p>
+                </div>
+                
+                <div className="p-3 bg-purple-950/20 rounded-lg">
+                  <h4 className="font-semibold text-purple-400">Purple Team</h4>
+                  <p className="text-sm">Creative spenders who excel at mockery and public appearances.</p>
                 </div>
               </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="titles">Content for Titles</TabsContent>
-          <TabsContent value="faq">Content for FAQ</TabsContent>
-        </Tabs>
-      </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="tiers">
+          <Card>
+            <CardHeader>
+              <CardTitle>Royal Tiers</CardTitle>
+              <CardDescription>
+                Learn about the various spending tiers and their benefits
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>
+                As you spend more in the royal court, you'll progress through various tiers,
+                each with increasing prestige and benefits. Higher tiers unlock more powerful
+                mockery actions and special privileges.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                {Object.entries(mockeryTierLabels).map(([key, label]) => (
+                  <div key={key} className="p-3 bg-black/20 rounded-lg">
+                    <h4 className="font-semibold">{label} Tier</h4>
+                    <p className="text-sm">
+                      {key === 'basic' && 'Entry level tier with basic mockery capabilities.'}
+                      {key === 'premium' && 'Enhanced tier with more mockery actions and better leaderboard visibility.'}
+                      {key === 'royal' && 'Elite tier with exclusive mockery actions and premium features.'}
+                      {key === 'founder' && 'Exclusive tier for the earliest supporters with unique benefits.'}
+                      {key === 'legendary' && 'The highest tier with ultimate mockery powers and royal status.'}
+                      {!['basic', 'premium', 'royal', 'founder', 'legendary'].includes(key) && 'A specialized tier with unique benefits.'}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

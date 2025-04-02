@@ -1,69 +1,41 @@
 
-/**
- * Central types export file
- * This consolidates all type exports to minimize import conflicts
- */
+// This file serves as a central export for all types
+// It helps avoid circular dependencies and makes importing types easier
 
-// Core types - using renamed exports to avoid conflicts
+// Export mockery-related types
 export type { 
-  MockeryAction,
-  MockeryTier,
-  TeamData,
+  MockeryAction, 
+  MockeryTier, 
+  MockeryResult, 
+  MockeryEffect,
   TeamColor,
   UserTier,
   Gender
 } from './mockery-types';
 
-// User types - these override mockery-types when there's a conflict
+// Export user-related types
 export type {
   UserProfile,
-  UserSettings
+  UserSettings,
+  ProfileBoost,
+  User,
+  SocialLink,
+  ProfileImage,
+  ProfileLink
+} from './user';
+
+// Export consolidated user types
+export type {
+  UserProfile as ConsolidatedUserProfile,
+  UserSettings as ConsolidatedUserSettings,
+  UserSubscription,
+  SocialLink as ConsolidatedSocialLink,
+  TeamType
 } from './user-consolidated';
 
-// Re-export TeamType for backward compatibility
-export type { TeamType } from './team-data';
-
+// Export team-related types
 export type {
-  AuthState,
-  AuthAction,
-  AuthContextType,
-  RegisterResponse,
-  LoginResponse,
-  AuthProviderProps
-} from './auth-context';
-
-// Feature-specific types
-export type {
-  Certificate,
-  CertificateType,
-  CertificateStyle,
-  CertificateTeam,
-  CertificateTemplate,
-  CertificateRepository
-} from './certificates';
-
-export type {
-  CosmeticType,
-  CosmeticCategory,
-  CosmeticRarity,
-  CosmeticItem,
-  SocialLink,
-  UserCosmetics,
-  UserCosmeticState,
-  CosmeticStoreSection,
-  CosmeticPurchaseResult,
-  ProfileLink
-} from './cosmetics';
-
-export type {
-  BoostEffectType,
-  BoostEffect,
-  ProfileBoost,
-  BoostService
-} from './boost';
-
-// Re-export team related types
-export type {
+  TeamData,
   TeamMember,
   TeamRole,
   TeamStats,
@@ -71,48 +43,40 @@ export type {
   TeamInvite
 } from './team';
 
+// Export certificate-related types
+export type {
+  Certificate,
+  CertificateType,
+  CertificateStyle,
+  CertificateTeam,
+  CertificateStatus,
+  CertificateRepository,
+  CertificateTemplate
+} from './certificates';
+
+// Export leaderboard-related types
 export type {
   LeaderboardUser,
   LeaderboardFilter,
   LeaderboardProps,
+  LeaderboardResponse,
+  LeaderboardConfig,
+  UseLeaderboardResult
 } from './leaderboard';
 
-// UI types
-export type { IconProps, IconSize, IconColor, IconStyle } from './ui/icon-types';
-export type { SoundType, SoundOptions, SoundConfig, SoundHook } from './sound-types';
+// Export auth-related types
+export type {
+  AuthContextType,
+  AuthProviderProps,
+  LoginData,
+  RegisterData,
+  LoginResponse
+} from './auth/types';
 
-// For backwards compatibility
-import { UserProfile } from './user-consolidated';
-export type User = UserProfile;
-
-// Re-export types from mocktypes.ts to ensure consistency
-export type { 
-  MockeryNotification,
-  MockerySettings
-} from './mocktypes';
-
-// Define simplified interfaces for leaderboard usage
-export interface LeaderboardConfig {
-  timeframe: 'today' | 'week' | 'month' | 'year' | 'all-time';
-  team: string;
-  limit: number;
-}
-
-export interface LeaderboardResponse {
-  users: LeaderboardUser[];
-  totalUsers: number;
-  currentPage: number;
-  totalPages: number;
-}
-
-export interface UseLeaderboardResult {
-  users: LeaderboardUser[];
-  isLoading: boolean;
-  error: Error | null;
-  filter: LeaderboardFilter;
-  setFilter: (filter: Partial<LeaderboardFilter>) => void;
-  refetch: () => void;
-  totalUsers: number;
-  currentPage: number;
-  totalPages: number;
-}
+// Export cosmetics-related types
+export type {
+  Cosmetic,
+  CosmeticCategory,
+  CosmeticRarity,
+  UserCosmetics
+} from './cosmetics';

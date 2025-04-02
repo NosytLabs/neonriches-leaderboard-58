@@ -1,82 +1,72 @@
 
 import React from 'react';
-import { TeamData, TeamColor } from '@/types/mockery-types';
-import { addTeamId } from '@/utils/teamUtils';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { TeamData } from '@/types/team';
+import { createTeamData, getTeamTailwindColor, addTeamId } from '@/utils/teamUtils';
 
 interface TeamLeaderboardProps {
-  teams: TeamData[];
-  activeTeam?: TeamColor | null;
+  teams?: TeamData[];
+  className?: string;
 }
 
-const TeamLeaderboard: React.FC<TeamLeaderboardProps> = ({ teams, activeTeam }) => {
-  // Sort teams by ranking if available, or by name
-  const sortedTeams = [...teams].map(team => {
-    if (!team.teamId) {
-      return {
-        ...team,
-        teamId: addTeamId(team.color)
-      };
-    }
-    return team;
-  }).sort((a, b) => {
-    if (a.ranking !== undefined && b.ranking !== undefined) {
-      return a.ranking - b.ranking;
-    }
-    return a.name.localeCompare(b.name);
-  });
-
+const TeamLeaderboard: React.FC<TeamLeaderboardProps> = ({ teams = [], className }) => {
+  // If teams is empty, create some mock teams
+  const displayTeams = teams.length > 0 
+    ? teams.map(team => addTeamId(team))
+    : [
+        createTeamData('red'),
+        createTeamData('blue'),
+        createTeamData('green'),
+        createTeamData('gold'),
+        createTeamData('purple')
+      ];
+  
+  // Sort teams by ranking (lower is better)
+  displayTeams.sort((a, b) => (a.ranking || 999) - (b.ranking || 999));
+  
   return (
-    <div className="space-y-4 max-w-3xl mx-auto">
-      <h2 className="text-xl font-bold mb-2">Team Leaderboard</h2>
-      
-      <div className="overflow-hidden rounded-lg border border-white/10">
-        <div className="bg-black/20 grid grid-cols-12 py-2 px-4 text-sm font-medium text-white/60">
-          <div className="col-span-1">#</div>
-          <div className="col-span-5">Team</div>
-          <div className="col-span-3 text-center">Members</div>
-          <div className="col-span-3 text-right">Score</div>
-        </div>
-        
-        <div className="divide-y divide-white/10">
-          {sortedTeams.map((team, index) => {
-            const teamId = team.teamId || addTeamId(team.color); // Add ID if missing
-            const isActive = activeTeam === team.color;
-            
-            let rowColorClass = '';
-            if (isActive) {
-              rowColorClass = 'bg-white/5';
-            } else if (index % 2 === 0) {
-              rowColorClass = 'bg-black/10';
-            }
-            
-            return (
-              <div 
-                key={teamId}
-                className={`grid grid-cols-12 py-3 px-4 ${rowColorClass} ${isActive ? 'font-medium' : ''}`}
-              >
-                <div className="col-span-1">{team.ranking || index + 1}</div>
-                <div className="col-span-5 flex items-center">
-                  <div 
-                    className="w-3 h-3 rounded-full mr-2"
-                    style={{ backgroundColor: team.color }}
-                  ></div>
-                  {team.name}
-                  {isActive && (
-                    <span className="ml-2 text-xs bg-white/10 px-1.5 py-0.5 rounded text-white/80">You</span>
-                  )}
-                </div>
-                <div className="col-span-3 text-center">
-                  {team.memberCount !== undefined ? team.memberCount.toLocaleString() : '-'}
-                </div>
-                <div className="col-span-3 text-right">
-                  {Math.floor(Math.random() * 10000).toLocaleString()}
+    <Card className={className}>
+      <CardHeader>
+        <CardTitle>Team Leaderboard</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {displayTeams.map((team, index) => (
+            <div 
+              key={team.id || team.color} 
+              className="flex items-center p-3 rounded-lg bg-black/20 hover:bg-black/30 transition-all"
+            >
+              <div className="w-8 h-8 flex items-center justify-center font-bold mr-2">
+                {index === 0 ? '🏆' : `#${index + 1}`}
+              </div>
+              
+              <Avatar className={`h-10 w-10 mr-3 bg-${team.color}-500/20`}>
+                {team.icon ? (
+                  <AvatarImage src={`/assets/teams/${team.icon}.png`} alt={team.name} />
+                ) : (
+                  <AvatarFallback className={getTeamTailwindColor(team.color)}>
+                    {team.name.substring(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                )}
+              </Avatar>
+              
+              <div>
+                <div className="font-medium">{team.name}</div>
+                <div className="text-sm text-white/60">
+                  {team.memberCount ? `${team.memberCount} members` : 'Members: N/A'}
                 </div>
               </div>
-            );
-          })}
+              
+              <div className="ml-auto text-right">
+                <div className="font-medium">Rank {team.ranking || 'N/A'}</div>
+                <div className="text-sm text-white/60"></div>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
