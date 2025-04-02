@@ -1,260 +1,208 @@
 
-import { MockeryAction, MockeryTier } from '@/types/mockery-types';
-import { AlertTriangle, Crown, Egg, Fish, MessageCircle, ShieldAlert, Skull, ThumbsDown, Target, Music, PartyPopper, Bell, User, Cloud } from 'lucide-react';
+import { MockeryAction, MockeryTier } from "@/types/mockery-types";
 
-// Create complete action descriptions mapping
-export const actionDescriptions: Record<MockeryAction, string> = {
-  tomato: "Throw a juicy tomato at someone to express your discontent.",
-  egg: "Hurl an egg to make a mess of your target's appearance.",
-  rotten_egg: "Throw a rotten egg for extra stink and embarrassment.",
-  flame: "Burn someone with a witty insult.",
-  heart: "Show some love and support in these trying times.",
-  thumbs_down: "Express your disapproval with a classic thumbs down.",
-  skull: "A deadly blow to their ego.",
-  crown: "Crown someone as the king or queen of fools.",
-  putridEgg: "A specially aged egg that makes a terrifying smell.",
-  stocks: "Put them in the public stocks for all to mock.",
-  jester: "Make them wear the jester's hat.",
-  mock: "Openly ridicule them with pointed mockery.",
-  challenge: "Challenge them to prove themselves.",
-  joust: "Challenge them to a royal joust.",
-  duel: "Call them out to a gentlemanly duel.",
-  silence: "Silence them from speaking in the town square.",
-  laugh: "Point and laugh at their expense.",
-  fish: "Slap them with a wet fish.",
-  taunt: "Taunt them with insulting gestures.",
-  thumbsDown: "Show your royal disapproval.",
-  trumpet: "Announce their folly with a trumpet sound.",
-  confetti: "Ironically celebrate their failure with confetti.",
-  shame: "Ring the bell of shame for all to hear.",
-  courtJester: "Appoint them as your personal court jester.",
-  smokeBomb: "Throw a smoke bomb to cause confusion.",
-  protection: "Grant them royal protection from mockery."
+/**
+ * Utility functions and data for mockery features
+ */
+
+// Mockery action descriptions
+export const mockeryDescriptions: Record<MockeryAction, string> = {
+  tomato: "Throw a tomato at the user",
+  egg: "Throw an egg at the user",
+  rotten_egg: "Throw a rotten egg for extra stench",
+  flame: "Flame the user in public",
+  heart: "Ironically heart their profile",
+  thumbs_down: "Show disapproval",
+  skull: "Mark them as digitally deceased",
+  crown: "Crown them as the fool",
+  putridEgg: "A specialty item that really stinks",
+  stocks: "Place them in the digital stocks for public mockery",
+  jester: "Declare them the court jester",
+  mock: "Simple mockery for simple folk",
+  challenge: "Challenge them to prove their worth",
+  joust: "Challenge them to a spending joust",
+  duel: "Declare a spending duel",
+  silence: "Temporarily silence them",
+  laugh: "Publicly laugh at their status",
+  fish: "Slap them with a digital fish",
+  taunt: "Taunt them mercilessly",
+  thumbsDown: "Express your disapproval",
+  trumpet: "Announce their failure",
+  confetti: "Ironically celebrate their spending",
+  shame: "Publicly shame them",
+  courtJester: "Name them the court's fool",
+  smokeBomb: "Leave them in a cloud of confusion",
+  protection: "Protect yourself from their mockery",
+  royal_decree: "Issue a royal decree of shame",
+  shame_certificate: "Award a certificate of shame",
+  insult: "Deliver a royal insult",
+  humiliate: "Publicly humiliate them"
 };
 
-// Create complete tier descriptions mapping
-export const tierDescriptions: Record<MockeryTier, string> = {
-  common: "An everyday mockery action available to all.",
-  uncommon: "A more unique form of ridicule that stands out.",
-  rare: "A special mockery that few can perform.",
-  epic: "A legendary mockery that leaves a lasting impression.",
-  legendary: "The most prestigious and impactful mockery possible.",
-  royal: "A mockery worthy of royalty.",
-  silver: "A refined mockery with silver lining.",
-  bronze: "A basic mockery with a touch of style.",
-  basic: "The simplest form of mockery.",
-  premium: "A premium mockery reserved for members.",
-  standard: "A standard mockery that gets the job done."
-};
-
-export const getMockeryName = (action: MockeryAction): string => {
-  const nameMap: Record<MockeryAction, string> = {
-    tomato: 'Tomato Throw',
-    egg: 'Egg Hurl',
-    rotten_egg: 'Rotten Egg Toss',
-    flame: 'Flame War',
-    heart: 'Heartfelt Support',
-    thumbs_down: 'Thumbs Down',
-    skull: 'Skull Strike',
-    crown: 'Crowning',
-    putridEgg: 'Putrid Egg Bomb',
-    stocks: 'Public Stocks',
-    jester: 'Jester Hat',
-    mock: 'Open Mockery',
-    challenge: 'Challenge',
-    joust: 'Royal Joust',
-    duel: 'Gentleman\'s Duel',
-    silence: 'Silence',
-    laugh: 'Public Laughter',
-    fish: 'Wet Fish Slap',
-    taunt: 'Insulting Taunt',
-    thumbsDown: 'Royal Disapproval',
-    trumpet: 'Trumpet Announce',
-    confetti: 'Confetti Celebration',
-    shame: 'Bell of Shame',
-    courtJester: 'Court Jester',
-    smokeBomb: 'Smoke Bomb',
-    protection: 'Royal Protection'
+/**
+ * Gets a random mockery message for the given action type
+ */
+export const getRandomMockeryMessage = (
+  action: MockeryAction,
+  targetName: string
+): string => {
+  // Default fallback messages
+  const defaultMessages: Record<MockeryAction, string[]> = {
+    tomato: [
+      `A tomato splatters on ${targetName}'s profile!`,
+      `${targetName} has been tomatoed!`,
+      `Splat! ${targetName} is now wearing tomato.`,
+    ],
+    egg: [
+      `An egg cracks on ${targetName}'s head!`,
+      `${targetName}'s profile is egged!`,
+      `${targetName} needs to clean up after being egged.`,
+    ],
+    rotten_egg: [
+      `A putrid smell follows ${targetName} everywhere now!`,
+      `${targetName} has been struck with a rotten egg!`,
+      `The stench of ${targetName}'s shame will linger for days.`,
+    ],
+    flame: [
+      `${targetName} has been flamed!`,
+      `${targetName} is feeling the heat of your mockery.`,
+      `You've publicly roasted ${targetName}!`,
+    ],
+    heart: [
+      `You've ironically hearted ${targetName}'s profile.`,
+      `${targetName} receives your sarcastic affection.`,
+      `Your fake appreciation makes ${targetName} look foolish.`,
+    ],
+    thumbs_down: [
+      `You've shown your disapproval of ${targetName}.`,
+      `${targetName} has been thumbed down.`,
+      `Your disapproval of ${targetName} is now public.`,
+    ],
+    skull: [
+      `${targetName} has been marked as digitally deceased.`,
+      `${targetName}'s digital life is over, courtesy of you.`,
+      `R.I.P ${targetName}'s online reputation.`,
+    ],
+    crown: [
+      `${targetName} has been crowned the kingdom's fool.`,
+      `All hail ${targetName}, the royal jester!`,
+      `${targetName} wears the crown of shame.`,
+    ],
+    // Add all other mockery actions with at least one message each
+    putridEgg: [`A putrid egg splatters on ${targetName}, leaving a horrible stench!`],
+    stocks: [`${targetName} has been placed in the stocks for public ridicule.`],
+    jester: [`${targetName} is now the court jester, thanks to you!`],
+    mock: [`You've mocked ${targetName} for all to see.`],
+    challenge: [`You've challenged ${targetName} to prove their worth!`],
+    joust: [`You've challenged ${targetName} to a spending joust!`],
+    duel: [`A spending duel has been declared against ${targetName}!`],
+    silence: [`${targetName} has been silenced by your mockery.`],
+    laugh: [`You laugh loudly at ${targetName}'s expense.`],
+    fish: [`You slap ${targetName} with a digital fish!`],
+    taunt: [`You taunt ${targetName} mercilessly.`],
+    thumbsDown: [`Your disapproval of ${targetName} is now permanent.`],
+    trumpet: [`You announce ${targetName}'s failures with a trumpet blast!`],
+    confetti: [`You ironically celebrate ${targetName}'s wasteful spending!`],
+    shame: [`${targetName} has been publicly shamed!`],
+    courtJester: [`${targetName} is now officially the court's fool.`],
+    smokeBomb: [`You've left ${targetName} in a cloud of confusion.`],
+    protection: [`You're now protected from ${targetName}'s mockery.`],
+    royal_decree: [`A royal decree of shame has been issued against ${targetName}!`],
+    shame_certificate: [`${targetName} has been awarded a certificate of shame!`],
+    insult: [`You've delivered a royal insult to ${targetName}!`],
+    humiliate: [`${targetName} has been publicly humiliated!`]
   };
-  return nameMap[action] || 'Unknown Action';
+
+  const messages = defaultMessages[action];
+  return messages[Math.floor(Math.random() * messages.length)];
 };
 
-export const getMockeryDescription = (action: MockeryAction): string => {
-  return actionDescriptions[action] || 'No description available.';
-};
-
+/**
+ * Gets the rarity tier for a mockery action
+ */
 export const getMockeryTier = (action: MockeryAction): MockeryTier => {
-  const tierMap: Record<MockeryAction, MockeryTier> = {
-    tomato: 'common',
-    egg: 'common',
-    rotten_egg: 'uncommon',
-    flame: 'uncommon',
-    heart: 'common',
-    thumbs_down: 'common',
-    skull: 'rare',
-    crown: 'epic',
-    putridEgg: 'rare',
-    stocks: 'epic',
-    jester: 'rare',
-    mock: 'common',
-    challenge: 'uncommon',
-    joust: 'royal',
-    duel: 'epic',
-    silence: 'royal',
-    laugh: 'common',
-    fish: 'uncommon',
-    taunt: 'common',
-    thumbsDown: 'common',
-    trumpet: 'uncommon',
-    confetti: 'rare',
-    shame: 'epic',
-    courtJester: 'royal',
-    smokeBomb: 'epic',
-    protection: 'legendary'
+  const tiers: Record<MockeryAction, MockeryTier> = {
+    tomato: "common",
+    egg: "common",
+    rotten_egg: "uncommon",
+    flame: "uncommon",
+    heart: "common",
+    thumbs_down: "common",
+    skull: "rare",
+    crown: "epic",
+    putridEgg: "rare",
+    stocks: "epic",
+    jester: "rare",
+    mock: "common",
+    challenge: "uncommon",
+    joust: "rare",
+    duel: "epic",
+    silence: "epic",
+    laugh: "common",
+    fish: "uncommon",
+    taunt: "common",
+    thumbsDown: "common",
+    trumpet: "uncommon",
+    confetti: "uncommon",
+    shame: "uncommon",
+    courtJester: "rare",
+    smokeBomb: "rare",
+    protection: "legendary",
+    royal_decree: "legendary",
+    shame_certificate: "epic",
+    insult: "uncommon",
+    humiliate: "rare"
   };
-  return tierMap[action] || 'common';
+
+  return tiers[action] || "common";
 };
 
-export const getMockeryActionPrice = (action: MockeryAction): number => {
-  const priceMap: Record<MockeryAction, number> = {
-    tomato: 10,
-    egg: 15,
-    rotten_egg: 25,
-    flame: 20,
-    heart: 5,
-    thumbs_down: 5,
-    skull: 30,
-    crown: 100,
-    putridEgg: 40,
-    stocks: 75,
-    jester: 50,
-    mock: 15,
-    challenge: 25,
-    joust: 150,
-    duel: 75,
-    silence: 200,
-    laugh: 10,
-    fish: 20,
-    taunt: 15,
-    thumbsDown: 10,
-    trumpet: 25,
-    confetti: 30,
-    shame: 50,
-    courtJester: 100,
-    smokeBomb: 65,
-    protection: 250
+/**
+ * Gets the cost for a mockery action
+ */
+export const getMockeryCost = (action: MockeryAction): number => {
+  const costs: Record<MockeryAction, number> = {
+    tomato: 5,
+    egg: 10,
+    rotten_egg: 300,
+    flame: 75,
+    heart: 100,
+    thumbs_down: 15,
+    skull: 20,
+    crown: 200,
+    putridEgg: 300,
+    stocks: 250,
+    jester: 30,
+    mock: 50,
+    challenge: 75,
+    joust: 100,
+    duel: 150,
+    silence: 350,
+    laugh: 25,
+    fish: 35,
+    taunt: 40,
+    thumbsDown: 15,
+    trumpet: 45,
+    confetti: 50,
+    shame: 150,
+    courtJester: 400,
+    smokeBomb: 450,
+    protection: 500,
+    royal_decree: 600,
+    shame_certificate: 250,
+    insult: 100,
+    humiliate: 300
   };
-  return priceMap[action] || 10;
+
+  return costs[action] || 50;
 };
 
-// Alias for getMockeryActionPrice for compatibility
-export const getMockeryCost = getMockeryActionPrice;
-
-export const getTierColors = (): Record<MockeryTier, string> => {
-  return {
-    common: '#9CA3AF',   // Gray
-    uncommon: '#34D399', // Green
-    rare: '#3B82F6',     // Blue
-    epic: '#8B5CF6',     // Purple
-    legendary: '#F59E0B', // Amber
-    royal: '#FFD700',    // Gold
-    silver: '#C0C0C0',   // Silver
-    bronze: '#CD7F32',   // Bronze
-    basic: '#6B7280',    // Gray
-    premium: '#EC4899',  // Pink
-    standard: '#9CA3AF'  // Gray
-  };
-};
-
-export const getMockeryTierColorClass = (tier: MockeryTier): string => {
-  const colorMap: Record<MockeryTier, string> = {
-    common: 'text-gray-400',
-    uncommon: 'text-green-400',
-    rare: 'text-blue-400',
-    epic: 'text-purple-400',
-    legendary: 'text-amber-400',
-    royal: 'text-yellow-400',
-    silver: 'text-gray-300',
-    bronze: 'text-amber-600',
-    basic: 'text-gray-500',
-    premium: 'text-pink-400',
-    standard: 'text-gray-400'
-  };
-  return colorMap[tier] || 'text-gray-400';
-};
-
-export const getMockeryActionIcon = (action: MockeryAction) => {
-  const iconMap: Record<string, any> = {
-    tomato: Target,
-    egg: Egg,
-    rotten_egg: Egg,
-    flame: AlertTriangle,
-    heart: Crown,
-    thumbs_down: ThumbsDown,
-    skull: Skull,
-    crown: Crown,
-    putridEgg: Egg,
-    stocks: ShieldAlert,
-    jester: User,
-    mock: MessageCircle,
-    challenge: Target,
-    joust: Crown,
-    duel: Target,
-    silence: MessageCircle,
-    laugh: MessageCircle,
-    fish: Fish,
-    taunt: MessageCircle,
-    thumbsDown: ThumbsDown,
-    trumpet: Music,
-    confetti: PartyPopper,
-    shame: Bell,
-    courtJester: User,
-    smokeBomb: Cloud,
-    protection: ShieldAlert
-  };
-  return iconMap[action] || Target;
-};
-
-export const getMockeryActionIconColor = (action: MockeryAction): string => {
-  const colorMap: Record<string, string> = {
-    tomato: '#FF6347',   // Tomato red
-    egg: '#F5F5DC',      // Beige
-    rotten_egg: '#7B6B43', // Brown
-    putridEgg: '#7B6B43', // Brown
-    flame: '#FF4500',    // Red-orange
-    heart: '#FF69B4',    // Pink
-    thumbs_down: '#FF4500', // Red-orange
-    thumbsDown: '#FF4500', // Red-orange
-    skull: '#808080',    // Gray
-    crown: '#FFD700',    // Gold
-    stocks: '#8B4513',   // Brown
-    jester: '#9370DB',   // Purple
-    mock: '#FF6347',     // Tomato red
-    challenge: '#4169E1', // Royal blue
-    joust: '#B22222',    // Firebrick
-    duel: '#B22222',     // Firebrick
-    silence: '#808080',  // Gray
-    laugh: '#FFA500',    // Orange
-    fish: '#4682B4',     // Steel blue
-    taunt: '#FF4500',    // Red-orange
-    trumpet: '#FFD700',  // Gold
-    confetti: '#FF69B4', // Pink
-    shame: '#FF0000',    // Red
-    courtJester: '#9370DB', // Purple
-    smokeBomb: '#708090', // Slate gray
-    protection: '#4682B4' // Steel blue
-  };
-  return colorMap[action] || '#808080'; // Default gray
-};
-
-export default {
-  getMockeryName,
-  getMockeryDescription,
-  getMockeryTier,
-  getMockeryActionPrice,
-  getMockeryCost,
-  getMockeryTierColorClass,
-  getMockeryActionIcon,
-  getMockeryActionIconColor,
-  getTierColors
+/**
+ * Formats a mockery action name for display
+ */
+export const formatMockeryAction = (action: MockeryAction): string => {
+  return action
+    .replace(/_/g, " ")
+    .replace(/([A-Z])/g, " $1")
+    .replace(/^./, (str) => str.toUpperCase());
 };

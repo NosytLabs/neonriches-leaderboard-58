@@ -56,10 +56,10 @@ export const useMockery = () => {
       skull: 20,
       trumpet: 45,
       confetti: 50,
-      royal_decree: 500,
-      shame_certificate: 200,
-      insult: 50,
-      humiliate: 150
+      royal_decree: 600,
+      shame_certificate: 250,
+      insult: 100,
+      humiliate: 300
     };
     
     return costs[action] || 50;
@@ -128,5 +128,3 @@ export const useMockery = () => {
     resetMockery
   };
 };
-
-// Remove duplicate default export

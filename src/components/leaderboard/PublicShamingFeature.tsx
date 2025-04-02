@@ -8,7 +8,6 @@ import { Eye, Target, TrendingUp, Trophy, User } from 'lucide-react';
 import { LeaderboardUser, MockeryAction } from '@/types/mockery-types';
 import { formatCurrency } from '@/utils/formatters';
 import { useToast } from '@/hooks/use-toast';
-import { VALID_MOCKERY_ACTIONS, normalizeMockeryAction } from '@/utils/mockeryActionUtils';
 
 interface PublicShamingFeatureProps {
   users: LeaderboardUser[];

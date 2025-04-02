@@ -1,165 +1,168 @@
 
-import { MockeryAction } from '@/types/mockery-types';
-import { 
-  Egg, 
-  ThumbsDown, 
-  Crown, 
-  Flame, 
-  Skull, 
-  Heart, 
-  Music, 
-  Confetti, 
-  AlertTriangle,
-  ShieldAlert,
-  Laugh,
-  Feather,
-  MessageCircle 
-} from 'lucide-react';
+import {
+  Egg,
+  FlameIcon,
+  Crown,
+  ThumbsDown,
+  Skull,
+  Heart,
+  PartyPopper, // Using PartyPopper instead of Confetti
+  MusicIcon,
+  Fish,
+  Flame,
+  Volume2,
+  Award,
+  MessageCircle,
+  Circle,
+  Scroll,
+  Shield,
+  AlertTriangle
+} from "lucide-react";
 
-// Define mockery action display names
-export const getMockeryActionDisplayName = (action: MockeryAction): string => {
-  const displayNames: Record<MockeryAction, string> = {
-    tomato: 'Tomato',
-    egg: 'Egg',
-    rotten_egg: 'Rotten Egg',
-    flame: 'Flame',
-    heart: 'Heart',
-    thumbs_down: 'Thumbs Down',
-    skull: 'Skull',
-    crown: 'Mock Crown',
-    putridEgg: 'Putrid Egg',
-    stocks: 'Stocks',
-    jester: 'Jester',
-    mock: 'Mock',
-    challenge: 'Challenge',
-    joust: 'Joust',
-    duel: 'Duel',
-    silence: 'Silence',
-    courtJester: 'Court Jester',
-    smokeBomb: 'Smoke Bomb',
-    protection: 'Protection',
-    laugh: 'Laugh',
-    fish: 'Fish',
-    taunt: 'Taunt',
-    thumbsDown: 'Thumbs Down',
-    trumpet: 'Trumpet',
-    confetti: 'Confetti',
-    shame: 'Shame',
-    royal_decree: 'Royal Decree',
-    shame_certificate: 'Shame Certificate',
-    insult: 'Insult',
-    humiliate: 'Humiliate'
-  };
-  
-  return displayNames[action] || 'Unknown';
+// Define the mockery action types
+export const MOCKERY_ACTIONS = [
+  'tomato',
+  'egg',
+  'rotten_egg',
+  'flame',
+  'heart',
+  'thumbs_down',
+  'skull',
+  'crown',
+  'putridEgg',
+  'stocks',
+  'jester',
+  'mock',
+  'challenge',
+  'joust',
+  'duel',
+  'silence',
+  'laugh',
+  'fish',
+  'taunt',
+  'thumbsDown',
+  'trumpet',
+  'confetti',
+  'shame',
+  'courtJester',
+  'smokeBomb',
+  'protection',
+  'royal_decree',
+  'shame_certificate',
+  'insult',
+  'humiliate'
+] as const;
+
+// Export normalizeMockeryAction for PublicShamingFeature
+export const normalizeMockeryAction = (action: string): string => {
+  // Convert camelCase/snake_case to readable format
+  return action
+    .replace(/_/g, ' ')
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, str => str.toUpperCase());
 };
 
-// Define mockery action icons (mapping to Lucide icons)
-export const mockeryActionIcons: Record<MockeryAction, any> = {
-  tomato: AlertTriangle,
+// Export valid mockery actions
+export const VALID_MOCKERY_ACTIONS = MOCKERY_ACTIONS;
+
+// Define the mockery action icons
+export const mockeryActionIcons: Record<string, any> = {
+  tomato: Circle,
   egg: Egg,
   rotten_egg: Egg,
-  flame: Flame,
+  flame: FlameIcon,
   heart: Heart,
   thumbs_down: ThumbsDown,
   skull: Skull,
   crown: Crown,
   putridEgg: Egg,
-  stocks: ShieldAlert,
-  jester: Laugh,
+  stocks: AlertTriangle,
+  jester: Crown,
   mock: MessageCircle,
-  challenge: AlertTriangle,
-  joust: AlertTriangle,
-  duel: AlertTriangle,
-  silence: AlertTriangle,
-  courtJester: Laugh,
-  smokeBomb: AlertTriangle,
-  protection: ShieldAlert,
-  laugh: Laugh,
-  fish: Feather,
+  challenge: Award,
+  joust: Award,
+  duel: Flame,
+  silence: Volume2,
+  laugh: PartyPopper,
+  fish: Fish,
   taunt: MessageCircle,
   thumbsDown: ThumbsDown,
-  trumpet: Music,
-  confetti: Confetti,
+  trumpet: MusicIcon,
+  confetti: PartyPopper,
   shame: AlertTriangle,
-  royal_decree: Crown,
-  shame_certificate: AlertTriangle,
+  courtJester: Crown,
+  smokeBomb: Circle,
+  protection: Shield,
+  royal_decree: Scroll,
+  shame_certificate: Scroll,
   insult: MessageCircle,
   humiliate: AlertTriangle
 };
 
-// Define mockery action descriptions
-export const getMockeryActionDescription = (action: MockeryAction): string => {
-  const descriptions: Record<MockeryAction, string> = {
-    tomato: 'Throw a tomato at the user',
-    egg: 'Throw an egg at the user',
-    rotten_egg: 'Throw a rotten egg at the user',
-    flame: 'Flame the user with a hot take',
-    heart: 'Show some ironic love',
-    thumbs_down: 'Give a thumbs down',
-    skull: 'Mark as defeated',
-    crown: 'Crown them mockingly',
-    putridEgg: 'Throw a putrid egg at the user',
-    stocks: 'Put the user in stocks for public mockery',
-    jester: 'Mark as a jester',
-    mock: 'Mock the user',
-    challenge: 'Challenge the user',
-    joust: 'Joust with the user',
-    duel: 'Challenge to a duel',
-    silence: 'Silence the user temporarily',
-    courtJester: 'Designate as court jester',
-    smokeBomb: 'Leave a smoke bomb',
-    protection: 'Add protection from mockery',
-    laugh: 'Laugh at the user',
-    fish: 'Slap with a fish',
-    taunt: 'Taunt the user',
-    thumbsDown: 'Give a thumbs down gesture',
-    trumpet: 'Play a mocking tune',
-    confetti: 'Throw ironic confetti',
-    shame: 'Public shaming',
-    royal_decree: 'Issue a royal decree of shame',
-    shame_certificate: 'Issue a certificate of shame',
-    insult: 'Insult the user',
-    humiliate: 'Publicly humiliate'
-  };
-  
-  return descriptions[action] || 'Mock the user';
+// Define descriptions for each mockery action
+export const mockeryActionDescriptions: Record<string, string> = {
+  tomato: "Throw a tomato at the user",
+  egg: "Throw an egg at the user",
+  rotten_egg: "Throw a rotten egg for extra stench",
+  flame: "Flame the user in public",
+  heart: "Ironically heart their profile",
+  thumbs_down: "Show disapproval",
+  skull: "Mark them as digitally deceased",
+  crown: "Crown them as the fool",
+  putridEgg: "A specialty item that really stinks",
+  stocks: "Place them in the digital stocks for public mockery",
+  jester: "Declare them the court jester",
+  mock: "Simple mockery for simple folk",
+  challenge: "Challenge them to prove their worth",
+  joust: "Challenge them to a spending joust",
+  duel: "Declare a spending duel",
+  silence: "Temporarily silence them",
+  laugh: "Publicly laugh at their status",
+  fish: "Slap them with a digital fish",
+  taunt: "Taunt them mercilessly",
+  thumbsDown: "Express your disapproval",
+  trumpet: "Announce their failure",
+  confetti: "Ironically celebrate their spending",
+  shame: "Publicly shame them",
+  courtJester: "Name them the court's fool",
+  smokeBomb: "Leave them in a cloud of confusion",
+  protection: "Protect yourself from their mockery",
+  royal_decree: "Issue a royal decree of shame",
+  shame_certificate: "Award a certificate of shame",
+  insult: "Deliver a royal insult",
+  humiliate: "Publicly humiliate them"
 };
 
-// Define mockery action tiers
-export const getMockeryActionTier = (action: MockeryAction): string => {
-  const tiers: Record<MockeryAction, string> = {
-    tomato: 'common',
-    egg: 'common',
-    rotten_egg: 'uncommon',
-    flame: 'uncommon',
-    heart: 'common',
-    thumbs_down: 'common',
-    skull: 'uncommon',
-    crown: 'rare',
-    putridEgg: 'uncommon',
-    stocks: 'rare',
-    jester: 'uncommon',
-    mock: 'common',
-    challenge: 'uncommon',
-    joust: 'rare',
-    duel: 'rare',
-    silence: 'epic',
-    courtJester: 'rare',
-    smokeBomb: 'epic',
-    protection: 'legendary',
-    laugh: 'common',
-    fish: 'uncommon',
-    taunt: 'common',
-    thumbsDown: 'common',
-    trumpet: 'uncommon',
-    confetti: 'uncommon',
-    shame: 'rare',
-    royal_decree: 'legendary',
-    shame_certificate: 'rare',
-    insult: 'common',
-    humiliate: 'rare'
-  };
-  
-  return tiers[action] || 'common';
+// Define costs for mockery actions
+export const mockeryActionCosts: Record<string, number> = {
+  tomato: 5,
+  egg: 10,
+  rotten_egg: 300,
+  flame: 75,
+  heart: 100,
+  thumbs_down: 15,
+  skull: 20,
+  crown: 200,
+  putridEgg: 300,
+  stocks: 250,
+  jester: 30,
+  mock: 50,
+  challenge: 75,
+  joust: 100,
+  duel: 150,
+  silence: 350,
+  laugh: 25,
+  fish: 35,
+  taunt: 40,
+  thumbsDown: 15,
+  trumpet: 45,
+  confetti: 50,
+  shame: 150,
+  courtJester: 400,
+  smokeBomb: 450,
+  protection: 500,
+  royal_decree: 600,
+  shame_certificate: 250,
+  insult: 100,
+  humiliate: 300
 };

@@ -13,6 +13,8 @@ export interface SubscriptionPlan {
   cta?: string;
   // Add billingInterval for compatibility
   billingInterval?: 'monthly' | 'yearly';
+  // Add onSelect for SubscriptionPlanCard
+  onSelect?: (planId: string) => void;
 }
 
 export type SubscriptionBillingInterval = 'monthly' | 'yearly';
