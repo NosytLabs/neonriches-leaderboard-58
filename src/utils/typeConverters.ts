@@ -49,6 +49,7 @@ export const leaderboardUserToProfile = (leaderboardUser: LeaderboardUser): User
     amountSpent: leaderboardUser.amountSpent || leaderboardUser.totalSpent,
     walletBalance: leaderboardUser.walletBalance || 0,
     isVerified: leaderboardUser.isVerified || false,
+    isProtected: leaderboardUser.isProtected,
     cosmetics: { border: [], color: [], font: [], emoji: [], title: [], background: [], effect: [], badge: [], theme: [] },
     settings: leaderboardUser.settings || {
       profileVisibility: 'public',

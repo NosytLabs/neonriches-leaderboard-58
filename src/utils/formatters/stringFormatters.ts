@@ -1,11 +1,19 @@
 
 /**
- * Truncate a string to the specified length
+ * Format username with special handling for long usernames
+ */
+export const formatUsername = (username: string, maxLength: number = 15): string => {
+  if (!username) return '';
+  if (username.length <= maxLength) return username;
+  return `${username.substring(0, maxLength)}...`;
+};
+
+/**
+ * Truncate a string with ellipsis if it exceeds maxLength
  */
 export const truncateString = (str: string, maxLength: number): string => {
   if (!str) return '';
-  if (str.length <= maxLength) return str;
-  return str.substring(0, maxLength) + '...';
+  return str.length > maxLength ? `${str.substring(0, maxLength)}...` : str;
 };
 
 /**
@@ -17,18 +25,18 @@ export const capitalizeFirstLetter = (str: string): string => {
 };
 
 /**
- * Convert a string to Title Case
+ * Convert a string to title case
  */
 export const toTitleCase = (str: string): string => {
   if (!str) return '';
-  return str
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
+  return str.replace(
+    /\w\S*/g,
+    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+  );
 };
 
 /**
- * Strip HTML tags from a string
+ * Remove HTML tags from a string
  */
 export const stripHtmlTags = (html: string): string => {
   if (!html) return '';
@@ -36,36 +44,33 @@ export const stripHtmlTags = (html: string): string => {
 };
 
 /**
- * Format a username to include @ symbol
+ * Get initials from a name or username
  */
-export const formatUsername = (username: string): string => {
-  if (!username) return '';
-  return username.startsWith('@') ? username : `@${username}`;
-};
-
-/**
- * Generate initials from a name
- */
-export const getInitials = (name: string): string => {
+export const getInitials = (name: string, maxChars: number = 2): string => {
   if (!name) return '';
   
-  const parts = name.trim().split(' ');
+  const parts = name.split(/[\s-_]+/);
   if (parts.length === 1) {
-    return parts[0].charAt(0).toUpperCase();
+    // If single word, take first N characters
+    return name.substring(0, maxChars).toUpperCase();
   }
   
-  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  // Take first character of each word
+  return parts
+    .slice(0, maxChars)
+    .map(part => part.charAt(0))
+    .join('')
+    .toUpperCase();
 };
 
 /**
- * Format a dollar amount with appropriate formatting
+ * Format a dollar amount
  */
-export const formatDollarAmount = (amount: number | undefined, decimals = 2): string => {
-  if (amount === undefined || amount === null) return '$0';
+export const formatDollarAmount = (value: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
-  }).format(amount);
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
 };

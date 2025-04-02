@@ -1,3 +1,4 @@
+
 export interface LeaderboardUser {
   id: string;
   userId: string;
@@ -5,7 +6,7 @@ export interface LeaderboardUser {
   displayName?: string;
   profileImage?: string;
   avatarUrl?: string;
-  tier: 'basic' | 'bronze' | 'silver' | 'gold' | 'royal';
+  tier: 'basic' | 'bronze' | 'silver' | 'gold' | 'royal' | 'pro' | 'premium' | 'elite' | 'standard' | 'legendary' | 'diamond' | 'platinum' | 'founder' | 'vip' | 'whale' | 'shark' | 'dolphin' | 'noble';
   team?: string;
   rank: number;
   previousRank?: number;
@@ -17,16 +18,16 @@ export interface LeaderboardUser {
   isProtected: boolean;
   spendStreak?: number;
   joinedAt?: string;     // Add joinedAt as an optional property
+  joinDate?: string;     // Add for compatibility
   spendChange?: number;  // Add additional fields from error messages
   rankChange?: number;
   thumbsDown?: number;
+  carrot?: number;       // Add mockery action type
   // Fields to support conversion from/to UserProfile
   email?: string;
   bio?: string;
   joinedDate?: string;
   settings?: any;
-  carrot?: number;       // Add mockery action type
-  joinDate?: string;     // Add for compatibility
 }
 
 export interface LeaderboardFilter {

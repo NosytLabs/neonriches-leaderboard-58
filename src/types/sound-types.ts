@@ -21,7 +21,12 @@ export type SoundType =
   | 'chime'
   | 'alert'
   | 'mockery'    // Add missing sound types
-  | 'fanfare';   // Add missing sound type
+  | 'fanfare'
+  | 'deposit'     // Add missing sound types from sound-types.d.ts
+  | 'withdrawal'
+  | 'shame'
+  | 'boost'
+  | 'throne';
 
 // Sound pack types for premium sounds
 export type SoundPackType = 

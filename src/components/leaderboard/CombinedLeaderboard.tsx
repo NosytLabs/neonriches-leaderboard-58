@@ -10,7 +10,7 @@ import { LeaderboardUser } from '@/types/leaderboard';
 import { useAuth } from '@/hooks/useAuth';
 import { useSound } from '@/hooks/use-sound';
 import { MockeryAction } from '@/types/mockery-types';
-import { toTeamColor } from '@/utils/typeConverters';
+import ShameModalWrapper from './components/ShameModalWrapper';
 
 interface CombinedLeaderboardProps {
   maxVisible?: number;
@@ -59,7 +59,7 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
               displayName: `Noble User ${index + 1}`,
               profileImage: `https://source.unsplash.com/random/?portrait&${index}`,
               tier: index < 3 ? 'royal' : index < 6 ? 'silver' : 'basic',
-              team: (['red', 'blue', 'green', 'gold', 'purple'][index % 5]) as any,
+              team: (['red', 'blue', 'green', 'gold', 'purple'][index % 5]),
               rank: index + 1,
               totalSpent: Math.floor(10000 / (index + 1)), 
               previousRank: index + 3 > 10 ? index - 2 : index + 3,
@@ -120,24 +120,6 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
     setVisibleCount(prevCount => prevCount + count);
   };
 
-  // Convert LeaderboardUser array to a type that's compatible with LeaderboardList
-  const convertToCompatibleUser = (users: LeaderboardUser[]): any[] => {
-    return users.map(user => ({
-      ...user,
-      // Add minimal fields expected by LeaderboardList component
-      id: user.id,
-      userId: user.userId,
-      displayName: user.displayName || user.username,
-      username: user.username,
-      profileImage: user.profileImage,
-      totalSpent: user.totalSpent,
-      isVerified: user.isVerified || false,
-      isProtected: user.isProtected,
-      rank: user.rank,
-      team: user.team
-    }));
-  }
-
   return (
     <div className={`${className} ${hideOnMobile ? 'hidden md:block' : ''}`}>
       <Card className="glass-morphism border-white/10">
@@ -173,41 +155,41 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
             
             <TabsContent value="all">
               <LeaderboardList 
-                users={convertToCompatibleUser(leaderboardData)}
+                users={leaderboardData}
                 loading={loading}
                 currentUserId={user?.id || ''}
-                onProfileClick={(userId, username) => console.log(`Clicked on ${username}`)}
-                onShameUser={(user) => console.log(`Shame on ${user.username}`)}
+                onProfileClick={handleProfileClick}
+                onShameUser={handleShameUser}
               />
             </TabsContent>
             
             <TabsContent value="trending">
               <LeaderboardList 
-                users={convertToCompatibleUser(leaderboardData)}
+                users={leaderboardData}
                 loading={loading}
                 currentUserId={user?.id || ''}
-                onProfileClick={(userId, username) => console.log(`Clicked on ${username}`)}
-                onShameUser={(user) => console.log(`Shame on ${user.username}`)}
+                onProfileClick={handleProfileClick}
+                onShameUser={handleShameUser}
               />
             </TabsContent>
             
             <TabsContent value="top">
               <LeaderboardList 
-                users={convertToCompatibleUser(leaderboardData)}
+                users={leaderboardData}
                 loading={loading}
                 currentUserId={user?.id || ''}
-                onProfileClick={(userId, username) => console.log(`Clicked on ${username}`)}
-                onShameUser={(user) => console.log(`Shame on ${user.username}`)}
+                onProfileClick={handleProfileClick}
+                onShameUser={handleShameUser}
               />
             </TabsContent>
             
             <TabsContent value="royal">
               <LeaderboardList 
-                users={convertToCompatibleUser(leaderboardData)}
+                users={leaderboardData}
                 loading={loading}
                 currentUserId={user?.id || ''}
-                onProfileClick={(userId, username) => console.log(`Clicked on ${username}`)}
-                onShameUser={(user) => console.log(`Shame on ${user.username}`)}
+                onProfileClick={handleProfileClick}
+                onShameUser={handleShameUser}
               />
             </TabsContent>
           </Tabs>
@@ -226,17 +208,12 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
             selectedUser={selectedUser}
             shameAction={shameAction}
             onOpenChange={setShowModal}
-            onConfirm={(userId) => console.log(`Confirmed shame on ${userId}`)}
+            onConfirm={(userId) => handleConfirmShame(userId)}
           />
         )}
       </Card>
     </div>
   );
-};
-
-// Placeholder for ShameModalWrapper until we implement it
-const ShameModalWrapper: React.FC<any> = ({ showModal, selectedUser, shameAction, onOpenChange, onConfirm }) => {
-  return null;
 };
 
 export default CombinedLeaderboard;

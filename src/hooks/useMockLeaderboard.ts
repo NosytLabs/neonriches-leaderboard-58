@@ -29,7 +29,7 @@ export const useMockLeaderboard = () => {
             spentAmount: totalSpent, // For backward compatibility
             amountSpent: totalSpent, // For backward compatibility
             isVerified: i < 10,
-            isProtected: i < 5, // Add isProtected property
+            isProtected: i < 5,
             spendStreak: Math.floor(Math.random() * 20),
           } as LeaderboardUser;
         });

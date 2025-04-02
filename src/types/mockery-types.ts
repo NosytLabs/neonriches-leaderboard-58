@@ -1,3 +1,4 @@
+
 import { TeamColor, UserTier } from "./user-types";
 import { LeaderboardUser } from "./leaderboard";
 
@@ -16,7 +17,15 @@ export type MockeryAction =
   | 'shame'
   | 'protection'
   | 'mock'
-  | 'denounce'; 
+  | 'denounce'
+  | 'taunt'
+  | 'challenge'
+  | 'joust'
+  | 'duel'
+  | 'putridEggs'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'; 
 
 export type MockeryTier = 
   | 'common'
@@ -93,6 +102,19 @@ export interface TeamMockeryStats {
   stats: {
     [key in MockeryAction]?: number;
   };
+}
+
+// Export TeamData type for compatibility with other code
+export interface TeamData {
+  id: string;
+  name: string;
+  color: TeamColor;
+  logoUrl: string;
+  members: number;
+  totalContribution: number;
+  rank?: number;
+  previousRank?: number;
+  description?: string;
 }
 
 // Re-export LeaderboardUser to avoid confusion
