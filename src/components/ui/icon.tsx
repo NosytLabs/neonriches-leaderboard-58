@@ -33,9 +33,9 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
     const iconName = (icon || name) as keyof typeof LucideIcons;
     
     // Get the Lucide icon component
-    const IconComponent = LucideIcons[iconName];
+    const LucideIcon = LucideIcons[iconName];
 
-    if (!IconComponent) {
+    if (!LucideIcon) {
       console.warn(`Icon "${iconName}" not found`);
       return null;
     }
@@ -59,16 +59,14 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(
     // Determine animation class
     const animatedClass = animated ? 'animate-pulse' : '';
 
-    // Create props for the icon component
-    const iconProps = {
-      ref,
-      className: cn(sizeClass, colorClass, animatedClass, className),
-      'aria-hidden': true,
-      ...props
-    };
-
-    // Using createElement with the Lucide icon component
-    return React.createElement(IconComponent, iconProps);
+    return (
+      <LucideIcon
+        ref={ref}
+        className={cn(sizeClass, colorClass, animatedClass, className)}
+        aria-hidden="true"
+        {...props}
+      />
+    );
   }
 );
 

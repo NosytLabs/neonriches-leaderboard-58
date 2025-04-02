@@ -5,7 +5,7 @@ export interface UserSettings {
   notifications: boolean;
   emailNotifications: boolean;
   soundEffects: boolean;
-  profileVisibility: 'public' | 'friends' | 'private';
+  profileVisibility: 'public' | 'friends' | 'private' | 'followers';
   showBadges: boolean;
   showRank: boolean;
   darkMode: boolean;
@@ -15,7 +15,7 @@ export interface UserSettings {
   marketingEmails: boolean;
   showEmailOnProfile: boolean;
   rankChangeAlerts: boolean;
-  allowMessages?: boolean; // Adding this optional property
+  allowMessages?: boolean;
   newFollowerAlerts?: boolean;
   teamNotifications?: boolean;
   language?: string;

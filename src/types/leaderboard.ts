@@ -1,106 +1,51 @@
 
-import { TeamColor } from './user';
+import { TeamColor, UserTier } from './mockery-types';
 
-export interface LeaderboardFilter {
-  timeframe?: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all';
-  team?: TeamColor | 'all';
-  limit?: number;
-  tier?: string;
-  skip?: number;
-  search?: string;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-  userId?: string;
-  minRank?: number;
-  maxRank?: number;
-  minSpent?: number;
-  maxSpent?: number;
-}
-
-export interface LeaderboardSortOption {
-  id: string;
-  label: string;
-  value: string;
-  description?: string;
-}
-
-export interface LeaderboardFilterOption {
-  id: string;
-  label: string;
-  value: string;
-  description?: string;
-  icon?: string;
-}
-
-export interface LeaderboardTimeframeOption {
-  id: string;
-  label: string;
-  value: string;
-  description?: string;
-}
-
-export const defaultLeaderboardFilter: LeaderboardFilter = {
-  timeframe: 'all-time',
-  team: 'all',
-  limit: 50,
-  skip: 0,
-  sortBy: 'rank',
-  sortDirection: 'asc'
-};
-
-// Define the LeaderboardUser interface with all necessary properties
 export interface LeaderboardUser {
   id: string;
-  userId: string;
+  userId: string; // Required property to match constraints
   username: string;
-  displayName: string;
+  displayName?: string;
   profileImage: string;
+  team: string;
   tier: string;
-  team: TeamColor;
   rank: number;
-  previousRank: number;
+  previousRank?: number;
   totalSpent: number;
-  spentAmount?: number;
-  walletBalance: number;
-  isVerified: boolean;
-  isProtected: boolean;
-  spendStreak: number;
-  spendChange?: number;
-  rankChange?: number;
-  avatarUrl?: string;
+  isVerified?: boolean;
+  isProtected: boolean; // Required property to match constraints
+  walletBalance?: number;
+  spendStreak?: number;
+  // Additional fields needed across the codebase
   joinedDate?: string;
   joinDate?: string;
+  avatarUrl?: string;
+  amountSpent?: number; // Added to support various code paths
+  spendChange?: number; // Added to support various code paths
 }
 
-// Define typed version of the filter with more specific types
-export interface TypedLeaderboardFilter extends Omit<LeaderboardFilter, 'timeframe' | 'team'> {
+export interface LeaderboardState {
+  users: LeaderboardUser[];
+  loading: boolean;
+  error: string | null;
+  filter: string;
   sortBy: string;
-  timeframe: string;
-  team: string;
-  sortDirection?: 'asc' | 'desc';
+  page: number;
+  itemsPerPage: number;
 }
 
-// Define other needed types for OnChain and SolanaTransaction
-export interface OnChainLeaderboardEntry {
-  address: string;
-  username: string;
+export interface LeaderboardStats {
+  totalUsers: number;
   totalSpent: number;
-  rank: number;
-  lastTx: string;
-  publicKey?: string;
-  amount?: number;
-  timestamp?: number;
-}
-
-export interface SolanaTransaction {
-  id: string;
-  signature: string;
-  amount: number;
-  timestamp: string;
-  block: number;
-  type: 'deposit' | 'withdrawal' | 'transfer' | 'spend';
-  status: 'confirmed' | 'pending' | 'failed';
-  sender: string;
-  receiver?: string;
-  slot?: number;
+  topSpender: {
+    username: string;
+    amount: number;
+  };
+  averageSpent: number;
+  recentActivity: {
+    username: string;
+    action: string;
+    amount: number;
+    timestamp: string;
+  }[];
 }

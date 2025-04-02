@@ -75,12 +75,40 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Adapt consolidated user to standard user profile with type assertion to satisfy TypeScript
-  const userWithDefaultEmail = {
+  // Adapt consolidated user to standard user profile
+  const userForComponents = {
     ...user,
-    email: user.email || ''
+    // Ensure required properties are present
+    profileImage: user.profileImage || '',
+    team: toTeamColor(user.team),
+    previousRank: user.previousRank || 0,
+    // Add missing properties for UserProfile type
+    settings: user.settings || {
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'dark',
+      notifications: true,
+      emailNotifications: false,
+      marketingEmails: false,
+      showRank: true,
+      darkMode: true,
+      soundEffects: true,
+      showBadges: true,
+      showTeam: true,
+      showSpending: true
+    },
+    cosmetics: user.cosmetics || {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    }
   };
-  const userForComponents = adaptToUserProfile(userWithDefaultEmail);
 
   const handleSpend = () => {
     toast({

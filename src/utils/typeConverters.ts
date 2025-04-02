@@ -61,7 +61,31 @@ export const toUserProfile = (user: LeaderboardUser): UserProfile => {
     amountSpent: user.totalSpent || 0,
     isProtected: user.isProtected || false,
     spendStreak: user.spendStreak || 0,
-    settings: {}
+    settings: {
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'dark',
+      notifications: true,
+      emailNotifications: false,
+      marketingEmails: false,
+      showRank: true,
+      darkMode: true,
+      soundEffects: true,
+      showBadges: true,
+      showTeam: true,
+      showSpending: true
+    },
+    cosmetics: {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    }
   };
 };
 
@@ -74,7 +98,7 @@ export const leaderboardUserToProfile = (user: UserProfile): LeaderboardUser => 
     userId: user.id,
     username: user.username,
     displayName: user.displayName,
-    profileImage: user.profileImage,
+    profileImage: user.profileImage || '',
     team: user.team as string,
     tier: user.tier,
     rank: user.rank,

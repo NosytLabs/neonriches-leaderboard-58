@@ -1,98 +1,54 @@
 
 export type SoundType = 
+  | 'click'
   | 'success'
   | 'error'
   | 'notification'
   | 'achievement'
-  | 'deposit'
-  | 'withdraw'
-  | 'unlock'
-  | 'level_up'
-  | 'rank_up'
-  | 'click'
-  | 'toggle'
-  | 'alert'
-  | 'badge'
-  | 'coin'
-  | 'upgrade'
-  | 'down'
-  | 'up'
-  | 'fanfare'
-  | 'coinDrop'
-  | 'swordClash'
-  | 'noblesLaugh'
   | 'purchase'
-  | 'withdrawal'
-  | 'boost'
+  | 'rank-up'
+  | 'level-up'
+  | 'unlock'
+  | 'loading'
+  | 'complete'
+  | 'alert'
   | 'message'
-  | 'mockery'
-  | 'shame'
-  | 'royal'
-  | 'protection'
-  | 'sparkle'
-  | 'royalAnnouncement'
-  | 'trumpet'
-  | 'medallion'
-  | 'seal'
-  | 'transfer'
-  | 'team'
-  | 'reward'
-  | 'parchmentUnfurl'
-  | 'pageChange'
-  | 'wish'
-  | 'inkScribble'
-  | 'hover'
-  | 'advertisement';
+  | 'join'
+  | 'leave'
+  | 'badge'
+  | 'boost'
+  | 'chime'; // Added 'chime' to match the imported type
 
 export interface SoundOptions {
   volume?: number;
   loop?: boolean;
-  playbackRate?: number;
-  onEnd?: () => void;
-}
-
-export interface SoundMap {
-  [key: string]: string;
-}
-
-export interface SoundDefinition {
-  soundType: SoundType;
-  url: string;
-  defaultVolume?: number;
-  defaultPlaybackRate?: number;
-  preload?: boolean;
+  interrupt?: boolean;
+  onComplete?: () => void;
 }
 
 export interface SoundState {
+  enabled: boolean;
   muted: boolean;
   volume: number;
-  theme: 'default' | 'royal' | 'minimal';
-  soundPack: string;
+  currentSound?: string;
+  playing: boolean;
 }
 
-export interface UseSoundHook {
-  playSound: (type: SoundType, options?: SoundOptions) => void;
-  play: (type: SoundType, options?: SoundOptions) => void; // Alias for playSound
-  stopSound: (type?: SoundType) => void;
-  pauseSound: (type?: SoundType) => void;
-  resumeSound: (type?: SoundType) => void;
-  isPlaying: (type: SoundType) => boolean;
-  isSoundEnabled: boolean;
-  currentVolume: number;
-  toggleMuted: () => boolean;
-  toggleSounds: () => boolean;
-  setVolume: (volume: number) => void;
-}
-
-export interface PremiumSoundPackDetails {
+export interface Sound {
   id: string;
-  name: string;
-  description: string;
-  price: number;
-  enabled: boolean;
-  sounds: SoundDefinition[];
-  previewUrl?: string;
-  author?: string;
-  authorUrl?: string;
-  releaseDate?: string;
+  type: SoundType;
+  src: string;
+  volume?: number;
+  loop?: boolean;
+}
+
+export interface SoundContextType {
+  sounds: Sound[];
+  state: SoundState;
+  playSound: (type: SoundType, options?: SoundOptions) => void;
+  stopSound: (type?: SoundType) => void;
+  toggleMute: () => void;
+  toggleSounds: () => void;
+  setVolume: (volume: number) => void;
+  isPlaying: (type?: SoundType) => boolean;
 }

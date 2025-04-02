@@ -1,4 +1,3 @@
-
 import { UserProfile, TeamColor } from '@/types/user-consolidated';
 
 /**
@@ -61,13 +60,66 @@ export const createBasicUserProfile = (
 };
 
 /**
- * Add a profile boost with a specified number of days duration
- * @param user UserProfile to update
- * @param boostType Type of boost
- * @param days Duration in days
- * @param strength Boost strength
- * @returns Updated UserProfile
+ * Creates a demo user profile for testing purposes
+ * @param id User ID
+ * @param username Username
+ * @returns A demo user profile
  */
+export const createDemoUserProfile = (
+  id: string,
+  username: string
+): UserProfile => {
+  const displayName = username.charAt(0).toUpperCase() + username.slice(1);
+  
+  return {
+    id,
+    username,
+    displayName,
+    email: `${username}@example.com`,
+    profileImage: 'https://source.unsplash.com/random/300x300/?portrait',
+    bio: `This is ${displayName}'s profile.`,
+    joinedDate: new Date().toISOString(),
+    isVerified: false,
+    team: 'blue',
+    tier: 'basic',
+    rank: Math.floor(Math.random() * 1000) + 1,
+    previousRank: Math.floor(Math.random() * 1000) + 1,
+    walletBalance: Math.floor(Math.random() * 1000),
+    totalSpent: Math.floor(Math.random() * 1000),
+    amountSpent: Math.floor(Math.random() * 1000),
+    spendStreak: Math.floor(Math.random() * 10),
+    settings: {
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'dark',
+      notifications: true,
+      emailNotifications: false,
+      marketingEmails: false,
+      showRank: true,
+      darkMode: true,
+      soundEffects: true,
+      showBadges: true,
+      showTeam: true,
+      showSpending: true
+    },
+    cosmetics: {
+      border: [],
+      color: [],
+      font: [],
+      emoji: [],
+      title: [],
+      background: [],
+      effect: [],
+      badge: [],
+      theme: []
+    },
+    socialLinks: [],
+    following: [],
+    followers: []
+  };
+};
+
+// Rest of the existing functions
 export const addProfileBoostWithDays = (
   user: UserProfile,
   boostType: string,
