@@ -1,101 +1,95 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { CheckIcon, XIcon } from "lucide-react";
-import { formatCurrency } from "@/utils/formatters";
-import { SubscriptionPlan } from "@/types/subscription";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Check, Star } from 'lucide-react';
+import { SubscriptionPlan, SubscriptionBillingInterval } from '@/types/subscription';
+import { cn } from '@/lib/utils';
 
-export interface SubscriptionPlanCardProps {
+interface SubscriptionPlanCardProps {
   plan: SubscriptionPlan;
-  onSelect?: (planId: string) => void;
-  selected?: boolean;
-  disabled?: boolean;
-  billingInterval?: 'monthly' | 'yearly'; // Add proper typing for billingInterval
-}
-
-interface PlanFeature {
-  name: string;
-  included: boolean;
+  isCurrentPlan?: boolean;
+  onSelectPlan?: () => void;
+  billingInterval?: SubscriptionBillingInterval; // Add support for billingInterval
 }
 
 const SubscriptionPlanCard: React.FC<SubscriptionPlanCardProps> = ({
   plan,
-  onSelect,
-  selected = false,
-  disabled = false,
+  isCurrentPlan,
+  onSelectPlan,
   billingInterval = 'monthly'
 }) => {
-  // Safely handle plan.price which might be null or a complex object
-  const displayPrice = plan.price 
-    ? (typeof plan.price === 'object' 
-      ? (plan.price[billingInterval] ?? plan.price.monthly ?? 0)
-      : plan.price) 
-    : 0;
-
-  const handleSelect = () => {
-    if (!disabled && onSelect) {
-      onSelect(plan.id);
+  // Calculate price based on billing interval
+  const getPrice = () => {
+    if (typeof plan.price === 'number') {
+      return plan.price;
     }
+    
+    return billingInterval === 'monthly' 
+      ? plan.price?.monthly 
+      : plan.price?.yearly;
   };
 
+  // Format price for display
+  const formattedPrice = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+  }).format(getPrice() || 0);
+
   return (
-    <Card 
-      className={`border-2 transition-all ${
-        selected ? "border-primary" : "border-border"
-      } ${disabled ? "opacity-60" : "hover:border-primary/50"}`}
-    >
+    <Card className={cn(
+      'relative overflow-hidden transition-all',
+      plan.popular ? 'border-royal-gold shadow-lg shadow-royal-gold/10' : 'border-border'
+    )}>
+      {plan.popular && (
+        <div className="absolute top-0 right-0">
+          <Badge className="m-2 bg-royal-gold text-black font-medium">
+            <Star className="mr-1 h-3 w-3" /> Popular
+          </Badge>
+        </div>
+      )}
+
       <CardHeader>
-        <div className="flex justify-between items-start">
-          <div>
-            <CardTitle>{plan.name}</CardTitle>
-            <CardDescription>{plan.description}</CardDescription>
-          </div>
-          {plan.popular && <Badge variant="secondary">Popular</Badge>}
+        <CardTitle className="text-xl">{plan.name}</CardTitle>
+        <div className="mt-1">
+          <span className="text-3xl font-bold">{formattedPrice}</span>
+          <span className="text-muted-foreground ml-1">/{billingInterval}</span>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="mb-4">
-          <div className="text-3xl font-bold">
-            {formatCurrency(displayPrice)}{" "}
-            <span className="text-sm font-normal text-muted-foreground">
-              /{billingInterval === 'yearly' ? 'year' : 'month'}
-            </span>
-          </div>
-        </div>
-        <ul className="space-y-2">
-          {(plan.features || []).map((feature, i) => {
-            // Handle both string features and object features
-            const featureObj: PlanFeature = typeof feature === 'string' 
-              ? { name: feature, included: true } 
-              : feature as PlanFeature;
 
+      <CardContent className="space-y-4">
+        <p className="text-muted-foreground">{plan.description}</p>
+
+        <div className="space-y-2">
+          {plan.features.map((feature, index) => {
+            // Handle both string features and object features with included property
+            const featureName = typeof feature === 'string' ? feature : feature.name;
+            const isIncluded = typeof feature === 'string' ? true : feature.included;
+            
             return (
-              <li key={i} className="flex items-center gap-2">
-                {featureObj.included ? (
-                  <CheckIcon className="h-4 w-4 text-primary" />
-                ) : (
-                  <XIcon className="h-4 w-4 text-muted-foreground" />
-                )}
-                <span 
-                  className={featureObj.included ? "" : "text-muted-foreground"}
-                >
-                  {featureObj.name}
-                </span>
-              </li>
+              <div key={index} className="flex items-center">
+                <div className={`mr-2 ${isIncluded ? 'text-green-500' : 'text-muted-foreground'}`}>
+                  {isIncluded ? <Check className="h-4 w-4" /> : <span className="block h-4 w-4">-</span>}
+                </div>
+                <span className={isIncluded ? '' : 'text-muted-foreground'}>{featureName}</span>
+              </div>
             );
           })}
-        </ul>
+        </div>
       </CardContent>
+
       <CardFooter>
-        <Button 
-          className="w-full" 
-          onClick={handleSelect}
-          disabled={disabled}
-          variant={selected ? "default" : "outline"}
+        <Button
+          onClick={onSelectPlan}
+          className={cn(
+            'w-full',
+            plan.popular ? 'bg-royal-gold text-black hover:bg-royal-gold/90' : ''
+          )}
+          disabled={isCurrentPlan}
         >
-          {selected ? "Selected" : "Select plan"}
+          {isCurrentPlan ? 'Current Plan' : plan.cta || 'Select Plan'}
         </Button>
       </CardFooter>
     </Card>

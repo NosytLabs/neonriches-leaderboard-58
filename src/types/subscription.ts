@@ -32,3 +32,16 @@ export interface SubscriptionManagementProps {
   onCancelSubscription?: () => Promise<void>;
   onReactivateSubscription?: () => Promise<void>;
 }
+
+// Add Feature export for ProfileMarketingFeatures
+export type Feature = 
+  | 'marketing-basic'
+  | 'marketing-premium'
+  | 'marketing-royal'
+  | 'profile-links'
+  | 'profile-analytics'
+  | 'profile-customization'
+  | 'profile-protection'
+  | 'visibility-enhanced'
+  | 'mockery-access'
+  | 'boost-effects';

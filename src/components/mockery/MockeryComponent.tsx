@@ -4,18 +4,66 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Crown, Shield, AlertTriangle } from 'lucide-react';
-import { 
-  getMockeryName, 
-  getMockeryDescription,
-  getMockeryActionPrice,
-  getMockeryTier,
-  getMockeryTierColorClass,
-  getMockeryActionIcon
-} from '@/utils/mockeryUtils';
 import { MockeryAction } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
 
-const MockeryComponent = () => {
+// Import mockery utility functions
+import { 
+  getMockeryActionDisplayName as getMockeryName, 
+  getMockeryActionIcons as getMockeryActionIcon
+} from '@/utils/mockeryActionUtils';
+
+// Add mock utility functions that can be implemented later properly
+const getMockeryDescription = (action: MockeryAction): string => {
+  const descriptions: Record<string, string> = {
+    tomato: 'Throw a tomato at the target',
+    egg: 'Throw an egg at the target',
+    crown: 'Pretend to crown the target mockingly',
+    stocks: 'Put the target in virtual stocks',
+    jester: 'Designate the target as a court jester'
+  };
+  return descriptions[action] || 'Mock the target';
+};
+
+const getMockeryTier = (action: MockeryAction): string => {
+  const tiers: Record<string, string> = {
+    tomato: 'common',
+    egg: 'common',
+    crown: 'rare',
+    stocks: 'epic',
+    jester: 'uncommon'
+  };
+  return tiers[action] || 'common';
+};
+
+const getMockeryTierColorClass = (tier: string): string => {
+  const colorClasses: Record<string, string> = {
+    common: 'text-gray-300',
+    uncommon: 'text-green-300',
+    rare: 'text-blue-300',
+    epic: 'text-purple-300',
+    legendary: 'text-orange-300'
+  };
+  return colorClasses[tier] || 'text-gray-300';
+};
+
+const getMockeryActionPrice = (action: MockeryAction): number => {
+  const prices: Record<string, number> = {
+    tomato: 5,
+    egg: 10,
+    crown: 50,
+    stocks: 75,
+    jester: 25
+  };
+  return prices[action] || 15;
+};
+
+interface MockeryComponentProps {
+  onMockUser: (actionType: string, targetUserId: string) => Promise<void>;
+  costForAction: (action: MockeryAction) => number;
+}
+
+const MockeryComponent: React.FC<MockeryComponentProps> = ({ onMockUser, costForAction }) => {
   const { toast } = useToast();
   const mockeryActions: MockeryAction[] = [
     'tomato',  
@@ -30,6 +78,9 @@ const MockeryComponent = () => {
       title: "Mockery Deployed!",
       description: `You have successfully deployed ${getMockeryName(action)}.`,
     });
+    
+    // In a real implementation, this would call onMockUser with a target ID
+    onMockUser(action, 'mock-target-123');
   };
 
   return (
@@ -50,9 +101,9 @@ const MockeryComponent = () => {
             {mockeryActions.map((action) => {
               const name = getMockeryName(action);
               const tier = getMockeryTier(action);
-              const price = getMockeryActionPrice(action);
+              const price = costForAction(action);
               const tierColorClass = getMockeryTierColorClass(tier);
-              const ActionIcon = getMockeryActionIcon(action);
+              const ActionIcon = AlertTriangle; // Placeholder until we have proper icons
               
               return (
                 <div 
@@ -61,7 +112,7 @@ const MockeryComponent = () => {
                   onClick={() => handleMockery(action)}
                 >
                   <div className="flex items-center mb-2">
-                    {React.createElement(ActionIcon, { className: "h-5 w-5 mr-2" })}
+                    <ActionIcon className="h-5 w-5 mr-2" />
                     <span className="font-medium text-sm">{name}</span>
                   </div>
                   <div className="flex justify-between items-center">

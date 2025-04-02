@@ -41,7 +41,8 @@ export { Shell } from './shell';
 export { 
   Toast, 
   ToastProvider, 
-  ToastViewport 
+  ToastViewport,
+  Toaster // Add the Toaster export
 } from './toast';
 
 // Export the remaining functionality from toast

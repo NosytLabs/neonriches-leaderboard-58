@@ -1,3 +1,4 @@
+
 import { MockeryAction, MockeryTier } from '@/types/mockery-types';
 
 /**
@@ -32,7 +33,15 @@ export const VALID_MOCKERY_ACTIONS: MockeryAction[] = [
   'protection',
   'laugh',
   'fish',
-  'taunt'
+  'taunt',
+  'rotten_egg',
+  'flame',
+  'heart',
+  'thumbs_down',
+  'royal_decree',
+  'shame_certificate',
+  'insult',
+  'humiliate'
 ];
 
 // Re-export MockeryAction type for components that import from this file
@@ -87,18 +96,26 @@ export function getMockeryActionDisplayName(action: MockeryAction): string {
     protection: 'Protection',
     laugh: 'Laugh',
     fish: 'Fish',
-    taunt: 'Taunt'
+    taunt: 'Taunt',
+    rotten_egg: 'Rotten Egg',
+    flame: 'Flame',
+    heart: 'Heart',
+    thumbs_down: 'Thumbs Down',
+    royal_decree: 'Royal Decree',
+    shame_certificate: 'Shame Certificate',
+    insult: 'Insult',
+    humiliate: 'Humiliate'
   };
   
   return displayNames[action] || 'Unknown';
 }
 
 // Fix the icons record to include all required actions
-export const mockeryActionIcons: Record<string, string> = {
+export const mockeryActionIcons: Record<MockeryAction, string> = {
   tomato: 'tomato',
   egg: 'egg',
   thumbsDown: 'thumbs-down',
-  thumbs_down: 'thumbs-down', // Added for compatibility
+  thumbs_down: 'thumbs-down',
   shame: 'shame',
   jester: 'jester',
   mock: 'mock',
@@ -108,14 +125,18 @@ export const mockeryActionIcons: Record<string, string> = {
   crown: 'crown',
   stocks: 'stocks',
   putridEgg: 'putrid-egg',
-  rotten_egg: 'rotten-egg', // Added for compatibility
+  rotten_egg: 'rotten-egg',
   silence: 'silence',
-  flame: 'flame', // Added for compatibility
-  heart: 'heart', // Added for compatibility
+  flame: 'flame',
+  heart: 'heart',
   taunt: 'taunt',
-  protection: 'protection', // Added for compatibility
-  royal_decree: 'royal-decree', // Added for compatibility
-  shame_certificate: 'shame-certificate', // Added for compatibility
-  insult: 'insult', // Added for compatibility
-  humiliate: 'humiliate' // Added for compatibility
+  protection: 'protection',
+  royal_decree: 'royal-decree',
+  shame_certificate: 'shame-certificate',
+  insult: 'insult',
+  humiliate: 'humiliate',
+  courtJester: 'court-jester',
+  smokeBomb: 'smoke-bomb',
+  laugh: 'laugh',
+  fish: 'fish'
 };

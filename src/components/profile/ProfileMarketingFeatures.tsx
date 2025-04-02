@@ -1,11 +1,9 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Sparkles, Link, BarChart, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useFeatureAccess } from '@/hooks/use-feature-access';
-import { Feature } from '@/types/subscription'; 
 import { UserProfile } from '@/types/user';
 import { useMarketing } from '@/hooks/use-marketing';
 

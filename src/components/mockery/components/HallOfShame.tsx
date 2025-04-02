@@ -17,11 +17,11 @@ interface MockedUser {
   mockeryCount?: number;
 }
 
-interface HallOfShameProps {
+export interface HallOfShameProps {
   mockedUsers: MockedUser[];
 }
 
-const HallOfShame: React.FC<HallOfShameProps> = ({ mockedUsers }) => {
+const HallOfShame: React.FC<HallOfShameProps> = ({ mockedUsers = [] }) => {
   const getTimeSince = (timestamp: string) => {
     const now = new Date();
     const mockedTime = new Date(timestamp);

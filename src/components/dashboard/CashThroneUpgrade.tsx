@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/badge'; // Fixed import to use lowercase
 import { Button } from '@/components/ui/button';
 import { Crown, CreditCard, ChevronRight, Check, Zap, DollarSign } from 'lucide-react';
 import { UserProfile } from '@/types/user';

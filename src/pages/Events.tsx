@@ -1,9 +1,8 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Shell } from '@/components/ui/shell';
-import EventList from '@/components/events/EventList';
-import { useEvents } from '@/hooks/useEvents';
+import { Shell } from '@/components/ui/shell'; // Fixed lowercase import
 
 const Events = () => {
   const navigate = useNavigate();

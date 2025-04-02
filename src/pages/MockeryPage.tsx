@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shell } from '@/components/ui/shell';
@@ -6,12 +7,40 @@ import { Badge } from '@/components/ui/badge'; // Fixed casing
 import { useMockery } from '@/hooks/use-mockery';
 import MockeryComponent from '@/components/mockery/MockeryComponent';
 import HallOfShame from '@/components/mockery/components/HallOfShame';
+import { MockeryAction } from '@/types/mockery-types';
+
+// Mock data for the Hall of Shame
+const mockShameUsers = [
+  {
+    username: "richSpender123",
+    displayName: "Rich Spender",
+    avatarUrl: "https://randomuser.me/api/portraits/men/1.jpg",
+    mockedReason: "Flaunting wealth in the town square",
+    mockedTimestamp: new Date(Date.now() - 3600000).toISOString(),
+    mockedBy: "kingmaker",
+    mockedTier: "rare",
+    mockeryCount: 3
+  },
+  {
+    username: "royalWannabe",
+    displayName: "Royal Wannabe",
+    avatarUrl: "https://randomuser.me/api/portraits/women/2.jpg",
+    mockedReason: "Pretended to be of royal blood",
+    mockedTimestamp: new Date(Date.now() - 86400000).toISOString(),
+    mockedBy: "truthSeeker",
+    mockedTier: "common",
+    mockeryCount: 1
+  }
+];
 
 const MockeryPage = () => {
   const navigate = useNavigate();
   const { targetUser, mockUser, isMocking, mockeryResult, costForAction, resetMockery } = useMockery();
 
   const handleMockUser = async (actionType: string, targetUserId: string) => {
+    // Convert string to MockeryAction type
+    const mockeryAction = actionType as MockeryAction;
+    
     // Mock implementation: Replace with actual user retrieval logic
     const targetUser = {
       id: targetUserId,
@@ -23,7 +52,7 @@ const MockeryPage = () => {
       rank: 1
     };
 
-    await mockUser(actionType, targetUser);
+    await mockUser(mockeryAction, targetUser);
   };
 
   const handleGoBack = () => {
@@ -49,7 +78,7 @@ const MockeryPage = () => {
             <MockeryComponent onMockUser={handleMockUser} costForAction={costForAction} />
           </div>
           <div>
-            <HallOfShame />
+            <HallOfShame mockedUsers={mockShameUsers} />
           </div>
         </div>
       </div>
