@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/auth';
 import { TeamData, TeamColor } from '@/types/team';
-import { getTeamColor, getTeamName, getTeamMotto, getTeamBenefits } from '@/utils/teamUtils';
+import teamService from '@/services/teamService';
 
 const useTeam = () => {
   const { user, updateUser } = useAuth();
@@ -11,7 +12,7 @@ const useTeam = () => {
   const currentTeam = user?.team || 'none';
   
   // Define mock team data for the Teams page
-  const allTeams: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'neutral', 'silver', 'bronze', 'none'];
+  const allTeams: TeamColor[] = teamService.getAllTeams();
   
   const changeTeam = async (newTeam: TeamColor): Promise<boolean> => {
     if (!user) {
@@ -56,10 +57,10 @@ const useTeam = () => {
     changeTeam,
     isLoading,
     error,
-    getTeamColor,
-    getTeamName,
-    getTeamMotto,
-    getTeamBenefits,
+    getTeamColor: teamService.getTeamColor.bind(teamService),
+    getTeamName: teamService.getTeamName.bind(teamService),
+    getTeamMotto: teamService.getTeamMotto.bind(teamService),
+    getTeamBenefits: teamService.getTeamBenefits.bind(teamService),
     allTeams
   };
 };

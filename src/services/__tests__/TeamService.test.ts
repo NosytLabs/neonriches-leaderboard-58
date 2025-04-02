@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import teamService from '@/services/teamService'; // Fixed import casing
+import teamService from '@/services/teamService';
+import { TeamColor } from '@/types/mockery-types';
 
 describe('TeamService', () => {
   it('renders without crashing', () => {
@@ -18,5 +19,24 @@ describe('TeamService', () => {
   it('gets team name correctly', () => {
     const blueName = teamService.getTeamName('blue');
     expect(blueName).toBe('Blue Team');
+  });
+
+  it('gets team motto correctly', () => {
+    const greenMotto = teamService.getTeamMotto('green');
+    expect(greenMotto).toBe('Growth and Prosperity!');
+  });
+
+  it('gets team benefits correctly', () => {
+    const benefits = teamService.getTeamBenefits('purple');
+    expect(benefits).toContain('Team profile badge');
+    expect(benefits).toContain('Purple-themed profile items');
+  });
+
+  it('returns default values for unknown teams', () => {
+    const unknownTeamColor = teamService.getTeamColor('unknown' as TeamColor);
+    const unknownTeamName = teamService.getTeamName('unknown' as TeamColor);
+    
+    expect(unknownTeamColor).toBe('text-gray-400');
+    expect(unknownTeamName).toBe('Unknown Team');
   });
 });
