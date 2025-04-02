@@ -10,7 +10,7 @@ import {
   SelectValue 
 } from '@/components/ui/select';
 import { Search } from 'lucide-react';
-import { LeaderboardFilter, TeamColor } from '@/types/mockery-types';
+import { LeaderboardFilter, TeamColor, UserTier } from '@/types/mockery-types';
 
 interface LeaderboardFiltersProps {
   filter: LeaderboardFilter;
@@ -92,7 +92,7 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
           
           <Select
             value={filter.tier}
-            onValueChange={(value) => onFilterChange({ tier: value })}
+            onValueChange={(value: 'all' | UserTier) => onFilterChange({ tier: value })}
           >
             <SelectTrigger className="bg-black/40 border-white/10">
               <SelectValue placeholder="Tier" />

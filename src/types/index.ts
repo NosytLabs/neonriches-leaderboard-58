@@ -26,10 +26,31 @@ export * from './sound-types';
 import { UserProfile } from './user-consolidated';
 export type User = UserProfile;
 
-// Fix duplicate exports by explicitly naming them
-import { TeamType as MockeryTeamType } from './mockery-types';
-import { UserCosmetics as MockeryUserCosmetics } from './user-consolidated';
-import { ProfileBoost as UserProfileBoost } from './user-consolidated';
-import { TeamColor as MockeryTeamColor } from './mockery-types';
-import { SoundOptions as MockerySoundOptions } from './mockery-types';
-import { SoundType as MockerySoundType } from './mockery-types';
+// Export aliases to avoid conflicts with duplicate exports
+import { 
+  TeamType as MockeryTeamType, 
+  TeamColor as MockeryTeamColor,
+  SoundOptions as MockerySoundOptions,
+  SoundType as MockerySoundType,
+  UserProfile as MockeryUserProfile,
+  UserSettings as MockeryUserSettings
+} from './mockery-types';
+
+import {
+  UserCosmetics as ConsolidatedUserCosmetics,
+  SocialLink as ConsolidatedSocialLink,
+  ProfileBoost as ConsolidatedProfileBoost
+} from './user-consolidated';
+
+// Export all the aliased types
+export type {
+  MockeryTeamType,
+  MockeryTeamColor,
+  MockerySoundOptions,
+  MockerySoundType,
+  MockeryUserProfile,
+  MockeryUserSettings,
+  ConsolidatedUserCosmetics,
+  ConsolidatedSocialLink,
+  ConsolidatedProfileBoost
+};

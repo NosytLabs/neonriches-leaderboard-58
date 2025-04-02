@@ -13,7 +13,11 @@ export type BoostEffectType =
   | 'discount'
   | 'multiplier'
   | 'feature'
-  | 'cosmetic';
+  | 'cosmetic'
+  | 'effect'
+  | 'animation'
+  | 'appearance'
+  | 'badge';
 
 export interface BoostEffect {
   id: string;
@@ -30,6 +34,7 @@ export interface BoostEffect {
   requiredTier?: UserTier;
   stackable?: boolean;
   effectId?: string; // Added for compatibility with ProfileBoostDisplay
+  cssClass?: string; // Added for styling support
 }
 
 export interface ProfileBoost {
@@ -42,6 +47,8 @@ export interface ProfileBoost {
   active: boolean;
   value?: number | string;
   metadata?: Record<string, any>;
+  level?: number;
+  endDate?: string; // For backwards compatibility
 }
 
 export interface BoostService {

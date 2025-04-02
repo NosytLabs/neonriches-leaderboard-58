@@ -1,11 +1,10 @@
 
-import { RefObject } from 'react';
-
 export type SoundType = 
-  'success' | 'error' | 'notification' | 'purchase' | 
-  'achievement' | 'deposit' | 'withdrawal' | 'rank_up' | 
-  'level_up' | 'coin' | 'shame' | 'mockery' | 'boost' | 
-  'throne' | 'royal' | 'click';
+  | 'success' | 'error' | 'notification' | 'purchase' | 
+  | 'achievement' | 'deposit' | 'withdrawal' | 'rank_up' | 
+  | 'level_up' | 'coin' | 'shame' | 'mockery' | 'boost' | 
+  | 'throne' | 'royal' | 'click'
+  | 'message' | 'reward' | 'chime' | 'fanfare' | 'coinDrop';
 
 export interface AudioOptions {
   volume?: number;

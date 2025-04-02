@@ -3,10 +3,13 @@
  * Team type definitions
  */
 
-import { TeamColor, TeamData } from './mockery-types';
+import { TeamColor as MockeryTeamColor, TeamData as MockeryTeamData } from './mockery-types';
 
 // Re-export TeamData for backward compatibility
-export type { TeamData };
+export type { MockeryTeamData as TeamData };
+
+// Export TeamColor - this is critical for fixing many errors
+export type TeamColor = MockeryTeamColor;
 
 export interface TeamMember {
   id: string;

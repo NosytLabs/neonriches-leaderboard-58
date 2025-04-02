@@ -1,88 +1,89 @@
 
-// Import partial type from sound-types
 import { SoundType } from '@/types/sound-types';
 
-type PremiumSoundAsset = {
+interface PremiumSoundPack {
   name: string;
   description: string;
-  source: string;
-  volume: number;
-};
+  baseUrl: string;
+  soundMappings: Record<string, SoundType>;
+  customVolumes?: Partial<Record<SoundType, number>>;
+}
 
-// Define premium sound assets
-export const premiumSoundAssets: Record<string, PremiumSoundAsset> = {
-  'royal-notification': {
-    name: 'Royal Notification',
-    description: 'A majestic notification sound for royalty',
-    source: '/sounds/premium/royal-notification.mp3',
-    volume: 0.7
+export const premiumSoundPacks: Record<string, PremiumSoundPack> = {
+  royal: {
+    name: 'Royal Court',
+    description: 'Elegant and regal sounds befitting your noble status',
+    baseUrl: '/sounds/premium/royal/',
+    soundMappings: {
+      'success.mp3': 'success',
+      'error.mp3': 'error',
+      'notification.mp3': 'notification',
+      'achievement.mp3': 'achievement',
+      'purchase.mp3': 'purchase',
+      'deposit.mp3': 'deposit',
+      'withdrawal.mp3': 'withdrawal',
+      'rank_up.mp3': 'rank_up',
+      'mockery.mp3': 'mockery',
+      'royal.mp3': 'royal',
+      'click.mp3': 'click',
+      'message.mp3': 'message',
+      'coin.mp3': 'coin',
+      'level_up.mp3': 'level_up',
+      'throne.mp3': 'throne',
+      'boost.mp3': 'boost',
+      'shame.mp3': 'shame',
+      'reward.mp3': 'reward',
+      'chime.mp3': 'chime',
+      'fanfare.mp3': 'fanfare',
+      'coinDrop.mp3': 'coinDrop'
+    },
+    customVolumes: {
+      'success': 0.7,
+      'error': 0.6,
+      'notification': 0.5,
+      'achievement': 0.8,
+      'coin': 0.4,
+      'level_up': 0.9,
+      'royal': 0.7,
+      'mockery': 0.8,
+      'throne': 0.9,
+      'shame': 0.75
+    }
   },
-  'royal-success': {
-    name: 'Royal Success',
-    description: 'Celebrate success with royal fanfare',
-    source: '/sounds/premium/royal-success.mp3',
-    volume: 0.7
+  
+  medieval: {
+    name: 'Medieval Ambiance',
+    description: 'Authentic sounds from the days of old',
+    baseUrl: '/sounds/premium/medieval/',
+    soundMappings: {
+      'success.mp3': 'success',
+      'error.mp3': 'error',
+      'notification.mp3': 'notification',
+      'achievement.mp3': 'achievement',
+      'purchase.mp3': 'purchase',
+      'deposit.mp3': 'deposit',
+      'withdrawal.mp3': 'withdrawal',
+      'rank_up.mp3': 'rank_up',
+      'mockery.mp3': 'mockery',
+      'royal.mp3': 'royal',
+      'click.mp3': 'click',
+      'message.mp3': 'message',
+      'coin.mp3': 'coin',
+      'level_up.mp3': 'level_up'
+    }
   },
-  'royal-error': {
-    name: 'Royal Error',
-    description: 'A dignified error tone',
-    source: '/sounds/premium/royal-error.mp3',
-    volume: 0.6
-  },
-  'level-up': {
-    name: 'Level Up',
-    description: 'Classic gaming level up sound',
-    source: '/sounds/premium/level-up.mp3',
-    volume: 0.7
-  },
-  'game-over': {
-    name: 'Game Over',
-    description: 'Retro game over tone',
-    source: '/sounds/premium/game-over.mp3',
-    volume: 0.6
-  },
-  'power-up': {
-    name: 'Power Up',
-    description: 'Arcade-style power up sound',
-    source: '/sounds/premium/power-up.mp3',
-    volume: 0.7
-  },
-  'gentle-stream': {
-    name: 'Gentle Stream',
-    description: 'Calming water sounds',
-    source: '/sounds/premium/gentle-stream.mp3',
-    volume: 0.5
-  },
-  'forest-birds': {
-    name: 'Forest Birds',
-    description: 'Peaceful bird chirping',
-    source: '/sounds/premium/forest-birds.mp3',
-    volume: 0.5
-  },
-  'ocean-waves': {
-    name: 'Ocean Waves',
-    description: 'Soothing ocean wave sounds',
-    source: '/sounds/premium/ocean-waves.mp3',
-    volume: 0.5
+  
+  minimal: {
+    name: 'Minimalist',
+    description: 'Subtle, unobtrusive sounds for focused users',
+    baseUrl: '/sounds/premium/minimal/',
+    soundMappings: {
+      'success.mp3': 'success',
+      'error.mp3': 'error',
+      'notification.mp3': 'notification',
+      'click.mp3': 'click'
+    }
   }
 };
 
-// Define volume adjustments for different sound types
-export const soundTypeVolumes: Partial<Record<SoundType, number>> = {
-  click: 0.4,
-  success: 0.7,
-  error: 0.6,
-  notification: 0.7,
-  achievement: 0.8,
-  levelUp: 0.7,
-  purchase: 0.6,
-  royal: 0.8,
-  claim: 0.7,
-  coin: 0.6,
-  swoosh: 0.5,
-  message: 0.7,
-  reward: 0.8,
-  fanfare: 0.7,
-  rank_up: 0.8,
-  transfer: 0.6
-};
+export default premiumSoundPacks;

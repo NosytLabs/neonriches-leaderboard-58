@@ -40,3 +40,9 @@ export interface SoundContextType {
   setVolume: (volume: number) => void;
   volume: number;
 }
+
+// Alias for backwards compatibility
+export type UseSoundHook = SoundHook;
+
+// Re-export SoundType and SoundOptions
+export type { SoundType, SoundOptions };

@@ -1,15 +1,18 @@
+
 import React, { useRef, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download, Share2, Award, Crown, Shield, Wallet, ExternalLink } from 'lucide-react';
-import { UserProfile } from '@/types/user';
-import { Certificate } from '@/types/certificate';
+import { UserProfile } from '@/types/user-consolidated';
+import { Certificate } from '@/types/certificates';
 import { formatDate } from '@/utils/formatters/dateFormatters';
-import { getTeamName, getTeamColor, getTeamTailwindBgColor } from '@/utils/teamUtils';
+import { TeamColor } from '@/types/team';
 import { useSolana } from '@/contexts/SolanaContext';
 import html2canvas from 'html2canvas';
-import { TeamColor } from '@/types/team';
+
+// Import directly from teamUtils
+import { getTeamName, getTeamColor, getTeamTailwindBgColor } from '@/utils/teamUtils';
 
 interface TeamCertificateProps {
   user: UserProfile;
@@ -283,11 +286,11 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
               Certificate #{certificate?.id || user.id}
             </div>
             
-            {certificate && certificate.isMinted && certificate.mintAddress && (
+            {certificate && certificate.isMinted && (certificate.nftAddress || certificate.mintAddress) && (
               <div className="flex justify-center mt-2">
                 <Badge variant="outline" className="bg-green-500/20 text-green-600">
                   <Shield className="h-3 w-3 mr-1" />
-                  Verified On-Chain: {certificate.mintAddress.substring(0, 6)}...
+                  Verified On-Chain: {(certificate.nftAddress || certificate.mintAddress)?.substring(0, 6)}...
                 </Badge>
               </div>
             )}
@@ -328,11 +331,11 @@ const TeamCertificate: React.FC<TeamCertificateProps> = ({
           </Button>
         )}
         
-        {certificate && certificate.isMinted && certificate.mintAddress && (
+        {certificate && certificate.isMinted && (certificate.nftAddress || certificate.mintAddress) && (
           <Button
             variant="outline"
             className="glass-morphism border-white/10 bg-purple-500/10"
-            onClick={() => window.open(`https://explorer.solana.com/address/${certificate.mintAddress}`, '_blank')}
+            onClick={() => window.open(`https://explorer.solana.com/address/${certificate.nftAddress || certificate.mintAddress}`, '_blank')}
           >
             <ExternalLink className="mr-2 h-4 w-4" />
             View NFT on Solana

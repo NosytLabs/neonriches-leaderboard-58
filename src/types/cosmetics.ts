@@ -1,21 +1,24 @@
 
 /**
- * Cosmetics type definitions
+ * Cosmetic items and related types
  */
 
-export type CosmeticCategory = 
+export type CosmeticType = 
   | 'border'
   | 'color'
   | 'font'
   | 'emoji'
   | 'title'
+  | 'badge'
   | 'background'
   | 'effect'
-  | 'badge'
   | 'theme'
-  | 'appearance' // Added to match existing code
-  | 'profile'    // Added to match existing code
-  | 'interaction'; // Added to match existing code
+  | 'profile'
+  | 'appearance'
+  | 'interaction'
+  | 'animation';
+
+export type CosmeticCategory = CosmeticType;
 
 export type CosmeticRarity = 
   | 'common'
@@ -23,35 +26,38 @@ export type CosmeticRarity =
   | 'rare'
   | 'epic'
   | 'legendary'
-  | 'mythic'  // Added to match existing code
-  | 'unique'; // Added to match existing code
-
-export type CosmeticType = 
-  | 'standard'
-  | 'premium'
-  | 'exclusive'
-  | 'event'
-  | 'seasonal'
-  | 'limited';
+  | 'mythic'
+  | 'unique'
+  | 'royal';
 
 export interface CosmeticItem {
   id: string;
   name: string;
   description: string;
-  price: number;
-  category: CosmeticCategory;
+  category: CosmeticType;
   rarity: CosmeticRarity;
-  enabled: boolean;
+  price: number;
   preview?: string;
-  previewUrl?: string; // Added for compatibility
+  previewUrl?: string;
+  imageSrc?: string;
   image?: string;
-  imageSrc?: string; // Added for compatibility
-  cost?: number; // Added for compatibility
-  cssClass?: string; // Added for compatibility
-  type?: CosmeticType; // Added for compatibility
+  enabled: boolean;
+  type?: CosmeticType;
+  cssClass?: string;
+  cost?: number;
+}
+
+export interface SocialLink {
+  id?: string;
+  type: string;
+  url: string;
+  displayName?: string;
+  icon?: string;
+  active?: boolean;
 }
 
 export interface UserCosmetics {
+  [key: string]: string[];
   border: string[];
   color: string[];
   font: string[];
@@ -61,26 +67,19 @@ export interface UserCosmetics {
   effect: string[];
   badge: string[];
   theme: string[];
-  [key: string]: string[];
 }
 
-export interface SocialLink {
-  id?: string;
-  platform: string;
-  url: string;
-  username?: string;
-  isVerified?: boolean;
+export type UserCosmeticState = Record<CosmeticType, string | null>;
+
+export interface CosmeticCategory {
+  id: string;
+  name: string;
+  description: string;
+  items: CosmeticItem[];
 }
 
-export interface UserCosmeticState {
-  activeBorder?: string;
-  activeColor?: string;
-  activeFont?: string;
-  activeEmoji?: string[];
-  activeTitle?: string;
-  activeBackground?: string;
-  activeEffect?: string;
-  activeBadge?: string[];
-  activeTheme?: string;
-  [key: string]: string | string[] | undefined;
+export interface CosmeticStoreSection {
+  id: string;
+  title: string;
+  items: CosmeticItem[];
 }

@@ -46,7 +46,19 @@ export const adaptIconColor = (color: IconColor | string | undefined): string =>
   return `text-${color}`;
 };
 
+/**
+ * Adapt icon name for consistency
+ * @param name Icon name
+ * @returns Formatted icon name
+ */
+export const adaptIconName = (name: string): string => {
+  // Convert kebab case to camel case
+  return name.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+};
+
+// Export functions individually and as default object
 export default {
   adaptIconSize,
-  adaptIconColor
+  adaptIconColor,
+  adaptIconName
 };

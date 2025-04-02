@@ -3,7 +3,7 @@
  * Team utility functions
  */
 
-import { TeamColor } from '@/types/mockery-types';
+import { TeamColor } from '@/types/team';
 
 /**
  * Get Tailwind background color class for a team color
@@ -34,6 +34,62 @@ export const getTeamTailwindBgColor = (team: TeamColor | string | null): string 
       return 'bg-gray-800';
     default:
       return 'bg-gray-700';
+  }
+};
+
+/**
+ * Get Tailwind text color class for a team color
+ * @param team Team color
+ * @returns Tailwind class string
+ */
+export const getTeamColor = (team: TeamColor | string | null): string => {
+  switch (team) {
+    case 'red':
+      return 'text-red-500';
+    case 'blue':
+      return 'text-blue-500';
+    case 'green':
+      return 'text-green-500';
+    case 'gold':
+      return 'text-yellow-400';
+    case 'purple':
+      return 'text-purple-500';
+    case 'silver':
+      return 'text-slate-400';
+    case 'bronze':
+      return 'text-amber-600';
+    case 'crimson':
+      return 'text-red-600';
+    default:
+      return 'text-gray-400';
+  }
+};
+
+/**
+ * Get team name
+ * @param team Team color
+ * @returns Team name
+ */
+export const getTeamName = (team: TeamColor | string | null): string => {
+  switch (team) {
+    case 'red':
+      return 'Red Team';
+    case 'blue':
+      return 'Blue Team';
+    case 'green':
+      return 'Green Team';
+    case 'gold':
+      return 'Gold Team';
+    case 'purple':
+      return 'Purple Team';
+    case 'silver':
+      return 'Silver Team';
+    case 'bronze':
+      return 'Bronze Team';
+    case 'crimson':
+      return 'Crimson Team';
+    default:
+      return 'Unaffiliated';
   }
 };
 
@@ -113,6 +169,8 @@ export const getTeamBenefits = (team: TeamColor | string | null): string[] => {
 
 export default {
   getTeamTailwindBgColor,
+  getTeamColor,
+  getTeamName,
   getTeamMotto,
   getTeamBenefits
 };

@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { SoundType, SoundOptions } from '@/types/sound-types';
 import getSoundPath from '@/utils/getSoundPath';
 
@@ -7,7 +7,7 @@ import getSoundPath from '@/utils/getSoundPath';
  * Hook for playing sounds
  * @returns Sound control functions
  */
-const useSound = () => {
+export const useSound = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentSound, setCurrentSound] = useState<SoundType | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -27,7 +27,7 @@ const useSound = () => {
    * @param type Sound type
    * @param options Sound options
    */
-  const playSound = (type: SoundType, options?: SoundOptions) => {
+  const playSound = useCallback((type: SoundType, options?: SoundOptions) => {
     const soundPath = getSoundPath(type);
     
     if (!soundPath) {
@@ -58,10 +58,6 @@ const useSound = () => {
       if (options.playbackRate !== undefined) {
         audio.playbackRate = options.playbackRate;
       }
-      
-      if (options.onEnd) {
-        audio.onended = options.onEnd;
-      }
     }
     
     // Set up event listeners
@@ -79,40 +75,35 @@ const useSound = () => {
     };
     
     // Play the sound and handle any errors
-    const playPromise = audio.play();
-    
-    // Check if play returns a promise (modern browsers)
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          // Playback started successfully
-        })
-        .catch(error => {
-          console.error('Error playing sound:', error);
-          setIsPlaying(false);
-          setCurrentSound(null);
-        });
+    try {
+      audio.play();
+    } catch (error) {
+      console.error('Error playing sound:', error);
+      setIsPlaying(false);
+      setCurrentSound(null);
     }
-  };
+  }, []);
   
   /**
    * Stop the current sound
    */
-  const stopSound = () => {
+  const stopSound = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
       setIsPlaying(false);
       setCurrentSound(null);
     }
-  };
+  }, []);
   
   return {
     playSound,
+    play: playSound,
     stopSound,
     isPlaying,
     currentSound
   };
 };
 
+// Default export for backwards compatibility
 export default useSound;

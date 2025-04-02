@@ -29,6 +29,7 @@ export const safeToString = (value: any): string => {
   return String(value);
 };
 
+// Export functions individually and as default object
 export default {
   getInitials,
   safeToString
