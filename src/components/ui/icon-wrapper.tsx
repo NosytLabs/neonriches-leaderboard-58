@@ -1,13 +1,13 @@
 
 import React from 'react';
 import IconSystem from '@/components/ui/icon-system';
-import { adaptIconName, adaptIconSize, adaptIconColor } from '@/utils/iconTypeAdapter';
-import { IconSize, IconColor, MedievalIconName, MedievalIconColor } from '@/types/ui/icon-types';
+import { adaptIconName } from '@/utils/iconTypeAdapter';
+import { IconProps } from '@/types/ui/icon-types';
 
 interface IconWrapperProps {
   icon: string;
-  size?: IconSize | number;
-  color?: IconColor | string;
+  size?: string | number;
+  color?: string;
   className?: string;
   medieval?: boolean;
 }
@@ -29,7 +29,7 @@ const IconWrapper: React.FC<IconWrapperProps> = ({
   // Convert to the appropriate format based on whether it's medieval or not
   const iconName = medieval ? adaptIconName(icon) : icon;
   const iconSize = size;
-  const iconColor = medieval ? adaptIconColor(color as string || 'default') : color;
+  const iconColor = color || 'default';
   
   return (
     <IconSystem

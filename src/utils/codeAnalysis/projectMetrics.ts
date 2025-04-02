@@ -45,3 +45,17 @@ export interface FileSizeData {
   duplicatedLines?: number;
   unusedExports?: string[];
 }
+
+// Mock performance types until actual module is created
+export interface WebVitalMetric {
+  id: string;
+  name: string;
+  value: number;
+  rating: 'good' | 'needs-improvement' | 'poor';
+  delta?: number;
+  entries: PerformanceEntry[];
+}
+
+export interface PerformanceMetrics {
+  [key: string]: WebVitalMetric;
+}

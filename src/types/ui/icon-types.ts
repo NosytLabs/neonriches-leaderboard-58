@@ -4,18 +4,27 @@ import { CSSProperties } from 'react';
 
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | string;
 export type IconStyle = 'default' | 'medieval';
-export type MedievalIconName = 'crown' | 'sword' | 'shield' | 'scroll' | 'potion' | 'coin' | 'key' | 'dagger' | 'banner';
+export type MedievalIconName = 'crown' | 'sword' | 'shield' | 'scroll' | 'potion' | 'coin' | 'key' | 'dagger' | 'banner' | 'castle' | 'chalice' | 'dragon' | 'flag' | 'throne' | 'tower' | 'coins';
 export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type MedievalIconColor = 'gold' | 'silver' | 'crimson' | 'royal' | 'emerald' | 'default';
+export type IconColor = 'default' | 'primary' | 'secondary' | 'muted' | 'gold' | 'silver' | 'crimson' | 'royal' | 'emerald' | string;
 
 export interface IconProps extends Omit<LucideProps, 'ref'> {
-  name: string;
+  name?: string;
+  icon?: string;
   size?: IconSize;
   className?: string;
-  style?: CSSProperties;
-  color?: string;
+  style?: IconStyle | CSSProperties;
+  color?: IconColor;
   animated?: boolean;
-  icon?: string;
+}
+
+export interface MedievalIconProps {
+  name: MedievalIconName;
+  size?: MedievalIconSize;
+  color?: MedievalIconColor;
+  className?: string;
+  animated?: boolean;
 }
 
 export const iconSizeMap: Record<string, string> = {

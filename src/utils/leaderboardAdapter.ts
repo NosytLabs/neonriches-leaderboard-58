@@ -1,5 +1,6 @@
 
 import { LeaderboardUser } from '@/types/mockery-types';
+import { TeamColor } from '@/types/user';
 
 /**
  * Adapts a user object to ensure it matches the LeaderboardUser interface
@@ -8,13 +9,13 @@ import { LeaderboardUser } from '@/types/mockery-types';
  */
 export const adaptToLeaderboardUser = (user: any): LeaderboardUser => {
   return {
-    userId: user.userId || user.id,
+    userId: user.userId || user.id, // Make sure userId is set
     id: user.id,
     username: user.username,
     displayName: user.displayName || user.username,
     profileImage: user.profileImage || '',
     tier: user.tier || 'basic',
-    team: user.team || 'none',
+    team: user.team as TeamColor || 'none' as TeamColor,
     rank: user.rank || 0,
     previousRank: user.previousRank || 0,
     totalSpent: user.totalSpent || user.amountSpent || 0,

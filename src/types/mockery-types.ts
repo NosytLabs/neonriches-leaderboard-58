@@ -1,99 +1,96 @@
 
-import { TeamColor, UserTier } from './user-consolidated';
+import { TeamColor } from './user';
 
 export type MockeryAction = 
-  | 'tomatoes'
-  | 'eggs'
-  | 'putridEggs'
-  | 'crown'
-  | 'stocks'
-  | 'jester'
   | 'shame'
-  | 'silence'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'protection'
-  | 'taunt'
+  | 'egg'
   | 'mock'
-  | 'challenge'
-  | 'joust'
-  | 'duel'
-  | 'fish'
-  | 'thumbsDown'; // Add missing actions
+  | 'downvote'
+  | 'taunt'
+  | 'gift';
 
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal' | 'basic' | 'premium';
+export type MockeryTier = 
+  | 'basic'
+  | 'standard'
+  | 'premium'
+  | 'royal'
+  | 'silver';
 
-export interface MockedUser {
+export interface MockeryReaction {
+  id: string;
   userId: string;
   username: string;
-  displayName?: string;
-  profileImage: string;
-  totalSpent: number;
-  rank: number;
-  team: TeamColor;
-  tier: UserTier;
-  spendStreak: number;
-  id?: string; // Backward compatibility
-  action?: string; // For some components
-  appliedAt?: string; // For some components
-  appliedBy?: string; // For some components
-  expiresAt?: string; // For some components
-  reason?: string; // For some components
-}
-
-export interface MockeryEvent {
-  id: string;
   action: MockeryAction;
-  sourceUserId: string;
-  targetUserId: string;
-  timestamp: string;
-  message?: string;
+  targetId: string;
+  targetType: 'user' | 'post' | 'comment';
+  appliedAt: string;
   expiresAt?: string;
-  isActive: boolean;
-  fromId?: string; // For backward compatibility
 }
 
-export interface LeaderboardUser {
-  userId: string;
+export interface MockeryStats {
+  shames: number;
+  eggs: number;
+  mocks: number;
+  downvotes: number;
+  taunts: number;
+  gifts: number;
+  totalReceived: number;
+  totalSent: number;
+}
+
+export interface MockedUser {
   id: string;
+  userId: string;
   username: string;
   displayName: string;
   profileImage: string;
-  tier: UserTier;
+  tier: string;
+  team: string | TeamColor;
+  action: MockeryAction;
+  appliedBy: string;
+  appliedAt: string;
+  expiresAt: string;
+  totalSpent: number;
+  rank: number;
+  spendStreak: number;
+}
+
+export interface MockeryProfile {
+  userId: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  mockeryStats: MockeryStats;
+  activeShames: MockedUser[];
+  activeMockeryOutgoing: MockeryReaction[];
+}
+
+export interface LeaderboardUser {
+  id: string;
+  userId: string;
+  username: string;
+  displayName: string;
+  profileImage: string;
+  tier: string;
   team: TeamColor;
   rank: number;
   previousRank: number;
   totalSpent: number;
+  spentAmount?: number; // Alias for totalSpent
   walletBalance: number;
   isVerified: boolean;
   isProtected: boolean;
   spendStreak: number;
   spendChange?: number;
   rankChange?: number;
-  spentAmount?: number; // For backward compatibility
 }
 
-export interface LeaderboardFilter {
-  userId?: string;
-  search?: string;
-  timeframe?: 'day' | 'week' | 'month' | 'all';
-  team?: TeamColor;
-  limit?: number;
-  tier?: UserTier;
-}
+export type MockeryAction = 
+  | 'shame'
+  | 'egg'
+  | 'mock'
+  | 'downvote'
+  | 'taunt'
+  | 'gift';
 
-export interface TeamData {
-  id: string;
-  name: string;
-  color: TeamColor;
-  totalContribution: number; 
-  members: number;
-  memberIds: string[];
-  rank: number;
-  previousRank: number;
-  description: string;
-  logoUrl: string;
-}
-
-// Export using export type syntax for isolatedModules
-export type { TeamColor };
+export { TeamColor };

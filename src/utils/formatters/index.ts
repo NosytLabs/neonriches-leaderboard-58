@@ -13,7 +13,7 @@ export * from './fileFormatters';
 // Re-export specific formatters for backward compatibility
 import { formatCurrency, formatDollarAmount, formatWithUnit, formatCompactNumber, formatPercent } from './currencyFormatters';
 import { formatNumber } from './numberFormatters';
-import { formatDate, formatTimeAgo } from './dateFormatters';
+import { formatDate, formatTimeAgo, formatRelativeTime } from './dateFormatters';
 import { formatFileSize } from './fileFormatters';
 
 export {
@@ -25,5 +25,19 @@ export {
   formatNumber,
   formatDate,
   formatTimeAgo,
+  formatRelativeTime,
+  formatFileSize
+};
+
+export default {
+  formatCurrency,
+  formatDollarAmount,
+  formatWithUnit,
+  formatCompactNumber,
+  formatPercent,
+  formatNumber,
+  formatDate,
+  formatTimeAgo,
+  formatRelativeTime,
   formatFileSize
 };

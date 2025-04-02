@@ -1,78 +1,109 @@
 
-import { IconSize, IconColor } from '@/types/ui/icon-types';
+import { MedievalIconName } from '@/types/ui/icon-types';
 
 /**
- * Adapts a string name to the correct medieval icon name format
+ * Adapts a generic icon name to a valid MedievalIconName
+ * @param name - Icon name to adapt
+ * @returns A valid MedievalIconName or fallback
  */
-export const adaptIconName = (name: string): string => {
-  // Check if already in correct format
-  if (name.includes('-medieval')) {
-    return name;
-  }
-  
-  // Convert camelCase to kebab-case
-  const kebabCase = name
-    .replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2')
-    .toLowerCase();
-  
-  // Add -medieval suffix if not present
-  return `${kebabCase}-medieval`;
+export const adaptIconName = (name: string): MedievalIconName => {
+  // Map of common icon names to medieval icon names
+  const iconMap: Record<string, MedievalIconName> = {
+    'crown': 'crown',
+    'sword': 'sword',
+    'shield': 'shield',
+    'scroll': 'scroll',
+    'potion': 'potion',
+    'coin': 'coin',
+    'coins': 'coins',
+    'key': 'key',
+    'dagger': 'dagger',
+    'banner': 'banner',
+    'castle': 'castle',
+    'chalice': 'chalice',
+    'dragon': 'dragon',
+    'flag': 'flag',
+    'throne': 'throne',
+    'tower': 'tower',
+    // Fallbacks for common icons
+    'money': 'coin',
+    'gold': 'coin',
+    'weapon': 'sword',
+    'defense': 'shield',
+    'document': 'scroll',
+    'spell': 'potion',
+    'magic': 'potion',
+    'lock': 'key',
+    'knife': 'dagger',
+    'flag': 'banner',
+    'fort': 'castle',
+    'cup': 'chalice',
+    'monster': 'dragon',
+    'royal': 'crown',
+    'king': 'crown',
+    'queen': 'crown',
+  };
+
+  // Return the mapped icon name or default to 'crown'
+  return (iconMap[name.toLowerCase()] || 'crown');
 };
 
 /**
- * Adapts an icon size value to the correct format
+ * Adapts a size value to a standardized size
+ * @param size - Size to adapt
+ * @returns Standardized size
  */
-export const adaptIconSize = (size: IconSize | string | number): IconSize => {
+export const adaptIconSize = (size: string | number): string => {
   if (typeof size === 'number') {
-    // Map number to closest icon size
-    if (size <= 4) return 'xs';
-    if (size <= 5) return 'sm';
+    // Convert number to nearest standard size
+    if (size <= 3) return 'xs';
+    if (size <= 4) return 'sm';
     if (size <= 6) return 'md';
     if (size <= 8) return 'lg';
-    if (size <= 10) return 'xl';
-    if (size <= 16) return '2xl';
-    if (size <= 20) return '3xl';
-    return '4xl';
+    return 'xl';
   }
-  
-  // Map the size if needed
-  const sizeMap: Record<string, IconSize> = {
+
+  // Map of common size names to standardized sizes
+  const sizeMap: Record<string, string> = {
+    'tiny': 'xs',
+    'small': 'sm',
+    'medium': 'md',
+    'large': 'lg',
+    'huge': 'xl',
     'xs': 'xs',
     'sm': 'sm',
     'md': 'md',
     'lg': 'lg',
     'xl': 'xl',
-    '2xl': '2xl',
-    '3xl': '3xl',
-    '4xl': '4xl',
-    // Add custom mappings if needed
-    'small': 'sm',
-    'medium': 'md',
-    'large': 'lg',
-    'extra-large': 'xl'
   };
-  
-  return sizeMap[size] || 'md';
+
+  return sizeMap[size.toLowerCase()] || 'md';
 };
 
 /**
- * Adapts a color name to the correct format
+ * Adapts a color value to a standardized color
+ * @param color - Color to adapt
+ * @returns Standardized color
  */
-export const adaptIconColor = (color: string = 'default'): IconColor => {
-  // Map colors to proper format if needed
-  const colorMap: Record<string, IconColor> = {
-    'default': 'default',
+export const adaptIconColor = (color: string): string => {
+  // Map of common color names to standardized colors
+  const colorMap: Record<string, string> = {
     'gold': 'gold',
-    'royal': 'royal',
-    'purple': 'purple',
-    'crimson': 'crimson',
-    'red': 'red',
-    'blue': 'blue',
-    'green': 'green',
     'silver': 'silver',
-    'bronze': 'silver',
-    'navy': 'info'
+    'red': 'crimson',
+    'crimson': 'crimson',
+    'purple': 'royal',
+    'royal': 'royal',
+    'green': 'emerald',
+    'emerald': 'emerald',
+    'default': 'default',
+    // Additional color mappings
+    'yellow': 'gold',
+    'orange': 'gold',
+    'blue': 'royal',
+    'regal': 'royal',
+    'nature': 'emerald',
   };
-  
-  return colorMap[color] || color;
+
+  return colorMap[color.toLowerCase()] || 'default';
 };

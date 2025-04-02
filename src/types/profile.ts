@@ -4,6 +4,7 @@ export interface ProfileImage {
   url: string;
   isPrimary: boolean;
   caption?: string;
+  type?: string; // Added for compatibility
 }
 
 export interface ProfileLink {
@@ -13,6 +14,11 @@ export interface ProfileLink {
   title?: string;
   displayText?: string;
   icon?: string;
+  label?: string; // Added for compatibility
+}
+
+export interface SocialLink extends ProfileLink {
+  title: string; // Make title required in SocialLink
 }
 
 export interface ProfileSettings {

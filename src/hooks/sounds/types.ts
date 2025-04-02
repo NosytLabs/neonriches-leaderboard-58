@@ -17,7 +17,32 @@ export type SoundType =
   | 'upgrade'
   | 'down'
   | 'up'
-  | 'fanfare';
+  | 'fanfare'
+  | 'coinDrop'
+  | 'swordClash'
+  | 'noblesLaugh'
+  | 'purchase'
+  | 'withdrawal'
+  | 'boost'
+  | 'message'
+  | 'mockery'
+  | 'shame'
+  | 'royal'
+  | 'protection'
+  | 'sparkle'
+  | 'royalAnnouncement'
+  | 'trumpet'
+  | 'medallion'
+  | 'seal'
+  | 'transfer'
+  | 'team'
+  | 'reward'
+  | 'parchmentUnfurl'
+  | 'pageChange'
+  | 'wish'
+  | 'inkScribble'
+  | 'hover'
+  | 'advertisement';
 
 export interface SoundOptions {
   volume?: number;
@@ -43,4 +68,31 @@ export interface SoundState {
   volume: number;
   theme: 'default' | 'royal' | 'minimal';
   soundPack: string;
+}
+
+export interface UseSoundHook {
+  playSound: (type: SoundType, options?: SoundOptions) => void;
+  play: (type: SoundType, options?: SoundOptions) => void; // Alias for playSound
+  stopSound: (type?: SoundType) => void;
+  pauseSound: (type?: SoundType) => void;
+  resumeSound: (type?: SoundType) => void;
+  isPlaying: (type: SoundType) => boolean;
+  isSoundEnabled: boolean;
+  currentVolume: number;
+  toggleMuted: () => boolean;
+  toggleSounds: () => boolean;
+  setVolume: (volume: number) => void;
+}
+
+export interface PremiumSoundPackDetails {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  enabled: boolean;
+  sounds: SoundDefinition[];
+  previewUrl?: string;
+  author?: string;
+  authorUrl?: string;
+  releaseDate?: string;
 }

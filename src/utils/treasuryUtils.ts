@@ -1,81 +1,107 @@
 
-import { UserProfile } from '@/types/user';
-import { formatCurrency } from './formatters';
+import { SolanaTransaction } from '@/types/solana';
+import { formatCurrency } from './formatters/currencyFormatters';
 
-export const calculatePrizePool = (weeklySpending: number): number => {
-  // 15% of weekly spending goes to the prize pool
-  return weeklySpending * 0.15;
+/**
+ * Format a transaction amount into a readable string with a sign
+ * 
+ * @param amount - Transaction amount
+ * @param type - Transaction type
+ * @returns Formatted amount string
+ */
+export const formatTransactionAmount = (amount: number, type: string): string => {
+  const prefix = type === 'deposit' ? '+' : '-';
+  return `${prefix}${formatCurrency(Math.abs(amount))}`;
 };
 
-export const distributePrizePool = (
-  prizePool: number,
-  topSpenders: UserProfile[],
-  consistentSpenders: UserProfile[]
-): { 
-  rewards: { user: UserProfile; amount: number }[];
-  developerCut: number;
-  charityDonation: number;
-} => {
-  // Initialize results
-  const rewards: { user: UserProfile; amount: number }[] = [];
-  let remainingPool = prizePool;
+/**
+ * Get a color class for a transaction based on its type
+ * 
+ * @param type - Transaction type
+ * @returns CSS class name
+ */
+export const getTransactionColorClass = (type: string): string => {
+  switch (type) {
+    case 'deposit':
+      return 'text-green-500';
+    case 'withdrawal':
+    case 'spend':
+      return 'text-red-500';
+    case 'transfer':
+      return 'text-blue-500';
+    default:
+      return 'text-white';
+  }
+};
+
+/**
+ * Format a transaction date into a readable string
+ * 
+ * @param timestamp - Transaction timestamp (in seconds or milliseconds)
+ * @returns Formatted date string
+ */
+export const formatTransactionDate = (timestamp: number): string => {
+  // Convert to milliseconds if in seconds
+  const ms = timestamp > 1000000000000 ? timestamp : timestamp * 1000;
   
-  // 20% goes to the developer
-  const developerCut = prizePool * 0.2;
-  remainingPool -= developerCut;
+  const date = new Date(ms);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+};
+
+/**
+ * Filter transactions by type
+ * 
+ * @param transactions - Array of transactions
+ * @param type - Transaction type to filter by
+ * @returns Filtered transactions
+ */
+export const filterTransactionsByType = (
+  transactions: SolanaTransaction[],
+  type: string | null
+): SolanaTransaction[] => {
+  if (!type) return transactions;
+  return transactions.filter(tx => tx.type === type);
+};
+
+/**
+ * Calculate the balance after a given transaction
+ * 
+ * @param transactions - Array of transactions
+ * @param currentTx - Current transaction
+ * @returns Balance after the transaction
+ */
+export const calculateBalanceAfterTransaction = (
+  transactions: SolanaTransaction[],
+  currentTx: SolanaTransaction
+): number => {
+  const sortedTxs = [...transactions].sort((a, b) => 
+    new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+  );
   
-  // Allocate to The Whale Endowment (50% of remaining)
-  const whaleEndowment = remainingPool * 0.5;
+  const currentIndex = sortedTxs.findIndex(tx => tx.signature === currentTx.signature);
+  if (currentIndex === -1) return 0;
   
-  // Top 3 whales get their share
-  if (topSpenders.length > 0) {
-    // #1 gets 60% of the whale endowment (minus 5% to "charity")
-    const whale1Amount = whaleEndowment * 0.6 * 0.95;
-    rewards.push({ user: topSpenders[0], amount: whale1Amount });
-    
-    if (topSpenders.length > 1) {
-      // #2 gets 30% of the whale endowment (minus 5% to "charity")
-      const whale2Amount = whaleEndowment * 0.3 * 0.95;
-      rewards.push({ user: topSpenders[1], amount: whale2Amount });
-      
-      if (topSpenders.length > 2) {
-        // #3 gets 10% of the whale endowment (minus 5% to "charity")
-        const whale3Amount = whaleEndowment * 0.1 * 0.95;
-        rewards.push({ user: topSpenders[2], amount: whale3Amount });
+  let balance = 0;
+  for (let i = 0; i <= currentIndex; i++) {
+    const tx = sortedTxs[i];
+    if (tx.type === 'deposit') {
+      balance += tx.amount;
+    } else if (tx.type === 'withdrawal' || tx.type === 'spend') {
+      balance -= tx.amount;
+    } else if (tx.type === 'transfer') {
+      if (tx.sender === 'self') {
+        balance -= tx.amount;
+      } else if (tx.receiver === 'self') {
+        balance += tx.amount;
       }
     }
   }
   
-  // 15% of the whale endowment goes to "charity" (5% from each whale)
-  const charityDonation = whaleEndowment * 0.15;
-  
-  // Allocate to The Sustenance Fund (50% of remaining)
-  const sustenanceFund = remainingPool * 0.5;
-  
-  // Distribute sustenance fund to consistent spenders
-  // This is a simplified implementation - real logic would be more complex
-  if (consistentSpenders.length > 0) {
-    const baseAmount = sustenanceFund / consistentSpenders.length;
-    
-    consistentSpenders.forEach(user => {
-      // Use properties that might affect reward amounts
-      const streakMultiplier = user.profileBoosts?.length ? 1.5 : 1;
-      const spendingBonus = (user.totalSpent || user.amountSpent || 0) > 1000 ? 1.1 : 1;
-      
-      const amount = baseAmount * streakMultiplier * spendingBonus;
-      rewards.push({ user, amount });
-    });
-  }
-  
-  return { rewards, developerCut, charityDonation };
-};
-
-export const formatRewardAmount = (amount: number): string => {
-  return formatCurrency(amount);
-};
-
-export const getWeeklySpending = (): number => {
-  // This would normally come from a database
-  // For demo purposes, we'll return a fixed amount
-  return 10000;
+  return balance;
 };

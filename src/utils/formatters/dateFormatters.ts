@@ -1,5 +1,9 @@
 
 /**
+ * Date formatting utilities
+ */
+
+/**
  * Format a date string to a readable format
  * @param dateString - ISO date string to format
  * @returns Formatted date string
@@ -80,4 +84,47 @@ export const formatTimeAgo = (timestamp: string | number): string => {
   // More than a year
   const years = Math.floor(seconds / 31536000);
   return `${years} year${years !== 1 ? 's' : ''} ago`;
+};
+
+/**
+ * Format a date as a relative time (e.g. "2 days ago", "in 3 hours")
+ */
+export const formatRelativeTime = (date: string | Date): string => {
+  const now = new Date();
+  const targetDate = typeof date === 'string' ? new Date(date) : date;
+  
+  // Invalid date
+  if (isNaN(targetDate.getTime())) return 'Invalid date';
+  
+  const diffMs = targetDate.getTime() - now.getTime();
+  const diffSec = Math.round(diffMs / 1000);
+  const diffMin = Math.round(diffSec / 60);
+  const diffHour = Math.round(diffMin / 60);
+  const diffDay = Math.round(diffHour / 24);
+  
+  if (diffSec < 0) {
+    // Past
+    if (diffSec > -60) return `${Math.abs(diffSec)} seconds ago`;
+    if (diffMin > -60) return `${Math.abs(diffMin)} minutes ago`;
+    if (diffHour > -24) return `${Math.abs(diffHour)} hours ago`;
+    if (diffDay > -30) return `${Math.abs(diffDay)} days ago`;
+    
+    const diffMonth = Math.round(diffDay / 30);
+    if (diffMonth > -12) return `${Math.abs(diffMonth)} months ago`;
+    
+    const diffYear = Math.round(diffDay / 365);
+    return `${Math.abs(diffYear)} years ago`;
+  } else {
+    // Future
+    if (diffSec < 60) return `in ${diffSec} seconds`;
+    if (diffMin < 60) return `in ${diffMin} minutes`;
+    if (diffHour < 24) return `in ${diffHour} hours`;
+    if (diffDay < 30) return `in ${diffDay} days`;
+    
+    const diffMonth = Math.round(diffDay / 30);
+    if (diffMonth < 12) return `in ${diffMonth} months`;
+    
+    const diffYear = Math.round(diffDay / 365);
+    return `in ${diffYear} years`;
+  }
 };
