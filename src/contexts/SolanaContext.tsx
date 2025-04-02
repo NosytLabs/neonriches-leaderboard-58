@@ -34,7 +34,7 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setWalletBalance(5);
       setConnected(true);
       
-      // Instead of using useToast directly, use the toast function
+      // Use direct toast function instead of hook
       toast({
         title: "Wallet Connected",
         description: "Your wallet has been connected."
@@ -55,7 +55,7 @@ export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setWalletAddress(null);
     setWalletBalance(0);
     
-    // Use toast function instead of useToast hook
+    // Use direct toast function
     toast({
       title: "Wallet Disconnected",
       description: "Your wallet has been disconnected."
