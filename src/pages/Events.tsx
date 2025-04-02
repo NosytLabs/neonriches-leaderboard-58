@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Shell from '@/components/ui/Shell'; // Fixed import casing
+import Shell from '@/components/ui/Shell';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const Events = () => {

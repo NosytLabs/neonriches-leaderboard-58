@@ -1,5 +1,7 @@
 
-import { TeamColor } from './mockery';
+import { TeamColor } from './mockery-types';
+
+export { TeamColor };
 
 export interface TeamData {
   id: string;
@@ -7,20 +9,26 @@ export interface TeamData {
   description: string;
   color: TeamColor;
   memberCount: number;
+  members?: number;
   leaderUsername?: string;
   leaderUserId?: string;
-  logo: string;
-  bannerImage: string;
-  isActive: boolean;
+  logo?: string;
+  logoUrl?: string;
+  bannerImage?: string;
+  isActive?: boolean;
   slogan?: string;
   code?: string;
   rankBonusMultiplier?: number;
   totalContribution: number;
+  totalSpent?: number;
+  rank?: number;
+  previousRank?: number;
   securityGuarantee?: string;
   absurdStat?: string;
   historicalNote?: string;
   nftJoke?: string;
   cryptoRoast?: string;
+  benefits?: string[];
 }
 
 export interface TeamTheme {
@@ -36,25 +44,79 @@ export interface TeamTheme {
 }
 
 export interface TeamMember {
+  id?: string;
   userId: string;
   username: string;
   displayName?: string;
   profileImage?: string;
   joinDate: string;
   contribution: number;
-  rank: number;
+  rank?: number;
   role?: string;
-  isActive: boolean;
+  isActive?: boolean;
+  isLeader?: boolean;
   tier?: string;
 }
 
+export interface TeamStats {
+  totalMembers: number;
+  activeMembers: number;
+  totalContribution: number;
+  averageContribution: number;
+  leaderboardPosition: number;
+  contributionChange: number;
+  weeklyGrowth: number;
+  victories?: number;
+  defeats?: number;
+  rankHistory?: number[];
+}
+
 export interface TeamLeaderboardEntry {
-  teamId: string;
-  teamName: string;
-  teamColor: TeamColor;
+  id: string;
+  teamId?: string;
+  teamName?: string;
+  name?: string;
+  teamColor?: TeamColor;
+  color?: TeamColor;
   memberCount: number;
   totalContribution: number;
   rank: number;
   previousRank?: number;
   logo?: string;
+  logoUrl?: string;
+  position?: number;
+  team?: TeamColor;
+  totalSpent?: number;
+  avgSpent?: number;
 }
+
+export interface TeamInvite {
+  id: string;
+  teamId: string;
+  inviterId: string;
+  inviteeId?: string;
+  email?: string;
+  status: 'pending' | 'accepted' | 'rejected' | 'expired';
+  createdAt: string;
+  expiresAt: string;
+  code: string;
+}
+
+export interface TeamRole {
+  id: string;
+  name: string;
+  color: string;
+  permissions: string[];
+  isDefault?: boolean;
+}
+
+export interface TeamBenefits {
+  id: string;
+  name: string;
+  description: string;
+  tier: string;
+  isActive: boolean;
+}
+
+// For backwards compatibility
+export type TeamType = TeamColor;

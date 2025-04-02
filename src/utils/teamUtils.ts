@@ -1,6 +1,7 @@
 
-import { TeamColor } from '@/types/team';
+import { TeamColor } from '@/types/mockery-types';
 
+// Team name utilities
 export const getTeamName = (team: TeamColor): string => {
   switch (team) {
     case 'red':
@@ -27,6 +28,7 @@ export const getTeamName = (team: TeamColor): string => {
   }
 };
 
+// Team color utilities
 export const getTeamColor = (team: TeamColor): string => {
   switch (team) {
     case 'red':
@@ -53,7 +55,35 @@ export const getTeamColor = (team: TeamColor): string => {
   }
 };
 
-export const getTeamTailwindBgColor = (team: TeamColor): string => {
+// Team background colors
+export const getTeamBgColor = (team: TeamColor): string => {
+  switch (team) {
+    case 'red':
+      return 'bg-red-500';
+    case 'blue':
+      return 'bg-blue-500';
+    case 'green':
+      return 'bg-green-500';
+    case 'gold':
+      return 'bg-amber-400';
+    case 'purple':
+      return 'bg-purple-500';
+    case 'silver':
+      return 'bg-gray-300';
+    case 'bronze':
+      return 'bg-amber-700';
+    case 'crimson':
+      return 'bg-red-700';
+    case 'neutral':
+      return 'bg-gray-400';
+    case 'none':
+    default:
+      return 'bg-gray-500';
+  }
+};
+
+// Team border colors
+export const getTeamBorderColor = (team: TeamColor): string => {
   switch (team) {
     case 'red':
       return 'border-red-500';
@@ -79,6 +109,7 @@ export const getTeamTailwindBgColor = (team: TeamColor): string => {
   }
 };
 
+// Team motto utilities
 export const getTeamMotto = (team: TeamColor): string => {
   switch (team) {
     case 'red':
@@ -105,51 +136,52 @@ export const getTeamMotto = (team: TeamColor): string => {
   }
 };
 
+// Team benefits utilities
 export const getTeamBenefits = (team: TeamColor): string[] => {
-  switch (team) {
-    case 'red':
-      return [
-        "20% bonus on all mockery actions",
-        "Exclusive 'Crimson Aura' effect",
-        "Access to the Dragon's Hoard collection"
-      ];
-    case 'blue':
-      return [
-        "10% protection from mockery effects",
-        "Exclusive 'Azure Shield' profile border",
-        "Priority access to special events"
-      ];
-    case 'green':
-      return [
-        "15% discount on purchases",
-        "Exclusive 'Emerald Fortune' profile effect",
-        "Enhanced visibility on leaderboards"
-      ];
-    case 'gold':
-      return [
-        "25% boost in status points",
-        "Exclusive 'Golden Crown' profile decoration",
-        "Access to royal announcements before others"
-      ];
-    case 'purple':
-      return [
-        "Magic protection from one mockery per day",
-        "Exclusive 'Arcane Glow' profile effect",
-        "Access to wizards-only chat room"
-      ];
-    default:
-      return [
-        "Standard mockery abilities",
-        "Basic profile customization",
-        "Regular access to events"
-      ];
-  }
+  const commonBenefits = ['Team profile badge', 'Team chat access', 'Team leaderboard'];
+  
+  const specificBenefits: Record<TeamColor, string[]> = {
+    red: ['5% bonus on deposits', 'Red-themed profile items', 'Fire effects'],
+    blue: ['Bonus profile visibility', 'Blue-themed profile items', 'Water effects'],
+    green: ['10% discount on purchases', 'Green-themed profile items', 'Nature effects'],
+    gold: ['Royal profile decorations', 'Gold-themed profile items', 'Sparkle effects'],
+    purple: ['Exclusive profile badges', 'Purple-themed profile items', 'Magic effects'],
+    silver: ['Fast transaction speed', 'Silver-themed profile items', 'Speed effects'],
+    bronze: ['Strength boosts', 'Bronze-themed profile items', 'Armor effects'],
+    crimson: ['Attack bonuses', 'Crimson-themed profile items', 'Blood effects'],
+    neutral: ['Balance bonuses', 'Neutral-themed profile items', 'Zen effects'],
+    none: ['Full independence', 'No team restrictions', 'Freedom to choose']
+  };
+  
+  return [...commonBenefits, ...(specificBenefits[team] || [])];
 };
+
+// Team conversion utilities
+export const asTeamColor = (team: string | TeamColor | null | undefined): TeamColor => {
+  if (!team) return 'none';
+  
+  const validTeamColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral', 'silver', 'bronze', 'crimson'];
+  if (validTeamColors.includes(team as TeamColor)) {
+    return team as TeamColor;
+  }
+  
+  return 'none';
+};
+
+// For backwards compatibility
+export const getTeamTailwindBgColor = getTeamBorderColor;
+export const getTeamDisplayName = getTeamName;
+export const getTeamColorClass = getTeamColor;
 
 export default {
   getTeamName,
   getTeamColor,
+  getTeamBgColor,
+  getTeamBorderColor,
   getTeamTailwindBgColor,
   getTeamMotto,
-  getTeamBenefits
+  getTeamBenefits,
+  asTeamColor,
+  getTeamDisplayName,
+  getTeamColorClass
 };

@@ -11,6 +11,9 @@ import MockeryPage from '@/pages/MockeryPage';
 import Auth from '@/pages/Auth';
 import Dashboard from '@/pages/Dashboard';
 import Chat from '@/pages/Chat';
+import Events from '@/pages/Events';
+import Community from '@/pages/Community';
+import Teams from '@/pages/Teams';
 
 // Use dynamic import for react-helmet-async to handle cases where it might not be available yet
 let HelmetProvider: React.ComponentType<{children: React.ReactNode, context?: object}>;
@@ -38,6 +41,9 @@ const App: React.FC = () => {
               <Route path="/login" element={<Auth />} />
               <Route path="/register" element={<Auth />} />
               <Route path="/chat" element={<Chat />} />
+              <Route path="/events" element={<Events />} />
+              <Route path="/community" element={<Community />} />
+              <Route path="/teams" element={<Teams />} />
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
