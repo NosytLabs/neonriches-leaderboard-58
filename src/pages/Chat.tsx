@@ -39,7 +39,7 @@ const Chat: React.FC = () => {
         profileImage: 'https://randomuser.me/api/portraits/men/1.jpg',
         text: 'Welcome to the Royal Chat!',
         timestamp: new Date(Date.now() - 60000).toISOString(),
-        team: toTeamColor('gold'), // Use toTeamColor to ensure it's a valid TeamColor
+        team: toTeamColor('gold'),
         isRoyal: true
       },
       {
@@ -48,7 +48,7 @@ const Chat: React.FC = () => {
         username: 'queenofcash',
         displayName: 'Queen of Cash',
         profileImage: 'https://randomuser.me/api/portraits/women/2.jpg',
-        text: 'Hello everyone! Who's ready to spend today?',
+        text: "Hello everyone! Who's ready to spend today?",
         timestamp: new Date(Date.now() - 30000).toISOString(),
         team: toTeamColor('purple'),
         isRoyal: true

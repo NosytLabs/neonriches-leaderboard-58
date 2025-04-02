@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/components/ui/use-toast';
 
 // Define the context type with all necessary properties
 export interface SolanaContextValue {
@@ -26,7 +26,6 @@ const SolanaContext = createContext<SolanaContextValue>({
 });
 
 export const SolanaProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { toast } = useToast();
   const [connected, setConnected] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [walletBalance, setWalletBalance] = useState(0);
