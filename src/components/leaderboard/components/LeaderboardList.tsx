@@ -3,7 +3,6 @@ import React from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
 import LeaderboardEntry from "./LeaderboardEntry";
 import { LeaderboardUser } from '@/types/leaderboard';
-import { leaderboardUserToProfile } from '@/utils/typeConverters';
 
 export interface LeaderboardListProps {
   users: LeaderboardUser[];

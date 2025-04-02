@@ -19,22 +19,19 @@ export interface LeaderboardUser {
   spendStreak?: number;
   joinedAt?: string;     // Add joinedAt as an optional property
   joinDate?: string;     // Add for compatibility
+  joinedDate?: string;   // Add for compatibility with UserProfile
   spendChange?: number;  // Add additional fields from error messages
   rankChange?: number;
   thumbsDown?: number;
   carrot?: number;       // Add mockery action type
-  // Fields to support conversion from/to UserProfile
-  email?: string;
-  bio?: string;
-  joinedDate?: string;
-  settings?: any;
 }
 
 export interface LeaderboardFilter {
   team?: string;
   tier?: string;
-  timeFrame?: 'all' | 'day' | 'week' | 'month' | 'year';
-  timeframe?: string; // Added for compatibility
+  // Use both timeframe and timeFrame for compatibility
+  timeframe?: 'all' | 'day' | 'week' | 'month' | 'year' | string;
+  timeFrame?: 'all' | 'day' | 'week' | 'month' | 'year' | string;
   search?: string;
   sort?: string;
   sortBy?: string;
@@ -54,5 +51,4 @@ export interface TypedLeaderboardFilter extends LeaderboardFilter {
   sort?: string;
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
-  timeframe?: string;
 }

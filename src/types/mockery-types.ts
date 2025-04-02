@@ -1,6 +1,6 @@
 
 // Define the available team colors
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral';
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze';
 
 // Define the available mockery actions
 export type MockeryAction = 
@@ -13,7 +13,17 @@ export type MockeryAction =
   | 'mock'
   | 'jester'
   | 'praise'
-  | 'thumbsDown';
+  | 'thumbsDown'
+  | 'putridEggs'
+  | 'stocks'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection'
+  | 'taunt'
+  | 'challenge'
+  | 'joust'
+  | 'duel';
 
 // Define the mockery tiers
 export type MockeryTier = 
@@ -36,7 +46,9 @@ export type UserTier =
   | 'premium'
   | 'elite'
   | 'royal'
-  | 'founder';
+  | 'founder'
+  | 'pro'
+  | 'gold';
 
 // Define team data interface
 export interface TeamData {
@@ -61,13 +73,30 @@ export interface MockedUser {
   profileImage?: string;
   team: TeamColor;
   tier: UserTier;
+  // Additional fields used in the code
+  userId?: string;
+  action?: MockeryAction;
+  appliedBy?: string;
+  appliedAt?: string;
+  expiresAt?: string;
+  reason?: string;
+  totalSpent?: number;
+  rank?: number;
+  spendStreak?: number;
 }
 
 export interface MockeryEvent {
   id: string;
-  actionType: MockeryAction;
   fromUserId: string;
   toUserId: string;
   timestamp: string;
   seen: boolean;
+  // Additional fields used in the code
+  actionType?: MockeryAction;
+  action?: MockeryAction;
+  targetId?: string;
+  fromId?: string;
+  isAnonymous?: boolean;
+  message?: string;
+  appliedBy?: string;
 }

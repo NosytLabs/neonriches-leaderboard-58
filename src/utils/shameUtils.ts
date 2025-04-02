@@ -45,7 +45,18 @@ export const getShameActionPrice = (action: MockeryAction): number => {
   return getMockeryActionPrice(action);
 };
 
-export {
-  getDiscountedShamePrice,
-  getShameActionPrice
+/**
+ * Check if there is a weekly discount on shame actions
+ */
+export const hasWeeklyDiscount = (): boolean => {
+  // In a real app, this would check if the current week has a discount
+  return true;
+};
+
+/**
+ * Get the weekly discounted action
+ */
+export const getWeeklyDiscountedAction = (): MockeryAction => {
+  // In a real app, this would return the action with a discount this week
+  return 'tomatoes';
 };

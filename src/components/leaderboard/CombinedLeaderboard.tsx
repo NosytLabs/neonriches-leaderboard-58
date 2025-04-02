@@ -4,28 +4,28 @@ import { useNavigate } from 'react-router-dom';
 import { useMockLeaderboard } from '@/hooks/useMockLeaderboard';
 import { useAuth } from '@/hooks/useAuth';
 import { LeaderboardFilter, LeaderboardUser } from '@/types/leaderboard';
-import { MockeryAction, TeamColor } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
 import { useSound } from '@/hooks/use-sound';
 import { toTeamColor } from '@/utils/typeConverters';
-import {
-  LeaderboardHeader,
-  LeaderboardFilters,
-  LeaderboardList,
-  ShameModalWrapper
-} from './components';
+import LeaderboardHeader from '@/components/LeaderboardHeader';
+import LeaderboardFilters from '@/components/LeaderboardFilters';
+import LeaderboardList from '@/components/leaderboard/components/LeaderboardList';
+import { Dialog } from '@/components/ui/dialog';
+import { Card, CardContent } from '@/components/ui/card';
+import ShameModal from '@/components/dashboard/leaderboard/ShameModal';
 
 const CombinedLeaderboard: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useAuth ? useAuth() : { user: null };
   const { toast } = useToast();
-  const sound = useSound();
-  const { loading, mockLeaderboardData } = useMockLeaderboard();
+  const sound = useSound ? useSound() : { playSound: () => {} };
+  const { loading, mockLeaderboardData } = useMockLeaderboard?.() || { loading: true, mockLeaderboardData: [] };
   
   const [filter, setFilter] = useState<LeaderboardFilter>({
     team: 'all',
     tier: 'all',
-    timeFrame: 'all',
+    timeframe: 'all',
     search: '',
     sortBy: 'rank',
     sortDirection: 'asc'
@@ -97,14 +97,16 @@ const CombinedLeaderboard: React.FC = () => {
     setShowShameModal(true);
   };
   
-  const handleShameConfirm = (userId: string, action: MockeryAction) => {
+  const handleShameConfirm = () => {
+    if (!selectedUser) return;
+    
     // In a real app, we would call an API to apply the shame
-    sound.playSound('mockery');
+    sound.playSound && sound.playSound('notification');
     
     toast({
       title: "Mockery Applied",
-      description: `You have applied ${action} mockery to ${selectedUser?.username}`,
-      variant: "success",
+      description: `You have applied ${shameAction} mockery to ${selectedUser?.username}`,
+      variant: "default",
     });
     
     setShowShameModal(false);
@@ -123,23 +125,38 @@ const CombinedLeaderboard: React.FC = () => {
       </div>
       
       <div className="mt-6">
-        <LeaderboardList 
-          users={filteredUsers} 
-          loading={loading} 
-          currentUserId={user?.id || ''}
-          onProfileClick={handleProfileClick}
-          onShameUser={handleShameUser}
-        />
+        <Card className="bg-black/20 border-white/10">
+          <CardContent className="p-4">
+            <LeaderboardList 
+              users={filteredUsers} 
+              loading={loading} 
+              currentUserId={user?.id || ''} 
+              onProfileClick={handleProfileClick}
+              onShameUser={handleShameUser}
+            />
+          </CardContent>
+        </Card>
       </div>
       
       {showShameModal && selectedUser && (
-        <ShameModalWrapper
-          showModal={showShameModal}
-          selectedUser={selectedUser as any} // This is a hack for now, but we should fix the type conversion
-          shameAction={shameAction}
-          onOpenChange={setShowShameModal}
-          onConfirm={handleShameConfirm}
-        />
+        <Dialog open={showShameModal} onOpenChange={setShowShameModal}>
+          <ShameModal
+            targetUser={{
+              userId: selectedUser.id,
+              username: selectedUser.username,
+              profileImage: selectedUser.profileImage || '/placeholder.svg',
+              totalSpent: selectedUser.totalSpent,
+              rank: selectedUser.rank,
+              team: toTeamColor(selectedUser.team || 'none'),
+              tier: selectedUser.tier || 'basic',
+              spendStreak: selectedUser.spendStreak || 0
+            }}
+            shameType={shameAction}
+            onConfirm={handleShameConfirm}
+            onCancel={() => setShowShameModal(false)}
+            hasDiscount={false}
+          />
+        </Dialog>
       )}
     </div>
   );

@@ -64,3 +64,15 @@ export const formatTimeAgo = (dateString: string): string => {
   
   return `${Math.floor(diffInSeconds / 31536000)} years ago`;
 };
+
+// Make sure all functions are explicitly exported
+export {
+  formatCurrency,
+  formatDollarAmount,
+  formatNumber,
+  formatPercentage,
+  formatDate,
+  formatTime,
+  formatDateTime,
+  formatTimeAgo
+};

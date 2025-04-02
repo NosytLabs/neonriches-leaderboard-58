@@ -17,7 +17,7 @@ const Leaderboard = () => {
   const [filter, setFilter] = useState<LeaderboardFilter>({
     team: 'all',
     tier: 'all',
-    timeFrame: 'all',
+    timeframe: 'all',
     search: '',
     sortBy: 'rank',
     sortDirection: 'asc'

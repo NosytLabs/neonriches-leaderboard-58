@@ -10,7 +10,11 @@ export const toTeamColor = (team: string | null | undefined): TeamColor => {
   if (!team) return 'none';
   
   // Check if the string is a valid TeamColor
-  const validTeamColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
+  const validTeamColors: TeamColor[] = [
+    'red', 'blue', 'green', 'gold', 'purple', 'none', 
+    'neutral', 'silver', 'bronze'
+  ];
+  
   if (validTeamColors.includes(team as TeamColor)) {
     return team as TeamColor;
   }
@@ -25,7 +29,11 @@ export const toTeamColor = (team: string | null | undefined): TeamColor => {
 export const toUserTier = (tier: string | null | undefined): UserTier => {
   if (!tier) return 'free';
   
-  const validTiers: UserTier[] = ['free', 'basic', 'premium', 'elite', 'royal', 'founder'];
+  const validTiers: UserTier[] = [
+    'free', 'basic', 'premium', 'elite', 'royal', 
+    'founder', 'pro', 'gold'
+  ];
+  
   if (validTiers.includes(tier as UserTier)) {
     return tier as UserTier;
   }
@@ -42,7 +50,7 @@ export const toUserProfile = (user: LeaderboardUser): UserProfile => {
     username: user.username,
     displayName: user.displayName || user.username,
     profileImage: user.profileImage || user.avatarUrl || '',
-    joinedDate: user.joinedDate || new Date().toISOString(),
+    joinedDate: user.joinedDate || user.joinDate || new Date().toISOString(),
     isVerified: user.isVerified || false,
     team: toTeamColor(user.team),
     tier: toUserTier(user.tier),
@@ -52,7 +60,31 @@ export const toUserProfile = (user: LeaderboardUser): UserProfile => {
     totalSpent: user.totalSpent || 0,
     amountSpent: user.totalSpent || 0,
     isProtected: user.isProtected || false,
-    spendStreak: user.spendStreak || 0
+    spendStreak: user.spendStreak || 0,
+    settings: {}
+  };
+};
+
+/**
+ * Convert a UserProfile to a LeaderboardUser
+ */
+export const leaderboardUserToProfile = (user: UserProfile): LeaderboardUser => {
+  return {
+    id: user.id,
+    userId: user.id,
+    username: user.username,
+    displayName: user.displayName,
+    profileImage: user.profileImage,
+    team: user.team as string,
+    tier: user.tier,
+    rank: user.rank,
+    previousRank: user.previousRank,
+    totalSpent: user.totalSpent,
+    isVerified: user.isVerified || false,
+    isProtected: user.isProtected || false,
+    walletBalance: user.walletBalance,
+    spendStreak: user.spendStreak,
+    joinedDate: user.joinedDate
   };
 };
 

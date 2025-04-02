@@ -107,8 +107,8 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
           </Select>
           
           <Select
-            value={filter.timeFrame || 'all'}
-            onValueChange={(value) => onFilterChange({ timeFrame: value as any })}
+            value={filter.timeframe || 'all'}
+            onValueChange={(value) => onFilterChange({ timeframe: value as any })}
           >
             <SelectTrigger className="bg-black/40 border-white/10">
               <SelectValue placeholder="Time Frame" />

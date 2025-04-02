@@ -89,3 +89,6 @@ export interface ProfileBoost {
 
 // Type alias for a simplified User type that matches UserProfile
 export type User = UserProfile;
+
+// Re-export TeamColor and UserTier for easier access
+export { TeamColor, UserTier };
