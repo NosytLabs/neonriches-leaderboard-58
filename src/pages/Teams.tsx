@@ -1,176 +1,171 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Shell, 
-  Badge 
-} from '@/utils/componentImports';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Shield, Users, Trophy, ChevronRight } from 'lucide-react';
-import { TeamColor } from '@/types/mockery-types';
-import { TeamData } from '@/types/team';
-import TeamSelection from '@/components/teams/TeamSelection';
-import TeamOverview from '@/components/teams/TeamOverview';
-import { createTeamData } from '@/utils/teamUtils';
-import TeamLeaderboard from '@/components/teams/TeamLeaderboard';
-import TeamDetails from '@/components/teams/TeamDetails';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { toTeamColor } from '@/utils/teamUtils';
 
-const TeamsPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [selectedTeam, setSelectedTeam] = useState<TeamColor>('red');
-  const [userTeam, setUserTeam] = useState<TeamColor>('none');
-  const [teamDetails, setTeamDetails] = useState<TeamData | null>(null);
+import React, { useState } from 'react';
+import { Shell } from '@/components/ui/Shell';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import TeamBadge from '@/components/ui/team/TeamBadge';
+import { TeamData, TeamColor } from '@/types/team';
+import { createTeamData } from '@/utils/teamUtils';
+import { UserProfile, UserCosmetics } from '@/types/user-consolidated';
+import TeamSelector from '@/components/teams/TeamSelector';
+
+const Teams = () => {
+  const [activeTab, setActiveTab] = useState('all');
+  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
   
-  useEffect(() => {
-    const teamData = createTeamData(selectedTeam);
-    setTeamDetails(teamData);
-  }, [selectedTeam]);
+  // Create team data
+  const redTeam = createTeamData('red', 'The Red Order', 'Warriors of flame and passion, standing strong against the rising tide of mediocrity. Join us to rise to glory!', 1250, 245000, 1);
   
-  const handleTeamSelect = async (team: TeamColor | string): Promise<boolean> => {
-    const validTeam = toTeamColor(team);
-    setUserTeam(validTeam);
-    setSelectedTeam(validTeam);
-    return Promise.resolve(true);
+  // Create other teams
+  const blueTeam = createTeamData('blue', 'The Blue Guardians', 'Defenders of the realm, masters of strategy and loyalty. We stand together as one unbreakable shield.', 980, 198000, 2);
+  const greenTeam = createTeamData('green', 'The Green Sentinels', 'Guardians of growth and prosperity. Our wealth grows like the mighty forest, and so does our influence.', 765, 156000, 3);
+  const goldTeam = createTeamData('gold', 'The Gold Dynasty', 'The royal bloodline, destined to rule with generosity and wisdom. Our legacy will shine for generations.', 540, 129000, 4);
+  const purpleTeam = createTeamData('purple', 'The Purple Reign', 'Masters of the arcane, wielding the power of mystery and secrets. Join us to unlock your hidden potential.', 320, 87000, 5);
+
+  const teams = [redTeam, blueTeam, greenTeam, goldTeam, purpleTeam];
+  
+  // Mock user
+  const currentUser: UserProfile = {
+    id: "user123",
+    username: "royalspender",
+    displayName: "Royal Spender",
+    profileImage: "/images/avatars/crowned-user.jpg",
+    joinedDate: "2023-01-15T10:30:00Z",
+    team: 'blue' as TeamColor,
+    tier: "premium",
+    rank: 42,
+    previousRank: 45,
+    totalSpent: 12500,
+    amountSpent: 12500,
+    walletBalance: 2800,
+    spendStreak: 7,
+    profileBoosts: [],
+    cosmetics: {} as UserCosmetics,
+    settings: {
+      profileVisibility: 'public',
+      allowProfileLinks: true,
+      theme: 'royal',
+      notifications: true,
+      emailNotifications: false,
+      marketingEmails: false,
+      showRank: true,
+      darkMode: true,
+      soundEffects: true,
+      showBadges: true,
+      showTeam: true,
+      showSpending: true,
+    }
   };
-  
-  const handleTeamView = (team: TeamColor | string): Promise<boolean> => {
-    const validTeam = toTeamColor(team);
-    setSelectedTeam(validTeam);
-    return Promise.resolve(true);
-  };
-  
+
   return (
     <Shell>
-      <div className="container mx-auto py-6">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Royal Teams</h1>
-          {userTeam !== 'none' ? (
-            <Badge className="px-3 py-1 text-sm">
-              Your Team: {userTeam.charAt(0).toUpperCase() + userTeam.slice(1)}
-            </Badge>
-          ) : (
-            <Badge variant="outline" className="px-3 py-1 text-sm">
-              No Team Selected
-            </Badge>
-          )}
-        </div>
+      <div className="container py-6">
+        <h1 className="text-3xl font-bold mb-2">Royal Teams</h1>
+        <p className="text-muted-foreground mb-8">
+          Join forces with like-minded spenders and rise through the ranks together
+        </p>
         
-        <Tabs defaultValue={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-4 mb-8">
-            <TabsTrigger value="overview" className="flex items-center">
-              <Shield className="h-4 w-4 mr-2" />
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="selection" className="flex items-center">
-              <Users className="h-4 w-4 mr-2" />
-              Join a Team
-            </TabsTrigger>
-            <TabsTrigger value="leaderboard" className="flex items-center">
-              <Trophy className="h-4 w-4 mr-2" />
-              Team Leaderboard
-            </TabsTrigger>
-            <TabsTrigger value="details" className="flex items-center">
-              <ChevronRight className="h-4 w-4 mr-2" />
-              Team Details
-            </TabsTrigger>
+        <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="mb-8">
+          <TabsList className="mb-4">
+            <TabsTrigger value="all">All Teams</TabsTrigger>
+            <TabsTrigger value="my-team">My Team</TabsTrigger>
+            <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="overview">
-            <TeamOverview 
-              user={{ 
-                id: '1', 
-                username: 'user1', 
-                displayName: 'User 1', 
-                profileImage: '/assets/avatars/default.png', 
-                joinedDate: new Date().toISOString(),
-                team: userTeam,
-                tier: 'basic',
-                rank: 0,
-                previousRank: 0,
-                totalSpent: 0,
-                amountSpent: 0,
-                walletBalance: 0,
-                spendStreak: 0,
-                settings: {
-                  profileVisibility: 'public',
-                  allowProfileLinks: true,
-                  theme: 'royal',
-                  notifications: true,
-                  emailNotifications: false,
-                  marketingEmails: false,
-                  showRank: true,
-                  darkMode: true,
-                  soundEffects: true,
-                  showBadges: true,
-                  showTeam: true,
-                  showSpending: true
-                },
-                profileBoosts: []
-              }}
-              onUpdateTeam={async (team) => { 
-                await handleTeamSelect(team);
-                return;
-              }}
-              onJoinTeam={() => setActiveTab('selection')}
-            />
-          </TabsContent>
-          
-          <TabsContent value="selection">
-            <TeamSelection 
-              onTeamSelect={handleTeamSelect}
-              selectedTeam={selectedTeam}
-            />
-          </TabsContent>
-          
-          <TabsContent value="leaderboard">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="md:col-span-2">
-                <TeamLeaderboard />
-              </div>
-              <div>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Team Benefits</CardTitle>
+          <TabsContent value="all" className="space-y-6">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {teams.map((team) => (
+                <Card key={team.id} className={
+                  `overflow-hidden transition-all hover:shadow-md ${team.color === currentUser.team ? 'ring-2 ring-primary' : ''}`
+                }>
+                  <CardHeader className="pb-2">
+                    <div className="flex justify-between items-start">
+                      <div className="flex items-center space-x-2">
+                        <Avatar className="h-8 w-8 rounded">
+                          <AvatarImage src={team.logo} alt={team.name} />
+                          <AvatarFallback>{team.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <CardTitle className="text-lg">{team.name}</CardTitle>
+                      </div>
+                      <TeamBadge team={team.color} size="sm" />
+                    </div>
+                    <CardDescription>Rank #{team.rank} • {team.memberCount.toLocaleString()} members</CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-sm text-white/70">
-                      Teams compete for glory and rewards on the royal leaderboard. 
-                      Your spending contributes to your team's rank.
-                    </p>
-                    <ul className="space-y-2 text-sm">
-                      <li className="flex items-start">
-                        <Shield className="h-4 w-4 mr-2 mt-0.5 text-green-500" />
-                        <span>Team-exclusive royal bonuses</span>
-                      </li>
-                      <li className="flex items-start">
-                        <Shield className="h-4 w-4 mr-2 mt-0.5 text-green-500" />
-                        <span>Weekly team competitions</span>
-                      </li>
-                      <li className="flex items-start">
-                        <Shield className="h-4 w-4 mr-2 mt-0.5 text-green-500" />
-                        <span>Special team cosmetics</span>
-                      </li>
-                    </ul>
+                  
+                  <CardContent className="pb-2">
+                    <p className="text-sm">{team.description}</p>
+                    
+                    <div className="mt-4 space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Total Spent:</span>
+                        <span className="font-medium">{team.totalSpent.toLocaleString()} coins</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Leader:</span>
+                        <span className="font-medium">{team.leaderUsername}</span>
+                      </div>
+                    </div>
                   </CardContent>
+                  
                   <CardFooter>
                     <Button 
-                      variant="outline" 
+                      variant={team.color === currentUser.team ? "outline" : "default"}
                       className="w-full"
-                      onClick={() => setActiveTab('selection')}
+                      onClick={() => setSelectedTeam(team.id)}
+                      disabled={team.color === currentUser.team}
                     >
-                      Change Team
+                      {team.color === currentUser.team ? "Current Team" : "Join Team"}
                     </Button>
                   </CardFooter>
                 </Card>
-              </div>
+              ))}
             </div>
           </TabsContent>
           
-          <TabsContent value="details">
-            {teamDetails && (
-              <TeamDetails team={teamDetails} />
-            )}
+          <TabsContent value="my-team">
+            {/* Current team view would go here */}
+            <div className="flex flex-col items-center justify-center p-12 text-center">
+              <h3 className="text-xl font-semibold mb-2">You are part of {teams.find(t => t.color === currentUser.team)?.name}</h3>
+              <p className="text-muted-foreground mb-4">
+                Work with your team to rise through the ranks and earn exclusive rewards!
+              </p>
+              <TeamSelector currentTeam={currentUser.team} onTeamSelect={(team) => console.log("Selected team", team)} />
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="leaderboard">
+            {/* Team leaderboard would go here */}
+            <div className="space-y-4">
+              {teams.sort((a, b) => a.rank - b.rank).map((team, idx) => (
+                <Card key={team.id} className="overflow-hidden">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="font-bold text-xl w-8 text-center">{idx + 1}</div>
+                      <Avatar className="h-12 w-12 rounded-md">
+                        <AvatarImage src={team.logo} alt={team.name} />
+                        <AvatarFallback>{team.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <h3 className="font-medium">{team.name}</h3>
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <span>{team.memberCount.toLocaleString()} members</span>
+                          <span className="mx-1">•</span>
+                          <TeamBadge team={team.color} size="sm" />
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-semibold">{team.totalSpent.toLocaleString()}</div>
+                        <div className="text-xs text-muted-foreground">Total coins</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </TabsContent>
         </Tabs>
       </div>
@@ -178,4 +173,4 @@ const TeamsPage: React.FC = () => {
   );
 };
 
-export default TeamsPage;
+export default Teams;

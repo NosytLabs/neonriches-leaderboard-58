@@ -1,10 +1,10 @@
 
 export interface ProfileImage {
-  id?: string;
+  id: string; // Changed from optional to required 
   url: string;
   isPrimary: boolean;
   caption?: string;
-  type?: string; // Added for compatibility
+  type?: string;
   imageSrc?: string; // Added for compatibility
 }
 
@@ -32,4 +32,22 @@ export interface ProfileSettings {
   showTeam: boolean;
   showSpending: boolean;
   showBadges: boolean;
+}
+
+// Add ProfileBoost definition with all required fields
+export interface ProfileBoost {
+  id: string;
+  type: string;
+  level: number; // Added for ProfileDecorations component
+  startDate: string;
+  endDate: string;
+  appliedBy: string;
+  strength: number; // Added for ProfileDecorations component
+  multiplier: number;
+  description: string;
+  name?: string;
+  isActive: boolean;
+  duration?: number;
+  price?: number;
+  icon?: string;
 }

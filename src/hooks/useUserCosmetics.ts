@@ -1,6 +1,8 @@
 
+import { useState } from 'react';
 import { UserProfile } from '@/types/user';
 import { UserCosmetics, CosmeticRarity } from '@/types/cosmetics';
+import { ProfileBoost } from '@/types/profile';
 
 /**
  * Hook for handling user cosmetics operations
@@ -35,7 +37,7 @@ export const useUserCosmetics = (
       };
       
       // Map legacy category names to the current property names
-      const categoryMap: Record<string, keyof UserCosmetics> = {
+      const categoryMap: Record<string, string> = {
         'borders': 'border',
         'colors': 'color',
         'fonts': 'font',
@@ -48,7 +50,7 @@ export const useUserCosmetics = (
       };
       
       // Get the correct property name
-      const propertyName = categoryMap[category] || category as keyof UserCosmetics;
+      const propertyName = categoryMap[category] || category;
       
       // Get the items array or initialize an empty array
       const items = userCosmetics[propertyName] || [];
@@ -90,7 +92,7 @@ export const useUserCosmetics = (
       const boostId = `boost_${Date.now()}`;
       
       // Create the boost object with required properties
-      const newBoost = {
+      const newBoost: ProfileBoost = {
         id: boostId,
         startDate: new Date().toISOString(),
         endDate: new Date(endTime).toISOString(),
@@ -98,7 +100,9 @@ export const useUserCosmetics = (
         type: 'visibility',
         strength: level,
         appliedBy: user.id,
-        isActive: true
+        isActive: true,
+        multiplier: level,
+        description: `Visibility Boost Level ${level}`
       };
       
       // Get existing boosts or initialize empty array

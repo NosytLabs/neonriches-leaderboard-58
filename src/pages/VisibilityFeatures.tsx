@@ -1,9 +1,8 @@
 import React from 'react';
-import { PageHeader } from '@/components/ui/page-header';
-import Shell from '@/components/Shell';
+import { Button } from '@/components/ui/button';
+import { Shell } from '@/components/Shell';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { RocketIcon, EyeIcon, BarChart, Users } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
 export default function VisibilityFeatures() {

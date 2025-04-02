@@ -55,7 +55,8 @@ export type CosmeticRarity =
   | 'exclusive' 
   | 'limited'
   | 'mythic'  // Added for compatibility
-  | 'unique';
+  | 'unique'
+  | 'noble';  // Added for compatibility with getMockeryTierColor
 
 export interface CosmeticItem {
   id: string;
@@ -91,7 +92,6 @@ export interface UserCosmetics {
   effect?: string[];
   badge?: string[];
   theme?: string[];
-  [key: string]: string[] | string | undefined;
   activeTitle?: string;
   activeBorder?: string;
   activeBackground?: string;
@@ -101,6 +101,7 @@ export interface UserCosmetics {
   activeEmoji?: string;
   activeBadge?: string;
   activeTheme?: string;
+  [key: string]: string[] | string | undefined; // Add index signature to support dynamic property access
 }
 
 export interface UserCosmeticState {

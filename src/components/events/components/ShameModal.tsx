@@ -1,131 +1,92 @@
 
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/Badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Laugh, Skull, Target, AlertTriangle } from 'lucide-react';
-import { LeaderboardUser } from '@/types/leaderboard';
-import { MockeryAction } from '@/types/mockery-types';
-import { getMockeryName, getMockeryDescription, getMockeryTier, getMockeryCost } from '@/utils/mockeryUtils';
-import { mockeryTierBadgeColors } from '@/utils/mockeryActionUtils';
+import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { TeamColor, MockeryAction, UserTier } from '@/types/mockery-types';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { getMockeryActionName, getMockeryDescription } from '@/utils/mockeryUtils';
+import { mockeryActionIcons } from '@/utils/mockeryActionUtils';
 
-interface ShameModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  target: LeaderboardUser | null;
-  onMockery: (action: MockeryAction) => void;
+export interface TargetUserType {
+  userId: string;
+  username: string;
+  profileImage: string;
+  totalSpent: number;
+  rank: number;
+  team: TeamColor;
+  tier: string | UserTier;
+  spendStreak: number;
+}
+
+export interface ShameModalProps {
+  targetUser: TargetUserType;
+  shameType: MockeryAction;
+  onConfirm: () => void;
+  onCancel: () => void;
+  hasDiscount?: boolean;
 }
 
 const ShameModal: React.FC<ShameModalProps> = ({
-  isOpen,
-  onClose,
-  target,
-  onMockery
+  targetUser,
+  shameType,
+  onConfirm,
+  onCancel,
+  hasDiscount = false
 }) => {
-  const [selectedAction, setSelectedAction] = useState<MockeryAction | null>(null);
-  
-  const mockeryActions: MockeryAction[] = [
-    'tomato',
-    'egg',
-    'crown',
-    'mock',
-    'laugh',
-    'shame',
-  ];
-  
-  const handleMockery = () => {
-    if (selectedAction && target) {
-      onMockery(selectedAction);
-      onClose();
-    }
-  };
-  
-  if (!target) return null;
+  const IconComponent = mockeryActionIcons[shameType] || mockeryActionIcons.mock;
+  const actionName = getMockeryActionName(shameType);
+  const actionDescription = getMockeryDescription(shameType);
   
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="glass-morphism border-white/10 sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Skull className="h-5 w-5 text-royal-crimson" />
-            Mock User
-          </DialogTitle>
-        </DialogHeader>
-        
-        <div className="flex items-center p-3 rounded-lg bg-black/20 border border-white/10 mb-4">
-          <Avatar className="h-10 w-10 mr-3 border border-white/20">
-            <AvatarImage src={target.profileImage} alt={target.username} />
-            <AvatarFallback>{target.displayName?.charAt(0) || target.username.charAt(0)}</AvatarFallback>
+    <DialogContent className="sm:max-w-md">
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-2">
+          <IconComponent className="h-5 w-5" />
+          <span>{actionName}</span>
+        </DialogTitle>
+      </DialogHeader>
+      
+      <div className="mt-4 space-y-4">
+        <div className="flex items-center space-x-3 p-4 border rounded-lg bg-background/50">
+          <Avatar className="h-12 w-12">
+            <AvatarImage src={targetUser.profileImage} alt={targetUser.username} />
+            <AvatarFallback>{targetUser.username.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
-          <div className="flex-1">
-            <p className="font-medium">{target.displayName || target.username}</p>
-            <p className="text-xs text-white/60">Rank #{target.rank} • ${target.totalSpent.toLocaleString()}</p>
+          <div className="flex-1 min-w-0">
+            <p className="font-medium truncate">{targetUser.username}</p>
+            <div className="flex items-center text-xs text-muted-foreground">
+              <span>Rank #{targetUser.rank}</span>
+              <span className="mx-1">•</span>
+              <Badge variant="outline" className="h-5 text-xs">{targetUser.team}</Badge>
+            </div>
           </div>
         </div>
         
-        <div className="space-y-2 mb-4">
-          <h3 className="font-medium mb-2 flex items-center">
-            <Target className="h-4 w-4 mr-2 text-royal-crimson" />
-            Select Mockery
-          </h3>
-          <div className="grid grid-cols-2 gap-2">
-            {mockeryActions.map((action) => {
-              const tier = getMockeryTier(action);
-              const tierColorClass = mockeryTierBadgeColors[tier];
-              
-              return (
-                <div 
-                  key={action}
-                  className={`p-3 rounded-md border cursor-pointer transition-colors ${
-                    selectedAction === action 
-                      ? 'bg-royal-crimson/20 border-royal-crimson/40' 
-                      : 'bg-black/20 border-white/10 hover:bg-royal-crimson/10 hover:border-royal-crimson/20'
-                  }`}
-                  onClick={() => setSelectedAction(action)}
-                >
-                  <div className="flex items-center mb-2">
-                    <Laugh className="h-4 w-4 mr-2" />
-                    <p className="font-medium text-sm">{getMockeryName(action)}</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <Badge variant="outline" className={tierColorClass}>
-                      {tier}
-                    </Badge>
-                    <span className="text-sm font-medium">${getMockeryCost(action)}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+        <div className="p-4 rounded-lg bg-muted/50">
+          <p className="text-sm">{actionDescription}</p>
+          
+          {hasDiscount && (
+            <p className="mt-2 text-sm text-emerald-600 font-medium">
+              You have a special discount on this action!
+            </p>
+          )}
         </div>
-        
-        {selectedAction && (
-          <div className="p-4 rounded-lg bg-black/20 border border-white/10 mb-4">
-            <h3 className="font-medium mb-2 flex items-center">
-              <AlertTriangle className="h-4 w-4 mr-2 text-yellow-500" />
-              Preview
-            </h3>
-            <p className="text-sm text-white/80">{getMockeryDescription(selectedAction)}</p>
-            <p className="text-xs text-white/60 mt-2">Cost: ${getMockeryCost(selectedAction)}</p>
-          </div>
-        )}
-        
-        <DialogFooter>
-          <Button variant="outline" className="flex-1" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button 
-            variant="default" 
-            className="flex-1 bg-royal-crimson hover:bg-royal-crimson/90"
-            onClick={handleMockery}
-            disabled={!selectedAction}
-          >
-            Deploy Mockery
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </div>
+      
+      <DialogFooter className="gap-2 sm:gap-0">
+        <Button variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button 
+          variant="default" 
+          className="bg-primary hover:bg-primary/90"
+          onClick={onConfirm}
+        >
+          Confirm
+        </Button>
+      </DialogFooter>
+    </DialogContent>
   );
 };
 

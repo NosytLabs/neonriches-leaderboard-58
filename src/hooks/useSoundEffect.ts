@@ -1,85 +1,140 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
-type SoundEffect = 'click' | 'success' | 'error' | 'notification' | 'mockery';
-
-interface UseSoundEffectResult {
-  play: (effect: SoundEffect) => void;
-  isPlaying: boolean;
-  setVolume: (volume: number) => void;
-  mute: () => void;
-  unmute: () => void;
-  isMuted: boolean;
+interface UseSoundEffectOptions {
+  baseUrl?: string;
+  volume?: number;
+  enabled?: boolean;
 }
 
-const useSoundEffect = (): UseSoundEffectResult => {
-  const [sounds] = useState<Record<SoundEffect, HTMLAudioElement | null>>({
-    click: typeof Audio !== 'undefined' ? new Audio('/sounds/click.mp3') : null,
-    success: typeof Audio !== 'undefined' ? new Audio('/sounds/success.mp3') : null,
-    error: typeof Audio !== 'undefined' ? new Audio('/sounds/error.mp3') : null,
-    notification: typeof Audio !== 'undefined' ? new Audio('/sounds/notification.mp3') : null,
-    mockery: typeof Audio !== 'undefined' ? new Audio('/sounds/mockery.mp3') : null,
-  });
-  
-  const [isPlaying, setIsPlaying] = useState(false);
+interface Sound {
+  name: string;
+  url: string;
+  element?: HTMLAudioElement;
+}
+
+export interface UseSoundEffectResult {
+  playSound: (name: string) => void;
+  stopSound: (name: string) => void;
+  stopAllSounds: () => void;
+  isPlaying: (name: string) => boolean;
+  toggleMute: () => void;
+  isMuted: boolean;
+  setVolume: (volume: number) => void;
+  getVolume: () => number;
+}
+
+/**
+ * A hook for playing sound effects in React components
+ */
+const useSoundEffect = (
+  sounds: Record<string, string>,
+  options: UseSoundEffectOptions = {}
+): UseSoundEffectResult => {
+  const { baseUrl = '/sounds/', volume = 0.5, enabled = true } = options;
+  const [audioElements, setAudioElements] = useState<Sound[]>([]);
   const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolumeState] = useState(0.5);
-  
-  const play = useCallback((effect: SoundEffect) => {
-    if (isMuted || !sounds[effect]) return;
+  const [currentVolume, setCurrentVolume] = useState(volume);
+
+  // Initialize audio elements
+  useEffect(() => {
+    if (!enabled) return;
     
-    try {
-      const sound = sounds[effect];
-      if (sound) {
-        sound.volume = volume;
-        sound.currentTime = 0;
-        setIsPlaying(true);
-        
-        sound.play()
-          .then(() => {
-            // Sound started playing
-          })
-          .catch((error) => {
-            // Sound failed to play, probably due to browser policy
-            console.error("Error playing sound:", error);
-          })
-          .finally(() => {
-            setIsPlaying(false);
-          });
-      }
-    } catch (error) {
-      console.error("Error in play sound:", error);
-      setIsPlaying(false);
-    }
-  }, [sounds, volume, isMuted]);
-  
-  const setVolume = useCallback((newVolume: number) => {
-    const clampedVolume = Math.max(0, Math.min(1, newVolume));
-    setVolumeState(clampedVolume);
+    const initialSounds = Object.entries(sounds).map(([name, url]) => ({
+      name,
+      url: url.startsWith('http') ? url : `${baseUrl}${url}`,
+      element: new Audio(url.startsWith('http') ? url : `${baseUrl}${url}`)
+    }));
     
-    // Update volume for all sounds
-    Object.values(sounds).forEach(sound => {
-      if (sound) {
-        sound.volume = clampedVolume;
+    initialSounds.forEach(sound => {
+      if (sound.element) {
+        sound.element.volume = currentVolume;
+        sound.element.preload = 'auto';
       }
     });
-  }, [sounds]);
-  
-  const mute = useCallback(() => {
-    setIsMuted(true);
+    
+    setAudioElements(initialSounds);
+    
+    // Cleanup
+    return () => {
+      initialSounds.forEach(sound => {
+        if (sound.element) {
+          sound.element.pause();
+          sound.element.src = '';
+        }
+      });
+    };
+  }, [baseUrl, sounds, enabled, currentVolume]);
+
+  // Play a sound by name
+  const playSound = useCallback((name: string) => {
+    if (!enabled || isMuted) return;
+    
+    const sound = audioElements.find(s => s.name === name);
+    if (sound?.element) {
+      sound.element.currentTime = 0;
+      sound.element.play().catch(error => {
+        console.error(`Error playing sound "${name}":`, error);
+      });
+    }
+  }, [audioElements, enabled, isMuted]);
+
+  // Stop a sound by name
+  const stopSound = useCallback((name: string) => {
+    const sound = audioElements.find(s => s.name === name);
+    if (sound?.element) {
+      sound.element.pause();
+      sound.element.currentTime = 0;
+    }
+  }, [audioElements]);
+
+  // Stop all sounds
+  const stopAllSounds = useCallback(() => {
+    audioElements.forEach(sound => {
+      if (sound.element) {
+        sound.element.pause();
+        sound.element.currentTime = 0;
+      }
+    });
+  }, [audioElements]);
+
+  // Check if a sound is playing
+  const isPlaying = useCallback((name: string) => {
+    const sound = audioElements.find(s => s.name === name);
+    return sound?.element ? !sound.element.paused : false;
+  }, [audioElements]);
+
+  // Toggle mute state
+  const toggleMute = useCallback(() => {
+    setIsMuted(prev => !prev);
   }, []);
-  
-  const unmute = useCallback(() => {
-    setIsMuted(false);
-  }, []);
-  
+
+  // Set volume for all sounds
+  const setVolume = useCallback((volume: number) => {
+    const clampedVolume = Math.min(1, Math.max(0, volume));
+    setCurrentVolume(clampedVolume);
+    
+    audioElements.forEach(sound => {
+      if (sound.element) {
+        sound.element.volume = clampedVolume;
+      }
+    });
+  }, [audioElements]);
+
+  // Get current volume
+  const getVolume = useCallback(() => {
+    return currentVolume;
+  }, [currentVolume]);
+
   return {
-    play,
+    playSound,
+    stopSound,
+    stopAllSounds,
     isPlaying,
+    toggleMute,
+    isMuted,
     setVolume,
-    mute,
-    unmute,
-    isMuted
+    getVolume
   };
 };
 

@@ -1,12 +1,11 @@
 
 import React from 'react';
-import { TeamColor } from '@/types/team';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { getTeamColor, getTeamName, asTeamColor } from '@/utils/teamUtils';
+import { toTeamColor, getTeamColor, getTeamName } from '@/utils/teamUtils';
 
 interface TeamBadgeProps {
-  team: string | TeamColor;
+  team: string;
   showName?: boolean;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
@@ -22,7 +21,7 @@ export const TeamBadge: React.FC<TeamBadgeProps> = ({
   size = 'md'
 }) => {
   // Convert to proper TeamColor type
-  const teamColor = asTeamColor(team);
+  const teamColor = toTeamColor(team);
   
   // Get team name and color
   const teamName = getTeamName(teamColor);

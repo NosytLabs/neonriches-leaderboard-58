@@ -51,6 +51,8 @@ export interface MockeryResult {
   };
   action?: MockeryAction;
   timestamp?: string;
+  actionType?: string; // Added missing property
+  error?: string; // Added missing property
 }
 
 // Define a mockery event that happened
@@ -68,14 +70,33 @@ export interface MockeryEvent {
   message?: string;
 }
 
-// Define team colors
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none';
+// Define team colors - expanded to include all colors used in the app
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze' | 'crimson';
 
-// Define user tiers
-export type UserTier = 'basic' | 'premium' | 'pro' | 'noble' | 'royal' | 'legendary';
+// Define user tiers - expanded to include all tiers used in the app
+export type UserTier = 
+  | 'basic' 
+  | 'premium' 
+  | 'pro' 
+  | 'noble' 
+  | 'royal' 
+  | 'legendary'
+  | 'free'
+  | 'founder'
+  | 'platinum'
+  | 'diamond'
+  | 'gold'
+  | 'silver'
+  | 'bronze'
+  | 'vip'
+  | 'whale'
+  | 'shark'
+  | 'dolphin'
+  | 'standard'
+  | 'elite';
 
 // Define gender for user profile
-export type Gender = 'male' | 'female' | 'other' | 'prefer_not_to_say';
+export type Gender = 'male' | 'female' | 'other' | 'prefer_not_to_say' | 'king' | 'queen' | 'jester' | 'noble';
 
 // Define leaderboard filter options
 export interface LeaderboardFilter {
@@ -114,3 +135,6 @@ export interface LeaderboardUser {
   spendChange?: number;
   avatarUrl?: string;
 }
+
+// Re-export TeamData for use in other files
+export type { TeamData } from './team';

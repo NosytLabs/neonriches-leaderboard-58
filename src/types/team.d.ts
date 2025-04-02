@@ -1,8 +1,7 @@
 
-import { TeamColor } from './mockery-types';
-
 // Re-export TeamColor to make it available from this module
-export { TeamColor };
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze' | 'crimson';
+export type TeamType = TeamColor; // Alias for backward compatibility
 
 export interface TeamData {
   id: string;
@@ -121,6 +120,3 @@ export interface TeamBenefits {
   tier: string;
   isActive: boolean;
 }
-
-// For backwards compatibility
-export type TeamType = TeamColor;
