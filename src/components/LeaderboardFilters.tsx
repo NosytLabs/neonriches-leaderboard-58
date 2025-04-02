@@ -10,8 +10,7 @@ import {
   SelectValue 
 } from '@/components/ui/select';
 import { Search } from 'lucide-react';
-import { LeaderboardFilter } from '@/types/leaderboard';
-import { TeamColor } from '@/types/mockery-types';
+import { LeaderboardFilter, TeamColor } from '@/types/mockery-types';
 
 interface LeaderboardFiltersProps {
   filter: LeaderboardFilter;
@@ -43,8 +42,8 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
   
   // Time frame options
   const timeFrameOptions = [
-    { value: 'all', label: 'All Time' },
-    { value: 'day', label: 'Today' },
+    { value: 'all-time', label: 'All Time' },
+    { value: 'today', label: 'Today' },
     { value: 'week', label: 'This Week' },
     { value: 'month', label: 'This Month' },
     { value: 'year', label: 'This Year' }
@@ -76,7 +75,7 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
           </div>
           
           <Select
-            value={filter.team as ('all' | TeamColor) || 'all'}
+            value={filter.team}
             onValueChange={(value: 'all' | TeamColor) => onFilterChange({ team: value })}
           >
             <SelectTrigger className="bg-black/40 border-white/10">
@@ -92,7 +91,7 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
           </Select>
           
           <Select
-            value={filter.tier || 'all'}
+            value={filter.tier}
             onValueChange={(value) => onFilterChange({ tier: value })}
           >
             <SelectTrigger className="bg-black/40 border-white/10">
@@ -108,8 +107,8 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
           </Select>
           
           <Select
-            value={(filter.timeframe as 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all') || 'all'}
-            onValueChange={(value: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all') => onFilterChange({ timeframe: value })}
+            value={filter.timeframe}
+            onValueChange={(value: "all-time" | "today" | "week" | "month" | "year") => onFilterChange({ timeframe: value })}
           >
             <SelectTrigger className="bg-black/40 border-white/10">
               <SelectValue placeholder="Time Frame" />
@@ -124,8 +123,8 @@ const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
           </Select>
           
           <Select
-            value={filter.sortBy || 'rank'}
-            onValueChange={(value) => onFilterChange({ sortBy: value })}
+            value={filter.sortBy}
+            onValueChange={(value: "rank" | "spent" | "username") => onFilterChange({ sortBy: value })}
           >
             <SelectTrigger className="bg-black/40 border-white/10">
               <SelectValue placeholder="Sort By" />

@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import LeaderboardFilters from '@/components/LeaderboardFilters';
 import LeaderboardList from '@/components/leaderboard/components/LeaderboardList';
 import LeaderboardHeader from '@/components/LeaderboardHeader';
-import { LeaderboardUser, LeaderboardFilter } from '@/types/leaderboard';
+import { LeaderboardUser, LeaderboardFilter } from '@/types/mockery-types';
 import { useMockLeaderboard } from '@/hooks/useMockLeaderboard';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';

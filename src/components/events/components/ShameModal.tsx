@@ -11,7 +11,7 @@ import {
   getMockeryActionPrice
 } from '@/utils/mockeryUtils';
 import { getDiscountedShamePrice } from '@/utils/shameUtils';
-import { getInitials } from '@/utils/stringUtils';
+import { getInitials } from '@/utils/formatters';
 
 interface ShameModalProps {
   targetUser: {

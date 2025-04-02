@@ -1,61 +1,47 @@
 
 import { MockeryAction } from '@/types/mockery-types';
-import { UserTier } from '@/types/user-types';
+import { UserTier } from '@/types/mockery-types';
+import { getMockeryActionPrice } from '@/utils/mockeryUtils';
 
 /**
- * Returns a discounted price for a mockery action based on the target's tier
- * @param action The mockery action
- * @param targetTier The tier of the target user
- * @returns The discounted price
+ * Get shame action price based on mockery action
  */
-export const getDiscountedShamePrice = (action: MockeryAction, targetTier?: string): number => {
-  // Get base price
-  const basePrice = getShameActionPrice(action);
-  
-  // Calculate discount based on target tier
-  let discount = 0;
-  
-  if (targetTier) {
-    switch(targetTier) {
-      case 'basic':
-        discount = 0.1; // 10% discount
-        break;
-      case 'premium':
-        discount = 0.2; // 20% discount
-        break;
-      case 'elite':
-        discount = 0.3; // 30% discount
-        break;
-      case 'royal':
-        discount = 0.5; // 50% discount
-        break;
-      case 'founder':
-        discount = 0.75; // 75% discount
-        break;
-      default:
-        discount = 0; // No discount
-    }
-  }
-  
-  // Apply discount and round to nearest integer
-  return Math.round(basePrice * (1 - discount));
+export const getShameActionPrice = (action: MockeryAction): number => {
+  return getMockeryActionPrice(action);
 };
 
 /**
- * Returns the price for a mockery action
- * @param action The mockery action
- * @returns The price in currency units
+ * Get shame tier prices
  */
-export const getShameActionPrice = (action: MockeryAction): number => {
-  switch(action) {
-    case 'tomatoes': return 5;
-    case 'eggs': return 10;
-    case 'confetti': return 15;
-    case 'flowers': return 20;
-    case 'shame': return 25;
-    case 'crown': return 30;
-    case 'carrot': return 10;
-    case 'fish': return 15;
-    default: return 10;
-  }
+export const getShameTierPrices = (tier: UserTier | string): number => {
+  const tierPrices: Record<string, number> = {
+    'free': 50,
+    'basic': 100,
+    'premium': 200,
+    'pro': 300,
+    'royal': 500,
+    'legendary': 1000
+  };
+  
+  return tierPrices[tier as string] || 100;
+};
+
+/**
+ * Get the discounted price for a shame action based on tier
+ */
+export const getDiscountedShamePrice = (action: MockeryAction): number => {
+  const basePrice = getShameActionPrice(action);
+  return Math.floor(basePrice * 0.5); // 50% discount
+};
+
+// Check if there is a weekly discount
+export const hasWeeklyDiscount = (): boolean => {
+  // In a real application, this might be based on the current week/day or fetched from an API
+  return true;
+};
+
+// Get the weekly discounted action
+export const getWeeklyDiscountedAction = (): MockeryAction => {
+  // In a real application, this might rotate weekly or be fetched from an API
+  return 'tomatoes';
 };

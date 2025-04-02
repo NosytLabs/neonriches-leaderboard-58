@@ -115,3 +115,34 @@ export interface MockeryEvent {
   message?: string;
   appliedBy?: string;
 }
+
+// Add LeaderboardUser interface
+export interface LeaderboardUser {
+  id: string;
+  userId?: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  avatarUrl?: string;
+  isVerified?: boolean;
+  isProtected?: boolean;
+  team: string;
+  tier: string;
+  rank: number;
+  previousRank: number;
+  totalSpent: number;
+  walletBalance?: number;
+  spendStreak?: number;
+  joinedDate?: string;
+  joinDate?: string;
+}
+
+// Define LeaderboardFilter type
+export interface LeaderboardFilter {
+  team: "all" | TeamColor;
+  tier: "all" | string;
+  timeframe: "all-time" | "today" | "week" | "month" | "year" | "all";
+  search: string;
+  sortBy: "rank" | "spent" | "username";
+  sortDirection: "asc" | "desc";
+}

@@ -66,3 +66,6 @@ export const formatTimeAgo = (dateString: string): string => {
   
   return `${Math.floor(diffInSeconds / 31536000)} years ago`;
 };
+
+// Export all string formatters
+export * from './stringFormatters';
