@@ -10,7 +10,7 @@ import RoyalDepositEffect from '@/components/deposit/RoyalDepositEffect';
 import MockeryEffect from '@/components/mockery/MockeryEffect';
 import { useAuth } from '@/contexts/auth';
 import { Button } from '@/components/ui/button';
-import { MockeryAction } from '@/types/mockery';
+import { MockeryAction } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
 
 const RoyalPrestige = () => {
@@ -19,7 +19,7 @@ const RoyalPrestige = () => {
   const [showDepositEffect, setShowDepositEffect] = useState(false);
   const [depositAmount, setDepositAmount] = useState(0);
   const [showMockeryEffect, setShowMockeryEffect] = useState(false);
-  const [mockeryAction, setMockeryAction] = useState<MockeryAction>('tomatoes');
+  const [mockeryAction, setMockeryAction] = useState<MockeryAction>('tomato');
   const [mockeryUsername, setMockeryUsername] = useState('');
   
   // Mock data for the wishing well
@@ -183,10 +183,10 @@ const RoyalPrestige = () => {
                       Mockery Effects
                     </h3>
                     <div className="grid grid-cols-2 gap-2">
-                      <Button variant="outline" className="glass-morphism border-white/10" onClick={() => testMockeryEffect('tomatoes', 'PeasantUser')}>
+                      <Button variant="outline" className="glass-morphism border-white/10" onClick={() => testMockeryEffect('tomato', 'PeasantUser')}>
                         Tomatoes
                       </Button>
-                      <Button variant="outline" className="glass-morphism border-white/10" onClick={() => testMockeryEffect('eggs', 'LowSpender')}>
+                      <Button variant="outline" className="glass-morphism border-white/10" onClick={() => testMockeryEffect('egg', 'LowSpender')}>
                         Eggs
                       </Button>
                       <Button variant="outline" className="glass-morphism border-white/10" onClick={() => testMockeryEffect('courtJester', 'FoolishNoble')}>

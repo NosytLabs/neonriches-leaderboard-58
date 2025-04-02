@@ -51,10 +51,35 @@ export interface TeamStats {
   defeats: number;
 }
 
-export default {
-  TeamColor,
-  TeamType,
-  Team,
-  TeamMember,
-  TeamStats
-};
+// For compatibility with default exports
+export interface TeamData {
+  id: string;
+  color: TeamColor;
+  name: string;
+  description: string;
+  logoUrl: string;
+  benefits: string[];
+  members: number;
+  totalContribution: number;
+  rank: number;
+  previousRank: number;
+}
+
+export interface TeamRole {
+  id: string;
+  name: string;
+  permissions: string[];
+}
+
+export interface TeamBenefits {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface TeamInvite {
+  id: string;
+  teamId: string;
+  userId: string;
+  expiresAt: string;
+}

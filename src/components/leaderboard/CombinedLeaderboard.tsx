@@ -45,7 +45,7 @@ const CombinedLeaderboard: React.FC = () => {
   const [filteredUsers, setFilteredUsers] = useState<LeaderboardUser[]>([]);
   const [showShameModal, setShowShameModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
-  const [shameAction, setShameAction] = useState<MockeryAction>('tomatoes');
+  const [shameAction, setShameAction] = useState<MockeryAction>('tomato');
   
   useEffect(() => {
     if (!mockLeaderboardData) return;
@@ -99,7 +99,7 @@ const CombinedLeaderboard: React.FC = () => {
   
   const handleShameUser = (user: LeaderboardUser) => {
     setSelectedUser(user);
-    setShameAction('tomatoes');
+    setShameAction('tomato');
     setShowShameModal(true);
   };
   

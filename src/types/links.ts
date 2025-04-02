@@ -8,6 +8,7 @@ export interface SocialLink {
   icon?: string;
   title?: string;
   // Add any other properties needed for social links
+  clicks?: number;
 }
 
 export interface ProfileLink {
@@ -29,10 +30,3 @@ export interface ClickableLink {
   icon?: string;
   clicks?: number;
 }
-
-export default {
-  SocialLink,
-  ProfileLink,
-  LinkType,
-  ClickableLink
-};

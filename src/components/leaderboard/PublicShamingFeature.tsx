@@ -23,8 +23,8 @@ const PublicShamingFeature = () => {
       rank: 3,
       totalSpent: 5200,
       mockeryCount: {
-        tomatoes: 12,
-        eggs: 5,
+        tomato: 12,
+        egg: 5,
         thumbsDown: 3,
         carrot: 1,
         fish: 2
@@ -38,8 +38,8 @@ const PublicShamingFeature = () => {
       rank: 7,
       totalSpent: 3800,
       mockeryCount: {
-        tomatoes: 8,
-        eggs: 2,
+        tomato: 8,
+        egg: 2,
         thumbsDown: 7,
         carrot: 4,
         fish: 1
@@ -49,15 +49,15 @@ const PublicShamingFeature = () => {
   
   const [userMockery, setUserMockery] = useState<Record<string, Partial<Record<MockeryAction, number>>>>({
     '1': {
-      tomatoes: 12,
-      eggs: 5,
+      tomato: 12,
+      egg: 5,
       thumbsDown: 3,
       carrot: 1,
       fish: 2
     },
     '2': {
-      tomatoes: 8,
-      eggs: 2,
+      tomato: 8,
+      egg: 2,
       thumbsDown: 7,
       carrot: 4,
       fish: 1
@@ -114,8 +114,8 @@ const PublicShamingFeature = () => {
                         variant="outline" 
                         className="bg-black/30 text-xs px-1.5"
                       >
-                        {key === 'tomatoes' && <Flame className="h-3 w-3 mr-1 text-red-500" />}
-                        {key === 'eggs' && <Egg className="h-3 w-3 mr-1 text-yellow-500" />}
+                        {key === 'tomato' && <Flame className="h-3 w-3 mr-1 text-red-500" />}
+                        {key === 'egg' && <Egg className="h-3 w-3 mr-1 text-yellow-500" />}
                         {key === 'thumbsDown' && <ThumbsDown className="h-3 w-3 mr-1 text-blue-500" />}
                         {key === 'carrot' && <Laugh className="h-3 w-3 mr-1 text-orange-500" />}
                         {key === 'fish' && <Fish className="h-3 w-3 mr-1 text-cyan-500" />}
@@ -132,7 +132,7 @@ const PublicShamingFeature = () => {
                 size="sm" 
                 variant="outline" 
                 className="w-full border-red-500/20 hover:border-red-500/40 hover:bg-red-500/10 text-xs"
-                onClick={() => handleApplyMockery(user.id, 'tomatoes')}
+                onClick={() => handleApplyMockery(user.id, 'tomato')}
               >
                 <Flame className="h-3.5 w-3.5 mr-1.5 text-red-500" />
                 Tomatoes
@@ -142,7 +142,7 @@ const PublicShamingFeature = () => {
                 size="sm" 
                 variant="outline" 
                 className="w-full border-yellow-500/20 hover:border-yellow-500/40 hover:bg-yellow-500/10 text-xs"
-                onClick={() => handleApplyMockery(user.id, 'eggs')}
+                onClick={() => handleApplyMockery(user.id, 'egg')}
               >
                 <Egg className="h-3.5 w-3.5 mr-1.5 text-yellow-500" />
                 Eggs

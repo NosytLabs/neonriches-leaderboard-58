@@ -13,10 +13,24 @@ const LEGACY_TO_STANDARD_MAPPING: Record<string, MockeryAction> = {
 /**
  * Map standard mockery actions to their legacy format
  */
-const STANDARD_TO_LEGACY_MAPPING: Record<string, string> = {
+const STANDARD_TO_LEGACY_MAPPING: Record<MockeryAction, string> = {
   'tomato': 'tomatoes',
   'egg': 'eggs',
-  'putridEgg': 'putridEggs'
+  'putridEgg': 'putridEggs',
+  'taunt': 'taunt',
+  'shame': 'shame',
+  'jester': 'jester',
+  'mock': 'mock',
+  'challenge': 'challenge',
+  'joust': 'joust',
+  'duel': 'duel',
+  'crown': 'crown',
+  'stocks': 'stocks',
+  'silence': 'silence',
+  'courtJester': 'courtJester',
+  'smokeBomb': 'smokeBomb',
+  'protection': 'protection',
+  'thumbsDown': 'thumbsDown'
 };
 
 /**

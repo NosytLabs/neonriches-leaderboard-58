@@ -103,6 +103,7 @@ export interface LeaderboardUser {
   spendChange?: number;
   isProtected?: boolean;
   amountSpent?: number;
+  spentAmount?: number; // For compatibility
 }
 
 export interface LeaderboardFilter {
@@ -156,4 +157,4 @@ export function convertLegacyAction(action: MockeryAction | LegacyMockeryAction)
 }
 
 // Re-export for consistency
-export { TeamColor };
+export type { TeamColor };
