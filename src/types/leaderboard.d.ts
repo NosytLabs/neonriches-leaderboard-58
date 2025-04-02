@@ -1,5 +1,4 @@
 
-
 export interface LeaderboardUser {
   id: string;
   userId: string;
@@ -29,11 +28,11 @@ export interface LeaderboardUser {
 }
 
 export interface LeaderboardFilter {
-  team?: string;
-  tier?: string;
+  team?: string | 'all';
+  tier?: string | 'all';
   // Use both timeframe and timeFrame for compatibility
-  timeframe?: 'all' | 'day' | 'week' | 'month' | 'year' | 'all-time' | 'today' | string;
-  timeFrame?: 'all' | 'day' | 'week' | 'month' | 'year' | 'all-time' | 'today' | string;
+  timeframe?: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all' | string;
+  timeFrame?: 'all-time' | 'today' | 'week' | 'month' | 'year' | 'all' | string;
   search?: string;
   sort?: string;
   sortBy?: string;
@@ -54,4 +53,3 @@ export interface TypedLeaderboardFilter extends LeaderboardFilter {
   sortBy?: string;
   sortDirection?: 'asc' | 'desc';
 }
-

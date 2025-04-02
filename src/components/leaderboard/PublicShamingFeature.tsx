@@ -4,14 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Egg, Flame, Laugh, ThumbsDown } from 'lucide-react';
+import { Egg, Flame, Laugh, Fish, ThumbsDown } from 'lucide-react';
 import { getInitials } from '@/utils/stringUtils';
 import { MockeryAction } from '@/types/mockery-types';
 import { 
-  getMockeryName, 
-  getMockeryDescription, 
-  getMockeryTier, 
-  getMockeryTierColorClass 
+  getMockeryActionDescription, 
+  getMockeryTierColor 
 } from '@/utils/mockeryUtils';
 
 const PublicShamingFeature = () => {
@@ -28,7 +26,8 @@ const PublicShamingFeature = () => {
         tomatoes: 12,
         eggs: 5,
         thumbsDown: 3,
-        carrot: 1
+        carrot: 1,
+        fish: 2
       }
     },
     {
@@ -42,7 +41,8 @@ const PublicShamingFeature = () => {
         tomatoes: 8,
         eggs: 2,
         thumbsDown: 7,
-        carrot: 4
+        carrot: 4,
+        fish: 1
       }
     }
   ];
@@ -52,13 +52,15 @@ const PublicShamingFeature = () => {
       tomatoes: 12,
       eggs: 5,
       thumbsDown: 3,
-      carrot: 1
+      carrot: 1,
+      fish: 2
     },
     '2': {
       tomatoes: 8,
       eggs: 2,
       thumbsDown: 7,
-      carrot: 4
+      carrot: 4,
+      fish: 1
     }
   });
   
@@ -116,6 +118,7 @@ const PublicShamingFeature = () => {
                         {key === 'eggs' && <Egg className="h-3 w-3 mr-1 text-yellow-500" />}
                         {key === 'thumbsDown' && <ThumbsDown className="h-3 w-3 mr-1 text-blue-500" />}
                         {key === 'carrot' && <Laugh className="h-3 w-3 mr-1 text-orange-500" />}
+                        {key === 'fish' && <Fish className="h-3 w-3 mr-1 text-cyan-500" />}
                         {count}
                       </Badge>
                     ))}

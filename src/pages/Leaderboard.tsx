@@ -21,7 +21,8 @@ const Leaderboard = () => {
     tier: 'all',
     timeframe: 'all-time',
     search: '',
-    sortBy: 'rank'
+    sortBy: 'rank',
+    sortDirection: 'asc' // Add sortDirection to fix the error
   });
   
   const [filteredUsers, setFilteredUsers] = useState<LeaderboardUser[]>([]);

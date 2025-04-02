@@ -1,62 +1,61 @@
 
 import { MockeryAction } from '@/types/mockery-types';
-import { getMockeryActionPrice } from './mockeryUtils';
+import { UserTier } from '@/types/user-types';
 
 /**
- * Apply a discount to a shame action price based on the user's tier
- * @param action - The mockery action
- * @param userTier - The target user's tier
- * @param discountPercent - The discount percentage (0-100)
+ * Returns a discounted price for a mockery action based on the target's tier
+ * @param action The mockery action
+ * @param targetTier The tier of the target user
  * @returns The discounted price
  */
-export const getDiscountedShamePrice = (
-  action: MockeryAction,
-  userTier: string,
-  discountPercent: number = 50
-): number => {
-  const basePrice = getMockeryActionPrice(action);
+export const getDiscountedShamePrice = (action: MockeryAction, targetTier?: string): number => {
+  // Get base price
+  const basePrice = getShameActionPrice(action);
   
-  // Apply various discounts based on tier
-  let finalDiscount = discountPercent;
+  // Calculate discount based on target tier
+  let discount = 0;
   
-  // Royal tier gets less discount (they're more valuable targets)
-  if (userTier === 'royal') {
-    finalDiscount = Math.min(finalDiscount, 25);
+  if (targetTier) {
+    switch(targetTier) {
+      case 'basic':
+        discount = 0.1; // 10% discount
+        break;
+      case 'premium':
+        discount = 0.2; // 20% discount
+        break;
+      case 'elite':
+        discount = 0.3; // 30% discount
+        break;
+      case 'royal':
+        discount = 0.5; // 50% discount
+        break;
+      case 'founder':
+        discount = 0.75; // 75% discount
+        break;
+      default:
+        discount = 0; // No discount
+    }
   }
   
-  // Lower tiers get more discount to encourage shaming them
-  if (userTier === 'basic' || userTier === 'free') {
-    finalDiscount = Math.max(finalDiscount, 75);
-  }
-  
-  // Calculate final price with the discount
-  const discountMultiplier = (100 - finalDiscount) / 100;
-  const discountedPrice = Math.max(1, Math.floor(basePrice * discountMultiplier));
-  
-  return discountedPrice;
+  // Apply discount and round to nearest integer
+  return Math.round(basePrice * (1 - discount));
 };
 
 /**
- * Get the price for a shame action (wrapper for getMockeryActionPrice)
- * @param action - The mockery action
- * @returns The price of the action
+ * Returns the price for a mockery action
+ * @param action The mockery action
+ * @returns The price in currency units
  */
 export const getShameActionPrice = (action: MockeryAction): number => {
-  return getMockeryActionPrice(action);
-};
-
-/**
- * Check if there is a weekly discount on shame actions
- */
-export const hasWeeklyDiscount = (): boolean => {
-  // In a real app, this would check if the current week has a discount
-  return true;
-};
-
-/**
- * Get the weekly discounted action
- */
-export const getWeeklyDiscountedAction = (): MockeryAction => {
-  // In a real app, this would return the action with a discount this week
-  return 'tomatoes';
+  switch(action) {
+    case 'tomatoes': return 5;
+    case 'eggs': return 10;
+    case 'confetti': return 15;
+    case 'flowers': return 20;
+    case 'shame': return 25;
+    case 'crown': return 30;
+    case 'carrot': return 10;
+    case 'fish': return 15;
+    default: return 10;
+  }
 };

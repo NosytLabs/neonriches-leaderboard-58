@@ -34,6 +34,17 @@ export interface UserProfile {
   };
   lastActive?: string;
   gender?: string;
+  // Additional fields from errors
+  activeTitle?: string;
+  profileViews?: number;
+  profileClicks?: number;
+  purchasedFeatures?: string[];
+  subscription?: {
+    planId: string;
+    nextBillingDate: string;
+    status?: 'active' | 'cancelled' | 'paused';
+    tier?: string;
+  };
 }
 
 export interface UserSettings {
@@ -87,8 +98,26 @@ export interface ProfileBoost {
   appliedBy: string;
 }
 
+// Interface for profile images
+export interface ProfileImage {
+  id: string;
+  url: string;
+  isPrimary: boolean;
+  caption?: string;
+  type?: string;
+}
+
+// Interface for profile links
+export interface ProfileLink {
+  id: string;
+  platform: string;
+  url: string;
+  title?: string;
+  icon?: string;
+}
+
 // Type alias for a simplified User type that matches UserProfile
 export type User = UserProfile;
 
 // Re-export TeamColor and UserTier for easier access
-export { TeamColor, UserTier };
+export type { TeamColor, UserTier };

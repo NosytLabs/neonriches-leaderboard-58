@@ -23,7 +23,9 @@ export type MockeryAction =
   | 'taunt'
   | 'challenge'
   | 'joust'
-  | 'duel';
+  | 'duel'
+  | 'carrot'
+  | 'fish';
 
 // Define the mockery tiers
 export type MockeryTier = 
@@ -48,7 +50,18 @@ export type UserTier =
   | 'royal'
   | 'founder'
   | 'pro'
-  | 'gold';
+  | 'gold'
+  | 'silver'
+  | 'bronze'
+  | 'platinum' 
+  | 'diamond'
+  | 'vip'
+  | 'whale'
+  | 'shark'
+  | 'dolphin'
+  | 'noble'
+  | 'standard'
+  | 'legendary';
 
 // Define team data interface
 export interface TeamData {

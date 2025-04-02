@@ -4,6 +4,9 @@ import { MockeryAction, MockeryTier, TeamColor, TeamData, UserTier } from './moc
 // Re-export types correctly
 export type { MockeryAction, MockeryTier, TeamColor, TeamData, UserTier };
 
+// Provide a TeamType alias for TeamColor for backward compatibility
+export type TeamType = TeamColor;
+
 // Add any other types needed
 export interface MockeryNotification {
   id: string;
