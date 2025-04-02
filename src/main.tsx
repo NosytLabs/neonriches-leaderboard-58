@@ -6,6 +6,7 @@ import App from './App';
 import './styles/main.css';
 import './styles/animations.css';
 import { preloadCriticalAssets } from './utils/resourcePreload';
+import * as serviceWorkerRegistration from './utils/serviceWorkerRegistration';
 
 // Start preloading critical resources as early as possible
 preloadCriticalAssets();
@@ -17,17 +18,7 @@ if (process.env.NODE_ENV === 'production') {
   });
   
   // Register service worker
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js')
-        .then(registration => {
-          console.log('SW registered: ', registration);
-        })
-        .catch(error => {
-          console.log('SW registration failed: ', error);
-        });
-    });
-  }
+  serviceWorkerRegistration.register();
 }
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

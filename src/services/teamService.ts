@@ -1,75 +1,72 @@
 
-import { TeamColor } from '@/types/mockery-types';
-import { getTeamColor, getTeamName, getTeamMotto, getTeamBenefits } from '@/utils/teamUtils';
+/**
+ * Team service provides functionality for team management
+ */
 
-class TeamService {
-  getTeamColor(team: TeamColor): string {
-    return getTeamColor(team);
-  }
-
-  getTeamName(team: TeamColor): string {
-    return getTeamName(team);
-  }
-
-  getTeamMotto(team: TeamColor): string {
-    return getTeamMotto(team);
-  }
-
-  getTeamBenefits(team: TeamColor): string[] {
-    return getTeamBenefits(team);
-  }
-
-  getTeamMembers(team: TeamColor): Promise<string[]> {
-    // Mock implementation - would connect to API in real app
-    return Promise.resolve(['user1', 'user2', 'user3']);
-  }
-
-  getTeamRank(team: TeamColor): Promise<number> {
-    // Mock implementation - would connect to API in real app
-    const mockRanks: Record<TeamColor, number> = {
-      red: 3,
-      blue: 2,
-      green: 4,
-      gold: 1,
-      purple: 5,
-      silver: 6,
-      bronze: 7,
-      crimson: 8,
-      neutral: 9,
-      none: 10
-    };
-    
-    return Promise.resolve(mockRanks[team] || 0);
-  }
-
-  getAllTeams(): TeamColor[] {
-    return ['red', 'blue', 'green', 'gold', 'purple', 'silver', 'bronze', 'crimson', 'neutral', 'none'];
-  }
-
-  getTeamById(id: string): any {
-    // Mock implementation
-    const teams = [
-      { id: 'team-1', color: 'red', name: 'Red Team' },
-      { id: 'team-2', color: 'blue', name: 'Blue Team' },
-      { id: 'team-3', color: 'green', name: 'Green Team' }
-    ];
-    return teams.find(team => team.id === id) || null;
-  }
-
-  getTeamByColor(color: string): any {
-    // Mock implementation
-    const teams = [
-      { id: 'team-1', color: 'red', name: 'Red Team' },
-      { id: 'team-2', color: 'blue', name: 'Blue Team' },
-      { id: 'team-3', color: 'green', name: 'Green Team' }
-    ];
-    return teams.find(team => team.color === color) || null;
-  }
+export interface Team {
+  id: string;
+  name: string;
+  description?: string;
+  color: string;
+  memberCount: number;
+  totalSpent: number;
 }
 
-// Create singleton instance
-const teamService = new TeamService();
+// Mock teams data - in a real app this would come from API
+const MOCK_TEAMS: Team[] = [
+  {
+    id: 'red-team',
+    name: 'Red Team',
+    description: 'The team of passion and fire',
+    color: 'red',
+    memberCount: 156,
+    totalSpent: 12400000
+  },
+  {
+    id: 'green-team',
+    name: 'Green Team',
+    description: 'The team of growth and prosperity',
+    color: 'green',
+    memberCount: 142,
+    totalSpent: 11800000
+  },
+  {
+    id: 'blue-team',
+    name: 'Blue Team',
+    description: 'The team of calm and wisdom',
+    color: 'blue',
+    memberCount: 168,
+    totalSpent: 13100000
+  }
+];
 
-// Export default and named export
+/**
+ * Get all available teams
+ */
+const getAllTeams = (): Promise<Team[]> => {
+  return Promise.resolve(MOCK_TEAMS);
+};
+
+/**
+ * Get a team by ID
+ */
+const getTeamById = (id: string): Promise<Team | null> => {
+  const team = MOCK_TEAMS.find(team => team.id === id) || null;
+  return Promise.resolve(team);
+};
+
+/**
+ * Get the top team by total spending
+ */
+const getTopTeam = (): Promise<Team> => {
+  const sortedTeams = [...MOCK_TEAMS].sort((a, b) => b.totalSpent - a.totalSpent);
+  return Promise.resolve(sortedTeams[0]);
+};
+
+const teamService = {
+  getAllTeams,
+  getTeamById,
+  getTopTeam
+};
+
 export default teamService;
-export { teamService };
