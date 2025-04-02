@@ -44,8 +44,28 @@ export const getTeamName = (team: TeamColor): string => {
 /**
  * Get the Tailwind background color class for a team color
  */
-export const getTeamTailwindBgColor = (team: TeamColor): string => {
+export const getTeamBgColor = (team: TeamColor): string => {
   const bgColorMap: Record<TeamColor, string> = {
+    red: 'bg-red-500',
+    blue: 'bg-blue-500',
+    green: 'bg-green-500',
+    gold: 'bg-yellow-400',
+    purple: 'bg-purple-500',
+    none: 'bg-gray-400',
+    neutral: 'bg-slate-400',
+    silver: 'bg-gray-300',
+    bronze: 'bg-amber-600',
+    crimson: 'bg-red-700'
+  };
+  
+  return bgColorMap[team] || 'bg-gray-400';
+};
+
+/**
+ * Get the Tailwind border color class for a team color
+ */
+export const getTeamTailwindBgColor = (team: TeamColor): string => {
+  const borderColorMap: Record<TeamColor, string> = {
     red: 'border-red-500',
     blue: 'border-blue-500',
     green: 'border-green-500',
@@ -58,11 +78,12 @@ export const getTeamTailwindBgColor = (team: TeamColor): string => {
     crimson: 'border-red-700'
   };
   
-  return bgColorMap[team] || 'border-gray-400';
+  return borderColorMap[team] || 'border-gray-400';
 };
 
 export default {
   getTeamColor,
   getTeamName,
+  getTeamBgColor,
   getTeamTailwindBgColor
 };

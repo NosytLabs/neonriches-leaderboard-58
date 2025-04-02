@@ -13,7 +13,7 @@ import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
 import { adaptToUserProfile } from '@/utils/userAdapter';
-import { UserProfile } from '@/types/user-consolidated'; // Changed import to use consolidated type
+import { UserProfile } from '@/types/user'; // Import from user for component props
 import { toTeamColor } from '@/utils/typeConverters';
 
 const EnhancedDashboard = () => {
@@ -75,14 +75,15 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Create a user object that satisfies the UserProfile type requirements from user-consolidated
-  const userForComponents: UserProfile = {
+  // Create a compatible user profile object that works with all components
+  const userForComponents = {
     ...user,
     // Ensure required properties are present with non-optional values
     profileImage: user.profileImage || '',
     team: toTeamColor(user.team || 'none'),
     previousRank: user.previousRank || 0,
     // Add missing properties for UserProfile type
+    bio: user.bio || '',
     settings: user.settings || {
       profileVisibility: 'public',
       allowProfileLinks: true,
@@ -108,7 +109,7 @@ const EnhancedDashboard = () => {
       badge: [],
       theme: []
     }
-  };
+  } as UserProfile;
 
   const handleSpend = () => {
     toast({

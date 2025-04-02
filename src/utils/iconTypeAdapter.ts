@@ -56,6 +56,7 @@ export const adaptIconColor = (color: string | undefined): string => {
   return colorMap[color] || color;
 };
 
+// Also export directly as default
 export default {
   adaptIconSize,
   adaptIconColor

@@ -1,7 +1,7 @@
 
 import { useCallback, useContext } from 'react';
 import { SoundType, SoundOptions } from '@/types/sound-types';
-import { SoundContext, SoundContextType } from '@/contexts/sound';
+import { SoundContext } from '@/contexts/sound';
 
 export interface UseSoundHook {
   playSound: (type: SoundType, options?: SoundOptions) => void;

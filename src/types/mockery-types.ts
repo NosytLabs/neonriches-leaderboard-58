@@ -1,4 +1,3 @@
-
 /**
  * Define all the mockery action types
  */
@@ -6,9 +5,9 @@
 export type MockeryAction = 
   | 'shame'
   | 'mock'
-  | 'praise' // Added missing action
+  | 'praise' // Ensuring praise is included
   | 'taunt'
-  | 'carrot' // Added missing action
+  | 'carrot' // Ensuring carrot is included
   | 'honor'
   | 'applaud'
   | 'laugh'
@@ -25,7 +24,22 @@ export type MockeryAction =
   | 'crown'
   | 'throne'
   | 'buy'
-  | 'boost';
+  | 'boost'
+  | 'tomatoes'
+  | 'eggs'
+  | 'confetti'
+  | 'flowers'
+  | 'putridEggs'
+  | 'stocks'
+  | 'jester'
+  | 'silence'
+  | 'courtJester'
+  | 'smokeBomb'
+  | 'protection'
+  | 'joust'
+  | 'duel'
+  | 'fish'
+  | 'thumbsDown';
 
 export type MockeryTier = 
   | 'common'

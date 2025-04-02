@@ -1,3 +1,4 @@
+
 import { UserProfile } from '@/types/user-consolidated';
 import { ProfileBoost } from '@/types/boost';
 import { UserCosmetics } from '@/types/cosmetics';
@@ -8,12 +9,12 @@ import { UserTier } from '@/types/user';
 /**
  * Creates a demo user profile for testing purposes
  */
-export const createDemoUserProfile = (): UserProfile => {
+export const createDemoUserProfile = (id: string = 'demo-user', username: string = 'demo_user'): UserProfile => {
   return {
-    id: 'demo-user',
-    username: 'demo_user',
-    displayName: 'Demo User',
-    email: 'demo@example.com',
+    id: id,
+    username: username,
+    displayName: `${username.charAt(0).toUpperCase()}${username.slice(1)}`,
+    email: `${username}@example.com`,
     profileImage: 'https://via.placeholder.com/150',
     bio: 'This is a demo user for testing purposes.',
     joinedDate: new Date().toISOString(),
@@ -172,7 +173,7 @@ export const hasPermission = (
  */
 export const addProfileBoostWithDays = (
   user: UserProfile,
-  boostType: string | BoostEffectType,  // Use union type for backward compatibility
+  boostType: string,  // Use simple string for easier compatibility
   durationDays: number = 30
 ): ProfileBoost[] => {
   if (!user) return [];

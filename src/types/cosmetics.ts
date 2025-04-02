@@ -1,4 +1,3 @@
-
 /**
  * Cosmetic items and related types
  */
@@ -25,11 +24,11 @@ export type CosmeticType =
   | 'cosmetic'   // Added for compatibility with boost.ts
   | 'feature';   // Added for compatibility with boost.ts
 
-// String literal type alias for CosmeticCategory
-export type CosmeticCategory = CosmeticType;
+// String literal type for category
+export type CosmeticCategory = string;
 
-// Type alias for backward compatibility
-export { CosmeticType as CosmeticCategory };
+// No conflicting exports
+export { CosmeticType };
 
 export type CosmeticRarity = 
   | 'common'
@@ -74,6 +73,7 @@ export interface SocialLink {
   clicks?: number;
   display?: string;
   primary?: boolean;
+  type?: string;
 }
 
 // Updated interface to allow for string indices and handle active* properties
