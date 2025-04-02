@@ -17,9 +17,10 @@ export type MockeryAction =
   | 'mock'
   | 'challenge'
   | 'joust'
-  | 'duel';
+  | 'duel'
+  | 'fish'; // Add missing 'fish' action
 
-export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+export type MockeryTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'royal' | 'basic';
 
 export interface MockedUser {
   userId: string;
@@ -31,6 +32,11 @@ export interface MockedUser {
   team: TeamColor;
   tier: UserTier;
   spendStreak: number;
+  id?: string; // Backward compatibility
+  action?: string; // For some components
+  appliedAt?: string; // For some components
+  appliedBy?: string; // For some components
+  expiresAt?: string; // For some components
 }
 
 export interface MockeryEvent {
@@ -42,6 +48,7 @@ export interface MockeryEvent {
   message?: string;
   expiresAt?: string;
   isActive: boolean;
+  fromId?: string; // For backward compatibility
 }
 
 export interface LeaderboardUser {
@@ -61,6 +68,7 @@ export interface LeaderboardUser {
   spendStreak: number;
   spendChange?: number;
   rankChange?: number;
+  spentAmount?: number; // For backward compatibility
 }
 
 export interface LeaderboardFilter {
@@ -76,11 +84,14 @@ export interface TeamData {
   id: string;
   name: string;
   color: TeamColor;
-  totalContribution: number;
-  members: number;
+  totalContribution: number; // Add this property
+  members: number; // Add this property
   memberIds: string[];
   rank: number;
   previousRank: number;
   description: string;
   logoUrl: string;
 }
+
+// Re-export TeamColor for other modules
+export { TeamColor };

@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -5,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Crown, Award, Calendar, Shield, Download, Twitter, ExternalLink, Wallet, Trophy, Coins } from 'lucide-react';
 import { UserProfile } from '@/types/user-consolidated';
 import { formatDate } from '@/utils/formatters';
-import { safeToString } from '@/utils/typeConverters';
+import { safeToString } from '@/utils/stringUtils';
 import html2canvas from 'html2canvas';
 import RoyalDecoration from '@/components/ui/royal-decoration';
 import { SpendAmount } from '@/components/ui/theme-components';
@@ -109,7 +110,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
         displayName: user.displayName || user.username,
         profileImage: user.profileImage || '',
         bio: user.bio || '',
-        joinedDate: user.joinedDate || user.joinDate || user.createdAt || new Date().toISOString(),
+        joinedDate: user.joinedDate || new Date().toISOString(),
         isVerified: user.isVerified || false,
         following: Array.isArray(user.following) ? user.following : [],
         followers: Array.isArray(user.followers) ? user.followers : [],
@@ -120,7 +121,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
         totalSpent: user.totalSpent,
         amountSpent: user.amountSpent || user.totalSpent || 0,
         walletBalance: user.walletBalance || 0
-      };
+      } as UserProfileUser;
       
       console.log('NFT Metadata:', userForService);
       
@@ -150,7 +151,7 @@ const RoyalCertificate: React.FC<RoyalCertificateProps> = ({
     window.open(url, '_blank');
   };
   
-  const joinedDate = user.joinedDate || user.joinDate || user.createdAt || new Date().toString();
+  const joinedDate = user.joinedDate || new Date().toString();
   const formattedDate = formatDate(joinedDate);
   
   return (

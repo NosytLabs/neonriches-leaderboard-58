@@ -18,3 +18,16 @@ export const toTeamColor = (team: string | null): any => {
   const validColors = ['red', 'blue', 'green', 'gold', 'purple', 'silver', 'bronze', 'neutral', 'none'];
   return validColors.includes(team) ? team : 'none';
 };
+
+/**
+ * Safely converts any value to a string, handling null and undefined
+ * @param value - The value to convert
+ * @param defaultValue - Default value if input is null/undefined
+ * @returns String representation of the value
+ */
+export const safeToString = (value: any, defaultValue: string = ''): string => {
+  if (value === null || value === undefined) {
+    return defaultValue;
+  }
+  return String(value);
+};

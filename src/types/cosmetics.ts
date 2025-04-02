@@ -18,6 +18,10 @@ export interface CosmeticItem {
   unlockCondition?: string;
   dateAdded?: string;
   isLimited?: boolean;
+  // Additional properties needed by components
+  cssClass?: string;
+  imageSrc?: string;
+  enabled?: boolean;
 }
 
 export interface UserCosmetics {

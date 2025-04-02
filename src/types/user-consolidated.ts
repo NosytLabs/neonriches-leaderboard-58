@@ -1,6 +1,4 @@
 
-import { UserTier, TeamColor, Gender } from './user';
-
 export interface UserSettings {
   profileVisibility: 'public' | 'private' | 'followers';
   allowProfileLinks: boolean;
@@ -89,6 +87,7 @@ export interface UserProfile {
   lastActive?: string;
   boostCount?: number;
   purchasedFeatures?: string[];
+  teamRank?: number;
   certificateNFT?: {
     mintAddress: string;
     mintDate: string;
@@ -102,5 +101,11 @@ export interface UserProfile {
   };
 }
 
-// Use type to make it clear these are type exports
-export type { UserTier, TeamColor, Gender };
+// Types used throughout the application
+export type UserTier = 'free' | 'basic' | 'premium' | 'gold' | 'silver' | 'bronze' | 'elite' | 'pro' | 'royal' | 'legendary';
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'silver' | 'bronze' | 'neutral' | 'none';
+export type Gender = 'male' | 'female' | 'other' | 'none';
+
+// Export these for backward compatibility 
+export type TeamType = TeamColor;
+export type User = UserProfile;
