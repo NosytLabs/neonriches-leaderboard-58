@@ -2,75 +2,49 @@
 import { MockeryAction } from '@/types/mockery-types';
 
 /**
- * Mapping from legacy names to standardized MockeryAction names
- */
-const LEGACY_TO_STANDARD: Record<string, MockeryAction> = {
-  'tomatoes': 'tomato',
-  'eggs': 'egg',
-  'putridEggs': 'putridEgg',
-  'thumbs_down': 'thumbs_down',
-  'thumbsDown': 'thumbs_down',
-  'rotten_egg': 'rotten_egg',
-};
-
-/**
- * Normalize a string to a valid MockeryAction
- * 
- * This handles legacy action names and ensures consistency
- * throughout the application.
+ * Normalize mockery action names to ensure consistent handling
+ * Handles cases like snake_case, camelCase, etc.
  */
 export const normalizeMockeryAction = (action: string): MockeryAction => {
-  if (!action) return 'mock';
-  
-  // First check if it's a direct match with a standard action
-  if (isValidAction(action as MockeryAction)) {
-    return action as MockeryAction;
-  }
-  
-  // Then check if it's a legacy name that needs to be mapped
-  if (action in LEGACY_TO_STANDARD) {
-    return LEGACY_TO_STANDARD[action];
-  }
-  
-  // Default fallback
-  return 'mock';
+  // Map of various formats to standardized format
+  const normalizationMap: Record<string, MockeryAction> = {
+    'putrid_egg': 'putridEgg',
+    'putrid-egg': 'putridEgg',
+    'putridegg': 'putridEgg',
+    'court_jester': 'courtJester',
+    'court-jester': 'courtJester',
+    'courtjester': 'courtJester',
+    'smoke_bomb': 'smokeBomb',
+    'smoke-bomb': 'smokeBomb',
+    'smokebomb': 'smokeBomb',
+    'thumbs_down': 'thumbsDown',
+    'thumbs-down': 'thumbsDown',
+    'thumbsdown': 'thumbsDown',
+    'royal_decree': 'royal_decree',
+    'royal-decree': 'royal_decree',
+    'royaldecree': 'royal_decree',
+    'shame_certificate': 'shame_certificate',
+    'shame-certificate': 'shame_certificate',
+    'shamecertificate': 'shame_certificate',
+    'rotten_egg': 'rotten_egg',
+    'rotten-egg': 'rotten_egg',
+    'rottenegg': 'rotten_egg'
+  };
+
+  // Return the normalized form if it exists, otherwise return as is
+  return normalizationMap[action.toLowerCase()] || action as MockeryAction;
 };
 
-/**
- * Checks if an action string is a valid MockeryAction
- */
-export const isValidAction = (action: string): action is MockeryAction => {
-  const validActions: MockeryAction[] = [
-    'tomato',
-    'egg',
-    'rotten_egg',
-    'flame',
-    'heart',
-    'thumbs_down',
-    'laugh',
-    'skull',
-    'crown',
-    'putridEgg',
-    'stocks',
-    'jester',
-    'shame',
-    'silence',
-    'courtJester',
-    'smokeBomb',
-    'protection',
-    'taunt',
-    'mock',
-    'challenge',
-    'joust',
-    'duel',
-    'fish',
-    'thumbsDown'
-  ];
-  
-  return validActions.includes(action as MockeryAction);
+// Export function to get readable form of mockery action
+export const getReadableMockeryAction = (action: string): string => {
+  // Convert camelCase/snake_case to readable format
+  return action
+    .replace(/_/g, ' ')
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, str => str.toUpperCase());
 };
 
 export default {
   normalizeMockeryAction,
-  isValidAction
+  getReadableMockeryAction
 };

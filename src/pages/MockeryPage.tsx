@@ -3,11 +3,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shell } from '@/components/ui/shell';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge'; // Fixed casing
+import { Badge } from '@/components/ui/badge'; 
 import { useMockery } from '@/hooks/use-mockery';
 import MockeryComponent from '@/components/mockery/MockeryComponent';
 import HallOfShame from '@/components/mockery/components/HallOfShame';
 import { MockeryAction } from '@/types/mockery-types';
+import { UserProfile } from '@/types/user';
 
 // Mock data for the Hall of Shame
 const mockShameUsers = [
@@ -37,22 +38,22 @@ const MockeryPage = () => {
   const navigate = useNavigate();
   const { targetUser, mockUser, isMocking, mockeryResult, costForAction, resetMockery } = useMockery();
 
-  const handleMockUser = async (actionType: string, targetUserId: string) => {
-    // Convert string to MockeryAction type
-    const mockeryAction = actionType as MockeryAction;
-    
+  const handleMockUser = async (actionType: MockeryAction, targetUserId: string) => {
     // Mock implementation: Replace with actual user retrieval logic
-    const targetUser = {
+    const mockTargetUser: UserProfile = {
       id: targetUserId,
       username: `user_${targetUserId}`,
       displayName: `User ${targetUserId}`,
       profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
       team: "gold",
       tier: "royal",
-      rank: 1
+      rank: 1,
+      previousRank: 2,
+      amountSpent: 1000,
+      joinedDate: new Date().toISOString()
     };
 
-    await mockUser(mockeryAction, targetUser);
+    await mockUser(actionType, mockTargetUser);
   };
 
   const handleGoBack = () => {

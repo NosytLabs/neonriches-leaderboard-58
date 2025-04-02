@@ -12,9 +12,7 @@ import { useSound } from '@/hooks/sounds/use-sound';
 import OverviewTab from './tabs/OverviewTab';
 import RankTab from './tabs/RankTab';
 import AchievementsTab from './tabs/AchievementsTab';
-import { toUserProfile } from '@/utils/userTypeConverter';
-import { UserProfile } from '@/types/user';
-import { toTeamColor } from '@/utils/typeConverters';
+import { adaptUserProfile } from '@/utils/typeAdapter';
 
 const EnhancedDashboard = () => {
   const { user } = useAuth();
@@ -75,14 +73,8 @@ const EnhancedDashboard = () => {
     return null;
   }
 
-  // Convert the user to the type needed by components with proper type casting
-  const userForComponents: UserProfile = {
-    ...user,
-    team: toTeamColor(user.team),
-    // Ensure other required properties
-    displayName: user.displayName || user.username || '',
-    walletBalance: user.walletBalance || 0,
-  };
+  // Adapt the user to ensure it has all required fields with valid values
+  const adaptedUser = adaptUserProfile(user);
 
   const handleSpend = () => {
     toast({
@@ -103,7 +95,7 @@ const EnhancedDashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <DashboardWelcome user={userForComponents} />
+      <DashboardWelcome user={adaptedUser} />
       
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid grid-cols-5 w-full bg-black/20">
@@ -132,7 +124,7 @@ const EnhancedDashboard = () => {
         <div className="mt-6">
           <TabsContent value="overview">
             <OverviewTab 
-              user={userForComponents}
+              user={adaptedUser}
               onSpend={handleSpend} 
               onPaymentSuccess={handlePaymentSuccess} 
             />
@@ -143,7 +135,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="team">
-            <TeamStatusCard user={userForComponents} />
+            <TeamStatusCard user={adaptedUser} />
           </TabsContent>
           
           <TabsContent value="achievements">
@@ -151,7 +143,7 @@ const EnhancedDashboard = () => {
           </TabsContent>
           
           <TabsContent value="upgrade">
-            <CashThroneUpgrade user={userForComponents} />
+            <CashThroneUpgrade user={adaptedUser} />
           </TabsContent>
         </div>
       </Tabs>
