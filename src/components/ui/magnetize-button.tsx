@@ -27,6 +27,7 @@ function MagnetizeButton({
     particleCount = 12,
     attractRadius = 50,
     color = 'purple',
+    children,
     ...props
 }: MagnetizeButtonProps) {
     const [isAttracting, setIsAttracting] = useState(false);
@@ -58,8 +59,8 @@ function MagnetizeButton({
     const handleInteractionEnd = useCallback(async () => {
         setIsAttracting(false);
         await particlesControl.start((i) => ({
-            x: particles[i].x,
-            y: particles[i].y,
+            x: particles[i]?.x || 0,
+            y: particles[i]?.y || 0,
             transition: {
                 type: "spring",
                 stiffness: 100,
@@ -87,7 +88,8 @@ function MagnetizeButton({
         const borderColor = getTeamBorderColor(color);
         
         // Extract color base from the team text color (e.g. "text-red-500" -> "red")
-        const baseColor = textColor.match(/text-([a-z]+)-/)?.[1] || 'gray';
+        const baseColorMatch = textColor.match(/text-([a-z]+)-/);
+        const baseColor = baseColorMatch ? baseColorMatch[1] : 'gray';
         
         return {
             background: bgLight,
@@ -121,7 +123,7 @@ function MagnetizeButton({
                 <motion.div
                     key={index}
                     custom={index}
-                    initial={{ x: particles[index].x, y: particles[index].y }}
+                    initial={{ x: particles[index]?.x || 0, y: particles[index]?.y || 0 }}
                     animate={particlesControl}
                     className={cn(
                         "absolute w-1.5 h-1.5 rounded-full",
@@ -138,7 +140,7 @@ function MagnetizeButton({
                         isAttracting && "scale-110"
                     )}
                 />
-                {isAttracting ? "Attracting" : "Hover me"}
+                {children || (isAttracting ? "Attracting" : "Hover me")}
             </span>
         </Button>
     );

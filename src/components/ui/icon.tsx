@@ -69,6 +69,7 @@ export const Icon = React.forwardRef<SVGSVGElement, IconProps>((props, ref) => {
     <LucideIcon
       ref={ref}
       className={cn(sizeClass, colorClass, animationClass, className)}
+      style={typeof style === 'object' ? style : undefined}
       {...restProps}
     />
   );

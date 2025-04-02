@@ -27,7 +27,11 @@ export type IconColor =
   | 'red'
   | 'blue'
   | 'green'
-  | 'purple';
+  | 'purple'
+  | 'muted'
+  | 'accent'
+  | 'info'
+  | 'danger';
 
 // Define icon style options
 export type IconStyle =
@@ -57,7 +61,11 @@ export type MedievalIconName =
   | 'tower'
   | 'banner'
   | 'dagger'
-  | 'potion';
+  | 'potion'
+  | 'medal'
+  | 'gem'
+  | 'heart'
+  | 'trophy';
 
 // Icon props interface
 export interface IconProps {
@@ -120,5 +128,9 @@ export const iconColorMap: Record<IconColor, string> = {
   'red': 'text-red-500',
   'blue': 'text-blue-500',
   'green': 'text-green-500',
-  'purple': 'text-purple-500'
+  'purple': 'text-purple-500',
+  'muted': 'text-muted-foreground',
+  'accent': 'text-accent-foreground',
+  'info': 'text-blue-500',
+  'danger': 'text-red-500'
 };
