@@ -26,7 +26,23 @@ export type MockeryAction =
   | 'public_mockery'
   | 'challenge'
   | 'joust'
-  | 'duel';
+  | 'duel'
+  // Extended action types to match implementations
+  | 'egg'
+  | 'putridEgg'
+  | 'crown'
+  | 'stocks'
+  | 'jester'
+  | 'courtJester'
+  | 'silence'
+  | 'taunt'
+  | 'smokeBomb'
+  | 'protection'
+  | 'flame'
+  | 'heart'
+  | 'skull'
+  | 'laugh'
+  | 'thumbs_down';
 
 // Mockery result types
 export interface MockeryResult {
@@ -35,10 +51,20 @@ export interface MockeryResult {
   cost?: number;
   effect?: string;
   targetId?: string;
+  actionType?: MockeryAction;
+  error?: string;
 }
 
 // Mockery tier system
-export type MockeryTier = 'basic' | 'advanced' | 'royal';
+export type MockeryTier = 
+  | 'basic' 
+  | 'advanced' 
+  | 'royal'
+  | 'common'
+  | 'uncommon'
+  | 'rare'
+  | 'epic'
+  | 'legendary';
 
 // Mockery event types
 export interface MockeryEvent {
@@ -62,6 +88,10 @@ export interface LeaderboardUser {
   team?: TeamColor;
   tier?: UserTier;
   spendingHistory?: number[];
+  userId?: string;
+  totalSpent?: number;
+  spendStreak?: number;
+  isVerified?: boolean;
 }
 
 // Filter options for leaderboard
@@ -79,6 +109,9 @@ export interface LeaderboardOptions {
   filter?: LeaderboardFilter;
   search?: string;
   team?: TeamColor | null;
+  timeframe?: string;
+  tier?: string;
+  page?: number;
 }
 
 // Mock user for mockery operations
@@ -91,16 +124,4 @@ export interface MockeryUser {
   team?: TeamColor;
   tier?: UserTier;
   immunityPoints?: number;
-}
-
-// Define team data for team-related operations
-export interface TeamData {
-  id: TeamColor;
-  name: string;
-  color: string;
-  members: number;
-  totalSpent: number;
-  description: string;
-  motto: string;
-  icon: string;
 }

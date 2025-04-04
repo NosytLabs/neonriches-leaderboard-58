@@ -1,93 +1,38 @@
 
-// Consolidated team types
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple' | 'none' | 'neutral' | 'silver' | 'bronze' | 'crimson';
+// Team related types
 
+// Team colors available in the system
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'none';
+
+// Team data structure
 export interface TeamData {
-  id: string;
+  id: TeamColor;
   name: string;
+  color: string;
+  members: number;
+  totalSpent: number;
   description: string;
-  color: TeamColor;
-  memberCount: number;
-  members?: number;
-  leaderUsername?: string;
-  leaderUserId?: string;
+  motto: string;
+  icon: string;
+  rank?: number;
   logo?: string;
-  logoUrl?: string;
-  bannerImage?: string;
-  isActive?: boolean;
-  slogan?: string;
-  code?: string;
-  rankBonusMultiplier?: number;
-  totalContribution?: number;
-  totalSpent?: number;
-  rank?: number;
-  previousRank?: number;
-  securityGuarantee?: string;
-  absurdStat?: string;
-  historicalNote?: string;
-  nftJoke?: string;
-  cryptoRoast?: string;
-  benefits?: string[];
-  icon?: string;
-  motto?: string;
-  ranking?: number;
+  memberCount?: number;
 }
 
-export interface TeamMember {
-  id?: string;
-  userId: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-  joinDate: string;
-  contribution: number;
-  rank?: number;
-  role?: string;
-  isActive?: boolean;
-  isLeader?: boolean;
-  tier?: string;
-}
-
-export interface TeamStats {
-  totalMembers: number;
-  activeMembers: number;
-  totalContribution: number;
-  averageContribution: number;
-  leaderboardPosition: number;
-  contributionChange: number;
-  weeklyGrowth: number;
-  victories?: number;
-  defeats?: number;
-  rankHistory?: number[];
-}
-
-export interface TeamLeaderboardEntry {
+// Team invitation
+export interface TeamInvite {
   id: string;
-  teamId?: string;
-  teamName?: string;
-  name?: string;
-  teamColor?: TeamColor;
-  color?: TeamColor;
-  memberCount: number;
-  totalContribution: number;
-  rank: number;
-  previousRank?: number;
-  logo?: string;
-  logoUrl?: string;
-  position?: number;
-  team?: TeamColor;
-  totalSpent?: number;
-  avgSpent?: number;
+  teamId: TeamColor;
+  inviterId: string;
+  inviteeId: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: string;
+  expiresAt?: string;
 }
 
-export interface TeamTheme {
-  primary: string;
-  secondary: string;
-  accent: string;
-  text: string;
-  border: string;
-  background: string;
-  backgroundSecondary: string;
-  hoverBg: string;
-  activeBg: string;
+// Team benefits
+export interface TeamBenefits {
+  id: TeamColor;
+  name: string;
+  benefits: string[];
 }

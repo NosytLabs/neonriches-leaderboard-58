@@ -1,5 +1,5 @@
 
-import { ButtonHTMLAttributes, ReactNode, RefAttributes } from "react";
+import { ButtonHTMLAttributes, ReactNode } from "react";
 
 // Button variants available in the application
 export type ButtonVariant = 
