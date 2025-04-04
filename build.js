@@ -9,10 +9,11 @@ if (!fs.existsSync('./tsconfig.build.json')) {
 }
 
 try {
-  // Run TypeScript compiler with the custom config, avoiding the --build flag
-  // This addresses the error "Compiler option '--noEmit' may not be used with '--build'"
+  // Run TypeScript compiler with the custom config
+  // Using -p flag instead of --build to avoid the conflict with noEmit
+  // Additionally, explicitly use --noEmit false to override any inherited setting
   console.log('Building TypeScript project with custom config...');
-  execSync('npx tsc -p tsconfig.build.json', { stdio: 'inherit' });
+  execSync('npx tsc -p tsconfig.build.json --noEmit false', { stdio: 'inherit' });
   console.log('TypeScript build completed successfully');
 } catch (error) {
   console.error('Build failed:', error.message);
