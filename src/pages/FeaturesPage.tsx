@@ -1,13 +1,13 @@
 
 import React from 'react';
-import MainLayout from '@/layouts/MainLayout';
+import Layout from '@/layouts/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown, Trophy, Users, Sparkles, Shield, Zap, Gift, Target, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const FeaturesPage: React.FC = () => {
   return (
-    <MainLayout>
+    <Layout>
       <div className="container mx-auto py-12 px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">Royal Decrees</h1>
@@ -102,7 +102,7 @@ const FeaturesPage: React.FC = () => {
           </p>
         </div>
       </div>
-    </MainLayout>
+    </Layout>
   );
 };
 
