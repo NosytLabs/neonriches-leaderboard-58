@@ -6,6 +6,8 @@ import { AuthProvider } from '@/contexts/auth';
 import { SolanaProvider } from '@/contexts/SolanaContext';
 import { ToastProvider } from '@/components/ui/toast-provider';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
+
+// Pages
 import Leaderboard from '@/pages/LeaderboardPage';
 import MockeryPage from '@/pages/MockeryPage';
 import Auth from '@/pages/Auth';
@@ -14,6 +16,13 @@ import Chat from '@/pages/Chat';
 import Events from '@/pages/Events';
 import Community from '@/pages/Community';
 import Teams from '@/pages/Teams';
+import ProfilePage from '@/pages/ProfilePage';
+import WalletPage from '@/pages/WalletPage';
+import SettingsPage from '@/pages/SettingsPage';
+import AboutPage from '@/pages/AboutPage';
+import FeaturesPage from '@/pages/FeaturesPage';
+import HistoryPage from '@/pages/HistoryPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 // Use dynamic import for react-helmet-async to handle cases where it might not be available yet
 let HelmetProvider: React.ComponentType<{children: React.ReactNode, context?: object}>;
@@ -35,21 +44,66 @@ const App: React.FC = () => {
         <SolanaProvider>
           <AuthProvider>
             <Routes>
+              {/* Public Routes */}
               <Route path="/" element={<Leaderboard />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/mockery" element={<MockeryPage />} />
-              <Route path="/mockery/:action" element={<MockeryPage />} />
+              <Route path="/teams" element={<Teams />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/features" element={<FeaturesPage />} />
               <Route path="/login" element={<Auth />} />
               <Route path="/register" element={<Auth />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/events" element={<Events />} />
-              <Route path="/community" element={<Community />} />
-              <Route path="/teams" element={<Teams />} />
+              <Route path="/status-through-history" element={<HistoryPage />} />
+              
+              {/* Protected Routes */}
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
                 </ProtectedRoute>
               } />
+              <Route path="/mockery" element={
+                <ProtectedRoute>
+                  <MockeryPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/mockery/:action" element={
+                <ProtectedRoute>
+                  <MockeryPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/chat" element={
+                <ProtectedRoute>
+                  <Chat />
+                </ProtectedRoute>
+              } />
+              <Route path="/events" element={
+                <ProtectedRoute>
+                  <Events />
+                </ProtectedRoute>
+              } />
+              <Route path="/community" element={
+                <ProtectedRoute>
+                  <Community />
+                </ProtectedRoute>
+              } />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              } />
+              <Route path="/profile/:username" element={<ProfilePage />} />
+              <Route path="/wallet" element={
+                <ProtectedRoute>
+                  <WalletPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/settings" element={
+                <ProtectedRoute>
+                  <SettingsPage />
+                </ProtectedRoute>
+              } />
+              
+              {/* Catch all route */}
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
             <Toaster />
           </AuthProvider>

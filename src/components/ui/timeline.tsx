@@ -1,78 +1,46 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/classNameUtils';
 
-export interface TimelineProps {
-  children: React.ReactNode;
+interface TimelineItem {
+  year: string;
+  title: string;
+  description: string;
+  icon?: React.ReactNode;
+}
+
+interface TimelineProps {
+  items: TimelineItem[];
   className?: string;
 }
 
-export const Timeline = ({ children, className }: TimelineProps) => {
-  return (
-    <div className={cn("space-y-4", className)}>
-      {children}
-    </div>
-  );
-};
-
-export interface TimelineItemProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export const TimelineItem = ({ children, className }: TimelineItemProps) => {
+export function Timeline({ items, className }: TimelineProps) {
   return (
     <div className={cn("relative", className)}>
-      {children}
+      {/* Timeline line */}
+      <div className="absolute left-9 top-0 bottom-0 w-px bg-gradient-to-b from-royal-gold/30 via-white/20 to-royal-gold/30" />
+      
+      <div className="space-y-12">
+        {items.map((item, index) => (
+          <div key={index} className="relative flex gap-6">
+            {/* Year marker */}
+            <div className="flex flex-col items-center">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black border border-white/20 z-10">
+                <span className="text-sm font-medium text-royal-gold">{item.year.split(' ')[0]}</span>
+              </div>
+              <span className="text-xs text-muted-foreground mt-1 whitespace-nowrap">
+                {item.year.split(' ')[1] || ''}
+              </span>
+            </div>
+            
+            {/* Content */}
+            <div className="flex flex-col glass-morphism border border-white/10 rounded-lg p-4">
+              <h3 className="font-semibold">{item.title}</h3>
+              <p className="text-muted-foreground mt-1">{item.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
-};
-
-export interface TimelineConnectorProps {
-  className?: string;
 }
-
-export const TimelineConnector = ({ className }: TimelineConnectorProps) => {
-  return (
-    <div className={cn("absolute top-5 left-4 bottom-0 w-px bg-white/20", className)} />
-  );
-};
-
-export interface TimelineHeaderProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export const TimelineHeader = ({ children, className }: TimelineHeaderProps) => {
-  return (
-    <div className={cn("flex items-center mb-2", className)}>
-      {children}
-    </div>
-  );
-};
-
-export interface TimelineIconProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export const TimelineIcon = ({ children, className }: TimelineIconProps) => {
-  return (
-    <div className={cn("relative z-10 flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 border border-primary/20 mr-3", className)}>
-      {children}
-    </div>
-  );
-};
-
-export interface TimelineBodyProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export const TimelineBody = ({ children, className }: TimelineBodyProps) => {
-  return (
-    <div className={cn("ml-11", className)}>
-      {children}
-    </div>
-  );
-};

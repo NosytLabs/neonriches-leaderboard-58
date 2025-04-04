@@ -1,17 +1,41 @@
 
-import { UserTier, TeamColor } from './mockery-types';
+import { TeamColor } from './team';
 
-// Re-export types with proper syntax for isolatedModules
-export type { TeamColor, UserTier } from './mockery-types';
-export type { Gender } from './mockery-types';
+export type UserTier = 
+  | 'free' | 'basic' | 'premium' | 'royal' | 'legendary'
+  | 'founder' | 'noble' | 'knight' | 'baron' | 'viscount' 
+  | 'earl' | 'duke' | 'prince' | 'king' | 'emperor' | 'whale'
+  | 'pro' | 'standard' | 'elite' | 'silver' | 'gold' 
+  | 'platinum' | 'diamond' | 'bronze' | 'vip';
 
-// Export TeamType alias for TeamColor for backward compatibility
-export type TeamType = TeamColor;
+export interface ProfileBoost {
+  id: string;
+  startDate: string;
+  endDate: string;
+  level: number;
+  type: string;
+  strength: number;
+  appliedBy: string;
+  isActive: boolean;
+}
+
+export interface UserCosmetics {
+  border: string[];
+  color: string[];
+  font: string[];
+  emoji: string[];
+  title: string[];
+  background: string[];
+  effect: string[];
+  badge: string[];
+  theme: string[];
+  [key: string]: string[];
+}
 
 export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'followers' | 'friends';
+  profileVisibility: 'public' | 'private' | 'friends';
   allowProfileLinks: boolean;
-  theme: 'royal' | 'dark' | 'light' | 'system' | string;
+  theme: string;
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
@@ -19,88 +43,50 @@ export interface UserSettings {
   darkMode: boolean;
   soundEffects: boolean;
   showBadges: boolean;
-  showTeam: boolean;
-  showSpending: boolean;
-  allowMentions?: boolean;
-  shameAlerts?: boolean;
-  teamNotifications?: boolean;
-  leaderboardAlerts?: boolean;
-  rankChangeNotifications?: boolean;
-  eventAlerts?: boolean;
-  walletAlerts?: boolean;
   showEmailOnProfile?: boolean;
   rankChangeAlerts?: boolean;
-  newFollowerAlerts?: boolean;
+  showTeam: boolean;
+  showSpending: boolean;
+  [key: string]: boolean | string | undefined;
 }
 
 export interface UserSubscription {
   id: string;
-  tier: string;
-  status: 'active' | 'cancelled' | 'expired' | 'pending' | 'paused';
+  planId: string;
+  status: 'active' | 'canceled' | 'past_due' | 'trialing' | 'inactive';
   startDate: string;
+  tier: UserTier;
+  nextBillingDate: string;
   endDate?: string;
-  autoRenew?: boolean;
-  planId?: string;
-  nextBillingDate?: string;
-  cancelAtPeriodEnd?: boolean;
+  autoRenew: boolean;
+  cancelAtPeriodEnd: boolean;
 }
 
-export interface SocialLink {
-  id: string;
-  platform: string;
-  url: string;
-  username?: string;
-  verified?: boolean;
-  enabled?: boolean;
-  title?: string;
-  clicks?: number;
-  icon?: string;
-  label?: string;
-}
-
-// Consolidated UserProfile type that's compatible across different files
 export interface UserProfile {
   id: string;
   username: string;
   displayName: string;
-  email?: string;
+  email: string;
   profileImage: string;
-  bio?: string;
+  bio: string;
   joinedDate: string;
-  joinDate?: string;
-  createdAt?: string;
   isVerified?: boolean;
-  isProtected?: boolean;
-  isVIP?: boolean;
-  isFounder?: boolean;
-  isAdmin?: boolean;
-  team: TeamColor | string;
-  tier: UserTier | string;
+  team: TeamColor;
+  tier: UserTier;
   rank: number;
   previousRank: number;
+  walletBalance: number;
   totalSpent: number;
   amountSpent: number;
-  walletBalance: number;
-  settings: UserSettings;
-  profileBoosts: any[];
-  cosmetics: any;
+  profileBoosts: ProfileBoost[];
+  cosmetics: UserCosmetics;
   spendStreak: number;
-  profileViews?: number;
-  profileClicks?: number;
-  subscription?: UserSubscription | null;
-  purchasedFeatures?: string[];
-  certificateNFT?: { 
-    mintAddress: string;
-    mintDate: string;
-    dateIssued?: string;
-  };
-  socialLinks?: SocialLink[] | Record<string, string>;
-  gender?: string;
-  lastActive?: string;
+  settings: UserSettings;
   followers?: string[];
   following?: string[];
-  achievements?: string[];
-  badges?: string[];
-  boostCount?: number;
-  activeTitle?: string;
+  achievements?: any[];
+  subscription?: Partial<UserSubscription>;
+  gender?: string;
 }
+
+export type { TeamColor };

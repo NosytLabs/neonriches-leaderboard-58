@@ -1,23 +1,4 @@
 
-import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
-
-interface ShellProps {
-  children: React.ReactNode;
-  transparent?: boolean;
-}
-
-const Shell: React.FC<ShellProps> = ({ children, transparent = false }) => {
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Header transparent={transparent} />
-      <main className="flex-1">
-        {children}
-      </main>
-      <Footer />
-    </div>
-  );
-};
-
+import Shell from '@/components/ui/shell';
+export { Shell };
 export default Shell;

@@ -1,52 +1,28 @@
 
-/**
- * Utility functions for type conversion and validation
- */
-
-import { TeamColor } from '@/types/mockery-types';
+import { TeamColor } from '@/types/team';
 
 /**
- * Convert a string to a valid TeamColor or return a default value
- * @param team - Team color string
- * @param defaultColor - Default color to return if invalid
- * @returns Valid TeamColor
+ * Safely converts any string to TeamColor type
+ * This provides a safeguard for when we receive team values as strings
  */
-export const toTeamColor = (team?: string | null): TeamColor => {
-  const validTeamColors: TeamColor[] = [
-    'red', 'blue', 'green', 'gold', 'purple', 'none', 
-    'neutral', 'silver', 'bronze', 'crimson'
-  ];
-  
+export function toTeamColor(team: string | TeamColor): TeamColor {
+  // Handle undefined or null values
   if (!team) return 'none';
   
-  const normalizedTeam = team.toLowerCase() as TeamColor;
-  return validTeamColors.includes(normalizedTeam) ? normalizedTeam : 'none';
-};
-
-/**
- * Ensures a value is a string
- * @param id - Any value
- * @returns String representation of the value
- */
-export const ensureStringId = (id: any): string => {
-  if (id === null || id === undefined) return '';
-  return String(id);
-};
-
-/**
- * Ensures proper type conversions for user profiles
- */
-export const convertUserProfile = (user: any) => {
-  if (!user) return null;
+  // Valid team colors
+  const validTeamColors: TeamColor[] = ['red', 'blue', 'green', 'gold', 'purple', 'none', 'neutral'];
   
-  return {
-    ...user,
-    team: toTeamColor(user.team)
-  };
-};
-
-export default {
-  toTeamColor,
-  ensureStringId,
-  convertUserProfile
-};
+  // If the team is already a valid TeamColor, return it
+  if (validTeamColors.includes(team as TeamColor)) {
+    return team as TeamColor;
+  }
+  
+  // Convert string to lowercase for case-insensitive matching
+  const normalizedTeam = String(team).toLowerCase();
+  
+  // Try to match with valid colors
+  const matchedTeam = validTeamColors.find(color => color === normalizedTeam);
+  
+  // Return matched team or default to 'none'
+  return matchedTeam || 'none';
+}

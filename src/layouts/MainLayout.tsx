@@ -5,12 +5,18 @@ import Footer from '@/components/Footer';
 
 interface MainLayoutProps {
   children: ReactNode;
+  transparent?: boolean;
+  className?: string;
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ 
+  children, 
+  transparent = false, 
+  className = '' 
+}) => {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
+    <div className={`flex flex-col min-h-screen ${className}`}>
+      <Header transparent={transparent} />
       <main className="flex-grow">
         {children}
       </main>

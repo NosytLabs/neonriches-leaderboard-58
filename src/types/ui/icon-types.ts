@@ -1,136 +1,33 @@
 
 import { LucideProps } from 'lucide-react';
-import { CSSProperties } from 'react';
 
-// Define icon size options
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
-
-// Define medieval icon size options
-export type MedievalIconSize = IconSize;
-
-// Define icon color options
-export type IconColor = 
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'warning'
-  | 'error'
-  | 'gold'
-  | 'silver'
-  | 'bronze'
-  | 'royal'
-  | 'white'
-  | 'black'
-  | 'crimson'
-  | 'emerald'
-  | 'red'
-  | 'blue'
-  | 'green'
-  | 'purple'
-  | 'muted'
-  | 'accent'
-  | 'info'
-  | 'danger';
-
-// Define icon style options
-export type IconStyle =
-  | 'default'
-  | 'filled'
-  | 'outlined'
-  | 'rounded'
-  | 'medieval'
-  | 'royal';
-
-// Define medieval icon names
-export type MedievalIconName = 
-  | 'crown' 
-  | 'sword' 
-  | 'shield' 
-  | 'dragon'
-  | 'castle'
-  | 'scroll'
-  | 'key'
-  | 'coin'
-  | 'coins'
-  | 'chest'
-  | 'throne'
-  | 'treasure-chest'
-  | 'chalice'
-  | 'flag'
-  | 'tower'
-  | 'banner'
-  | 'dagger'
-  | 'potion'
-  | 'medal'
-  | 'gem'
-  | 'heart'
-  | 'trophy';
-
-// Icon props interface
-export interface IconProps {
-  name?: string;
+export interface IconProps extends LucideProps {
   icon?: string;
-  iconName?: string;
-  size?: IconSize | number;
-  color?: IconColor | string;
-  className?: string;
-  style?: IconStyle | CSSProperties;
+  name?: string; // For backward compatibility
+  iconName?: string; // Support iconName prop
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | number;
+  color?: 'default' | 'primary' | 'secondary' | 'accent' | 'muted' | 'warning' | 'success' | 'danger' | 'info' | string;
   animated?: boolean;
-  [key: string]: any;
+  style?: 'default' | React.CSSProperties;
 }
 
-// Medieval Icon props
-export interface MedievalIconProps {
-  name: MedievalIconName;
-  size?: MedievalIconSize;
-  color?: IconColor;
-  animated?: boolean;
-  className?: string;
-}
-
-// Icon adapter props for compatibility with different icon systems
-export interface IconAdapterProps {
-  name: string;
-  size?: IconSize | string | number;
-  color?: IconColor | string;
-  style?: IconStyle | CSSProperties;
-}
-
-// Size mapping for consistent sizing across icon systems
-export const iconSizeMap: Record<IconSize, string> = {
-  'xs': 'w-3 h-3',
-  'sm': 'w-4 h-4',
-  'md': 'w-6 h-6',
-  'lg': 'w-8 h-8',
-  'xl': 'w-10 h-10',
-  '2xl': 'w-12 h-12',
-  '3xl': 'w-16 h-16',
-  '4xl': 'w-20 h-20'
+export const iconSizeMap = {
+  xs: 'h-3 w-3',
+  sm: 'h-4 w-4',
+  md: 'h-6 w-6',
+  lg: 'h-8 w-8',
+  xl: 'h-10 w-10',
+  '2xl': 'h-12 w-12',
 };
 
-// Color mapping for consistent colors across icon systems
-export const iconColorMap: Record<IconColor, string> = {
-  'default': 'text-foreground',
-  'primary': 'text-primary',
-  'secondary': 'text-secondary',
-  'success': 'text-green-500',
-  'warning': 'text-amber-500',
-  'error': 'text-red-500',
-  'gold': 'text-royal-gold',
-  'silver': 'text-gray-300',
-  'bronze': 'text-amber-700',
-  'royal': 'text-royal-purple',
-  'white': 'text-white',
-  'black': 'text-black',
-  'crimson': 'text-royal-crimson',
-  'emerald': 'text-emerald-500',
-  'red': 'text-red-500',
-  'blue': 'text-blue-500',
-  'green': 'text-green-500',
-  'purple': 'text-purple-500',
-  'muted': 'text-muted-foreground',
-  'accent': 'text-accent-foreground',
-  'info': 'text-blue-500',
-  'danger': 'text-red-500'
+export const iconColorMap = {
+  default: 'text-foreground',
+  primary: 'text-primary',
+  secondary: 'text-secondary',
+  accent: 'text-accent',
+  muted: 'text-muted-foreground',
+  warning: 'text-yellow-500',
+  success: 'text-green-500',
+  danger: 'text-red-500',
+  info: 'text-blue-500',
 };
