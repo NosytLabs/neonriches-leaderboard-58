@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/auth';
 import { SolanaProvider } from '@/contexts/SolanaContext';
@@ -25,6 +24,7 @@ import FeaturesPage from '@/pages/FeaturesPage';
 import HistoryPage from '@/pages/HistoryPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import HomePage from '@/pages/HomePage';
+import CodeAnalysisPage from './pages/CodeAnalysisPage';
 
 // Use dynamic import for react-helmet-async to handle cases where it might not be available yet
 let HelmetProvider: React.ComponentType<{children: React.ReactNode, context?: object}>;
@@ -104,6 +104,9 @@ const App: React.FC = () => {
                     <SettingsPage />
                   </ProtectedRoute>
                 } />
+                
+                {/* Add the code analysis route */}
+                <Route path="/code-analysis" element={<CodeAnalysisPage />} />
                 
                 {/* Catch all route */}
                 <Route path="*" element={<NotFoundPage />} />
