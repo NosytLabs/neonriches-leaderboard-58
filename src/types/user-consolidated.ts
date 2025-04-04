@@ -163,3 +163,9 @@ export interface UserProfile {
   joinedAt?: string;
   createdAt?: string;
 }
+
+// Re-export TeamColor for compatibility
+export { TeamColor };
+
+// Export a TeamType type alias that maps to TeamColor for backward compatibility
+export type TeamType = TeamColor;

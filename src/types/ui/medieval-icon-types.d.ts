@@ -34,3 +34,14 @@ export type IconColor =
   | 'red'
   | 'silver'
   | 'emerald';
+
+// Icon props type
+export interface MedievalIconProps {
+  name: MedievalIconName;
+  color?: IconColor | string;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number;
+  className?: string;
+}
+
+// Icon color mapping
+export type MedievalIconColor = IconColor;

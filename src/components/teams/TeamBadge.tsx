@@ -2,13 +2,13 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { TeamColor } from '@/types/user-consolidated';
+import { TeamColor } from '@/types/user-types';
 
 interface TeamBadgeProps {
   team: TeamColor | string | null;
   size?: 'sm' | 'md' | 'lg';
   showLabel?: boolean;
-  showName?: boolean; // This prop is necessary
+  showName?: boolean; 
   className?: string;
 }
 
@@ -19,7 +19,7 @@ const TeamBadge: React.FC<TeamBadgeProps> = ({
   team, 
   size = 'md', 
   showLabel = true,
-  showName = true, // Default to true for backwards compatibility
+  showName = true,
   className = ''
 }) => {
   if (!team || team === 'none' || team === 'neutral') {

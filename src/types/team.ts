@@ -49,5 +49,5 @@ export interface TeamBenefits {
   benefits: string[];
 }
 
-// Ensure TeamColor is exported from user-consolidated
-export { TeamColor };
+// Export type for TeamColor (using 'export type' syntax)
+export type { TeamColor };

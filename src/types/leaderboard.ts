@@ -1,45 +1,47 @@
 
-import { TeamColor } from './mockery-types';
+import { TeamColor } from './user-types';
+import { UserTier } from './user-types';
 
 export interface LeaderboardUser {
   id: string;
-  userId: string;
   username: string;
-  displayName: string;
-  profileImage: string;
+  displayName?: string;
+  profileImage?: string;
   rank: number;
   previousRank?: number;
-  tier: string;
-  team: TeamColor | string;
-  totalSpent: number;
   amountSpent: number;
-  walletBalance: number;
-  spendStreak: number;
-  
-  // Add missing properties used in components
+  team?: TeamColor;
+  tier?: UserTier;
+  spendingHistory?: number[];
+  userId?: string;
+  totalSpent?: number;
+  spendStreak?: number;
   isVerified?: boolean;
   isProtected?: boolean;
   rankChange?: number;
-  spendChange?: number;
-  avatarUrl?: string;
 }
 
-export interface LeaderboardFilter {
-  limit: number;
-  page?: number;
-  team?: string;
-  tier?: string;
-  timeframe?: 'all' | 'week' | 'month' | 'year' | 'today' | 'all-time';
+export type LeaderboardFilter = 
+  | 'all'
+  | 'daily'
+  | 'weekly'
+  | 'monthly'
+  | 'team-red'
+  | 'team-blue'
+  | 'team-green';
+
+export interface LeaderboardOptions {
+  filter?: LeaderboardFilter;
   search?: string;
-  sortBy?: string;
-  sortDirection?: 'asc' | 'desc';
-  sort?: string; // Added for compatibility
-  period?: string; // Added for compatibility
+  team?: TeamColor | null;
+  timeframe?: string;
+  tier?: string;
+  page?: number;
 }
 
 export interface LeaderboardResponse {
   users: LeaderboardUser[];
-  totalUsers: number;
-  currentPage: number;
   totalPages: number;
+  currentPage: number;
+  total: number;
 }

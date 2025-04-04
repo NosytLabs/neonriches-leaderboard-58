@@ -2,24 +2,27 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
-import { BadgeVariant } from "@/types/ui/badge-types"
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+          "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
         secondary:
           "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
         destructive:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
+          "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
         outline: "text-foreground",
-        gold: "border-royal-gold/30 bg-royal-gold/10 text-royal-gold",
-        warning: "border-amber-500/30 bg-amber-500/10 text-amber-500",
-        success: "border-green-500/30 bg-green-500/10 text-green-500",
-        royal: "border-royal-purple/30 bg-royal-purple/10 text-royal-purple",
+        success:
+          "border-transparent bg-success text-success-foreground shadow hover:bg-success/80",
+        warning:
+          "border-transparent bg-warning text-warning-foreground shadow hover:bg-warning/80",
+        gold:
+          "border-transparent bg-yellow-600/20 text-yellow-500 shadow hover:bg-yellow-600/30",
+        royal:
+          "border-transparent bg-purple-600/20 text-purple-400 shadow hover:bg-purple-600/30",
       },
     },
     defaultVariants: {
@@ -30,9 +33,7 @@ const badgeVariants = cva(
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {
-  variant?: BadgeVariant;
-}
+    VariantProps<typeof badgeVariants> {}
 
 function Badge({ className, variant, ...props }: BadgeProps) {
   return (
