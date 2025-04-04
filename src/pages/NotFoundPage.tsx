@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import MainLayout from '@/layouts/MainLayout';
+import Layout from '@/layouts/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown } from 'lucide-react';
@@ -10,7 +10,7 @@ const NotFoundPage: React.FC = () => {
   const navigate = useNavigate();
   
   return (
-    <MainLayout>
+    <Layout>
       <div className="container flex flex-col items-center justify-center min-h-[70vh] px-4">
         <Card className="max-w-md w-full glass-morphism border-white/10">
           <CardHeader className="text-center">
@@ -34,7 +34,7 @@ const NotFoundPage: React.FC = () => {
           </CardFooter>
         </Card>
       </div>
-    </MainLayout>
+    </Layout>
   );
 };
 
