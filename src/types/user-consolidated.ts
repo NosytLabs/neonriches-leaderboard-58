@@ -8,6 +8,8 @@ export type UserTier =
   | 'pro' | 'standard' | 'elite' | 'silver' | 'gold' 
   | 'platinum' | 'diamond' | 'bronze' | 'vip';
 
+export type Gender = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say' | 'king' | 'queen' | 'jester' | 'noble';
+
 export interface ProfileBoost {
   id: string;
   startDate: string;
@@ -17,6 +19,12 @@ export interface ProfileBoost {
   strength: number;
   appliedBy: string;
   isActive: boolean;
+  name?: string;
+  description?: string;
+  multiplier?: number;
+  duration?: number;
+  price?: number;
+  icon?: string;
 }
 
 export interface UserCosmetics {
@@ -29,13 +37,17 @@ export interface UserCosmetics {
   effect: string[];
   badge: string[];
   theme: string[];
-  [key: string]: string[];
+  activeTitle?: string;
+  activeBorder?: string;
+  activeBackground?: string;
+  activeEffect?: string;
+  [key: string]: string[] | string | undefined;
 }
 
 export interface UserSettings {
-  profileVisibility: 'public' | 'private' | 'friends';
+  profileVisibility: 'public' | 'private' | 'friends' | 'followers';
   allowProfileLinks: boolean;
-  theme: string;
+  theme: 'light' | 'dark' | 'royal' | 'system';
   notifications: boolean;
   emailNotifications: boolean;
   marketingEmails: boolean;
@@ -47,46 +59,107 @@ export interface UserSettings {
   rankChangeAlerts?: boolean;
   showTeam: boolean;
   showSpending: boolean;
+  newFollowerAlerts?: boolean;
+  teamNotifications?: boolean;
+  language?: string;
+  shameAlerts?: boolean;
+  publicProfile?: boolean;
+  allowMessages?: boolean;
   [key: string]: boolean | string | undefined;
 }
 
 export interface UserSubscription {
   id: string;
   planId: string;
-  status: 'active' | 'canceled' | 'past_due' | 'trialing' | 'inactive';
+  status: 'active' | 'canceled' | 'past_due' | 'trialing' | 'inactive' | 'cancelled' | 'expired' | 'trial' | 'paused' | 'pending';
   startDate: string;
-  tier: UserTier;
+  tier: UserTier | string;
   nextBillingDate: string;
   endDate?: string;
   autoRenew: boolean;
   cancelAtPeriodEnd: boolean;
+  plan?: string;
+  renewalDate?: Date;
+  paymentMethod?: 'credit_card' | 'paypal' | 'crypto';
+  price?: number;
+  interval?: 'monthly' | 'yearly' | 'quarterly';
+  features?: string[];
+  active?: boolean;
+}
+
+export interface SocialLink {
+  id?: string | number;
+  platform: string;
+  url: string;
+  username?: string;
+  display?: string;
+  icon?: string;
+  verified?: boolean;
+  primary?: boolean;
+  clicks?: number;
+  title?: string;
+  label?: string;
+  type?: string;
+}
+
+export interface ProfileImage {
+  id?: string;
+  url: string;
+  isPrimary: boolean;
+  caption?: string;
+  type?: string;
+  width?: number;
+  height?: number;
+  alt?: string;
 }
 
 export interface UserProfile {
   id: string;
   username: string;
   displayName: string;
-  email: string;
+  email?: string;
   profileImage: string;
   bio: string;
   joinedDate: string;
   isVerified?: boolean;
+  isProtected?: boolean;
+  isVIP?: boolean;
+  isFounder?: boolean;
+  isAdmin?: boolean;
   team: TeamColor;
-  tier: UserTier;
+  tier: UserTier | string;
   rank: number;
   previousRank: number;
   walletBalance: number;
   totalSpent: number;
   amountSpent: number;
+  spentAmount?: number;
   profileBoosts: ProfileBoost[];
   cosmetics: UserCosmetics;
   spendStreak: number;
-  settings: UserSettings;
-  followers?: string[];
-  following?: string[];
+  followers?: string[] | number;
+  following?: string[] | number;
   achievements?: any[];
+  badges?: string[];
   subscription?: Partial<UserSubscription>;
-  gender?: string;
+  gender?: Gender | string;
+  socialLinks?: SocialLink[] | Record<string, string>;
+  profileViews?: number;
+  profileClicks?: number;
+  purchasedFeatures?: string[];
+  lastActive?: string;
+  lastLogin?: string;
+  settings: UserSettings;
+  teamRank?: number;
+  activeTitle?: string;
+  certificateNFT?: {
+    mintAddress: string;
+    mintDate: string;
+    dateIssued?: string;
+  };
+  boostCount?: number;
+  // Compatibility fields
+  joinDate?: string;
+  joinedAt?: string;
+  createdAt?: string;
 }
-
-export type { TeamColor };

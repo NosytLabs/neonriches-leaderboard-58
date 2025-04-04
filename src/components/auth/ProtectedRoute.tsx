@@ -1,7 +1,8 @@
 
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import useAuth from '@/hooks/useAuth';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -13,15 +14,24 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   redirectTo = '/login' 
 }) => {
   const { isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
 
-  // If authentication is still loading, show loading state or nothing
+  // If authentication is still loading, show loading state
   if (isLoading) {
-    return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="w-full max-w-md space-y-4">
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-64 w-full" />
+          <Skeleton className="h-12 w-full" />
+        </div>
+      </div>
+    );
   }
 
-  // If not authenticated, redirect to login
+  // If not authenticated, redirect to login with the return path
   if (!isAuthenticated) {
-    return <Navigate to={redirectTo} replace />;
+    return <Navigate to={redirectTo} state={{ from: location.pathname }} replace />;
   }
 
   // If authenticated, render the children

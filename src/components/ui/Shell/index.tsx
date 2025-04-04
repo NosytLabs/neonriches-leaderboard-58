@@ -2,19 +2,21 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { cn } from '@/lib/utils';
 
-interface ShellProps {
+export interface ShellProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   transparent?: boolean;
 }
 
-/**
- * Main application shell component that provides consistent layout
- * with header and footer for all pages
- */
-const Shell: React.FC<ShellProps> = ({ children, transparent = false }) => {
+export const Shell = ({ 
+  children, 
+  className, 
+  transparent = false,
+  ...props 
+}: ShellProps) => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className={cn("flex flex-col min-h-screen", className)} {...props}>
       <Header transparent={transparent} />
       <main className="flex-1">
         {children}
@@ -24,5 +26,4 @@ const Shell: React.FC<ShellProps> = ({ children, transparent = false }) => {
   );
 };
 
-export { Shell };
 export default Shell;

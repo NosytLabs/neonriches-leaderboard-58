@@ -53,6 +53,7 @@ const App: React.FC = () => {
               <Route path="/login" element={<Auth />} />
               <Route path="/register" element={<Auth />} />
               <Route path="/status-through-history" element={<HistoryPage />} />
+              <Route path="/profile/:username" element={<ProfilePage />} />
               
               {/* Protected Routes */}
               <Route path="/dashboard" element={
@@ -90,7 +91,6 @@ const App: React.FC = () => {
                   <ProfilePage />
                 </ProtectedRoute>
               } />
-              <Route path="/profile/:username" element={<ProfilePage />} />
               <Route path="/wallet" element={
                 <ProtectedRoute>
                   <WalletPage />
