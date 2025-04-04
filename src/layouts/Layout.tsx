@@ -1,6 +1,6 @@
 
 import React, { ReactNode } from 'react';
-import { Shell } from '@/components/ui/Shell';
+import { Shell } from '@/components/shell';
 
 interface LayoutProps {
   children: ReactNode;

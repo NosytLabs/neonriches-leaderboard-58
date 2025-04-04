@@ -1,57 +1,42 @@
 
-// Define sound types
-export type SoundType = 
-  | 'click' 
-  | 'success' 
-  | 'error' 
-  | 'notification' 
-  | 'achievement' 
-  | 'purchase' 
-  | 'levelUp' 
-  | 'transaction' 
-  | 'warning' 
-  | 'message' 
-  | 'ui' 
-  | 'transition' 
-  | 'hover'
-  | 'shame'
-  | 'royal'
+export type SoundType =
+  | 'click'
+  | 'success'
+  | 'error'
+  | 'notification'
+  | 'achievement'
   | 'coin'
+  | 'purchase'
+  | 'deposit'
+  | 'withdrawal'
+  | 'levelUp'
+  | 'level_up'
+  | 'boost'
+  | 'message'
+  | 'mockery'
   | 'coinDrop'
-  | 'team'
-  | 'badge'
-  | 'alert'
-  | 'chime'
-  | 'reward'
-  | 'toggle'
-  | 'upgrade'
-  | 'down'
-  | 'up'
-  | 'withdraw'
-  | 'royalAnnouncement'
+  | 'shame'
   | 'fanfare'
+  | 'royal'
+  | 'protection'
+  | 'sparkle'
+  | 'royalAnnouncement'
   | 'trumpet'
   | 'medallion'
-  | 'protection'
-  | 'taunt'
-  | 'mock'
-  | 'challenge'
-  | 'joust'
-  | 'duel'
-  | 'crown'
-  | 'stocks'
-  | 'silence'
-  | 'courtJester'
-  | 'smokeBomb'
-  | 'putridEgg'
-  | 'fish'
-  | 'deposit'
+  | 'seal'
+  | 'transfer'
+  | 'unlock'
+  | 'team'
   | 'rank_up'
-  | 'mockery'
-  | 'level_up'
-  | 'throne'
-  | 'boost'
-  | 'unlock';
+  | 'reward'
+  | 'swordClash'
+  | 'noblesLaugh'
+  | 'parchmentUnfurl'
+  | 'pageChange'
+  | 'wish'
+  | 'inkScribble'
+  | 'hover'
+  | 'advertisement';
 
 export interface SoundOptions {
   volume?: number;
@@ -62,73 +47,31 @@ export interface SoundOptions {
 
 export interface SoundConfig {
   enabled: boolean;
-  volume: number;
   muted: boolean;
-  premium?: boolean;
+  volume: number;
 }
 
-// Sound hook interface
 export interface SoundHook {
-  playSound: (sound: SoundType, options?: SoundOptions) => void;
-  stopSound: () => void;
-  pauseSound: () => void;
-  resumeSound: () => void;
-  toggleMute: () => boolean;
-  isMuted: boolean;
-  setVolume: (volume: number) => void;
-  getVolume: () => number;
-  isEnabled: boolean;
-  toggleEnabled: () => void;
-  soundConfig: SoundConfig;
-  mute: () => void;
-  unmute: () => void;
+  playSound: (type: SoundType, options?: SoundOptions) => void;
+  play: (type: SoundType, options?: SoundOptions) => void;
+  stopSound: (type?: SoundType) => void;
+  pauseSound: (type?: SoundType) => void;
+  resumeSound: (type?: SoundType) => void;
+  isMuted?: boolean;
+  toggleMute?: () => boolean;
   toggleMuted: () => boolean;
-  currentVolume: number;
-  play: (sound: SoundType, options?: SoundOptions) => void;
-  isPlaying: boolean;
+  setVolume: (volume: number) => void;
+  soundConfig?: SoundConfig;
+  mute?: () => void;
+  unmute?: () => void;
+  toggleEnabled?: () => boolean;
+  isEnabled?: boolean;
   isSoundEnabled: boolean;
-}
-
-// Alias for backward compatibility
-export type UseSoundHook = SoundHook;
-
-// Add missing types for notification sounds
-export interface UseNotificationSoundsReturn {
-  playSound: (sound: SoundType, options?: SoundOptions) => void;
-  playNotificationSound: (type?: string, options?: SoundOptions) => void;
-  playSoundForNotification: (type: string) => void;
-  playNewNotificationSound: () => void;
-  mute: () => void;
-  unmute: () => void;
-  isMuted: boolean;
-  toggleMuted: () => boolean;
-  setVolume: (volume: number) => void;
+  isPlaying: (type: SoundType) => boolean;
   currentVolume: number;
+  getVolume?: () => number;
 }
 
-// Add notification type for NotificationItem
-export interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  type: 'rank_change' | 'achievement' | 'royal' | 'event' | 'poke' | 'system' | 'deposit' | 'milestone';
-  read: boolean;
-  timestamp: Date;
-  actions?: Array<{
-    label: string;
-    action: () => void;
-  }>;
-}
+// Legacy interface for backwards compatibility
+export interface UseSoundHook extends SoundHook {}
 
-// Add use-notifications interface
-export interface UseNotificationsResult {
-  notifications: Notification[];
-  unreadCount: number;
-  open: boolean;
-  setOpen: (isOpen: boolean) => void;
-  handleMarkAllAsRead: () => void;
-  handleMarkAsRead: (id: string) => void;
-  handleDeleteNotification: (id: string) => void;
-  formatTimestamp: (timestamp: Date) => string;
-  playSound: (sound: SoundType, volume?: number) => void;
-}

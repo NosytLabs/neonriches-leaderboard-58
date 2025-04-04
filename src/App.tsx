@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/auth';
 import { SolanaProvider } from '@/contexts/SolanaContext';
 import { ToastProvider } from '@/components/ui/toast-provider';
+import { SoundProvider } from '@/contexts/SoundContext';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
 // Pages
@@ -23,6 +24,7 @@ import AboutPage from '@/pages/AboutPage';
 import FeaturesPage from '@/pages/FeaturesPage';
 import HistoryPage from '@/pages/HistoryPage';
 import NotFoundPage from '@/pages/NotFoundPage';
+import HomePage from '@/pages/HomePage';
 
 // Use dynamic import for react-helmet-async to handle cases where it might not be available yet
 let HelmetProvider: React.ComponentType<{children: React.ReactNode, context?: object}>;
@@ -41,73 +43,75 @@ const App: React.FC = () => {
   return (
     <HelmetProvider context={helmetContext}>
       <ToastProvider>
-        <SolanaProvider>
-          <AuthProvider>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Leaderboard />} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/teams" element={<Teams />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/features" element={<FeaturesPage />} />
-              <Route path="/login" element={<Auth />} />
-              <Route path="/register" element={<Auth />} />
-              <Route path="/status-through-history" element={<HistoryPage />} />
-              <Route path="/profile/:username" element={<ProfilePage />} />
-              
-              {/* Protected Routes */}
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/mockery" element={
-                <ProtectedRoute>
-                  <MockeryPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/mockery/:action" element={
-                <ProtectedRoute>
-                  <MockeryPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/chat" element={
-                <ProtectedRoute>
-                  <Chat />
-                </ProtectedRoute>
-              } />
-              <Route path="/events" element={
-                <ProtectedRoute>
-                  <Events />
-                </ProtectedRoute>
-              } />
-              <Route path="/community" element={
-                <ProtectedRoute>
-                  <Community />
-                </ProtectedRoute>
-              } />
-              <Route path="/profile" element={
-                <ProtectedRoute>
-                  <ProfilePage />
-                </ProtectedRoute>
-              } />
-              <Route path="/wallet" element={
-                <ProtectedRoute>
-                  <WalletPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/settings" element={
-                <ProtectedRoute>
-                  <SettingsPage />
-                </ProtectedRoute>
-              } />
-              
-              {/* Catch all route */}
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-            <Toaster />
-          </AuthProvider>
-        </SolanaProvider>
+        <SoundProvider>
+          <SolanaProvider>
+            <AuthProvider>
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/teams" element={<Teams />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/features" element={<FeaturesPage />} />
+                <Route path="/login" element={<Auth />} />
+                <Route path="/register" element={<Auth />} />
+                <Route path="/status-through-history" element={<HistoryPage />} />
+                <Route path="/profile/:username" element={<ProfilePage />} />
+                
+                {/* Protected Routes */}
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/mockery" element={
+                  <ProtectedRoute>
+                    <MockeryPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/mockery/:action" element={
+                  <ProtectedRoute>
+                    <MockeryPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/chat" element={
+                  <ProtectedRoute>
+                    <Chat />
+                  </ProtectedRoute>
+                } />
+                <Route path="/events" element={
+                  <ProtectedRoute>
+                    <Events />
+                  </ProtectedRoute>
+                } />
+                <Route path="/community" element={
+                  <ProtectedRoute>
+                    <Community />
+                  </ProtectedRoute>
+                } />
+                <Route path="/profile" element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/wallet" element={
+                  <ProtectedRoute>
+                    <WalletPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/settings" element={
+                  <ProtectedRoute>
+                    <SettingsPage />
+                  </ProtectedRoute>
+                } />
+                
+                {/* Catch all route */}
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+              <Toaster />
+            </AuthProvider>
+          </SolanaProvider>
+        </SoundProvider>
       </ToastProvider>
     </HelmetProvider>
   );

@@ -1,5 +1,5 @@
 
-import { useSoundsContext } from './sounds/use-sounds-context';
+import { useSoundsContext } from '@/contexts/SoundContext';
 import { SoundType, SoundOptions, SoundHook } from '@/types/sound-types';
 
 /**
