@@ -1,6 +1,6 @@
 
 // Team colors available in the system
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'none';
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'none' | 'purple' | 'silver' | 'bronze' | 'crimson' | 'neutral';
 
 // User tier levels
 export type UserTier = 
@@ -10,7 +10,10 @@ export type UserTier =
   | 'gold' 
   | 'platinum' 
   | 'diamond' 
-  | 'royal';
+  | 'royal'
+  | 'free'
+  | 'premium'
+  | 'founder';
 
 // Gender options for user profiles
 export type Gender = 'male' | 'female' | 'non-binary' | 'prefer-not-to-say';
@@ -30,6 +33,7 @@ export type MockeryAction =
   // Extended action types to match implementations
   | 'egg'
   | 'putridEgg'
+  | 'rotten_egg'
   | 'crown'
   | 'stocks'
   | 'jester'
@@ -92,6 +96,8 @@ export interface LeaderboardUser {
   totalSpent?: number;
   spendStreak?: number;
   isVerified?: boolean;
+  isProtected?: boolean;
+  rankChange?: number;
 }
 
 // Filter options for leaderboard

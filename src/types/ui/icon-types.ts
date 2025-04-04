@@ -1,33 +1,54 @@
 
-import { LucideProps } from 'lucide-react';
+// Basic icon sizes
+export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 
-export interface IconProps extends LucideProps {
-  icon?: string;
-  name?: string; // For backward compatibility
-  iconName?: string; // Support iconName prop
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | number;
-  color?: 'default' | 'primary' | 'secondary' | 'accent' | 'muted' | 'warning' | 'success' | 'danger' | 'info' | string;
-  animated?: boolean;
-  style?: 'default' | React.CSSProperties;
+// Medieval icon sizes
+export type MedievalIconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
+// Colors for icons
+export type IconColor = 'default' | 'primary' | 'secondary' | 'gold' | 'royal' | 'crimson' | 'green' | 'blue' | 'red';
+
+// Icon style variations
+export type IconStyle = 'outline' | 'solid' | 'duotone';
+
+// Medieval icon names
+export type MedievalIconName = 
+  | 'crown'
+  | 'scroll'
+  | 'sword'
+  | 'shield'
+  | 'coin'
+  | 'castle'
+  | 'dragon'
+  | 'knight'
+  | 'throne'
+  | 'chalice'
+  | 'banner';
+
+// Standard interface for medieval icon props
+export interface MedievalIconProps {
+  name: MedievalIconName;
+  size?: MedievalIconSize;
+  color?: IconColor;
+  className?: string;
 }
 
-export const iconSizeMap = {
-  xs: 'h-3 w-3',
-  sm: 'h-4 w-4',
-  md: 'h-6 w-6',
-  lg: 'h-8 w-8',
-  xl: 'h-10 w-10',
-  '2xl': 'h-12 w-12',
-};
+// Adapter props for icon components
+export interface IconAdapterProps {
+  size?: IconSize;
+  color?: IconColor;
+  className?: string;
+}
 
+// Color mapping for icons
 export const iconColorMap = {
   default: 'text-foreground',
   primary: 'text-primary',
   secondary: 'text-secondary',
-  accent: 'text-accent',
-  muted: 'text-muted-foreground',
-  warning: 'text-yellow-500',
-  success: 'text-green-500',
-  danger: 'text-red-500',
-  info: 'text-blue-500',
+  gold: 'text-royal-gold',
+  royal: 'text-royal-purple',
+  crimson: 'text-royal-crimson',
+  green: 'text-green-500',
+  blue: 'text-blue-500',
+  red: 'text-red-500'
 };

@@ -1,77 +1,84 @@
 
-export type SoundType =
+export type SoundType = 
   | 'click'
   | 'success'
-  | 'error'
+  | 'error' 
   | 'notification'
-  | 'achievement'
-  | 'coin'
   | 'purchase'
-  | 'deposit'
-  | 'withdrawal'
-  | 'levelUp'
-  | 'level_up'
-  | 'boost'
-  | 'message'
-  | 'mockery'
-  | 'coinDrop'
-  | 'shame'
-  | 'fanfare'
-  | 'royal'
-  | 'protection'
-  | 'sparkle'
-  | 'royalAnnouncement'
-  | 'trumpet'
-  | 'medallion'
-  | 'seal'
-  | 'transfer'
-  | 'unlock'
-  | 'team'
+  | 'achievement'
   | 'rank_up'
-  | 'reward'
-  | 'swordClash'
-  | 'noblesLaugh'
-  | 'parchmentUnfurl'
-  | 'pageChange'
-  | 'wish'
-  | 'inkScribble'
-  | 'hover'
-  | 'advertisement';
+  | 'team'
+  | 'mockery'
+  | 'level_up'
+  | 'message'
+  | 'withdrawal'
+  | 'coin'
+  | 'chime';
 
 export interface SoundOptions {
   volume?: number;
   loop?: boolean;
-  playbackRate?: number;
-  onEnd?: () => void;
+  rate?: number;
+  detune?: number;
 }
 
 export interface SoundConfig {
   enabled: boolean;
-  muted: boolean;
   volume: number;
+  muted: boolean;
 }
 
 export interface SoundHook {
   playSound: (type: SoundType, options?: SoundOptions) => void;
-  play: (type: SoundType, options?: SoundOptions) => void;
-  stopSound: (type?: SoundType) => void;
-  pauseSound: (type?: SoundType) => void;
-  resumeSound: (type?: SoundType) => void;
-  isMuted?: boolean;
-  toggleMute?: () => boolean;
-  toggleMuted: () => boolean;
+  stopSound: (type: SoundType) => void;
+  pauseSound: (type: SoundType) => void;
+  resumeSound: (type: SoundType) => void;
+  toggleMute: () => boolean;
+  isMuted: boolean;
   setVolume: (volume: number) => void;
-  soundConfig?: SoundConfig;
-  mute?: () => void;
-  unmute?: () => void;
-  toggleEnabled?: () => boolean;
-  isEnabled?: boolean;
-  isSoundEnabled: boolean;
-  isPlaying: (type: SoundType) => boolean;
+  getVolume: () => number;
+  isEnabled: boolean;
+  toggleEnabled: () => void;
+  soundConfig: SoundConfig;
+  mute: () => void;
+  unmute: () => void;
+  toggleMuted: () => boolean;
   currentVolume: number;
-  getVolume?: () => number;
+  play: (type: SoundType, options?: SoundOptions) => void;
+  isPlaying: boolean | ((type: SoundType) => boolean);
+  isSoundEnabled: boolean;
 }
 
-// Legacy interface for backwards compatibility
-export interface UseSoundHook extends SoundHook {}
+export interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  type: string;
+  read: boolean;
+  timestamp: Date;
+}
 
+export interface UseNotificationSoundsReturn {
+  playSoundForNotification: (type: string) => void;
+  playNewNotificationSound: () => void;
+  playSound: (type: SoundType, options?: SoundOptions) => void;
+  playNotificationSound: (type?: string, options?: any) => void;
+  mute: () => void;
+  unmute: () => void;
+  isMuted: boolean;
+  toggleMuted: () => boolean;
+  setVolume: (volume: number) => void;
+  currentVolume: number;
+}
+
+export interface UseNotificationsResult {
+  notifications: Notification[];
+  unreadCount: number;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  handleMarkAllAsRead: () => void;
+  handleMarkAsRead: (id: string) => void;
+  handleDeleteNotification: (id: string) => void;
+  formatTimestamp: (timestamp: Date) => string;
+  playSound: (soundType: SoundType, volume?: number) => void;
+}

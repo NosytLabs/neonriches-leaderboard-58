@@ -2,11 +2,21 @@
 // Team related types
 
 // Team colors available in the system
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'none';
+export type TeamColor = 
+  | 'red' 
+  | 'blue' 
+  | 'green' 
+  | 'gold' 
+  | 'none'
+  | 'purple'  // Added purple
+  | 'silver'  // Added silver
+  | 'bronze'  // Added bronze
+  | 'crimson' // Added crimson
+  | 'neutral'; // Added neutral
 
 // Team data structure
 export interface TeamData {
-  id: TeamColor;
+  id: string | TeamColor;
   name: string;
   color: string;
   members: number;
@@ -17,12 +27,14 @@ export interface TeamData {
   rank?: number;
   logo?: string;
   memberCount?: number;
+  benefits?: string[];
+  ranking?: number;
 }
 
 // Team invitation
 export interface TeamInvite {
   id: string;
-  teamId: TeamColor;
+  teamId: TeamColor | string;
   inviterId: string;
   inviteeId: string;
   status: 'pending' | 'accepted' | 'rejected';
@@ -32,7 +44,10 @@ export interface TeamInvite {
 
 // Team benefits
 export interface TeamBenefits {
-  id: TeamColor;
+  id: TeamColor | string;
   name: string;
   benefits: string[];
 }
+
+// Ensure TeamColor is exported from user-consolidated
+export { TeamColor };
