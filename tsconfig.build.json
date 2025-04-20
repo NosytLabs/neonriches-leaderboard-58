@@ -5,7 +5,7 @@
     "outDir": "dist",
     "declaration": true,
     "sourceMap": true,
-    "noEmit": false  // Remove or set to false to allow emitting files
+    "noEmit": false  // Explicitly set to false to allow file emission
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]
