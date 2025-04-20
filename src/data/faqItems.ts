@@ -1,75 +1,70 @@
 
-import { ReactNode } from 'react';
+import React from 'react';
+import { Crown, Trophy, Gift, DollarSign, Shield, Users, MessageSquare, Heart } from 'lucide-react';
 
 export interface FAQItem {
   id: string;
   question: string;
-  answer: string;
+  answer: React.ReactNode;
   category?: string;
-  icon?: ReactNode;
+  icon?: React.ReactNode;
 }
 
 export const faqItems: FAQItem[] = [
   {
-    id: "faq-1",
-    question: "What exactly is SpendThrone?",
-    answer: "It's a digital hierarchy where your wallet determines your worth - like social media but without pretending otherwise. Each dollar spent equals one rank point. Think of it as the honest version of Instagram.",
-    category: "general"
+    id: '1',
+    question: 'What is SpendThrone?',
+    answer: 'SpendThrone is a satirical social platform that explores the dynamics of wealth, status, and digital prestige through gamification.',
+    category: 'general',
+    icon: <Crown size={16} />
   },
   {
-    id: "faq-2",
-    question: "How do I climb the ranks?",
-    answer: "Spend money. That's it. One dollar = one point. It's like buying followers, except we don't even pretend they're real people.",
-    category: "ranks"
+    id: '2',
+    question: 'How do I rank up on the leaderboard?',
+    answer: 'Your rank is determined by the total amount deposited. Every dollar equals one ranking point.',
+    category: 'rankings',
+    icon: <Trophy size={16} />
   },
   {
-    id: "faq-3",
-    question: "What do I get for my money?",
-    answer: "A higher rank, customization options, and the ability to look down on those who've spent less. Basically, a digital version of wearing Gucci to the grocery store.",
-    category: "benefits"
+    id: '3',
+    question: 'What are Noble Houses (teams)?',
+    answer: 'Noble Houses are teams you can join to compete collectively. Your spending contributes to your team\'s overall ranking.',
+    category: 'teams',
+    icon: <Users size={16} />
   },
   {
-    id: "faq-4",
-    question: "What's with the teams?",
-    answer: "Choose Red, Green, or Blue to join the digital equivalent of high school cliques, but for adults with disposable income. Your team contribution affects the collective ranking - like a designer brand loyalty program.",
-    category: "teams"
+    id: '4',
+    question: 'How do I purchase profile enhancements?',
+    answer: 'Profile enhancements can be purchased in the Royal Boutique using your wallet balance.',
+    category: 'cosmetics',
+    icon: <Gift size={16} />
   },
   {
-    id: "faq-5",
-    question: "Can I get my money back?",
-    answer: "No. Much like those Supreme drops you waited in line for, all sales are final. Consider it an investment in your digital social capital.",
-    category: "payment"
+    id: '5',
+    question: 'Is my payment information secure?',
+    answer: 'Yes, we use industry-standard encryption and never store your full payment details on our servers.',
+    category: 'payments',
+    icon: <Shield size={16} />
   },
   {
-    id: "faq-6",
-    question: "Is my data secure?",
-    answer: "Absolutely. We protect your data better than you protect your credit score. Bank-level encryption, regular security audits, and zero tolerance for breaches. We joke about everything except security.",
-    category: "security"
+    id: '6',
+    question: 'How does mockery work?',
+    answer: 'Mockery allows you to apply visual effects to other users\' profiles for a limited time as a form of playful teasing.',
+    category: 'mockery',
+    icon: <MessageSquare size={16} />
   },
   {
-    id: "faq-7",
-    question: "Is this better than buying NFTs?",
-    answer: "Yes, because we're honest about selling you nothing. No vague promises about 'utility' or 'community access' - just pure, unapologetic status flexing.",
-    category: "general"
+    id: '7',
+    question: 'What payment methods do you accept?',
+    answer: 'We accept credit/debit cards, PayPal, and selected cryptocurrencies.',
+    category: 'payments',
+    icon: <DollarSign size={16} />
   },
   {
-    id: "faq-8",
-    question: "Do you have a blockchain/token/DAO?",
-    answer: "No buzzwords, just straightforward wealth hierarchy. We've eliminated the middleman between your poor financial decisions and our profit margin.",
-    category: "crypto"
-  },
-  {
-    id: "faq-9",
-    question: "What happens if I become #1?",
-    answer: "You're crowned the Supreme Flexer and featured prominently. Your profile becomes a shrine to conspicuous consumption. Plus, you'll have undeniable proof you have more money than sense.",
-    category: "ranks"
-  },
-  {
-    id: "faq-10",
-    question: "Is this satire or serious?",
-    answer: "Yes. We're satirizing the digital status economy while simultaneously participating in it. Like how you post about consumerism being toxic from your brand new iPhone.",
-    category: "general"
+    id: '8',
+    question: 'Is SpendThrone a real social network?',
+    answer: 'SpendThrone is a satirical experiment exploring the dynamics of social status through the lens of wealth. All "spending" is purely for entertainment purposes.',
+    category: 'general',
+    icon: <Heart size={16} />
   }
 ];
-
-export default faqItems;

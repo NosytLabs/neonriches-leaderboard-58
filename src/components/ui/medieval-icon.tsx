@@ -1,59 +1,32 @@
 
 import React from 'react';
-import { MedievalIconProps, iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
+import { Icon } from '@/components/ui/icon';
 import { cn } from '@/lib/utils';
+
+interface MedievalIconProps {
+  name: string;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+  color?: string;
+  className?: string;
+  animated?: boolean;
+}
 
 const MedievalIcon: React.FC<MedievalIconProps> = ({
   name,
   size = 'md',
   color = 'default',
-  animated = false,
-  className = ''
+  className,
+  animated = false
 }) => {
-  const sizeValue = iconSizeMap[size] || size;
-  const colorValue = typeof color === 'string' && color in iconColorMap 
-    ? iconColorMap[color as keyof typeof iconColorMap] 
-    : color;
-
-  // Default icon path if name doesn't match
-  let iconPath = '/assets/icons/medieval/crown.svg';
-
-  // Map icon name to file path
-  if (name === 'crown') iconPath = '/assets/icons/medieval/crown.svg';
-  if (name === 'sword') iconPath = '/assets/icons/medieval/sword.svg';
-  if (name === 'shield') iconPath = '/assets/icons/medieval/shield.svg';
-  if (name === 'dragon') iconPath = '/assets/icons/medieval/dragon.svg';
-  if (name === 'castle') iconPath = '/assets/icons/medieval/castle.svg';
-  if (name === 'scroll') iconPath = '/assets/icons/medieval/scroll.svg';
-  if (name === 'key') iconPath = '/assets/icons/medieval/key.svg';
-  if (name === 'coin') iconPath = '/assets/icons/medieval/coin.svg';
-  if (name === 'coins') iconPath = '/assets/icons/medieval/coins.svg';
-  if (name === 'chest') iconPath = '/assets/icons/medieval/chest.svg';
-  if (name === 'throne') iconPath = '/assets/icons/medieval/throne.svg';
-  if (name === 'treasure-chest') iconPath = '/assets/icons/medieval/treasure-chest.svg';
-  if (name === 'chalice') iconPath = '/assets/icons/medieval/chalice.svg';
-  if (name === 'flag') iconPath = '/assets/icons/medieval/flag.svg';
-  if (name === 'tower') iconPath = '/assets/icons/medieval/tower.svg';
-  if (name === 'banner') iconPath = '/assets/icons/medieval/banner.svg';
-  if (name === 'dagger') iconPath = '/assets/icons/medieval/dagger.svg';
-  if (name === 'potion') iconPath = '/assets/icons/medieval/potion.svg';
-
   return (
-    <div 
-      className={cn(`medieval-icon ${animated ? 'medieval-icon-animated' : ''}`, className)}
-      style={{ 
-        width: sizeValue,
-        height: sizeValue,
-        color: colorValue
-      }}
-    >
-      <img 
-        src={iconPath} 
-        alt={`${name} icon`} 
-        width={sizeValue}
-        height={sizeValue}
-      />
-    </div>
+    <Icon 
+      icon={name} 
+      size={size} 
+      color={color} 
+      className={cn("medieval-icon", className)}
+      animated={animated}
+      style="medieval"
+    />
   );
 };
 

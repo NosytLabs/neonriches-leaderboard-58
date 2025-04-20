@@ -1,25 +1,22 @@
 
-import React, { ReactNode } from 'react';
-import { Shell } from '@/components/shell';
+import React from 'react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 interface LayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
   transparent?: boolean;
-  className?: string;
 }
 
-/**
- * Main application layout component
- */
-const Layout: React.FC<LayoutProps> = ({ 
-  children, 
-  transparent = false, 
-  className = '' 
-}) => {
+const Layout: React.FC<LayoutProps> = ({ children, transparent = false }) => {
   return (
-    <Shell transparent={transparent} className={className}>
-      {children}
-    </Shell>
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
+      <Header transparent={transparent} />
+      <main className="flex-grow">
+        {children}
+      </main>
+      <Footer />
+    </div>
   );
 };
 

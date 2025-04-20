@@ -23,8 +23,13 @@ export const iconColorMap: Record<string, string> = {
 
 export interface IconProps {
   name?: string;
+  icon?: string;  // Added this property
+  iconName?: string;
   size?: IconSize | number;
   color?: string;
   className?: string;
   strokeWidth?: number;
+  animated?: boolean;
+  style?: any;
+  [key: string]: any;
 }
