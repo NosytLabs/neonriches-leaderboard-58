@@ -1,44 +1,26 @@
 
-export interface User {
+export interface UserProfile {
   id: string;
   username: string;
   displayName?: string;
   email?: string;
-  profileImage?: string;
-  walletBalance?: number;
+  avatarUrl?: string;
   rank?: number;
-  tier?: UserTier;
-  team?: TeamColor;
-  joinedAt?: string;
-  lastLoginAt?: string;
-  cosmetics?: UserCosmetics;
-  achievements?: Achievement[];
-  stats?: UserStats;
+  walletBalance?: number;
+  amountSpent?: number;
+  totalSpent?: number;
+  team?: string;
+  role?: string;
+  tier?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export type UserTier = 'basic' | 'premium' | 'elite' | 'royal';
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple';
-
-export interface UserStats {
-  totalSpent: number;
-  mockeries: number;
-  mockeryReceived: number;
-  purchasedItems: number;
-}
-
-export interface UserCosmetics {
-  titles?: string[];
-  badges?: string[];
-  colors?: string[];
-  decorations?: string[];
-  emojis?: string[];
-  fonts?: string[];
-}
-
-export interface Achievement {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  unlockedAt?: string;
+export interface AuthContextType {
+  user: UserProfile | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+  register: (email: string, password: string, username: string) => Promise<boolean>;
 }
