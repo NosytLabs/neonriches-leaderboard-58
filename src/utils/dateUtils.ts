@@ -1,130 +1,94 @@
 
 /**
- * Format time left until a given date
+ * Format a date to a readable format
+ * @param dateString ISO date string or Date object
+ * @returns Formatted date string
  */
-export const formatTimeLeft = (endDate: Date): string => {
+export const formatDate = (dateString?: string | Date): string => {
+  if (!dateString) return 'N/A';
+  
+  const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+  
+  if (isNaN(date.getTime())) {
+    return 'Invalid Date';
+  }
+  
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+};
+
+/**
+ * Get the number of days until the next specific day of the week
+ * @param targetDay Day of week (0 = Sunday, 1 = Monday, etc.)
+ * @returns Number of days
+ */
+export const getDaysUntil = (targetDay: number): number => {
+  const today = new Date();
+  const currentDay = today.getDay();
+  
+  // Calculate days until target day
+  let daysUntil = targetDay - currentDay;
+  
+  // If target day is earlier in the week, add 7 to get to next week
+  if (daysUntil <= 0) {
+    daysUntil += 7;
+  }
+  
+  return daysUntil;
+};
+
+/**
+ * Get the number of days until next Monday
+ * @returns Number of days until next Monday
+ */
+export const getDaysUntilNextMonday = (): number => {
+  return getDaysUntil(1); // 1 = Monday
+};
+
+/**
+ * Format relative time (e.g., "2 days ago", "just now")
+ * @param dateString ISO date string or Date object
+ * @returns Formatted relative time string
+ */
+export const formatRelativeTime = (dateString?: string | Date): string => {
+  if (!dateString) return 'N/A';
+  
+  const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+  
+  if (isNaN(date.getTime())) {
+    return 'Invalid Date';
+  }
+  
   const now = new Date();
-  const diffTime = endDate.getTime() - now.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
   
-  if (diffDays > 0) {
-    return `${diffDays} day${diffDays !== 1 ? 's' : ''} ${diffHours} hour${diffHours !== 1 ? 's' : ''}`;
+  if (diffInSeconds < 60) {
+    return 'just now';
   }
   
-  if (diffHours > 0) {
-    return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''}`;
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} ${diffInMinutes === 1 ? 'minute' : 'minutes'} ago`;
   }
   
-  if (diffMinutes > 0) {
-    return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''}`;
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) {
+    return `${diffInHours} ${diffInHours === 1 ? 'hour' : 'hours'} ago`;
   }
   
-  return 'Less than a minute';
-};
-
-/**
- * Format a date to a string representation
- */
-export const formatDate = (date: string | Date | null | undefined, formatString: string = 'MMM d, yyyy'): string => {
-  if (!date) return 'N/A';
-  
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
-  try {
-    const year = dateObj.getFullYear();
-    const month = dateObj.getMonth();
-    const day = dateObj.getDate();
-    
-    // Simple formatter for common patterns
-    if (formatString === 'MMM d, yyyy') {
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      return `${months[month]} ${day}, ${year}`;
-    }
-    
-    if (formatString === 'yyyy-MM-dd') {
-      const monthStr = (month + 1).toString().padStart(2, '0');
-      const dayStr = day.toString().padStart(2, '0');
-      return `${year}-${monthStr}-${dayStr}`;
-    }
-    
-    // Default fallback format
-    return dateObj.toLocaleDateString();
-  } catch (error) {
-    return 'Invalid date';
-  }
-};
-
-/**
- * Get relative time string (e.g., "2 days ago")
- */
-export const getRelativeTimeString = (date: string | Date): string => {
-  const now = new Date();
-  const past = typeof date === 'string' ? new Date(date) : date;
-  
-  const diffTime = Math.abs(now.getTime() - past.getTime());
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
-  const diffSeconds = Math.floor((diffTime % (1000 * 60)) / 1000);
-  
-  if (diffDays > 365) {
-    return `${Math.floor(diffDays / 365)} year${Math.floor(diffDays / 365) !== 1 ? 's' : ''} ago`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 30) {
+    return `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'} ago`;
   }
   
-  if (diffDays > 30) {
-    return `${Math.floor(diffDays / 30)} month${Math.floor(diffDays / 30) !== 1 ? 's' : ''} ago`;
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) {
+    return `${diffInMonths} ${diffInMonths === 1 ? 'month' : 'months'} ago`;
   }
   
-  if (diffDays > 0) {
-    return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
-  }
-  
-  if (diffHours > 0) {
-    return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
-  }
-  
-  if (diffMinutes > 0) {
-    return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
-  }
-  
-  return `${diffSeconds} second${diffSeconds !== 1 ? 's' : ''} ago`;
-};
-
-/**
- * Check if date is in the past
- */
-export const isDateInPast = (date: string | Date): boolean => {
-  const checkDate = typeof date === 'string' ? new Date(date) : date;
-  const now = new Date();
-  return checkDate < now;
-};
-
-/**
- * Check if date is in the future
- */
-export const isDateInFuture = (date: string | Date): boolean => {
-  const checkDate = typeof date === 'string' ? new Date(date) : date;
-  const now = new Date();
-  return checkDate > now;
-};
-
-/**
- * Check if date is today
- */
-export const isDateToday = (date: string | Date): boolean => {
-  const checkDate = typeof date === 'string' ? new Date(date) : date;
-  const now = new Date();
-  
-  return checkDate.getDate() === now.getDate() &&
-    checkDate.getMonth() === now.getMonth() &&
-    checkDate.getFullYear() === now.getFullYear();
-};
-
-/**
- * Get the number of days in a month
- */
-export const getDaysInMonth = (month: number, year: number): number => {
-  return new Date(year, month + 1, 0).getDate();
+  const diffInYears = Math.floor(diffInMonths / 12);
+  return `${diffInYears} ${diffInYears === 1 ? 'year' : 'years'} ago`;
 };

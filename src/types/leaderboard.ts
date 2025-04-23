@@ -1,47 +1,55 @@
 
-import { TeamColor } from './user-types';
-import { UserTier } from './user-types';
+import { TeamColor, UserTier } from '@/types/mockery-types';
 
+/**
+ * User information for leaderboard displays
+ */
 export interface LeaderboardUser {
   id: string;
   username: string;
   displayName?: string;
-  profileImage?: string;
   rank: number;
-  previousRank?: number;
-  amountSpent: number;
+  amount: number;
+  totalSpent?: number;
   team?: TeamColor;
   tier?: UserTier;
-  spendingHistory?: number[];
-  userId?: string;
-  totalSpent?: number;
-  spendStreak?: number;
-  isVerified?: boolean;
-  isProtected?: boolean;
-  rankChange?: number;
+  avatarUrl?: string;
+  profileImage?: string;
+  isCurrentUser?: boolean;
 }
 
-export type LeaderboardFilter = 
-  | 'all'
-  | 'daily'
-  | 'weekly'
-  | 'monthly'
-  | 'team-red'
-  | 'team-blue'
-  | 'team-green';
+/**
+ * Filter options for leaderboard views
+ */
+export type LeaderboardTimeFrame = 'daily' | 'weekly' | 'monthly' | 'all-time';
 
-export interface LeaderboardOptions {
-  filter?: LeaderboardFilter;
+/**
+ * Leaderboard sorting options
+ */
+export type LeaderboardSortOption = 'rank' | 'amount' | 'recent' | 'team';
+
+/**
+ * Leaderboard filter configuration
+ */
+export interface LeaderboardFilters {
+  timeFrame: LeaderboardTimeFrame;
+  team?: TeamColor | 'all';
+  tier?: UserTier | 'all';
   search?: string;
-  team?: TeamColor | null;
-  timeframe?: string;
-  tier?: string;
-  page?: number;
+  sortBy?: LeaderboardSortOption;
+  sortDirection?: 'asc' | 'desc';
 }
 
-export interface LeaderboardResponse {
+/**
+ * Leaderboard state for UI components
+ */
+export interface LeaderboardState {
   users: LeaderboardUser[];
-  totalPages: number;
+  filters: LeaderboardFilters;
+  loading: boolean;
+  error?: string;
   currentPage: number;
-  total: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 }

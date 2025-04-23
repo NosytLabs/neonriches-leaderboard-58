@@ -1,64 +1,55 @@
 
-// Import all formatters
-import { getInitials, truncateString, capitalizeWords, formatUsername } from './stringFormatters';
-import { formatDate, formatTimeAgo, formatCurrency } from './dateFormatters';
-
-// Re-export all formatters
-export {
-  getInitials,
-  truncateString,
-  capitalizeWords,
-  formatUsername,
-  formatDate,
-  formatTimeAgo,
-  formatCurrency
+/**
+ * Format a date string to a readable format
+ * @param dateString ISO date string or Date object
+ * @returns Formatted date string
+ */
+export const formatDate = (dateString?: string | Date): string => {
+  if (!dateString) return 'N/A';
+  
+  const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+  
+  if (isNaN(date.getTime())) {
+    return 'Invalid Date';
+  }
+  
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
 };
 
 /**
  * Format a number as currency
+ * @param amount Number to format
+ * @param currency Currency code
+ * @returns Formatted currency string
  */
-export const formatMoney = (amount: number | string): string => {
-  const num = typeof amount === 'string' ? parseFloat(amount) : amount;
-  
-  if (isNaN(num)) return '$0';
+export const formatCurrency = (amount?: number, currency = 'USD'): string => {
+  if (amount === undefined || amount === null) return '$0.00';
   
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(num);
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(amount);
 };
 
 /**
- * Format a number with commas
+ * Format a number with commas for thousands
+ * @param num Number to format
+ * @returns Formatted number string
  */
-export const formatNumber = (num: number | string): string => {
-  const parsedNum = typeof num === 'string' ? parseFloat(num) : num;
+export const formatNumber = (num?: number): string => {
+  if (num === undefined || num === null) return '0';
   
-  if (isNaN(parsedNum)) return '0';
-  
-  return new Intl.NumberFormat('en-US').format(parsedNum);
+  return new Intl.NumberFormat('en-US').format(num);
 };
 
-/**
- * Format a rank number (1st, 2nd, 3rd, etc)
- */
-export const formatRankNumber = (num: number): string => {
-  if (isNaN(num)) return '0th';
-  
-  const j = num % 10;
-  const k = num % 100;
-  
-  if (j === 1 && k !== 11) {
-    return num + 'st';
-  }
-  if (j === 2 && k !== 12) {
-    return num + 'nd';
-  }
-  if (j === 3 && k !== 13) {
-    return num + 'rd';
-  }
-  
-  return num + 'th';
+export default {
+  formatDate,
+  formatCurrency,
+  formatNumber
 };

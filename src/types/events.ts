@@ -1,145 +1,54 @@
-export type EventType = 
-  | 'standard'
-  | 'featured'
-  | 'limited'
-  | 'premium'
-  | 'exclusive'
-  | 'seasonal'
-  | 'treasure'
-  | 'shame'
-  | 'team'
-  | 'auction'
-  | 'mockery'
-  | 'tournament';
 
-export type EventStatus = 
-  | 'upcoming'
-  | 'active'
-  | 'past'
-  | 'cancelled'
-  | 'canceled'
-  | 'completed';
+import { MockeryAction } from './mockery-types';
 
-export interface Event {
-  id: string;
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  type: EventType;
-  status: EventStatus;
-  prizes?: any[];
-  rewards?: EventReward[];
-  imageUrl?: string;
-  totalParticipants?: number;
-  userParticipating?: boolean;
-  leaderboardUrl?: string;
-  participationCost?: number;
-  maxParticipants?: number;
-  createdAt?: string;
-  rules?: string[]; // Add rules property to Event interface
-  
-  // Additional properties for compatibility
-  name?: string;
-  image?: string;
-  rarity?: string;
-}
+export type EventType = 'spending' | 'rank' | 'team' | 'treasure' | 'shame' | 'mockery';
 
-export interface EventParticipant {
-  id: string;
-  userId: string;
-  eventId: string;
-  joinedAt: string;
-  status: 'active' | 'completed' | 'disqualified';
-  username?: string;
-  displayName?: string;
-  profileImage?: string;
-  score?: number;
-  rank?: number;
-  rewards?: any[];
-  teamId?: string;
-}
-
-export interface EventStats {
-  participantCount: number;
-  totalSpent: number;
-  averageSpent: number;
-  highestSpender: {
-    userId: string;
-    username: string;
-    amount: number;
-  };
-  activeTeams: {
-    id: string;
-    name: string;
-    count: number;
-  }[];
-  
-  // Additional properties for compatibility
-  prizePool?: number;
-  totalPrizes?: number;
-  participantsCount?: number;
-  totalPokes?: number;
-  mostPoked?: {
-    username: string;
-    pokeCount: number;
-  }[];
-  id?: string;
-  usersParticipating?: number;
-  totalContributed?: number;
-  topContributor?: string;
-  daysRemaining?: number;
-  teamsParticipating?: number;
-  leadingTeam?: string;
-}
+export type EventStatus = 'upcoming' | 'active' | 'completed' | 'cancelled';
 
 export interface EventReward {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   type: string;
-  value: number;
-  imageUrl?: string;
-  claimed?: boolean;
-  claimedAt?: string;
-  expiresAt?: string;
-  rank?: {
-    rank: string;
-    reward: string;
-  };
-  tier?: string;
-  rarity?: string;
+  value?: number;
+  iconUrl?: string;
 }
 
-export interface EventLeaderboard {
-  eventId: string;
-  participants: EventParticipant[];
-  lastUpdated: string;
-}
-
-// Fix EventDetails to make it compatible with Event
-export interface EventDetails {
+export interface Event {
   id: string;
-  title: string;
-  description: string;
+  name: string;
+  title?: string;
+  description?: string;
+  type: EventType;
   startDate: string;
   endDate: string;
-  type: EventType;
   status: EventStatus;
-  rules: string[];
-  prizes: Array<{
-    rank: string;
-    reward: string;
-  }> | string[];
-  rewards?: EventReward[] | string[];
   imageUrl?: string;
-  totalParticipants?: number;
-  userParticipating?: boolean;
-  leaderboardUrl?: string;
-  participationCost?: number;
-  maxParticipants?: number;
-  createdAt?: string;
-  name?: string;
   image?: string;
-  rarity?: string;
+  rewards?: EventReward[] | string[];
+  participantCount?: number;
+}
+
+export interface EventDetails extends Event {
+  rules?: string;
+  requirements?: string[];
+  leaderboard?: any[];
+  participants?: {
+    id: string;
+    username: string;
+    profileImage?: string;
+    score?: number;
+  }[];
+  actions?: MockeryAction[];
+  isParticipating?: boolean;
+}
+
+export interface EventParticipation {
+  userId: string;
+  eventId: string;
+  joinedAt: string;
+  score?: number;
+  rank?: number;
+  rewards?: EventReward[];
+  completedTasks?: string[];
 }

@@ -1,29 +1,60 @@
 
-import { MockeryAction, MockeryTier, TeamColor, UserTier } from './mockery-types';
-import type { TeamData } from './mockery-types';
+// Import the MockeryAction and related types from mockery-types.ts
+import { MockeryAction, MockeryTier, MockeryResult, MockeryEvent } from './mockery-types';
 
-// Re-export types correctly
-export type { MockeryAction, MockeryTier, TeamColor, TeamData, UserTier };
-
-// Provide a TeamType alias for TeamColor for backward compatibility
-export type TeamType = TeamColor;
-
-// Add any other types needed
-export interface MockeryNotification {
+/**
+ * Mockery target information
+ */
+export interface MockeryTarget {
   id: string;
-  fromUserId: string;
-  toUserId: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  activeEffects?: MockeryEffect[];
+  mockeryCount?: number;
+}
+
+/**
+ * Mockery effect details
+ */
+export interface MockeryEffect {
+  id?: string;
   action: MockeryAction;
-  timestamp: string;
-  read: boolean;
+  type?: MockeryAction;
+  appliedAt: string;
+  timestamp?: string;
+  expiresAt: string;
+  appliedById?: string;
+  appliedByUsername?: string;
 }
 
-export interface MockerySettings {
-  allowMockery: boolean;
-  notifyOnMockery: boolean;
-  protectionEnabled: boolean;
-  protectionEndDate?: string;
+/**
+ * Mockery purchase options
+ */
+export interface MockeryOption {
+  action: MockeryAction;
+  name: string;
+  description: string;
+  cost: number;
+  duration: number; // in hours
+  tier: MockeryTier;
+  available: boolean;
+  iconPath?: string;
 }
 
-// These are forward exports
-export * from './mockery-types';
+/**
+ * Mockery history record
+ */
+export interface MockeryHistory {
+  id: string;
+  userId: string;
+  targetId: string;
+  targetUsername: string;
+  action: MockeryAction;
+  appliedAt: string;
+  expiresAt: string;
+  cost: number;
+  isActive: boolean;
+}
+
+export type { MockeryAction, MockeryTier, MockeryResult, MockeryEvent };

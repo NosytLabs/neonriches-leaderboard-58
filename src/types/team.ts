@@ -1,53 +1,57 @@
 
-// Team related types
-
-// Team colors available in the system
+/**
+ * Team color options for user affiliation
+ */
 export type TeamColor = 
   | 'red' 
   | 'blue' 
   | 'green' 
   | 'gold' 
-  | 'none'
-  | 'purple'  // Added purple
-  | 'silver'  // Added silver
-  | 'bronze'  // Added bronze
-  | 'crimson' // Added crimson
-  | 'neutral'; // Added neutral
+  | 'purple' 
+  | 'silver' 
+  | 'bronze' 
+  | 'neutral' 
+  | 'none';
 
-// Team data structure
-export interface TeamData {
-  id: string | TeamColor;
-  name: string;
-  color: string;
-  members: number;
-  totalSpent: number;
-  description: string;
-  motto: string;
-  icon: string;
-  rank?: number;
-  logo?: string;
-  memberCount?: number;
-  benefits?: string[];
-  ranking?: number;
-}
-
-// Team invitation
-export interface TeamInvite {
+/**
+ * Team details interface
+ */
+export interface Team {
   id: string;
-  teamId: TeamColor | string;
-  inviterId: string;
-  inviteeId: string;
-  status: 'pending' | 'accepted' | 'rejected';
-  createdAt: string;
-  expiresAt?: string;
-}
-
-// Team benefits
-export interface TeamBenefits {
-  id: TeamColor | string;
   name: string;
-  benefits: string[];
+  color: TeamColor;
+  abbreviation: string;
+  motto?: string;
+  description?: string;
+  memberCount?: number;
+  totalSpent?: number;
+  leaderboardPosition?: number;
+  iconPath?: string;
+  benefits?: string[];
 }
 
-// Export type for TeamColor (using 'export type' syntax)
-export type { TeamColor };
+/**
+ * Team stats interface
+ */
+export interface TeamStats {
+  teamId: string;
+  memberCount: number;
+  totalSpent: number;
+  averageSpent: number;
+  rank: number;
+  weeklyChange?: number;
+  monthlyChange?: number;
+}
+
+/**
+ * Team member interface
+ */
+export interface TeamMember {
+  userId: string;
+  username: string;
+  displayName?: string;
+  profileImage?: string;
+  rank?: number;
+  amountSpent?: number;
+  joinedAt: string;
+}
