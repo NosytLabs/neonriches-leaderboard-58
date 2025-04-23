@@ -9,9 +9,9 @@ if (!fs.existsSync('./tsconfig.build.json')) {
 }
 
 try {
-  // Run TypeScript compiler with the custom config using -p flag instead of --build
-  console.log('Building TypeScript project with custom config...');
-  execSync('npx tsc -p tsconfig.build.json', { stdio: 'inherit' });
+  // Run TypeScript compiler
+  console.log('Building TypeScript project...');
+  execSync('npx tsc --project tsconfig.build.json', { stdio: 'inherit' });
   console.log('TypeScript build completed successfully');
 } catch (error) {
   console.error('Build failed:', error.message);

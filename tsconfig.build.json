@@ -6,7 +6,8 @@
     "declaration": true,
     "sourceMap": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "noEmit": false
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]
