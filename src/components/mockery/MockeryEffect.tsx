@@ -1,71 +1,46 @@
 
 import React from 'react';
 import { MockeryAction } from '@/types/mockery-types';
-import { ensureMockeryAction } from '@/utils/mockeryNormalizer';
+import { getMockeryActionIcon } from '@/utils/mockeryActionUtils';
 
-export interface MockeryEffectProps {
+interface MockeryEffectProps {
   action: MockeryAction;
   username: string;
-  isActive?: boolean; // Add this prop to match what's being passed
-  onComplete?: () => void; // Add this prop to match what's being passed
 }
 
-const MockeryEffect: React.FC<MockeryEffectProps> = ({ action, username, isActive, onComplete }) => {
-  // Ensure the action is a valid MockeryAction
-  const safeAction = ensureMockeryAction(action);
+const MockeryEffect: React.FC<MockeryEffectProps> = ({ action, username }) => {
+  const IconComponent = getMockeryActionIcon(action);
   
-  switch (safeAction) {
-    case 'tomato':
-      return <div className="text-red-500">Throwing tomatoes at {username}!</div>;
-    case 'egg':
-      return <div className="text-yellow-500">Pelting {username} with eggs!</div>;
-    case 'putridEgg':
-      return <div className="text-green-500">Covering {username} in putrid eggs!</div>;
-    case 'crown':
-      return <div className="text-yellow-600">Flipping {username}'s crown!</div>;
-    case 'thumbsDown':
-      return <div className="text-gray-500">Giving {username} a thumbs down!</div>;
-    case 'mock':
-      return <div>Mocking {username}!</div>;
-    case 'stocks':
-      return <div>Putting {username} in the stocks!</div>;
-    case 'jester':
-      return <div>Making {username} wear a jester hat!</div>;
-    case 'courtJester':
-      return <div>Demoting {username} to court jester!</div>;
-    case 'silence':
-      return <div>Silencing {username}!</div>;
-    case 'taunt':
-      return <div>Taunting {username}!</div>;
-    case 'smokeBomb':
-      return <div>Throwing a smoke bomb at {username}!</div>;
-    case 'protection':
-      return <div>Protecting {username} from mockery!</div>;
-    case 'shame':
-      return <div>Shaming {username}!</div>;
-    case 'challenge':
-      return <div>Challenging {username}!</div>;
-    case 'joust':
-      return <div>Jousting with {username}!</div>;
-    case 'duel':
-      return <div>Duelling with {username}!</div>;
-    case 'royal_decree':
-      return <div>Issuing a royal decree about {username}!</div>;
-    case 'flame':
-      return <div className="text-orange-500">Flaming {username}!</div>;
-    case 'heart':
-      return <div className="text-pink-500">Sending hearts to {username}!</div>;
-    case 'skull':
-      return <div className="text-gray-500">Sending a skull to {username}!</div>;
-    case 'thumbs_down':
-      return <div className="text-gray-500">Giving {username} a thumbs down!</div>;
-    case 'laugh':
-      return <div className="text-yellow-300">Laughing at {username}!</div>;
-    case 'rotten_egg':
-      return <div className="text-green-600">Pelting {username} with rotten eggs!</div>;
-    default:
-      return <div>Performing a generic mockery on {username}!</div>;
-  }
+  const getEffectText = () => {
+    switch (action) {
+      case 'tomatoes':
+        return `${username} is being pelted with tomatoes!`;
+      case 'eggs':
+        return `${username} is being egged!`;
+      case 'crown':
+        return `${username}'s crown has been stolen!`;
+      case 'stocks':
+        return `${username} has been put in the stocks!`;
+      case 'jester':
+        return `${username} has been made the royal jester!`;
+      case 'shame':
+        return `${username} is being publicly shamed!`;
+      case 'target':
+        return `${username} has been marked as a target!`;
+      default:
+        return `${username} is being mocked!`;
+    }
+  };
+  
+  return (
+    <div className="mockery-effect">
+      <div className="flex items-center justify-center mb-4">
+        <IconComponent size={48} className="text-royal-crimson animate-bounce" />
+      </div>
+      <h3 className="text-2xl font-bold mb-2">{getEffectText()}</h3>
+      <p className="text-white/70">Royal mockery is being displayed.</p>
+    </div>
+  );
 };
 
 export default MockeryEffect;

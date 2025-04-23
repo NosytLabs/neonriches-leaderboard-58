@@ -5,10 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import type { UserProfile } from '@/types/user';
-import TeamSelector from './TeamSelector';
+import ProfileImageEditor from './editor/ProfileImageEditor';
+import TeamEditor from './editor/TeamEditor';
 
 interface ProfileEditorProps {
   user: UserProfile;
@@ -33,29 +33,6 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
-  
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      setIsLoading(true);
-      try {
-        await onUpdateProfileImage(file);
-        toast({
-          title: "Profile image updated",
-          description: "Your profile image has been updated successfully.",
-          variant: "success"
-        });
-      } catch (error) {
-        toast({
-          title: "Error updating profile image",
-          description: "There was an error updating your profile image. Please try again.",
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    }
   };
   
   const handleSubmit = async (e: React.FormEvent) => {
@@ -88,6 +65,10 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({
   
   const handleTeamChange = (team: "red" | "blue" | "green") => {
     setFormData(prev => ({ ...prev, team }));
+  };
+
+  const handleProfileImageChange = (profileImage: string) => {
+    setFormData(prev => ({ ...prev, profileImage }));
   };
   
   return (
@@ -135,73 +116,21 @@ const ProfileEditor: React.FC<ProfileEditorProps> = ({
           </TabsContent>
           
           <TabsContent value="profile-image">
-            <div className="space-y-6">
-              <div className="flex items-center space-x-6">
-                <div className="h-24 w-24 rounded-full overflow-hidden bg-gray-100">
-                  <img 
-                    src={formData.profileImage || '/placeholder-avatar.png'} 
-                    alt="Profile" 
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    Upload a new profile picture. Square images work best.
-                  </p>
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    disabled={isLoading}
-                    onChange={handleImageChange}
-                  />
-                </div>
-              </div>
-              
-              <Separator />
-              
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium">Image URL</h3>
-                <Input
-                  name="profileImage"
-                  placeholder="Or enter an image URL"
-                  value={formData.profileImage}
-                  onChange={handleInputChange}
-                />
-                <Button 
-                  variant="outline" 
-                  onClick={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)} 
-                  disabled={isLoading}
-                >
-                  Update Image URL
-                </Button>
-              </div>
-            </div>
+            <ProfileImageEditor
+              user={user}
+              profileImage={formData.profileImage}
+              onProfileImageChange={handleProfileImageChange}
+              onProfileImageUpload={onUpdateProfileImage}
+            />
           </TabsContent>
           
           <TabsContent value="team">
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <h3 className="text-base font-medium">Team Affiliation</h3>
-                <p className="text-sm text-muted-foreground">
-                  Choose which royal team you want to join. Your team choice impacts your available rewards and leaderboard.
-                </p>
-              </div>
-              
-              <div className="mt-4">
-                <TeamSelector 
-                  team={formData.team as "red" | "blue" | "green"}
-                  onTeamChange={handleTeamChange} 
-                />
-              </div>
-              
-              <Button 
-                onClick={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)} 
-                disabled={isLoading}
-              >
-                Save Team Selection
-              </Button>
-            </div>
+            <TeamEditor 
+              team={formData.team as "red" | "blue" | "green"}
+              onTeamChange={handleTeamChange}
+              onSave={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
+              isLoading={isLoading}
+            />
           </TabsContent>
         </Tabs>
       </CardContent>
