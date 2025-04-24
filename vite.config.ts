@@ -6,16 +6,14 @@ import { componentTagger } from "lovable-tagger";
 import { splitVendorChunkPlugin } from 'vite';
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode }: { mode: string }) => ({
   server: {
     host: "::",
     port: 8080,
   },
   plugins: [
     react(),
-    mode === 'development' &&
-    componentTagger(),
-    // Split vendor chunks for better caching
+    mode === 'development' && componentTagger(),
     splitVendorChunkPlugin(),
   ].filter(Boolean),
   resolve: {
@@ -24,7 +22,6 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    // Improve chunk size and caching
     cssCodeSplit: true,
     chunkSizeWarningLimit: 500,
     sourcemap: mode === 'development',
@@ -64,7 +61,6 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
-    // Include dependencies that need to be pre-bundled
     include: [
       'react', 
       'react-dom', 
@@ -74,13 +70,9 @@ export default defineConfig(({ mode }) => ({
       'framer-motion',
       'recharts',
     ],
-    // Exclude dependencies that should not be bundled
-    exclude: [
-      // Add any packages that cause issues when pre-bundled
-    ],
+    exclude: []
   },
   define: {
-    // Any global constants to define for the application
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
     __MODE__: JSON.stringify(mode),
   },
