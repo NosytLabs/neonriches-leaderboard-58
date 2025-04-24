@@ -1,111 +1,74 @@
 
 import { useState, useCallback } from 'react';
+import { MockeryAction } from '@/types/mockery-types';
 import { useToast } from '@/hooks/use-toast';
-import { MockeryAction, MockeryResult } from '@/types/mockery-types';
-import { UserProfile } from '@/types/user';
-import { ensureMockeryAction } from '@/utils/mockeryNormalizer';
 
-export const useMockery = () => {
+interface UseMockeryOptions {
+  onComplete?: () => void;
+}
+
+export const useMockery = (options: UseMockeryOptions = {}) => {
+  const [selectedAction, setSelectedAction] = useState<MockeryAction | null>(null);
+  const [targetUserId, setTargetUserId] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
-  const [targetUser, setTargetUser] = useState<UserProfile | null>(null);
-  const [isMocking, setIsMocking] = useState(false);
-  const [mockeryResult, setMockeryResult] = useState<MockeryResult | null>(null);
 
-  // Define costs for different mockery actions
-  const actionCosts: Record<string, number> = {
-    tomato: 10,
-    egg: 15,
-    putridEgg: 25,
-    crown: 50,
-    thumbsDown: 5,
-    mock: 10,
-    stocks: 35,
-    jester: 30,
-    courtJester: 30,
-    silence: 40,
-    taunt: 10,
-    smokeBomb: 45,
-    protection: 75,
-    shame: 20,
-    challenge: 30,
-    joust: 40,
-    duel: 50,
-    royal_decree: 100,
-    flame: 15,
-    heart: 20,
-    skull: 25,
-    thumbs_down: 10,
-    laugh: 30,
-    rotten_egg: 20
-  };
+  const handleSelectAction = useCallback((action: MockeryAction) => {
+    setSelectedAction(action);
+  }, []);
 
-  const mockUser = async (actionType: string, target: UserProfile): Promise<MockeryResult> => {
-    try {
-      setIsMocking(true);
-      setTargetUser(target);
-      
-      // Normalize the action type to match our MockeryAction type
-      const normalizedAction = ensureMockeryAction(actionType);
-      
-      // In a real app, this would make an API call
-      // For now, we'll simulate a successful mockery
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const cost = costForAction(normalizedAction);
-      
-      const result: MockeryResult = {
-        success: true,
-        message: `You have successfully mocked ${target.username || 'the user'} with ${normalizedAction}!`,
-        cost,
-        actionType: normalizedAction,
-        targetId: target.id
-      };
-      
-      setMockeryResult(result);
-      
+  const handleSelectTarget = useCallback((userId: string) => {
+    setTargetUserId(userId);
+  }, []);
+
+  const handleApplyMockery = useCallback(async () => {
+    if (!selectedAction || !targetUserId) {
       toast({
-        title: "Mockery Successful",
-        description: result.message,
-      });
-      
-      return result;
-    } catch (error) {
-      const errorResult: MockeryResult = {
-        success: false,
-        message: "Failed to mock user",
-        error: error instanceof Error ? error.message : "Unknown error"
-      };
-      
-      setMockeryResult(errorResult);
-      
-      toast({
-        title: "Mockery Failed",
-        description: errorResult.message,
+        title: "Error",
+        description: "Please select both an action and a target",
         variant: "destructive"
       });
-      
-      return errorResult;
-    } finally {
-      setIsMocking(false);
+      return;
     }
-  };
 
-  const costForAction = (action: MockeryAction | string): number => {
-    return actionCosts[action] || 10;
-  };
+    setIsProcessing(true);
+    try {
+      // Here you would make the actual API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast({
+        title: "Success",
+        description: "Mockery applied successfully",
+      });
 
-  const resetMockery = useCallback(() => {
-    setTargetUser(null);
-    setMockeryResult(null);
+      setSelectedAction(null);
+      setTargetUserId(null);
+      options.onComplete?.();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to apply mockery",
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [selectedAction, targetUserId, toast, options]);
+
+  const reset = useCallback(() => {
+    setSelectedAction(null);
+    setTargetUserId(null);
+    setIsProcessing(false);
   }, []);
 
   return {
-    targetUser,
-    isMocking,
-    mockeryResult,
-    mockUser,
-    costForAction,
-    resetMockery
+    selectedAction,
+    targetUserId,
+    isProcessing,
+    handleSelectAction,
+    handleSelectTarget,
+    handleApplyMockery,
+    reset
   };
 };
 

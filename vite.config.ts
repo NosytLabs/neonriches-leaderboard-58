@@ -5,7 +5,6 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { splitVendorChunkPlugin } from 'vite';
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }: { mode: string }) => ({
   server: {
     host: "::",
@@ -22,6 +21,7 @@ export default defineConfig(({ mode }: { mode: string }) => ({
     },
   },
   build: {
+    // Remove noEmit since it conflicts with --build
     cssCodeSplit: true,
     chunkSizeWarningLimit: 500,
     sourcemap: mode === 'development',
