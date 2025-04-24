@@ -1,14 +1,7 @@
 
 import React from 'react';
 import { Crown, Trophy, Gift, DollarSign, Shield, Users, MessageSquare, Heart } from 'lucide-react';
-
-export interface FAQItem {
-  id: string;
-  question: string;
-  answer: React.ReactNode;
-  category?: string;
-  icon?: React.ReactNode;
-}
+import { FAQItem } from '@/types/faq';
 
 export const faqItems: FAQItem[] = [
   {
@@ -28,7 +21,7 @@ export const faqItems: FAQItem[] = [
   {
     id: '3',
     question: 'What are Noble Houses (teams)?',
-    answer: 'Noble Houses are teams you can join to compete collectively. Your spending contributes to your team\'s overall ranking.',
+    answer: "Noble Houses are teams you can join to compete collectively. Your spending contributes to your team's overall ranking.",
     category: 'teams',
     icon: <Users size={16} />
   },
@@ -49,7 +42,7 @@ export const faqItems: FAQItem[] = [
   {
     id: '6',
     question: 'How does mockery work?',
-    answer: 'Mockery allows you to apply visual effects to other users\' profiles for a limited time as a form of playful teasing.',
+    answer: "Mockery allows you to apply visual effects to other users' profiles for a limited time as a form of playful teasing.",
     category: 'mockery',
     icon: <MessageSquare size={16} />
   },

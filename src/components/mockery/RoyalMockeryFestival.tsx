@@ -1,17 +1,15 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
-import { Crown, Laugh, Shield, Skull, Target, Search, AlertTriangle, Info } from 'lucide-react';
+import { Shield, AlertTriangle, Crown, Laugh, Target } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import type { MockeryAction } from '@/types/mockery-types';
+import { MockeryAction } from '@/types/mockery-types';
 
-import { getMockeryActionIcon, getMockeryName, mockeryDescriptions, getMockeryCost, getMockeryTier } from '@/utils/mockeryUtils';
-import { getMockeryTierColor, getMockeryTierBadgeColor } from '@/components/help/mockeryHelpers';
+import MockeryAction from './actions/MockeryAction';
+import MockeryPreview from './preview/MockeryPreview';
+import MockeryTargetSearch from './search/MockeryTargetSearch';
+import MockeryTargetList from './targets/MockeryTargetList';
+import MockeryActionsList from './actions/MockeryActionsList';
 
 interface MockeryTarget {
   id: string;
@@ -93,54 +91,16 @@ const RoyalMockeryFestival = () => {
                 Select Your Target
               </h3>
               
-              <div className="relative mb-4">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50" />
-                <Input
-                  placeholder="Search nobles by name..."
-                  className="pl-9"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
+              <MockeryTargetSearch 
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+              />
               
-              <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
-                {filteredTargets.length > 0 ? (
-                  filteredTargets.map((target) => (
-                    <div 
-                      key={target.id}
-                      className={`flex items-center p-3 rounded-md border cursor-pointer transition-colors ${
-                        selectedTarget?.id === target.id 
-                          ? 'bg-royal-crimson/20 border-royal-crimson/40' 
-                          : 'bg-background/50 border-white/10 hover:bg-royal-crimson/10 hover:border-royal-crimson/20'
-                      }`}
-                      onClick={() => setSelectedTarget(target)}
-                    >
-                      <Avatar className="h-10 w-10 mr-3 border border-white/20">
-                        <AvatarImage src={target.profileImage} alt={target.username} />
-                        <AvatarFallback>{target.displayName.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex items-center">
-                          <h4 className="font-medium">{target.displayName}</h4>
-                          {target.tier === 'royal' && (
-                            <Badge className="ml-2 bg-royal-gold/20 text-royal-gold border-royal-gold/30">
-                              Royal
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-xs text-white/60">@{target.username} • Rank #{target.rank}</p>
-                      </div>
-                      {selectedTarget?.id === target.id && (
-                        <Target className="h-5 w-5 text-royal-crimson" />
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center py-4 text-white/60">
-                    No targets found with that name
-                  </div>
-                )}
-              </div>
+              <MockeryTargetList 
+                targets={filteredTargets}
+                selectedTarget={selectedTarget}
+                onSelectTarget={setSelectedTarget}
+              />
             </div>
             
             {selectedTarget && (
@@ -150,73 +110,20 @@ const RoyalMockeryFestival = () => {
                   Choose Your Mockery
                 </h3>
                 
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {mockeryActions.map((action) => {
-                    const IconComponent = getMockeryActionIcon(action as any);
-                    const name = getMockeryName(action as any);
-                    const tier = getMockeryTier(action as any);
-                    const price = getMockeryCost(action as any);
-                    const tierColorClass = getMockeryTierBadgeColor(tier);
-                    
-                    return (
-                      <div 
-                        key={action}
-                        className={`p-3 rounded-md border cursor-pointer transition-colors ${
-                          selectedAction === action 
-                            ? 'bg-royal-crimson/20 border-royal-crimson/40' 
-                            : 'bg-background/50 border-white/10 hover:bg-royal-crimson/10 hover:border-royal-crimson/20'
-                        }`}
-                        onClick={() => setSelectedAction(action)}
-                      >
-                        <div className="flex items-center mb-2">
-                          {React.createElement(IconComponent, { className: "h-5 w-5 mr-2" })}
-                          <h4 className="font-medium text-sm">{name}</h4>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Badge variant="outline" className={`${tierColorClass} border-${tierColorClass}/30 text-xs`}>
-                            {tier}
-                          </Badge>
-                          <span className="text-sm font-bold">${price}</span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                <MockeryActionsList
+                  selectedAction={selectedAction}
+                  onActionSelect={setSelectedAction}
+                  mockeryActions={mockeryActions}
+                />
               </div>
             )}
             
             {selectedTarget && selectedAction && (
               <div className="mt-6">
-                <div className="p-4 rounded-lg bg-black/20 border border-white/10 mb-4">
-                  <div className="flex justify-between items-center mb-3">
-                    <div className="flex items-center">
-                      <Info className="h-5 w-5 mr-2 text-white/70" />
-                      <h3 className="font-medium">Mockery Details</h3>
-                    </div>
-                    <Badge variant="outline" className="bg-royal-crimson/20 text-royal-crimson border-royal-crimson/40">
-                      Preview
-                    </Badge>
-                  </div>
-                  
-                  <div className="flex items-center mb-3">
-                    <Avatar className="h-10 w-10 mr-3 border border-white/20">
-                      <AvatarFallback>{selectedTarget.displayName.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium">{selectedTarget.displayName}</p>
-                      <p className="text-xs text-white/60">Rank #{selectedTarget.rank}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="p-3 rounded bg-black/30 mb-3">
-                    <p className="text-sm">{mockeryDescriptions[selectedAction as any]}</p>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span>Cost</span>
-                    <span className="font-bold">${getMockeryCost(selectedAction as any)}</span>
-                  </div>
-                </div>
+                <MockeryPreview 
+                  selectedTarget={selectedTarget}
+                  selectedAction={selectedAction as MockeryAction}
+                />
                 
                 <div className="p-3 rounded-lg bg-royal-crimson/10 border border-royal-crimson/20 mb-4">
                   <div className="flex items-start">
