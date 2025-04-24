@@ -2,26 +2,28 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 import { splitVendorChunkPlugin } from 'vite';
 
+// https://vitejs.dev/config/
 export default defineConfig(({ mode }: { mode: string }) => ({
   server: {
     host: "::",
     port: 8080,
   },
   plugins: [
-    react(),
-    mode === 'development' && componentTagger(),
+    react({
+      jsxRuntime: 'automatic', // Ensure proper JSX runtime is used
+    }),
+    // Split vendor chunks for better caching
     splitVendorChunkPlugin(),
-  ].filter(Boolean),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
   build: {
-    // Remove noEmit since it conflicts with --build
+    // Improve chunk size and caching
     cssCodeSplit: true,
     chunkSizeWarningLimit: 500,
     sourcemap: mode === 'development',
@@ -61,6 +63,7 @@ export default defineConfig(({ mode }: { mode: string }) => ({
     },
   },
   optimizeDeps: {
+    // Include dependencies that need to be pre-bundled
     include: [
       'react', 
       'react-dom', 
@@ -70,9 +73,9 @@ export default defineConfig(({ mode }: { mode: string }) => ({
       'framer-motion',
       'recharts',
     ],
-    exclude: []
   },
   define: {
+    // Any global constants to define for the application
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
     __MODE__: JSON.stringify(mode),
   },

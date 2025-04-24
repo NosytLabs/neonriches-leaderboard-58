@@ -4,9 +4,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge'; // Fixed import to use lowercase
+import { Badge } from '@/components/ui/badge';
 import { Search } from 'lucide-react';
-import { faqItems, FAQItem } from '@/data/faqItems';
+import { faqItems } from '@/data/faqItems';
+import { FAQItem } from '@/types/faq';
 
 interface FaqComponentProps {
   title?: string;
