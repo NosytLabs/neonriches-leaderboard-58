@@ -1,69 +1,45 @@
 
+// Define all the possible mockery actions
 export type MockeryAction = 
-  | 'tomatoes' 
-  | 'eggs' 
-  | 'crown' 
-  | 'stocks' 
-  | 'jester' 
-  | 'shame' 
-  | 'target' 
-  | 'mock';
+  | 'egg'
+  | 'crown'
+  | 'target'
+  | 'protection'
+  | 'heart'
+  | 'flame'
+  | 'message'
+  | 'tomatoes'
+  | 'stocks'
+  | 'shame'
+  | 'jester';
 
-export type MockeryTier = 'basic' | 'premium' | 'royal' | 'legendary';
-
-export interface MockeryResult {
-  success: boolean;
-  message: string;
-  cost: number;
-  targetId: string;
-  action: MockeryAction;
-  timestamp: string;
+// Define a mockery target type
+export interface MockeryTarget {
+  id: string;
+  username: string;
+  displayName: string;
+  rank: number;
+  profileImage?: string;
+  tier: string;
 }
 
-export interface MockeryEvent {
+// Define a mockery transaction
+export interface MockeryTransaction {
   id: string;
+  sourceUserId: string;
+  targetUserId: string;
   action: MockeryAction;
-  targetId: string;
-  sourceId: string;
-  timestamp: string;
+  timestamp: Date;
+  expiresAt: Date;
+  price: number;
   message?: string;
 }
 
-export type TeamColor = 
-  | 'red' 
-  | 'blue' 
-  | 'green' 
-  | 'gold' 
-  | 'purple' 
-  | 'silver' 
-  | 'bronze' 
-  | 'neutral' 
-  | 'none' 
-  | null;
-
-export type UserTier = 
-  | 'free' 
-  | 'basic' 
-  | 'premium' 
-  | 'royal' 
-  | 'gold' 
-  | 'silver'
-  | 'bronze'
-  | 'elite'
-  | 'pro';
-
-export type Gender = 'male' | 'female' | 'other' | 'prefer-not-to-say';
-
-export type LeaderboardFilter = 'daily' | 'weekly' | 'monthly' | 'all-time' | string;
-
-export interface LeaderboardUser {
-  id: string;
-  username: string;
-  displayName?: string;
-  rank: number;
-  amount: number;
-  team?: TeamColor;
-  tier?: UserTier;
-  avatarUrl?: string;
-  profileImage?: string;
+// Define mockery stats for a user
+export interface MockeryStats {
+  userId: string;
+  received: Record<MockeryAction, number>;
+  sent: Record<MockeryAction, number>;
+  activeIncoming: MockeryTransaction[];
+  activeOutgoing: MockeryTransaction[];
 }

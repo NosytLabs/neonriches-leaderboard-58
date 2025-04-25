@@ -3,17 +3,20 @@ import React from 'react';
 import { MockeryAction } from '@/types/mockery-types';
 import { cn } from '@/lib/utils';
 import { Egg, Crown, Target, Shield, Heart, Flame, MessageSquare } from 'lucide-react';
+import { getMockeryEffect } from '@/utils/mockery-utils';
 
 interface MockeryIconRendererProps {
   action: MockeryAction;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
+  animated?: boolean;
 }
 
 const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({
   action,
   size = 'md',
-  className
+  className,
+  animated = false
 }) => {
   const sizeMap = {
     sm: 16,
@@ -43,10 +46,11 @@ const MockeryIconRenderer: React.FC<MockeryIconRendererProps> = ({
   };
 
   const IconComponent = getIconComponent();
+  const effectClass = animated ? getMockeryEffect(action) : '';
 
   return (
     <IconComponent 
-      className={cn("transition-colors", className)} 
+      className={cn("transition-colors", effectClass, className)} 
       size={iconSize}
     />
   );

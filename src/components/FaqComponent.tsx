@@ -68,9 +68,9 @@ const FaqComponent: React.FC<FaqComponentProps> = ({
               <TabsTrigger key={category} value={category} className="flex-shrink-0">
                 {formatCategoryName(category)}
                 {category !== 'all' && (
-                  <Badge variant="outline" className="ml-1.5 px-1.5 py-0 text-xs">
+                  <span className="ml-1.5 px-1.5 py-0 text-xs inline-flex h-5 items-center justify-center rounded-full border bg-muted text-muted-foreground">
                     {faqItems.filter(item => item.category === category).length}
-                  </Badge>
+                  </span>
                 )}
               </TabsTrigger>
             ))}
