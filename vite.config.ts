@@ -12,5 +12,8 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['react', 'react-dom', 'lucide-react']
+  },
+  server: {
+    port: 8080
   }
 });

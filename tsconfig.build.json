@@ -1,6 +1,6 @@
 
 {
-  "extends": "./tsconfig.json",
+  "extends": "./src/tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
     "declaration": true,
@@ -8,7 +8,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "jsx": "react-jsx",
-    "noEmit": false
+    "noEmit": false // Changed from true to false for build compatibility
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]
