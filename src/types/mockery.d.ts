@@ -1,38 +1,38 @@
 
-import { 
-  MockeryAction, 
-  MockeryTier, 
-  TeamColor, 
-  UserTier, 
-  Gender, 
-  MockeryUser, 
-  MockeryEvent,
-  LeaderboardUser,
-  LeaderboardFilter
-} from './mockery-types';
+// Define mockery action types
+export type MockeryAction = 
+  | 'egg'
+  | 'crown'
+  | 'target'
+  | 'protection'
+  | 'heart'
+  | 'flame'
+  | 'message'
+  | 'tomato'
+  | 'stocks'
+  | 'shame'
+  | 'jester'
+  | 'mock'
+  | 'tomatoes'
+  | 'putridEgg'
+  | 'rotten_egg'
+  | 'thumbs_down'
+  | 'courtJester'
+  | 'silence'
+  | 'taunt'
+  | 'smokeBomb'
+  | 'challenge'
+  | 'joust'
+  | 'duel'
+  | 'royal_decree'
+  | 'skull'
+  | 'laugh';
 
-// Export the types to make them available for importing from this file
-export type { 
-  MockeryAction, 
-  MockeryTier, 
-  TeamColor, 
-  UserTier, 
-  Gender, 
-  MockeryUser, 
-  MockeryEvent,
-  LeaderboardUser,
-  LeaderboardFilter
-};
+// Define mockery tier types
+export type MockeryTier = 'common' | 'rare' | 'epic' | 'legendary' | 'mythic';
 
-// Define MockeryResult type for use in the mockery system
-export interface MockeryResult {
-  success: boolean;
-  message: string;
-  cost?: number;
-  actionType?: MockeryAction;
-  targetId?: string;
-  error?: string;
-}
+// Define user tier types
+export type UserTier = 'free' | 'basic' | 'premium' | 'pro' | 'royal' | 'legendary';
 
-// Export legacy aliases for backward compatibility
-export type TeamType = TeamColor;
+// Define team color types
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple';
