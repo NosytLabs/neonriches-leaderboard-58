@@ -1,73 +1,48 @@
 
 import React from 'react';
+import { IconProps } from '@/types/icons';
 import { cn } from '@/lib/utils';
-import { motion, MotionProps } from 'framer-motion';
 
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-
-export interface BaseIconProps {
-  className?: string;
-  size?: IconSize;
-  animated?: boolean;
-  interactive?: boolean;
-  onClick?: () => void;
-}
-
-// Map of size class names by size type
-export const iconSizeClasses: Record<IconSize, string> = {
-  xs: 'w-6 h-6',
-  sm: 'w-8 h-8',
-  md: 'w-12 h-12',
-  lg: 'w-16 h-16',
-  xl: 'w-20 h-20',
-  '2xl': 'w-24 h-24',
-};
-
-// Base animation variants
-export const baseAnimationVariants = {
-  hover: {
-    scale: 1.05,
-    y: -3,
-    transition: { type: "spring", stiffness: 400, damping: 10 }
-  },
-  tap: {
-    scale: 0.95,
-    transition: { duration: 0.1 }
-  }
-};
-
-export const BaseIcon: React.FC<BaseIconProps & { 
-  renderIcon: (props: { animated: boolean }) => React.ReactNode;
-  motionProps?: MotionProps;
-}> = ({ 
-  className, 
-  size = 'md', 
-  animated = false,
-  interactive = false,
-  onClick,
-  renderIcon,
-  motionProps = {},
+export const BaseIcon: React.FC<IconProps & React.SVGProps<SVGSVGElement>> = ({
+  size = 'md',
+  color = 'primary',
+  className,
+  ...props
 }) => {
-  const handleClick = () => {
-    if (onClick) onClick();
+  const sizeMap = {
+    xs: 'w-3 h-3',
+    sm: 'w-4 h-4',
+    md: 'w-6 h-6',
+    lg: 'w-8 h-8',
+    xl: 'w-12 h-12',
+    '2xl': 'w-16 h-16'
+  };
+
+  const colorMap = {
+    primary: 'text-primary',
+    secondary: 'text-secondary',
+    muted: 'text-muted',
+    accent: 'text-accent',
+    info: 'text-blue-500',
+    success: 'text-green-500',
+    warning: 'text-yellow-500',
+    danger: 'text-red-500',
+    royal: 'text-royal-gold',
+    gold: 'text-yellow-400',
+    silver: 'text-gray-400',
+    crimson: 'text-red-600'
   };
 
   return (
-    <motion.div 
+    <svg
+      {...props}
       className={cn(
-        'relative inline-block', 
-        iconSizeClasses[size], 
-        interactive && 'cursor-pointer',
+        sizeMap[size],
+        colorMap[color],
+        'inline-block',
         className
       )}
-      onClick={handleClick}
-      whileHover={interactive ? "hover" : undefined}
-      whileTap={interactive ? "tap" : undefined}
-      variants={baseAnimationVariants}
-      {...motionProps}
-    >
-      {renderIcon({ animated })}
-    </motion.div>
+    />
   );
 };
 
