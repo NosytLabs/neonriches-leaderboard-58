@@ -8,7 +8,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "jsx": "react-jsx",
-    "noEmit": false // Changed from true to false for build compatibility
+    "noEmit": false, // Change this to false for build
+    "declarationMap": true,
+    "composite": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]

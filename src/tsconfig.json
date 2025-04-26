@@ -9,7 +9,7 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true, // This is fine for the main tsconfig used by Vite
+    "noEmit": true, // Keep this for development
     "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": false,
