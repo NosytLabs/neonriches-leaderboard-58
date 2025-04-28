@@ -1,14 +1,44 @@
 
-import { toast as toastFn, useToast as useShadcnToast } from "@/components/ui/use-toast";
+import { useState, useCallback } from 'react';
 
-// Re-export the toast function
-export const toast = toastFn;
+interface Toast {
+  id: string;
+  title: string;
+  description?: string;
+  variant?: 'default' | 'destructive' | 'success';
+}
 
-// Re-export the useToast hook
-export const useToast = useShadcnToast;
+export const useToast = () => {
+  const [toasts, setToasts] = useState<Toast[]>([]);
+  
+  const toast = useCallback(({ title, description, variant = 'default' }: Omit<Toast, 'id'>) => {
+    const id = `toast-${Date.now()}-${Math.random()}`;
+    const newToast: Toast = {
+      id,
+      title,
+      description,
+      variant
+    };
+    
+    setToasts(prev => [...prev, newToast]);
+    
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => {
+      setToasts(prev => prev.filter(t => t.id !== id));
+    }, 5000);
+    
+    return id;
+  }, []);
+  
+  const dismiss = useCallback((id: string) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  }, []);
+  
+  return {
+    toasts,
+    toast,
+    dismiss
+  };
+};
 
-// Export useToastContext for backward compatibility
-export const useToastContext = useShadcnToast;
-
-export { ToastProvider } from '@/components/ui/toast-provider';
-export { ToastContext, type ToastActionElement, type ToastProps, type ToastOptions, type Toast } from '@/components/ui/use-toast';
+export default useToast;

@@ -1,45 +1,47 @@
 
-// Define all the possible mockery actions
+import { ReactNode } from 'react';
+
 export type MockeryAction = 
   | 'egg'
   | 'crown'
   | 'target'
-  | 'protection'
-  | 'heart'
   | 'flame'
-  | 'message'
-  | 'tomatoes'
-  | 'stocks'
-  | 'shame'
-  | 'jester';
+  | 'heart'
+  | 'protection'
+  | 'mock';
 
-// Define a mockery target type
 export interface MockeryTarget {
-  id: string;
+  userId: string;
   username: string;
-  displayName: string;
-  rank: number;
+  displayName?: string;
   profileImage?: string;
-  tier: string;
 }
 
-// Define a mockery transaction
-export interface MockeryTransaction {
+export interface MockeryEvent {
   id: string;
-  sourceUserId: string;
-  targetUserId: string;
   action: MockeryAction;
-  timestamp: Date;
-  expiresAt: Date;
-  price: number;
+  sourceUserId: string;
+  sourceUsername: string;
+  targetUserId: string;
+  targetUsername: string;
+  createdAt: Date;
   message?: string;
 }
 
-// Define mockery stats for a user
 export interface MockeryStats {
-  userId: string;
-  received: Record<MockeryAction, number>;
-  sent: Record<MockeryAction, number>;
-  activeIncoming: MockeryTransaction[];
-  activeOutgoing: MockeryTransaction[];
+  eggsReceived: number;
+  eggsSent: number;
+  crownsReceived: number;
+  crownsSent: number;
+  totalMockeriesReceived: number;
+  totalMockeriesSent: number;
+  mostCommonMockeryReceived?: MockeryAction;
+  mostCommonMockerySent?: MockeryAction;
+}
+
+export interface MockeryEffectProps {
+  action: MockeryAction;
+  message?: ReactNode;
+  duration?: number;
+  onComplete?: () => void;
 }

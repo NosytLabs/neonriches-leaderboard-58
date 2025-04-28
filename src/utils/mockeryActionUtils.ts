@@ -1,37 +1,59 @@
 
-import { Crown, Egg, Target, Shield, Heart, Flame, MessageSquare } from 'lucide-react';
-import { MockeryAction } from '@/types/mockery';
+import { 
+  Egg, 
+  Crown, 
+  Target, 
+  Flame, 
+  Heart, 
+  Shield, 
+  MessageSquare 
+} from 'lucide-react';
+import { MockeryAction } from '@/types/mockery-types';
+import { LucideIcon } from 'lucide-react';
 
-// Map mockery actions to their corresponding Lucide icons
-export const mockeryActionIcons: Record<string, any> = {
+// Map of mockery actions to their display names
+export const mockeryActionNames: Record<MockeryAction, string> = {
+  egg: 'Egg',
+  crown: 'Crown',
+  target: 'Target',
+  flame: 'Flame',
+  heart: 'Support',
+  protection: 'Shield',
+  mock: 'Mock'
+};
+
+// Map of mockery actions to their icons
+export const mockeryActionIcons: Record<MockeryAction, LucideIcon> = {
   egg: Egg,
   crown: Crown,
   target: Target,
-  protection: Shield,
-  heart: Heart,
   flame: Flame,
-  message: MessageSquare,
-  tomato: MessageSquare,
-  tomatoes: MessageSquare,
-  stocks: MessageSquare,
-  shame: MessageSquare,
-  jester: MessageSquare,
-  mock: MessageSquare,
-  putridEgg: Egg,
-  rotten_egg: Egg,
-  thumbs_down: MessageSquare,
-  courtJester: Crown,
-  silence: MessageSquare,
-  taunt: MessageSquare,
-  smokeBomb: MessageSquare,
-  challenge: Target,
-  joust: Shield,
-  duel: Shield,
-  royal_decree: Crown,
-  skull: MessageSquare,
-  laugh: MessageSquare
+  heart: Heart,
+  protection: Shield,
+  mock: MessageSquare
 };
 
-export const getMockeryIcon = (action: MockeryAction) => {
+// Get the display name for a mockery action
+export const getMockeryActionName = (action: MockeryAction): string => {
+  return mockeryActionNames[action] || 'Unknown';
+};
+
+// Get the icon component for a mockery action
+export const getMockeryActionIcon = (action: MockeryAction): LucideIcon => {
   return mockeryActionIcons[action] || MessageSquare;
+};
+
+// Get the CSS effect class for a mockery action
+export const getMockeryEffect = (action: MockeryAction): string => {
+  const effectMap: Record<MockeryAction, string> = {
+    egg: 'animate-bounce text-yellow-200',
+    crown: 'animate-pulse text-royal-gold',
+    target: 'animate-ping text-red-500',
+    flame: 'animate-pulse text-orange-500',
+    heart: 'animate-pulse text-pink-500',
+    protection: 'animate-pulse text-blue-500',
+    mock: 'animate-bounce text-purple-500'
+  };
+  
+  return effectMap[action] || '';
 };

@@ -10,3 +10,21 @@ import { twMerge } from 'tailwind-merge';
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+/**
+ * Format a number as currency
+ * @param value - Number to format as currency
+ * @param options - Intl.NumberFormatOptions
+ * @returns Formatted currency string
+ */
+export function formatCurrency(value: number, options?: Intl.NumberFormatOptions) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+    ...options
+  }).format(value);
+}
+
+export default cn;
