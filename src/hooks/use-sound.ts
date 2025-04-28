@@ -1,48 +1,19 @@
 
-import { useContext } from 'react';
-import { SoundContext } from '@/contexts/SoundContext';
-import { SoundType, SoundOptions, SoundHook } from '@/types/sound-types';
+// Mock implementation for sound hooks
+export const useSound = () => {
+  const soundMap = {
+    click: 'click.mp3',
+    success: 'success.mp3',
+    error: 'error.mp3',
+    coins: 'coins.mp3',
+  };
 
-/**
- * Hook for playing sounds in the application
- */
-function useSoundHook(): SoundHook {
-  const context = useContext(SoundContext);
-  
-  if (!context) {
-    console.warn('useSound must be used within a SoundProvider');
-    
-    // Return a fallback implementation when used outside of context
-    return {
-      playSound: () => {},
-      stopSound: () => {},
-      pauseSound: () => {},
-      resumeSound: () => {},
-      toggleMute: () => false,
-      isMuted: false,
-      setVolume: () => {},
-      getVolume: () => 0,
-      isEnabled: false,
-      toggleEnabled: () => {},
-      soundConfig: {
-        enabled: false,
-        volume: 0,
-        muted: true
-      },
-      mute: () => {},
-      unmute: () => {},
-      toggleMuted: () => false,
-      currentVolume: 0,
-      play: () => {},
-      isPlaying: false,
-      isSoundEnabled: false
-    };
-  }
-  
-  return context;
-}
+  const playSound = (sound: keyof typeof soundMap) => {
+    console.log(`Playing sound: ${soundMap[sound]}`);
+    // In a real implementation, this would play the actual sound
+  };
 
-// Export the hook
-export const useSound = useSoundHook;
+  return { playSound };
+};
 
-export default useSoundHook;
+export default useSound;
