@@ -1,5 +1,4 @@
 
-import * as React from "react";
 import { cn } from "@/utils/classNameUtils";
 
 const Card = React.forwardRef<
