@@ -18,6 +18,8 @@ export default defineConfig(({ mode }) => ({
   },
   esbuild: {
     jsxInject: `import React from 'react'`,
+    jsxFactory: 'React.createElement',
+    jsxFragment: 'React.Fragment'
   },
   server: {
     host: "::",

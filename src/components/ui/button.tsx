@@ -1,5 +1,4 @@
 
-import React from "react";
 import { cn } from "@/utils/classNameUtils";
 
 export interface ButtonProps
