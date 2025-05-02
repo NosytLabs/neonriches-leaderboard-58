@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react({
       jsxImportSource: 'react',
+      tsDecorators: true,
     }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
