@@ -1,0 +1,72 @@
+
+// This file centralizes icon imports and exports them correctly
+// React is already injected by Vite's jsxInject configuration
+
+import {
+  Trophy,
+  ArrowRight,
+  AlertTriangle,
+  Search,
+  GitHub,
+  Twitter,
+  Menu as MenuIcon,
+  X,
+  DollarSign,
+  Coins, 
+  ThumbsUp,
+  Flag,
+  ShieldCheck,
+  Sparkles,
+  User,
+  Users,
+  TrendingUp,
+  ChevronDown,
+  ChevronUp,
+  CreditCard,
+  CheckCircle,
+  Scroll,
+  Award,
+  ExternalLink,
+  Zap,
+  Medal,
+  Clock,
+  Shield,
+  Crown,
+  Activity,
+  Gem
+} from "lucide-react";
+
+// Re-export all icons
+export {
+  Trophy,
+  ArrowRight,
+  AlertTriangle,
+  Search,
+  GitHub as Github, // Aliased to match usage in components
+  Twitter,
+  MenuIcon,
+  X,
+  DollarSign,
+  Coins,
+  ThumbsUp,
+  Flag,
+  ShieldCheck,
+  Sparkles,
+  User,
+  Users,
+  TrendingUp,
+  ChevronDown,
+  ChevronUp,
+  CreditCard,
+  CheckCircle,
+  Scroll,
+  Award,
+  ExternalLink,
+  Zap,
+  Medal,
+  Clock,
+  Shield,
+  Crown,
+  Activity,
+  Gem
+};

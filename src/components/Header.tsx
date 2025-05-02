@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import useAuth from '@/hooks/useAuth';
 import { formatCurrency } from '@/utils/formatters';
-import { MenuIcon, X } from 'lucide-react';
+import { MenuIcon, X } from '@/components/ui/icons';
 import { useToast } from '@/hooks/use-toast';
 import Crown from '@/components/ui/icons/Crown';
 import AuthButton from './auth/AuthButton';

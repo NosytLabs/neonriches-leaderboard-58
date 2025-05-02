@@ -1,12 +1,11 @@
-
-import React from 'react';
+// React is already injected by Vite's jsxInject configuration
 import { 
   Accordion, 
   AccordionContent, 
   AccordionItem, 
   AccordionTrigger 
 } from '@/components/ui/accordion';
-import { Crown, DollarSign, Shield, Target, Trophy, Gem, Scroll, Coins, MessageSquare } from 'lucide-react';
+import { DollarSign, Shield, Trophy, Gem, Scroll, Coins, MessageSquare } from '@/components/ui/icons';
 
 interface FAQItem {
   question: string;

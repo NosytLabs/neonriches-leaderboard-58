@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+// React is already injected by Vite's jsxInject configuration
 import { Link } from 'react-router-dom';
-import { X, Menu, ChevronDown, ChevronUp, Crown, Users, Shield, Sparkles } from 'lucide-react';
+import { X, Menu, ChevronDown, ChevronUp, Crown, Users, Shield, Sparkles } from '@/components/ui/icons';
 import useAuth from '@/hooks/useAuth';
 
 export interface MobileMenuProps {

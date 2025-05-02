@@ -1,6 +1,7 @@
 
-import { useState, useCallback, useContext } from 'react';
-import { AuthContext } from '@/contexts/auth';
+// React is already injected by Vite's jsxInject configuration
+import { useContext } from 'react';
+import { AuthContext, AuthProvider } from '@/contexts/auth/AuthProvider';
 
 /**
  * Hook for accessing and managing authentication
@@ -24,4 +25,5 @@ export function useAuth() {
   return context;
 }
 
+export { AuthProvider };
 export default useAuth;
