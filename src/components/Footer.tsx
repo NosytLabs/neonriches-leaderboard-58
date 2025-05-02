@@ -1,7 +1,7 @@
 
 // React is already injected by Vite's jsxInject configuration
 import { Link } from 'react-router-dom';
-import { Crown, Github, Twitter } from '@/components/ui/icons';
+import { Crown, GitHub, Twitter } from '@/components/ui/icons';
 
 const Footer = () => {
   return (
@@ -26,7 +26,7 @@ const Footer = () => {
               <Twitter className="h-5 w-5" />
             </a>
             <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white">
-              <Github className="h-5 w-5" />
+              <GitHub className="h-5 w-5" />
             </a>
           </div>
         </div>

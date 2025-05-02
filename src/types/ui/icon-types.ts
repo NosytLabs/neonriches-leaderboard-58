@@ -1,22 +1,5 @@
 
-import { LucideIcon } from 'lucide-react';
-
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-export type IconColor = 'default' | 'primary' | 'secondary' | 'muted' | 'accent' | 'gold' | 'silver' | 'crimson';
-export type IconStyle = 'default' | 'medieval';
-export type MedievalIconName = 'crown' | 'shield' | 'sword' | 'scroll' | 'chalice';
-
-export interface IconProps {
-  icon?: string;
-  name?: string;
-  iconName?: string;
-  size?: IconSize | number;
-  color?: IconColor | string;
-  className?: string;
-  animated?: boolean;
-  style?: IconStyle | React.CSSProperties;
-  [key: string]: any;
-}
+import React from 'react';
 
 export const iconSizeMap = {
   'xs': 'h-3 w-3',
@@ -37,3 +20,19 @@ export const iconColorMap = {
   'silver': 'text-gray-300',
   'crimson': 'text-royal-crimson',
 };
+
+export type IconSize = keyof typeof iconSizeMap;
+export type IconColor = keyof typeof iconColorMap;
+export type IconStyle = 'default' | 'medieval';
+
+export interface IconProps {
+  icon?: string;
+  name?: string;
+  iconName?: string;
+  size?: IconSize | number;
+  color?: IconColor | string;
+  className?: string;
+  animated?: boolean;
+  style?: IconStyle | React.CSSProperties;
+  [key: string]: any;
+}

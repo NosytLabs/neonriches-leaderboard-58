@@ -37,4 +37,17 @@ declare module 'react' {
   export function useContext<T>(context: Context<T>): T;
   export function useCallback<T extends (...args: any[]) => any>(callback: T, deps: ReadonlyArray<any>): T;
   export function useMemo<T>(factory: () => T, deps: ReadonlyArray<any> | undefined): T;
+  export function useReducer<R extends Reducer<any, any>, I>(
+    reducer: R,
+    initializerArg: I & ExtractStateFromReducer<R>,
+    initializer: (arg: I & ExtractStateFromReducer<R>) => ExtractStateFromReducer<R>
+  ): [ExtractStateFromReducer<R>, Dispatch<ExtractActionFromReducer<R>>];
+  export function useReducer<R extends Reducer<any, any>>(
+    reducer: R,
+    initialState: ExtractStateFromReducer<R>,
+    initializer?: undefined
+  ): [ExtractStateFromReducer<R>, Dispatch<ExtractActionFromReducer<R>>];
+  export function useLayoutEffect(effect: EffectCallback, deps?: DependencyList): void;
+  export function useImperativeHandle<T, R extends T>(ref: Ref<T>, init: () => R, deps?: DependencyList): void;
+  export function useDebugValue<T>(value: T, format?: (value: T) => any): void;
 }

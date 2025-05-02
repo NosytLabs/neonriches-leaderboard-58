@@ -17,7 +17,7 @@ export default defineConfig(({ mode }: { mode: string }) => ({
     },
   },
   esbuild: {
-    jsxInject: `import React, { useState, useEffect, useRef, useCallback, useMemo, createContext, useContext } from 'react'`,
+    jsxInject: `import React from 'react'`,
     jsxFactory: 'React.createElement',
     jsxFragment: 'React.Fragment'
   },

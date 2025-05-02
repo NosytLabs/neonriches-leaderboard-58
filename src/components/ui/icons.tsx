@@ -1,13 +1,12 @@
 
 // This file centralizes icon imports and exports them correctly
-// React is already injected by Vite's jsxInject configuration
 
 import {
   Trophy,
   ArrowRight,
   AlertTriangle,
   Search,
-  Github, // Note: GitHub is actually named Github in lucide-react
+  Github,
   Twitter,
   Menu,
   X,
@@ -37,7 +36,8 @@ import {
   ArrowUp,
   MessageSquare,
   Target,
-  Flame
+  Flame,
+  ScrollText
 } from "lucide-react";
 
 // Re-export all icons
@@ -47,6 +47,7 @@ export {
   AlertTriangle,
   Search,
   Github as GitHub, // Alias Github as GitHub to maintain compatibility
+  Github, // Also export as original name
   Twitter,
   Menu,
   Menu as MenuIcon, // Export with alias to maintain compatibility
@@ -77,5 +78,6 @@ export {
   ArrowUp,
   MessageSquare,
   Target,
-  Flame
+  Flame,
+  ScrollText
 };
