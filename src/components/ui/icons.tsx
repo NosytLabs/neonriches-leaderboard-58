@@ -7,7 +7,7 @@ import {
   ArrowRight,
   AlertTriangle,
   Search,
-  GitHub,
+  Github, // Note: GitHub is actually named Github in lucide-react
   Twitter,
   Menu,
   X,
@@ -46,7 +46,7 @@ export {
   ArrowRight,
   AlertTriangle,
   Search,
-  GitHub as Github, // Aliased to match usage in components
+  Github as GitHub, // Alias Github as GitHub to maintain compatibility
   Twitter,
   Menu,
   Menu as MenuIcon, // Export with alias to maintain compatibility
