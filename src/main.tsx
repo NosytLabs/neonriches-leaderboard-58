@@ -1,5 +1,5 @@
 
-import React from 'react';
+// React is already injected by Vite's jsxInject configuration
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@/hooks/useAuth';

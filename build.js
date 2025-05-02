@@ -10,9 +10,8 @@ if (!fs.existsSync('./tsconfig.build.json')) {
 
 try {
   // Run TypeScript compiler with the build configuration
-  // Removed the --project flag to avoid the conflict
   console.log('Building TypeScript project...');
-  execSync('npx tsc -p tsconfig.build.json', { stdio: 'inherit' });
+  execSync('npx tsc --build tsconfig.build.json', { stdio: 'inherit' });
   console.log('TypeScript build completed successfully');
 } catch (error) {
   console.error('Build failed:', error.message);
