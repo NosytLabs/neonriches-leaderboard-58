@@ -6,7 +6,9 @@ import { splitVendorChunkPlugin } from 'vite';
 
 export default defineConfig(({ mode }: { mode: string }) => ({
   plugins: [
-    react(),
+    react({
+      jsxImportSource: 'react',
+    }),
     splitVendorChunkPlugin(),
   ],
   resolve: {
@@ -14,7 +16,6 @@ export default defineConfig(({ mode }: { mode: string }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  // Add explicit jsx runtime configuration
   esbuild: {
     jsxImportSource: 'react',
     jsxInject: `import React from 'react'`

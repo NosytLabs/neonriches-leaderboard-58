@@ -8,7 +8,6 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react({
       jsxImportSource: 'react',
-      // Remove the emotion plugin configuration as it's causing issues
     }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),

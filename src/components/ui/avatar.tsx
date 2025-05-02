@@ -1,5 +1,4 @@
 
-import * as React from "react";
 import { cn } from "@/utils/classNameUtils";
 
 const Avatar = React.forwardRef<
