@@ -1,27 +1,24 @@
 
-import React from 'react';
-import { Crown as LucideCrown } from 'lucide-react';
-import { iconSizeMap, iconColorMap } from '@/types/ui/icon-types';
-import { cn } from '@/lib/utils';
+import * as React from 'react';
 
-interface CrownProps {
-  className?: string;
-  size?: string | number;
-  color?: string;
-}
+interface CrownProps extends React.SVGProps<SVGSVGElement> {}
 
-const Crown: React.FC<CrownProps> = ({ className = "", size = "md", color = "default" }) => {
-  // Get appropriate size class
-  const sizeClass = typeof size === 'string' 
-    ? (size in iconSizeMap ? iconSizeMap[size as keyof typeof iconSizeMap] : iconSizeMap.md)
-    : `h-${size} w-${size}`;
-  
-  // Get appropriate color class
-  const colorClass = typeof color === 'string' && color in iconColorMap 
-    ? iconColorMap[color as keyof typeof iconColorMap] 
-    : 'text-current';
-  
-  return <LucideCrown className={cn(sizeClass, colorClass, className)} />;
+const Crown: React.FC<CrownProps> = (props) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14" />
+    </svg>
+  );
 };
 
 export default Crown;

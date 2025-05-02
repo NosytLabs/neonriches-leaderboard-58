@@ -10,6 +10,9 @@ export type MockeryAction =
   | 'protection'
   | 'mock';
 
+export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple';
+export type UserTier = 'basic' | 'premium' | 'elite' | 'royal';
+
 export interface MockeryTarget {
   userId: string;
   username: string;

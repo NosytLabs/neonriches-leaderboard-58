@@ -1,5 +1,5 @@
 
-import { useRef, useState, useEffect, RefObject } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface FloatingEffect {
   id: string;
@@ -10,8 +10,8 @@ interface FloatingEffect {
   opacity: number;
 }
 
-interface UseFloatingEffectsOptions {
-  containerRef: RefObject<HTMLElement>;
+interface UseFloatingEffectsProps {
+  containerRef: React.RefObject<HTMLElement>;
   enabled?: boolean;
   frequency?: number;
   density?: 'low' | 'medium' | 'high';
@@ -19,81 +19,68 @@ interface UseFloatingEffectsOptions {
   sizes?: number[];
 }
 
-export const useFloatingEffects = (options: UseFloatingEffectsOptions) => {
-  const {
-    containerRef,
-    enabled = true,
-    frequency = 0.5,
-    density = 'medium',
-    colors = ['#ffffff', '#f0f0f0', '#e0e0e0'],
-    sizes = [3, 4, 5]
-  } = options;
-  
+const useFloatingEffects = ({
+  containerRef,
+  enabled = true,
+  frequency = 0.5,
+  density = 'medium',
+  colors = ['#ffffff'],
+  sizes = [3, 5, 8]
+}: UseFloatingEffectsProps) => {
   const [effects, setEffects] = useState<FloatingEffect[]>([]);
-  const intervalRef = useRef<number | null>(null);
-  
-  const getEffectCount = () => {
-    const densityMap = {
-      'low': 5,
-      'medium': 10,
-      'high': 20
-    };
-    return densityMap[density];
-  };
+  const timerRef = useRef<number | null>(null);
   
   useEffect(() => {
-    if (!enabled || !containerRef.current) return;
-    
-    const container = containerRef.current;
-    const rect = container.getBoundingClientRect();
-    const maxEffects = getEffectCount();
-    
-    // Initialize effects
-    const initialEffects: FloatingEffect[] = [];
-    for (let i = 0; i < maxEffects; i++) {
-      initialEffects.push({
-        id: `effect-${i}`,
-        x: Math.random() * rect.width,
-        y: Math.random() * rect.height,
-        size: sizes[Math.floor(Math.random() * sizes.length)],
-        color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: 0.3 + Math.random() * 0.5
-      });
+    if (!enabled) {
+      setEffects([]);
+      return;
     }
-    setEffects(initialEffects);
     
-    // Create new effects periodically
-    const handleInterval = () => {
+    const densityMap = {
+      low: 1,
+      medium: 2,
+      high: 4
+    };
+    
+    const particleCount = densityMap[density];
+    
+    const createParticle = () => {
       if (!containerRef.current) return;
+      
       const rect = containerRef.current.getBoundingClientRect();
       
-      setEffects(prev => {
-        const updated = [...prev];
-        const indexToUpdate = Math.floor(Math.random() * maxEffects);
+      // Create new effects
+      const newEffects = [...Array(particleCount)].map(() => {
+        const size = sizes[Math.floor(Math.random() * sizes.length)];
+        const color = colors[Math.floor(Math.random() * colors.length)];
         
-        // Update a random effect
-        updated[indexToUpdate] = {
-          ...updated[indexToUpdate],
+        return {
+          id: `effect-${Date.now()}-${Math.random()}`,
           x: Math.random() * rect.width,
           y: Math.random() * rect.height,
-          size: sizes[Math.floor(Math.random() * sizes.length)],
-          color: colors[Math.floor(Math.random() * colors.length)],
+          size,
+          color,
           opacity: 0.3 + Math.random() * 0.5
         };
-        
-        return updated;
       });
+      
+      setEffects(prev => [...prev, ...newEffects]);
+      
+      // Clean up old effects
+      setTimeout(() => {
+        setEffects(prev => prev.filter(effect => !newEffects.includes(effect)));
+      }, 3000);
     };
     
-    const intervalTime = 1000 / frequency;
-    intervalRef.current = window.setInterval(handleInterval, intervalTime);
+    // Set interval for creating particles
+    timerRef.current = window.setInterval(createParticle, 1000 / frequency);
     
     return () => {
-      if (intervalRef.current !== null) {
-        clearInterval(intervalRef.current);
+      if (timerRef.current !== null) {
+        clearInterval(timerRef.current);
       }
     };
-  }, [enabled, containerRef, density, frequency, colors, sizes]);
+  }, [enabled, containerRef, frequency, density, colors, sizes]);
   
   return {
     effects

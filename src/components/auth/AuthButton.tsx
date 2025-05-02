@@ -1,35 +1,33 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import useAuth from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthButtonProps {
-  variant?: 'default' | 'outline' | 'ghost' | 'link' | 'royal';
-  size?: 'default' | 'sm' | 'lg';
+  variant?: 'default' | 'outline' | 'secondary';
+  size?: 'sm' | 'default' | 'lg';
+  className?: string;
 }
 
-const AuthButton: React.FC<AuthButtonProps> = ({ variant = 'default', size = 'default' }) => {
-  const { isAuthenticated, login } = useAuth();
+const AuthButton: React.FC<AuthButtonProps> = ({
+  variant = 'default',
+  size = 'default',
+  className = ''
+}) => {
+  const navigate = useNavigate();
   
-  const handleLogin = async () => {
-    try {
-      await login({ username: 'demo', password: 'password' });
-    } catch (error) {
-      console.error('Login failed', error);
-    }
+  const handleLogin = () => {
+    navigate('/login');
   };
   
-  if (isAuthenticated) {
-    return null;
-  }
-  
   return (
-    <Button 
-      variant={variant} 
+    <Button
+      variant={variant}
       size={size}
+      className={className}
       onClick={handleLogin}
     >
-      Log In
+      Sign In
     </Button>
   );
 };

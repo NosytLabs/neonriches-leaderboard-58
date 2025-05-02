@@ -4,136 +4,77 @@
 @tailwind utilities;
 
 :root {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  
-  --primary: 0 0% 98%;
-  --primary-foreground: 240 5.9% 10%;
-  
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
-  
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 240 4.9% 83.9%;
-  
-  --radius: 0.5rem;
-  
-  --royal-gold: 43 77% 52%;
-  --royal-purple: 267 77% 54%;
-  --royal-crimson: 343 77% 50%;
+  --royal-gold: #D4AF37;
+  --royal-crimson: #DC143C;
+  --royal-navy: #000080;
+  --royal-purple: #5D3FD3;
+  --royal-blue: #4169E1;
 }
 
+/* Global styles */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  @apply bg-black text-white antialiased;
+}
+
+/* Royal theme utilities */
+.royal-gradient {
+  @apply bg-gradient-to-r from-royal-gold to-amber-500 bg-clip-text text-transparent;
 }
 
 .glass-morphism {
-  backdrop-filter: blur(10px);
-  background: rgba(15, 15, 25, 0.5);
+  @apply bg-black/30 backdrop-blur-sm;
 }
 
-.animate-sparkle {
-  animation: sparkle 2s infinite alternate;
+/* Animation utilities */
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .animate-crown-glow {
-  filter: drop-shadow(0 0 5px currentColor);
-}
-
-.animate-pulse-slow {
-  animation: pulse 3s infinite;
-}
-
-.animate-bounce-slow {
-  animation: bounce 2s infinite;
-}
-
-.animation-delay-100 {
-  animation-delay: 100ms;
-}
-
-.animation-delay-200 {
-  animation-delay: 200ms;
-}
-
-.animation-delay-300 {
-  animation-delay: 300ms;
-}
-
-@keyframes sparkle {
-  0%, 100% {
-    opacity: 0.5;
-    transform: scale(0.9);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.8;
-  }
-  50% {
-    opacity: 0.4;
-  }
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-@keyframes ping-slow {
-  75%, 100% {
-    transform: scale(2);
-    opacity: 0;
-  }
-}
-
-.animate-ping-slow {
-  animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+  filter: drop-shadow(0 0 8px var(--royal-gold));
 }
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+.animate-sparkle {
+  animation: sparkle 2s infinite;
 }
 
 .crown-click-effect {
-  animation: crown-click 0.7s ease-in-out;
+  animation: crown-click 0.5s forwards;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0px);
+    opacity: 0.7;
+  }
+}
+
+@keyframes sparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
 }
 
 @keyframes crown-click {
@@ -148,12 +89,58 @@ body {
   }
 }
 
-/* Scrollbar styles */
+/* Team colors */
+.text-team-red {
+  color: #DC143C;
+}
+
+.text-team-blue {
+  color: #4169E1;
+}
+
+.text-team-green {
+  color: #2E8B57;
+}
+
+.text-royal-gold {
+  color: var(--royal-gold);
+}
+
+.text-royal-crimson {
+  color: var(--royal-crimson);
+}
+
+.text-royal-navy {
+  color: var(--royal-navy);
+}
+
+.text-royal-purple {
+  color: var(--royal-purple);
+}
+
+.text-royal-blue {
+  color: var(--royal-blue);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-black/30;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/20 rounded hover:bg-white/30;
+}
+
 .scrollbar-none {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .scrollbar-none::-webkit-scrollbar {
-  display: none; /* Chrome/Safari/Opera */
+  display: none;
 }

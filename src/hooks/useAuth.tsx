@@ -1,15 +1,14 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-// Define types
 interface User {
   id: string;
   username: string;
   displayName?: string;
-  email?: string;
   profileImage?: string;
-  walletBalance?: number;
+  email?: string;
   rank?: number;
+  walletBalance?: number;
 }
 
 interface AuthContextType {
@@ -21,82 +20,117 @@ interface AuthContextType {
   register: (email: string, password: string, username: string) => Promise<void>;
 }
 
-// Create context
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isAuthenticated: false,
-  isLoading: false,
+  isLoading: true,
   login: async () => {},
   logout: async () => {},
-  register: async () => {},
+  register: async () => {}
 });
 
-// Mock user data
-const mockUser: User = {
-  id: '1',
-  username: 'royaluser',
-  displayName: 'Royal User',
-  email: 'user@example.com',
-  profileImage: '/assets/default-avatar.png',
-  walletBalance: 1000,
-  rank: 42
-};
+interface AuthProviderProps {
+  children: ReactNode;
+}
 
-// Provider component
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    // Simulate checking for auth state
+    const checkAuthState = async () => {
+      try {
+        // Mock authentication check - in a real app, this would verify with a backend
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (error) {
+        console.error('Error checking auth state:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuthState();
+  }, []);
+
   const login = async (email: string, password: string) => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setUser(mockUser);
-    setIsLoading(false);
+    try {
+      // Mock login - in a real app, this would call an auth API
+      const mockUser: User = {
+        id: '123',
+        username: 'mockuser',
+        displayName: 'Mock User',
+        email: email,
+        rank: 42,
+        walletBalance: 1000
+      };
+      
+      setUser(mockUser);
+      localStorage.setItem('user', JSON.stringify(mockUser));
+    } catch (error) {
+      console.error('Login error:', error);
+      throw new Error('Login failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
-  
+
   const logout = async () => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 500));
-    setUser(null);
-    setIsLoading(false);
+    try {
+      // Mock logout - in a real app, this would call an auth API
+      setUser(null);
+      localStorage.removeItem('user');
+    } catch (error) {
+      console.error('Logout error:', error);
+      throw new Error('Logout failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
-  
+
   const register = async (email: string, password: string, username: string) => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setUser({
-      ...mockUser,
-      email,
-      username,
-      displayName: username
-    });
-    setIsLoading(false);
+    try {
+      // Mock registration - in a real app, this would call an auth API
+      const mockUser: User = {
+        id: '123',
+        username: username,
+        email: email,
+        rank: 100,
+        walletBalance: 500
+      };
+      
+      setUser(mockUser);
+      localStorage.setItem('user', JSON.stringify(mockUser));
+    } catch (error) {
+      console.error('Registration error:', error);
+      throw new Error('Registration failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
-  
+
   return (
-    <AuthContext.Provider value={{
-      user,
-      isAuthenticated: !!user,
-      isLoading,
-      login,
-      logout,
-      register
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
+        isLoading,
+        login,
+        logout,
+        register
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Hook
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+const useAuth = () => useContext(AuthContext);
 
 export default useAuth;
