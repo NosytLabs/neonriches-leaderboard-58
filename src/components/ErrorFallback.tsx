@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { AlertTriangle } from 'lucide-react';
+// React is already injected by Vite's jsxInject configuration
+import { AlertTriangle } from '@/components/ui/icons';
 import { Button } from '@/components/ui/button';
 
 interface ErrorFallbackProps {

@@ -1,6 +1,6 @@
 
-import React, { useState, useRef } from 'react';
-import { Crown, Gem } from 'lucide-react';
+// React is already injected by Vite's jsxInject configuration
+import { Crown, Gem } from '@/components/ui/icons';
 import useFloatingEffects from '@/hooks/use-floating-effects';
 
 interface RoyalThroneProps {

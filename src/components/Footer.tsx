@@ -1,7 +1,7 @@
 
-import React from 'react';
+// React is already injected by Vite's jsxInject configuration
 import { Link } from 'react-router-dom';
-import { Crown, Github, Twitter } from 'lucide-react';
+import { Crown, Github, Twitter } from '@/components/ui/icons';
 
 const Footer = () => {
   return (

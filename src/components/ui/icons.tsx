@@ -9,7 +9,7 @@ import {
   Search,
   GitHub,
   Twitter,
-  Menu as MenuIcon,
+  Menu,
   X,
   DollarSign,
   Coins, 
@@ -33,7 +33,11 @@ import {
   Shield,
   Crown,
   Activity,
-  Gem
+  Gem,
+  ArrowUp,
+  MessageSquare,
+  Target,
+  Flame
 } from "lucide-react";
 
 // Re-export all icons
@@ -44,7 +48,8 @@ export {
   Search,
   GitHub as Github, // Aliased to match usage in components
   Twitter,
-  MenuIcon,
+  Menu,
+  Menu as MenuIcon, // Export with alias to maintain compatibility
   X,
   DollarSign,
   Coins,
@@ -68,5 +73,9 @@ export {
   Shield,
   Crown,
   Activity,
-  Gem
+  Gem,
+  ArrowUp,
+  MessageSquare,
+  Target,
+  Flame
 };

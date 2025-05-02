@@ -1,11 +1,11 @@
 
-import React, { useState } from 'react';
+// React is already injected by Vite's jsxInject configuration
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search } from 'lucide-react';
+import { Search } from '@/components/ui/icons';
 import { faqItems } from '@/data/faqItems';
 import { FAQItem } from '@/types/faq';
 

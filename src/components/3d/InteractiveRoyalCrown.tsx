@@ -1,6 +1,6 @@
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Crown, Sparkles } from 'lucide-react';
+// React is already injected by Vite's jsxInject configuration
+import { Crown, Sparkles } from '@/components/ui/icons';
 import useFloatingCoins from '@/hooks/use-floating-coins';
 import useFloatingEffects from '@/hooks/use-floating-effects';
 

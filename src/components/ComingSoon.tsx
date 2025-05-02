@@ -1,7 +1,7 @@
 
-import React from 'react';
+// React is already injected by Vite's jsxInject configuration
 import { Card, CardContent } from '@/components/ui/card';
-import { Clock, Sparkles } from 'lucide-react';
+import { Clock, Sparkles } from '@/components/ui/icons';
 
 interface ComingSoonProps {
   title: string;
