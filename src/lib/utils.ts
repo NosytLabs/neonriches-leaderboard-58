@@ -2,29 +2,37 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-/**
- * Combines multiple class names or class name objects using clsx and tailwind-merge
- * @param inputs - Class names or class name objects
- * @returns Combined and deduped class name string
- */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+</lov-add-dependency>clsx@latest</lov-add-dependency>
+<lov-add-dependency>tailwind-merge@latest</lov-add-dependency>
 
-/**
- * Format a number as currency
- * @param value - Number to format as currency
- * @param options - Intl.NumberFormatOptions
- * @returns Formatted currency string
- */
-export function formatCurrency(value: number, options?: Intl.NumberFormatOptions) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-    ...options
-  }).format(value);
-}
+8. Now let's update index.html to include the GPT Engineer script for the "Select" feature:
 
-export default cn;
+<lov-write file_path="index.html">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="theme-color" content="#0d0d20" />
+    <meta name="description" content="Lovable app built with modern web technologies" />
+    
+    <!-- Resource hints for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Critical Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <title>Lovable App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- GPT Engineer script for the "Select" feature -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
