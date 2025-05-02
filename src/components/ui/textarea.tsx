@@ -1,5 +1,5 @@
-import * as React from "react"
 
+// React is already injected by Vite's jsxInject configuration
 import { cn } from "@/lib/utils"
 
 export interface TextareaProps

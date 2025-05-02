@@ -1,4 +1,5 @@
-import * as React from "react"
+
+// React is already injected by Vite's jsxInject configuration
 import * as SliderPrimitive from "@radix-ui/react-slider"
 
 import { cn } from "@/lib/utils"

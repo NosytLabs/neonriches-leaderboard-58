@@ -1,3 +1,5 @@
+
+// React is already injected by Vite's jsxInject configuration
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible"
 
 const Collapsible = CollapsiblePrimitive.Root

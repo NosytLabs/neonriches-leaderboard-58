@@ -1,4 +1,5 @@
-import * as React from "react"
+
+// React is already injected by Vite's jsxInject configuration
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card"
 
 import { cn } from "@/lib/utils"

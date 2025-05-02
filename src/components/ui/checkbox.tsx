@@ -1,4 +1,5 @@
-import * as React from "react"
+
+// React is already injected by Vite's jsxInject configuration
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
 import { Check } from "lucide-react"
 
