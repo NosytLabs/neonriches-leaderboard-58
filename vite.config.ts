@@ -25,5 +25,9 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+  },
+  build: {
+    // Remove noEmit flag to avoid the TS5094 error
+    sourcemap: true
   }
 }));

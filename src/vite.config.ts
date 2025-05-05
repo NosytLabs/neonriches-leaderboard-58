@@ -7,6 +7,7 @@ export default defineConfig(({ mode }: { mode: string }) => ({
   plugins: [
     react({
       jsxImportSource: 'react',
+      tsDecorators: true,
     }),
   ],
   resolve: {
