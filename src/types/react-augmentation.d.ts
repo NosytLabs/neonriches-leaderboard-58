@@ -1,10 +1,9 @@
 
 import 'react';
 
-// Extend the existing React namespace to ensure all required types are available
-declare namespace React {
+// Add missing React type declarations
+declare module 'react' {
   export type FC<P = {}> = React.FunctionComponent<P>;
-  export type ReactNode = React.ReactNode;
   
   export interface FunctionComponent<P = {}> {
     (props: P, context?: any): React.ReactElement<any, any> | null;
@@ -13,10 +12,17 @@ declare namespace React {
     defaultProps?: Partial<P> | undefined;
     displayName?: string | undefined;
   }
-}
-
-// Make sure hooks are properly defined
-declare module 'react' {
+  
+  export type ReactNode = 
+    | React.ReactElement
+    | string
+    | number
+    | boolean
+    | null
+    | undefined
+    | React.ReactNodeArray;
+  
+  // Export hooks
   export function useState<T>(initialState: T | (() => T)): [T, React.Dispatch<React.SetStateAction<T>>];
   export function useEffect(effect: React.EffectCallback, deps?: React.DependencyList): void;
   export function useRef<T>(initialValue: T): React.MutableRefObject<T>;

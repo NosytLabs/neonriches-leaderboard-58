@@ -1,38 +1,53 @@
 
-// React is already injected by Vite's jsxInject configuration
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Crown, GitHub, Twitter } from '@/components/ui/icons';
 
-const Footer = () => {
+const Footer: React.FC = () => {
+  const currentYear = new Date().getFullYear();
+  
   return (
-    <footer className="py-6 px-6 border-t border-white/10">
-      <div className="container mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center mb-4 md:mb-0">
-            <Crown className="h-6 w-6 text-royal-gold mr-2" />
-            <span className="text-lg font-bold">SpendThrone</span>
+    <footer className="bg-black/80 border-t border-white/10 py-8">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h3 className="text-lg font-bold mb-4">SpendThrone</h3>
+            <p className="text-white/60 text-sm">
+              The ultimate pay-to-win leaderboard where your money defines your status.
+            </p>
           </div>
           
-          <div className="flex flex-wrap justify-center gap-4 text-sm text-white/60">
-            <Link to="/about" className="hover:text-white transition-colors">About</Link>
-            <Link to="/features" className="hover:text-white transition-colors">Features</Link>
-            <Link to="/mockery" className="hover:text-white transition-colors">Mockery</Link>
-            <Link to="/terms" className="hover:text-white transition-colors">Terms</Link>
-            <Link to="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+          <div>
+            <h4 className="text-md font-medium mb-4">Explore</h4>
+            <ul className="space-y-2 text-sm">
+              <li><Link to="/leaderboard" className="text-white/70 hover:text-yellow-500 transition-colors">Leaderboard</Link></li>
+              <li><Link to="/features" className="text-white/70 hover:text-yellow-500 transition-colors">Features</Link></li>
+              <li><Link to="/teams" className="text-white/70 hover:text-yellow-500 transition-colors">Teams</Link></li>
+            </ul>
           </div>
           
-          <div className="flex gap-4 mt-4 md:mt-0">
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white">
-              <Twitter className="h-5 w-5" />
-            </a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white">
-              <GitHub className="h-5 w-5" />
-            </a>
+          <div>
+            <h4 className="text-md font-medium mb-4">Resources</h4>
+            <ul className="space-y-2 text-sm">
+              <li><Link to="/about" className="text-white/70 hover:text-yellow-500 transition-colors">About</Link></li>
+              <li><Link to="/status-through-history" className="text-white/70 hover:text-yellow-500 transition-colors">History of Status</Link></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 className="text-md font-medium mb-4">Follow Us</h4>
+            <div className="flex space-x-4">
+              <a href="#" className="text-white/70 hover:text-yellow-500 transition-colors">
+                Twitter
+              </a>
+              <a href="#" className="text-white/70 hover:text-yellow-500 transition-colors">
+                Discord
+              </a>
+            </div>
           </div>
         </div>
-        <div className="mt-4 text-center text-xs text-white/40">
-          <p>&copy; {new Date().getFullYear()} SpendThrone | All rights reserved</p>
-          <p className="mt-1">A satirical social experiment in digital status</p>
+        
+        <div className="border-t border-white/10 mt-8 pt-8 text-center text-white/50 text-sm">
+          <p>&copy; {currentYear} SpendThrone. All rights reserved.</p>
         </div>
       </div>
     </footer>

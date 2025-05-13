@@ -1,5 +1,6 @@
 
-import { cn } from "@/utils/classNameUtils";
+import React from 'react';
+import { cn } from "@/lib/utils";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -28,7 +29,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           variant === "secondary" && "bg-secondary text-secondary-foreground hover:bg-secondary/80",
           variant === "ghost" && "hover:bg-accent hover:text-accent-foreground",
           variant === "link" && "text-primary underline-offset-4 hover:underline",
-          variant === "royal" && "bg-gradient-to-r from-royal-gold to-yellow-600 text-black hover:from-yellow-500 hover:to-royal-gold",
+          variant === "royal" && "bg-gradient-to-r from-yellow-400 to-yellow-600 text-black hover:from-yellow-500 hover:to-yellow-400",
           
           // Sizes
           size === "default" && "h-9 px-4 py-2",

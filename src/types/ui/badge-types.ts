@@ -7,4 +7,7 @@ export type BadgeVariant =
   | 'success'
   | 'warning'
   | 'gold'
-  | 'royal';
+  | 'royal'
+  | 'crimson'
+  | 'navy'
+  | 'purple';

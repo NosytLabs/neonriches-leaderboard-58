@@ -1,37 +1,30 @@
 
-// React is already injected by Vite's jsxInject configuration
-import { Card, CardContent } from '@/components/ui/card';
-import { Clock, Sparkles } from '@/components/ui/icons';
+import React from 'react';
+import { Sparkles } from 'lucide-react';
 
 interface ComingSoonProps {
   title: string;
   description?: string;
-  icon?: React.ReactNode;
 }
 
 const ComingSoon: React.FC<ComingSoonProps> = ({
   title,
-  description = "This feature is under development and will be available soon.",
-  icon = <Sparkles className="h-8 w-8 text-royal-gold" />
+  description = "This feature is under development and will be available soon."
 }) => {
   return (
-    <div className="flex items-center justify-center h-[70vh]">
-      <Card className="max-w-md w-full mx-auto glass-morphism border-white/10 overflow-hidden">
-        <div className="h-1 bg-gradient-to-r from-royal-gold to-royal-purple"></div>
-        <CardContent className="p-8 text-center">
-          <div className="mb-4 inline-flex items-center justify-center rounded-full bg-white/5 p-3">
-            {icon}
-          </div>
-          
-          <h2 className="text-2xl font-bold mb-2">{title}</h2>
-          <p className="text-white/70 mb-6">{description}</p>
-          
-          <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/5 text-sm">
-            <Clock className="h-4 w-4 mr-2 text-royal-gold animate-pulse" />
-            <span>Coming Soon</span>
-          </div>
-        </CardContent>
-      </Card>
+    <div className="flex items-center justify-center min-h-[50vh]">
+      <div className="max-w-md w-full mx-auto p-8 text-center">
+        <div className="mb-4 inline-flex items-center justify-center rounded-full bg-yellow-500/20 p-3">
+          <Sparkles className="h-8 w-8 text-yellow-500" />
+        </div>
+        
+        <h2 className="text-2xl font-bold mb-2">{title}</h2>
+        <p className="text-white/70 mb-6">{description}</p>
+        
+        <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-white/5 text-sm">
+          Coming Soon
+        </div>
+      </div>
     </div>
   );
 };

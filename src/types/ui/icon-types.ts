@@ -25,6 +25,48 @@ export type IconSize = keyof typeof iconSizeMap;
 export type IconColor = keyof typeof iconColorMap;
 export type IconStyle = 'default' | 'medieval';
 
+export type MedievalIconName = 
+  | 'crown'
+  | 'shield'
+  | 'sword'
+  | 'castle'
+  | 'chalice'
+  | 'dragon'
+  | 'flag'
+  | 'fleur-de-lis'
+  | 'goblet'
+  | 'knight'
+  | 'royal-crown'
+  | 'scroll'
+  | 'throne'
+  | 'tower'
+  | 'treasure-chest'
+  | 'coat-of-arms'
+  | 'medal'
+  | 'gem'
+  | 'heart'
+  | 'trophy'
+  | 'key'
+  | 'coins'
+  | 'wallet'
+  | 'seal'
+  | 'sparkles'
+  | 'user'
+  | 'users'
+  | 'Crown'
+  | 'Scroll'
+  | 'Coins'
+  | 'Shield'
+  | 'Sparkles'
+  | 'Trophy'
+  | 'Users'
+  | 'User'
+  | 'banner'
+  | 'dagger'
+  | 'coin'
+  | 'potion'
+  | 'treasure-chest';
+
 export interface IconProps {
   icon?: string;
   name?: string;
@@ -35,4 +77,12 @@ export interface IconProps {
   animated?: boolean;
   style?: IconStyle | React.CSSProperties;
   [key: string]: any;
+}
+
+export interface MedievalIconProps {
+  name: MedievalIconName;
+  size?: IconSize;
+  color?: IconColor;
+  className?: string;
+  animated?: boolean;
 }
