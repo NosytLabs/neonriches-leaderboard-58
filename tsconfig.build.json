@@ -9,7 +9,6 @@
     "experimentalDecorators": true,
     "jsx": "react-jsx",
     "declarationMap": true,
-    "composite": true,
     "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
