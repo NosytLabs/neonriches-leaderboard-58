@@ -1,60 +1,85 @@
 
 /**
- * Format currency values
- * @param amount - Numeric amount to format
- * @param options - Intl.NumberFormatOptions
- * @returns Formatted currency string
+ * Formats a number as currency
+ * @param {number} amount - The amount to format
+ * @param {string} [currency='USD'] - Currency code
+ * @param {string} [locale='en-US'] - Locale for formatting
+ * @returns {string} Formatted currency string
  */
-export const formatCurrency = (
+export function formatCurrency(
   amount: number, 
-  options?: Intl.NumberFormatOptions
-): string => {
-  return new Intl.NumberFormat('en-US', {
+  currency = 'USD', 
+  locale = 'en-US'
+): string {
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
+    currency,
     maximumFractionDigits: 0,
-    ...options
   }).format(amount);
-};
+}
 
 /**
- * Format a date to a readable string
- * @param date - Date to format
- * @param format - Format style
- * @returns Formatted date string
+ * Formats a number with commas as thousand separators
+ * @param {number} value - The value to format
+ * @returns {string} Formatted string with commas
  */
-export const formatDate = (
-  date: Date | string,
-  format: 'short' | 'medium' | 'long' = 'medium'
-): string => {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
+export function formatNumber(value: number): string {
+  return new Intl.NumberFormat().format(value);
+}
+
+/**
+ * Formats a date to a short format (e.g., "May 4, 2023")
+ * @param {Date|string|number} date - Date to format
+ * @returns {string} Formatted date string
+ */
+export function formatDate(date: Date | string | number): string {
+  return new Date(date).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+/**
+ * Formats a percentage value
+ * @param {number} value - The percentage value (e.g., 0.42 for 42%)
+ * @returns {string} Formatted percentage string (e.g., "42%")
+ */
+export function formatPercentage(value: number): string {
+  return `${Math.round(value * 100)}%`;
+}
+
+/**
+ * Truncates a string to a specific length and adds ellipsis if needed
+ * @param {string} str - String to truncate
+ * @param {number} maxLength - Maximum length before truncating
+ * @returns {string} Truncated string
+ */
+export function truncateText(str: string, maxLength: number): string {
+  if (str.length <= maxLength) return str;
+  return `${str.slice(0, maxLength).trim()}...`;
+}
+
+/**
+ * Formats a number to display with k, m, b suffixes for thousands, millions, billions
+ * @param {number} num - Number to format
+ * @returns {string} Formatted number with suffix
+ */
+export function formatCompactNumber(num: number): string {
+  if (num < 1000) return num.toString();
   
-  const options: Intl.DateTimeFormatOptions = {
-    short: { month: 'numeric', day: 'numeric', year: '2-digit' },
-    medium: { month: 'short', day: 'numeric', year: 'numeric' },
-    long: { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }
-  }[format];
+  const tiers = [
+    { threshold: 1e12, suffix: 't' },
+    { threshold: 1e9, suffix: 'b' },
+    { threshold: 1e6, suffix: 'm' },
+    { threshold: 1e3, suffix: 'k' }
+  ];
   
-  return new Intl.DateTimeFormat('en-US', options).format(dateObj);
-};
-
-/**
- * Format numbers with commas for thousands separators
- * @param num - Number to format
- * @returns Formatted number string
- */
-export const formatNumber = (num: number): string => {
-  return new Intl.NumberFormat('en-US').format(num);
-};
-
-/**
- * Truncate a string to a specified length with ellipsis
- * @param str - String to truncate
- * @param length - Maximum length
- * @returns Truncated string
- */
-export const truncateString = (str: string, length: number = 50): string => {
-  if (str.length <= length) return str;
-  return str.substring(0, length) + '...';
-};
+  for (const { threshold, suffix } of tiers) {
+    if (num >= threshold) {
+      return `${(num / threshold).toFixed(1).replace(/\.0$/, '')}${suffix}`;
+    }
+  }
+  
+  return num.toString();
+}

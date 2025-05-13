@@ -1,19 +1,64 @@
 
-// Mock implementation for sound hooks
+import { useCallback } from 'react';
+import { useSoundsConfig } from './sounds/use-sounds-config';
+
+interface SoundOptions {
+  volume?: number;
+  playbackRate?: number;
+  loop?: boolean;
+  forcePlay?: boolean;
+}
+
 export const useSound = () => {
-  const soundMap = {
-    click: 'click.mp3',
-    success: 'success.mp3',
-    error: 'error.mp3',
-    coins: 'coins.mp3',
-  };
+  const { soundConfig } = useSoundsConfig();
+  
+  const playSound = useCallback((
+    soundName: string, 
+    options: SoundOptions = {}
+  ) => {
+    // Check if sound is muted globally
+    if (soundConfig?.muted && !options.forcePlay) {
+      return;
+    }
 
-  const playSound = (sound: keyof typeof soundMap) => {
-    console.log(`Playing sound: ${soundMap[sound]}`);
-    // In a real implementation, this would play the actual sound
-  };
+    try {
+      const audio = new Audio(`/sounds/${soundName}.mp3`);
+      
+      // Apply options
+      if (options.volume !== undefined) {
+        audio.volume = options.volume;
+      }
+      
+      if (options.playbackRate !== undefined) {
+        audio.playbackRate = options.playbackRate;
+      }
+      
+      if (options.loop) {
+        audio.loop = true;
+      }
+      
+      audio.play().catch(error => {
+        console.error(`Error playing sound "${soundName}":`, error);
+      });
+      
+      return audio;
+    } catch (error) {
+      console.error(`Failed to load sound "${soundName}":`, error);
+      return null;
+    }
+  }, [soundConfig?.muted]);
 
-  return { playSound };
+  const stopSound = useCallback((audio: HTMLAudioElement | null) => {
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  }, []);
+
+  return {
+    playSound,
+    stopSound
+  };
 };
 
 export default useSound;
