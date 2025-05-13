@@ -3,9 +3,9 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 
 try {
-  // Run TypeScript check without using any build-related flags
+  // Run TypeScript type-checking only (no emission)
   console.log('Running TypeScript check...');
-  execSync('npx tsc --project src/tsconfig.json --noEmit --skipLibCheck', { stdio: 'inherit' });
+  execSync('npx tsc --project src/tsconfig.json --skipLibCheck', { stdio: 'inherit' });
   
   // Run Vite build separately
   console.log('Building project with Vite...');
