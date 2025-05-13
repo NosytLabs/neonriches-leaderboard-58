@@ -2,17 +2,16 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 
-// Check if the file exists
-if (!fs.existsSync('./tsconfig.build.json')) {
-  console.error('Error: tsconfig.build.json does not exist');
-  process.exit(1);
-}
-
 try {
-  // Run TypeScript compiler with the build configuration
-  console.log('Building TypeScript project...');
-  execSync('npx tsc -p tsconfig.build.json', { stdio: 'inherit' });
-  console.log('TypeScript build completed successfully');
+  // Run TypeScript check (but don't emit files)
+  console.log('Running TypeScript check...');
+  execSync('npx tsc --noEmit', { stdio: 'inherit' });
+  
+  // Run Vite build
+  console.log('Building project with Vite...');
+  execSync('npx vite build', { stdio: 'inherit' });
+  
+  console.log('Build completed successfully');
 } catch (error) {
   console.error('Build failed:', error.message);
   process.exit(1);
