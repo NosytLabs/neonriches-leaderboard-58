@@ -3,7 +3,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 
 try {
-  // Run TypeScript type-checking only (no emission)
+  // Run TypeScript type-checking without using --build or --noEmit together
   console.log('Running TypeScript check...');
   execSync('npx tsc --project src/tsconfig.json --skipLibCheck', { stdio: 'inherit' });
   
