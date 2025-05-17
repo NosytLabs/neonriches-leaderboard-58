@@ -1,17 +1,18 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Crown, Globe, Users } from 'lucide-react';
+import { Crown, Globe } from 'lucide-react';
 import RoyalCourtMember from './RoyalCourtMember';
 import { LeaderboardList } from './components/LeaderboardList';
+import { LeaderboardUser } from '@/types/leaderboard-types';
 
 interface CombinedLeaderboardProps {
-  royalCourt: any[];
-  leaderboardUsers: any[];
+  royalCourt: LeaderboardUser[];
+  leaderboardUsers: LeaderboardUser[];
   currentUserId: string;
   onProfileClick?: (userId: string, username: string) => void;
-  onShameUser?: (user: any) => void;
+  onShameUser?: (user: LeaderboardUser) => void;
 }
 
 const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
@@ -46,10 +47,11 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
 
           <TabsContent value="royal">
             <div className="space-y-4">
-              {royalCourt.map((user, index) => (
-                <RoyalCourtMember key={user.id} user={user} position={index + 1} />
-              ))}
-              {royalCourt.length === 0 && (
+              {royalCourt.length > 0 ? (
+                royalCourt.map((user, index) => (
+                  <RoyalCourtMember key={user.id} user={user} position={index + 1} />
+                ))
+              ) : (
                 <div className="text-center py-4 text-white/60">
                   No royal court members found.
                 </div>
@@ -59,13 +61,14 @@ const CombinedLeaderboard: React.FC<CombinedLeaderboardProps> = ({
 
           <TabsContent value="spenders">
             <div className="space-y-4">
-              <LeaderboardList
-                users={leaderboardUsers}
-                currentUserId={currentUserId}
-                onProfileClick={onProfileClick}
-                onShameUser={onShameUser}
-              />
-              {leaderboardUsers.length === 0 && (
+              {leaderboardUsers.length > 0 ? (
+                <LeaderboardList
+                  users={leaderboardUsers}
+                  currentUserId={currentUserId}
+                  onProfileClick={onProfileClick}
+                  onShameUser={onShameUser}
+                />
+              ) : (
                 <div className="text-center py-4 text-white/60">
                   No top spenders found.
                 </div>

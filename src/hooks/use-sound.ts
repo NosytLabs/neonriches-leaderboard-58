@@ -1,63 +1,47 @@
-
 import { useCallback } from 'react';
-import { useSoundsConfig } from './sounds/use-sounds-config';
 
-interface SoundOptions {
-  volume?: number;
-  playbackRate?: number;
-  loop?: boolean;
-  forcePlay?: boolean;
+type SoundName = 
+  | 'click'
+  | 'success'
+  | 'error'
+  | 'purchase'
+  | 'notification'
+  | 'levelUp'
+  | 'coin';
+
+interface SoundAPI {
+  playSound: (soundName: SoundName) => void;
+  stopSound: (soundName: SoundName) => void;
+  stopAllSounds: () => void;
 }
 
-export const useSound = () => {
-  const { soundConfig } = useSoundsConfig();
-  
-  const playSound = useCallback((
-    soundName: string, 
-    options: SoundOptions = {}
-  ) => {
-    // Check if sound is muted globally
-    if (soundConfig?.muted && !options.forcePlay) {
-      return;
-    }
-
+// Simple sound implementation (to be enhanced later)
+export const useSound = (): SoundAPI => {
+  const playSound = useCallback((soundName: SoundName) => {
     try {
       const audio = new Audio(`/sounds/${soundName}.mp3`);
-      
-      // Apply options
-      if (options.volume !== undefined) {
-        audio.volume = options.volume;
-      }
-      
-      if (options.playbackRate !== undefined) {
-        audio.playbackRate = options.playbackRate;
-      }
-      
-      if (options.loop) {
-        audio.loop = true;
-      }
-      
-      audio.play().catch(error => {
-        console.error(`Error playing sound "${soundName}":`, error);
+      audio.volume = 0.5;
+      audio.play().catch(err => {
+        console.log(`Failed to play sound ${soundName}:`, err);
       });
-      
-      return audio;
-    } catch (error) {
-      console.error(`Failed to load sound "${soundName}":`, error);
-      return null;
+    } catch (err) {
+      console.log(`Error playing sound ${soundName}:`, err);
     }
-  }, [soundConfig?.muted]);
+  }, []);
 
-  const stopSound = useCallback((audio: HTMLAudioElement | null) => {
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
-    }
+  const stopSound = useCallback((soundName: SoundName) => {
+    // This would require keeping reference to active sounds
+    console.log(`Stopping sound ${soundName}`);
+  }, []);
+
+  const stopAllSounds = useCallback(() => {
+    console.log('Stopping all sounds');
   }, []);
 
   return {
     playSound,
-    stopSound
+    stopSound,
+    stopAllSounds
   };
 };
 

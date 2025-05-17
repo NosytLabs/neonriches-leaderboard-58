@@ -1,38 +1,55 @@
 
 import React from 'react';
-import { LeaderboardUser } from '@/types/leaderboard';
+import { LeaderboardUser } from '@/types/leaderboard-types';
 import LeaderboardEntry from './LeaderboardEntry';
 
 export interface LeaderboardListProps {
   users: LeaderboardUser[];
-  currentUserId: string;
-  compact?: boolean;
-  onProfileClick?: (userId: string, username: string) => void;
+  currentUserId?: string;
+  loading?: boolean;
+  error?: Error | null;
+  showTeams?: boolean;
+  showTiers?: boolean;
+  showRankChange?: boolean;
+  onProfileClick?: (userId: string, username?: string) => void;
   onShameUser?: (user: LeaderboardUser) => void;
 }
 
 export const LeaderboardList: React.FC<LeaderboardListProps> = ({
   users,
   currentUserId,
-  compact = false,
+  loading = false,
+  error = null,
+  showTeams = true,
+  showTiers = true,
+  showRankChange = true,
   onProfileClick,
   onShameUser
 }) => {
-  if (!users.length) {
-    return <div className="text-center py-6 text-white/70">No users found</div>;
+  if (loading) {
+    return <div className="py-4 text-center text-white/60">Loading leaderboard data...</div>;
+  }
+
+  if (error) {
+    return <div className="py-4 text-center text-red-400">Error: {error.message}</div>;
+  }
+
+  if (!users || users.length === 0) {
+    return <div className="py-4 text-center text-white/60">No leaderboard data available</div>;
   }
 
   return (
-    <div className="divide-y divide-white/10">
+    <div className="space-y-2">
       {users.map((user, index) => (
         <LeaderboardEntry
-          key={user.id || user.userId || `user-${index}`}
+          key={user.id || index}
           user={user}
-          rank={user.rank || index + 1}
-          currentUserId={currentUserId}
-          compact={compact}
-          onProfileClick={onProfileClick}
-          onShameUser={() => onShameUser && onShameUser(user)}
+          showTeam={showTeams}
+          showTier={showTiers}
+          showRankChange={showRankChange}
+          isCurrentUser={user.id === currentUserId}
+          onUserClick={onProfileClick ? () => onProfileClick(user.id, user.username) : undefined}
+          onShameClick={onShameUser ? () => onShameUser(user) : undefined}
         />
       ))}
     </div>

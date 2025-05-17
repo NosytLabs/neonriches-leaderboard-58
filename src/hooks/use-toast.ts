@@ -1,44 +1,54 @@
 
 import { useState, useCallback } from 'react';
 
-interface Toast {
-  id: string;
+type ToastVariant = 'default' | 'success' | 'error' | 'warning' | 'destructive' | 'info';
+
+interface ToastOptions {
   title: string;
   description?: string;
-  variant?: 'default' | 'destructive' | 'success';
+  variant?: ToastVariant;
+  duration?: number;
 }
 
-export const useToast = () => {
+interface ToastAPI {
+  toast: (options: ToastOptions) => void;
+  closeToast: (id: string) => void;
+  toasts: Toast[];
+}
+
+interface Toast extends ToastOptions {
+  id: string;
+}
+
+// Simple toast implementation that doesn't actually render toasts
+// In a real app, this would manage visible toasts
+export const useToast = (): ToastAPI => {
   const [toasts, setToasts] = useState<Toast[]>([]);
-  
-  const toast = useCallback(({ title, description, variant = 'default' }: Omit<Toast, 'id'>) => {
-    const id = `toast-${Date.now()}-${Math.random()}`;
-    const newToast: Toast = {
-      id,
-      title,
-      description,
-      variant
-    };
+
+  const toast = useCallback(({ title, description, variant = 'default', duration = 5000 }: ToastOptions) => {
+    const id = Date.now().toString();
+    const newToast = { id, title, description, variant, duration };
     
-    setToasts(prev => [...prev, newToast]);
+    setToasts((currentToasts) => [...currentToasts, newToast]);
     
-    // Auto-dismiss after 5 seconds
+    // Log toast to console for development
+    console.log(`TOAST [${variant}]: ${title}${description ? ` - ${description}` : ''}`);
+    
+    // Auto-remove toast after duration
     setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
-    }, 5000);
+      setToasts((currentToasts) => currentToasts.filter(t => t.id !== id));
+    }, duration);
     
     return id;
   }, []);
-  
-  const dismiss = useCallback((id: string) => {
-    setToasts(prev => prev.filter(t => t.id !== id));
+
+  const closeToast = useCallback((id: string) => {
+    setToasts((currentToasts) => currentToasts.filter((toast) => toast.id !== id));
   }, []);
-  
+
   return {
-    toasts,
     toast,
-    dismiss
+    closeToast,
+    toasts
   };
 };
-
-export default useToast;

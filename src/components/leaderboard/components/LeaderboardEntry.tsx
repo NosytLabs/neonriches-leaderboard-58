@@ -1,24 +1,21 @@
 
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowUp, ArrowDown, Shield, Skull, MoreVertical } from 'lucide-react';
-import { LeaderboardUser } from '@/types/leaderboard';
+import { LeaderboardUser } from '@/types/leaderboard-types';
 import { formatCurrency } from '@/utils/formatters';
+import { TrendingDown, TrendingUp, Crown, Shield } from 'lucide-react';
+import { getTeamBgColor, getTeamTextColor, getRankTextColor } from '@/lib/colors';
 
-export interface LeaderboardEntryProps {
+interface LeaderboardEntryProps {
   user: LeaderboardUser;
   showTeam?: boolean;
   showTier?: boolean;
   showRankChange?: boolean;
-  onUserClick?: (userId: string) => void;
-  onShameClick?: (userId: string) => void;
-  rank?: number;
-  currentUserId?: string;
-  compact?: boolean;
-  onProfileClick?: (userId: string, username: string) => void;
-  onShameUser?: () => void;
+  isCurrentUser?: boolean;
+  onUserClick?: () => void;
+  onShameClick?: () => void;
 }
 
 const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
@@ -26,138 +23,97 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
   showTeam = true,
   showTier = true,
   showRankChange = true,
+  isCurrentUser = false,
   onUserClick,
-  onShameClick,
-  rank,
-  currentUserId,
-  compact = false,
-  onProfileClick,
-  onShameUser,
+  onShameClick
 }) => {
-  const rankDiff = user.previousRank !== undefined ? user.rank - user.previousRank : 0;
-  const displayRank = rank !== undefined ? rank : user.rank;
-  
-  const handleUserClick = () => {
-    if (onUserClick) {
-      onUserClick(user.userId);
-    } else if (onProfileClick) {
-      onProfileClick(user.userId, user.username);
-    }
-  };
-  
-  const handleShame = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onShameClick) {
-      onShameClick(user.userId);
-    } else if (onShameUser) {
-      onShameUser();
-    }
-  };
+  // Calculate rank change
+  const rankChange = user.previousRank ? user.previousRank - user.rank : 0;
   
   return (
     <div 
-      className={`flex items-center p-3 rounded-lg border border-white/10 hover:bg-white/5 transition-colors cursor-pointer ${compact ? 'py-2' : ''}`}
-      onClick={handleUserClick}
+      className={`flex items-center p-3 rounded-md ${isCurrentUser ? 'bg-royal-gold/10' : 'bg-black/20'} hover:bg-white/5 transition-colors`}
+      onClick={onUserClick}
+      role={onUserClick ? 'button' : undefined}
+      tabIndex={onUserClick ? 0 : undefined}
     >
-      <div className="relative mr-3">
-        <div className="absolute -top-1 -left-1 w-5 h-5 flex items-center justify-center bg-black text-xs font-semibold rounded-full border border-white/20">
-          {displayRank}
-        </div>
-        <Avatar className="h-10 w-10 border border-white/20">
-          <AvatarImage src={user.profileImage || user.avatarUrl} alt={user.username} />
-          <AvatarFallback>{user.displayName?.charAt(0) || user.username.charAt(0)}</AvatarFallback>
-        </Avatar>
-        {showRankChange && user.previousRank !== undefined && (
-          <div className={`absolute -bottom-1 -right-1 w-5 h-5 flex items-center justify-center text-xs rounded-full border 
-            ${rankDiff < 0 
-              ? 'text-green-500 border-green-500/30 bg-green-500/10' 
-              : rankDiff > 0 
-                ? 'text-red-500 border-red-500/30 bg-red-500/10' 
-                : 'text-yellow-500 border-yellow-500/30 bg-yellow-500/10'
-            }`}
-          >
-            {rankDiff < 0 ? (
-              <ArrowUp className="h-3 w-3" />
-            ) : rankDiff > 0 ? (
-              <ArrowDown className="h-3 w-3" />
-            ) : (
-              <span>-</span>
-            )}
-          </div>
+      <div className="flex-shrink-0 w-8 text-center font-bold">
+        {user.rank <= 3 ? (
+          <span className={getRankTextColor(user.rank)}>
+            {user.rank === 1 ? <Crown className="h-5 w-5 mx-auto text-royal-gold" /> : user.rank}
+          </span>
+        ) : (
+          <span className="text-white/70">{user.rank}</span>
         )}
       </div>
       
-      <div className="flex-1 min-w-0">
+      <Avatar className="h-10 w-10 mx-3 border border-white/20">
+        <AvatarImage src={user.profileImage || user.avatarUrl} alt={user.username} />
+        <AvatarFallback>
+          {user.displayName?.substring(0, 2) || user.username.substring(0, 2)}
+        </AvatarFallback>
+      </Avatar>
+      
+      <div className="flex-grow">
         <div className="flex items-center">
-          <p className="font-medium truncate">{user.displayName || user.username}</p>
+          <span className="font-medium">{user.displayName || user.username}</span>
           {user.isVerified && (
-            <Badge variant="outline" className="ml-1.5 py-0 h-4 px-1 text-[10px] bg-blue-500/10 text-blue-400 border-blue-400/20">
-              Verified
+            <Badge variant="outline" className="ml-2 h-5 px-1 bg-royal-gold/10 text-royal-gold border-royal-gold/30">
+              <Crown className="h-3 w-3 mr-1" />
+              <span className="text-xs">Verified</span>
             </Badge>
           )}
+          
           {user.isProtected && (
-            <Badge variant="outline" className="ml-1 py-0 h-4 px-1 text-[10px] bg-green-500/10 text-green-400 border-green-400/20">
-              <Shield className="w-2.5 h-2.5 mr-0.5" />
-              Protected
+            <Badge variant="outline" className="ml-2 h-5 px-1 bg-royal-navy/10 text-royal-navy border-royal-navy/30">
+              <Shield className="h-3 w-3 mr-1" />
+              <span className="text-xs">Protected</span>
             </Badge>
           )}
         </div>
-        
-        <div className="flex items-center text-xs text-white/60">
-          <span className="truncate">@{user.username}</span>
-          
-          {showTier && (
-            <>
-              <span className="mx-1">•</span>
-              <span className="capitalize">{user.tier}</span>
-            </>
-          )}
-          
-          {showTeam && user.team && user.team !== 'none' && (
-            <>
-              <span className="mx-1">•</span>
-              <span 
-                className={`capitalize ${
-                  user.team === 'red' ? 'text-red-400' : 
-                  user.team === 'blue' ? 'text-blue-400' : 
-                  user.team === 'green' ? 'text-green-400' : 
-                  user.team === 'gold' ? 'text-yellow-400' : 
-                  user.team === 'purple' ? 'text-purple-400' : 
-                  'text-white/60'
-                }`}
-              >
-                {user.team}
-              </span>
-            </>
-          )}
-        </div>
+        <div className="text-sm text-white/60">@{user.username}</div>
       </div>
       
-      <div className="flex flex-col items-end">
-        <p className="font-medium">${formatCurrency(user.totalSpent)}</p>
-        {!compact && (
-          <div className="flex items-center space-x-2 mt-1">
-            {onShameClick && currentUserId !== user.userId && (
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-6 w-6 rounded-full hover:bg-red-500/10 hover:text-red-400"
-                onClick={handleShame}
-              >
-                <Skull className="h-3.5 w-3.5" />
-              </Button>
+      {showTeam && user.team && (
+        <div className={`px-2 py-1 rounded-md text-xs mr-3 ${getTeamBgColor(user.team as string)} ${getTeamTextColor(user.team as string)} bg-opacity-20`}>
+          {user.team}
+        </div>
+      )}
+      
+      <div className="text-right">
+        <div className="font-bold text-royal-gold">
+          ${formatCurrency(user.totalSpent || user.amountSpent || user.amount || 0)}
+        </div>
+        {showRankChange && rankChange !== 0 && (
+          <div className="flex items-center text-xs justify-end">
+            {rankChange > 0 ? (
+              <>
+                <TrendingUp className="h-3 w-3 text-green-500 mr-1" />
+                <span className="text-green-500">+{rankChange}</span>
+              </>
+            ) : (
+              <>
+                <TrendingDown className="h-3 w-3 text-red-500 mr-1" />
+                <span className="text-red-500">{rankChange}</span>
+              </>
             )}
-            
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-6 w-6 rounded-full hover:bg-white/10"
-            >
-              <MoreVertical className="h-3.5 w-3.5" />
-            </Button>
           </div>
         )}
       </div>
+      
+      {onShameClick && (
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="ml-3 text-xs bg-red-900/20 hover:bg-red-800/30 border-red-900/30"
+          onClick={(e) => {
+            e.stopPropagation();
+            onShameClick();
+          }}
+        >
+          Shame
+        </Button>
+      )}
     </div>
   );
 };

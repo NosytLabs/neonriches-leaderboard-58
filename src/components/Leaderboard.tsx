@@ -1,89 +1,98 @@
 
 import React, { useState, useEffect } from 'react';
 import CombinedLeaderboard from './leaderboard/CombinedLeaderboard';
+import LeaderboardHeader from './LeaderboardHeader';
+import LeaderboardFilters from './LeaderboardFilters';
 import useAuth from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useSound } from '@/hooks/use-sound';
+import { LeaderboardUser, LeaderboardFilters as FilterOptions } from '@/types/leaderboard-types';
+import { allLeaderboardUsers } from '@/data/leaderboardData';
 
 const Leaderboard = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [royalCourt, setRoyalCourt] = useState([]);
-  const [leaderboardUsers, setLeaderboardUsers] = useState([]);
+  const sound = useSound();
+  
+  const [royalCourt, setRoyalCourt] = useState<LeaderboardUser[]>([]);
+  const [leaderboardUsers, setLeaderboardUsers] = useState<LeaderboardUser[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Default filters
+  const [filters, setFilters] = useState<FilterOptions>({
+    team: 'all',
+    tier: 'all',
+    timeframe: 'all-time',
+    sortBy: 'rank',
+    sortDirection: 'asc'
+  });
 
   useEffect(() => {
-    // Mock data for demonstration
-    const mockRoyalCourt = [
-      {
-        id: '1',
-        username: 'royalKing',
-        displayName: 'Royal King',
-        profileImage: '/assets/default-avatar.png',
-        rank: 1,
-        tier: 'royal',
-        team: 'gold',
-        totalSpent: 10000,
-        amountSpent: 10000,
-        spendStreak: 30
-      },
-      {
-        id: '2',
-        username: 'royalQueen',
-        displayName: 'Royal Queen',
-        profileImage: '/assets/default-avatar.png',
-        rank: 2,
-        tier: 'royal',
-        team: 'purple',
-        totalSpent: 9500,
-        amountSpent: 9500,
-        spendStreak: 28
-      }
-    ];
+    // Simulate API loading
+    setIsLoading(true);
     
-    const mockLeaderboardUsers = [
-      {
-        id: '3',
-        username: 'bigSpender',
-        displayName: 'Big Spender',
-        profileImage: '/assets/default-avatar.png',
-        rank: 3,
-        previousRank: 5,
-        tier: 'premium',
-        team: 'red',
-        totalSpent: 8000,
-        amountSpent: 8000,
-        spendStreak: 20
-      },
-      {
-        id: '4',
-        username: 'loyalUser',
-        displayName: 'Loyal User',
-        profileImage: '/assets/default-avatar.png',
-        rank: 4,
-        previousRank: 4,
-        tier: 'premium',
-        team: 'blue',
-        totalSpent: 7500,
-        amountSpent: 7500,
-        spendStreak: 15
-      },
-      {
-        id: '5',
-        username: 'newComer',
-        displayName: 'New Comer',
-        profileImage: '/assets/default-avatar.png',
-        rank: 5,
-        previousRank: 8,
-        tier: 'basic',
-        team: 'green',
-        totalSpent: 2000,
-        amountSpent: 2000,
-        spendStreak: 5
-      }
-    ];
-    
-    setRoyalCourt(mockRoyalCourt);
-    setLeaderboardUsers(mockLeaderboardUsers);
+    setTimeout(() => {
+      // Get the top 2 users for royal court
+      const royalCourtUsers = [...allLeaderboardUsers]
+        .sort((a, b) => b.totalSpent - a.totalSpent)
+        .slice(0, 2);
+      
+      // Get the rest of the users for the main leaderboard
+      const remainingUsers = [...allLeaderboardUsers]
+        .sort((a, b) => b.totalSpent - a.totalSpent)
+        .slice(2);
+      
+      setRoyalCourt(royalCourtUsers);
+      setLeaderboardUsers(remainingUsers);
+      setIsLoading(false);
+    }, 800);
   }, []);
+  
+  // Handle filter changes
+  const handleFilterChange = (newFilters: Partial<FilterOptions>) => {
+    const updatedFilters = { ...filters, ...newFilters };
+    setFilters(updatedFilters);
+    
+    // In a real app, you would call an API with these filters
+    // For now, we'll just simulate filtering
+    setIsLoading(true);
+    
+    setTimeout(() => {
+      let filteredUsers = [...allLeaderboardUsers];
+      
+      // Apply team filter
+      if (updatedFilters.team && updatedFilters.team !== 'all') {
+        filteredUsers = filteredUsers.filter(user => 
+          user.team === updatedFilters.team
+        );
+      }
+      
+      // Apply tier filter
+      if (updatedFilters.tier && updatedFilters.tier !== 'all') {
+        filteredUsers = filteredUsers.filter(user => 
+          user.tier === updatedFilters.tier
+        );
+      }
+      
+      // Sort users
+      filteredUsers.sort((a, b) => {
+        if (updatedFilters.sortBy === 'rank') {
+          return updatedFilters.sortDirection === 'asc' 
+            ? a.rank - b.rank
+            : b.rank - a.rank;
+        }
+        
+        return updatedFilters.sortDirection === 'asc'
+          ? a.totalSpent - b.totalSpent
+          : b.totalSpent - a.totalSpent;
+      });
+      
+      // Update royal court and leaderboard users
+      setRoyalCourt(filteredUsers.slice(0, 2));
+      setLeaderboardUsers(filteredUsers.slice(2));
+      setIsLoading(false);
+    }, 500);
+  };
 
   const handleProfileClick = (userId: string, username: string) => {
     // Handle profile click
@@ -91,24 +100,44 @@ const Leaderboard = () => {
       title: "Profile Clicked",
       description: `Viewing profile of ${username}`,
     });
+    sound.playSound('click');
   };
 
-  const handleShameUser = (user: any) => {
+  const handleShameUser = (user: LeaderboardUser) => {
     // Handle shame user action
     toast({
       title: "Shame Action",
       description: `Preparing to shame ${user.username}`,
     });
+    sound.playSound('notification');
   };
 
   return (
-    <CombinedLeaderboard
-      royalCourt={royalCourt}
-      leaderboardUsers={leaderboardUsers}
-      currentUserId={user?.id || ''}
-      onProfileClick={handleProfileClick}
-      onShameUser={handleShameUser}
-    />
+    <div className="container mx-auto px-4 py-8">
+      <LeaderboardHeader />
+      
+      <div className="mb-6">
+        <LeaderboardFilters 
+          filter={filters}
+          onFilterChange={handleFilterChange}
+        />
+      </div>
+      
+      {isLoading ? (
+        <div className="text-center py-20">
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
+          <p className="mt-4 text-white/70">Loading royal leaderboard...</p>
+        </div>
+      ) : (
+        <CombinedLeaderboard
+          royalCourt={royalCourt}
+          leaderboardUsers={leaderboardUsers}
+          currentUserId={user?.id || ''}
+          onProfileClick={handleProfileClick}
+          onShameUser={handleShameUser}
+        />
+      )}
+    </div>
   );
 };
 
