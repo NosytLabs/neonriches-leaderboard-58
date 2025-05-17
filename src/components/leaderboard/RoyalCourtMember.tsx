@@ -1,12 +1,11 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Crown, DollarSign } from 'lucide-react';
+import { LeaderboardUser } from '@/types/leaderboard-unified';
+import { Crown, Shield, TrendingUp } from 'lucide-react';
 import { formatCurrency } from '@/utils/formatters';
-import { LeaderboardUser } from '@/types/leaderboard-types';
-import { getRankBorderColor, getRankTextColor } from '@/lib/colors';
+import RoyalBadge from '@/components/ui/royal-badge';
 
 interface RoyalCourtMemberProps {
   user: LeaderboardUser;
@@ -14,51 +13,67 @@ interface RoyalCourtMemberProps {
 }
 
 const RoyalCourtMember: React.FC<RoyalCourtMemberProps> = ({ user, position }) => {
+  const getPositionTitle = (pos: number): string => {
+    switch (pos) {
+      case 1: return 'Sovereign';
+      case 2: return 'Royal Advisor';
+      default: return 'Royal Court Member';
+    }
+  };
+
+  const positionTitle = getPositionTitle(position);
+
   return (
-    <Card className={`royal-card overflow-hidden border ${getRankBorderColor(position)}`}>
-      <CardContent className="p-0">
-        <div className="flex items-center p-4 gap-4">
-          <div className="relative">
-            <div className={`absolute -inset-1 rounded-full ${position === 1 ? 'bg-royal-gold/30 animate-pulse' : ''}`}></div>
-            <Avatar className="h-16 w-16 border-2 border-white/20">
-              <AvatarImage src={user.profileImage} alt={user.username} />
-              <AvatarFallback className="bg-black/50">
-                {user.displayName?.substring(0, 2) || user.username.substring(0, 2)}
-              </AvatarFallback>
-            </Avatar>
-            {position <= 3 && (
-              <div className="absolute -bottom-1 -right-1 bg-black rounded-full p-1">
-                <Crown className={`h-5 w-5 ${position === 1 ? 'text-royal-gold' : position === 2 ? 'text-gray-300' : 'text-amber-700'}`} />
-              </div>
+    <Card className="p-4 border border-royal-gold/30 bg-black/40 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-royal-gold/20 to-transparent rounded-bl-3xl -z-10"></div>
+      
+      <div className="flex items-center gap-4">
+        <div className="relative">
+          <Avatar className="h-16 w-16 border-2 border-royal-gold/50 shadow-glow">
+            <AvatarImage src={user.profileImage || user.avatarUrl} alt={user.username} />
+            <AvatarFallback className="bg-royal-gold/20 text-royal-gold">
+              {user.displayName?.substring(0, 2) || user.username.substring(0, 2)}
+            </AvatarFallback>
+          </Avatar>
+          {position === 1 && (
+            <span className="absolute -top-2 -right-2 text-royal-gold">
+              <Crown className="h-6 w-6 animate-pulse-slow" />
+            </span>
+          )}
+        </div>
+        
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h3 className="font-bold text-lg">{user.displayName || user.username}</h3>
+            {user.isVerified && (
+              <RoyalBadge variant="gold" className="text-xs">Verified</RoyalBadge>
+            )}
+            {user.isProtected && (
+              <RoyalBadge variant="royal" className="text-xs">
+                <Shield className="h-3 w-3 mr-1" /> Protected
+              </RoyalBadge>
             )}
           </div>
           
-          <div className="flex-1">
-            <div className="flex items-center mb-1">
-              <h3 className={`font-bold text-lg ${getRankTextColor(position)}`}>
-                {user.displayName || user.username}
-              </h3>
-              <Badge variant="outline" className="ml-2 bg-royal-gold/10 text-royal-gold text-xs">
-                Rank #{position}
-              </Badge>
-            </div>
-            
-            <p className="text-sm text-white/70">@{user.username}</p>
-            
-            <div className="flex items-center mt-2 text-sm">
-              <span className="inline-flex items-center text-royal-gold">
-                <DollarSign className="h-4 w-4 mr-1" />
-                {formatCurrency(user.totalSpent || 0)}
-              </span>
-              {user.spendStreak && user.spendStreak > 0 && (
-                <Badge className="ml-2 text-xs bg-royal-purple/20 text-royal-purple">
-                  {user.spendStreak} Day Streak
-                </Badge>
-              )}
-            </div>
+          <div className="text-sm text-white/60">@{user.username}</div>
+          
+          <div className="mt-1">
+            <span className="text-royal-gold font-medieval">{positionTitle}</span>
           </div>
         </div>
-      </CardContent>
+        
+        <div className="text-right">
+          <div className="royal-gradient text-xl font-bold">
+            ${formatCurrency(user.totalSpent)}
+          </div>
+          {user.spendStreak && user.spendStreak > 0 && (
+            <div className="flex items-center justify-end gap-1 text-xs text-yellow-500">
+              <TrendingUp className="h-3 w-3" />
+              <span>{user.spendStreak} day streak</span>
+            </div>
+          )}
+        </div>
+      </div>
     </Card>
   );
 };

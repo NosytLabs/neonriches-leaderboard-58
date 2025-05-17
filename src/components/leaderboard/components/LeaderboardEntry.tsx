@@ -3,7 +3,7 @@ import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { LeaderboardUser } from '@/types/leaderboard-types';
+import { LeaderboardUser } from '@/types/leaderboard-unified';
 import { formatCurrency } from '@/utils/formatters';
 import { TrendingDown, TrendingUp, Crown, Shield } from 'lucide-react';
 import { getTeamBgColor, getTeamTextColor, getRankTextColor } from '@/lib/colors';
@@ -27,8 +27,9 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
   onUserClick,
   onShameClick
 }) => {
-  // Calculate rank change
-  const rankChange = user.previousRank ? user.previousRank - user.rank : 0;
+  // Calculate rank change from previousRank or use rankChange if available
+  const rankChange = user.rankChange !== undefined ? user.rankChange : 
+                     (user.previousRank ? user.previousRank - user.rank : 0);
   
   return (
     <div 
@@ -65,7 +66,7 @@ const LeaderboardEntry: React.FC<LeaderboardEntryProps> = ({
           )}
           
           {user.isProtected && (
-            <Badge variant="outline" className="ml-2 h-5 px-1 bg-royal-navy/10 text-royal-navy border-royal-navy/30">
+            <Badge variant="outline" className="ml-1 h-5 px-1 bg-royal-navy/10 text-royal-navy border-royal-navy/30">
               <Shield className="h-3 w-3 mr-1" />
               <span className="text-xs">Protected</span>
             </Badge>

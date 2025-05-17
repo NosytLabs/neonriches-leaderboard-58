@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Crown, Globe } from 'lucide-react';
 import RoyalCourtMember from './RoyalCourtMember';
 import { LeaderboardList } from './components/LeaderboardList';
-import { LeaderboardUser } from '@/types/leaderboard-types';
+import { LeaderboardUser } from '@/types/leaderboard-unified';
 
 interface CombinedLeaderboardProps {
   royalCourt: LeaderboardUser[];

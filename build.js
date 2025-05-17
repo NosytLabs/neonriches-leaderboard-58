@@ -3,11 +3,11 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 
 try {
-  // Run TypeScript type-checking without using --build or --noEmit together
+  // Run TypeScript type-checking separately from build
   console.log('Running TypeScript check...');
-  execSync('npx tsc --project src/tsconfig.json --skipLibCheck', { stdio: 'inherit' });
+  execSync('npx tsc --project src/tsconfig.json --skipLibCheck --noEmit', { stdio: 'inherit' });
   
-  // Run Vite build separately
+  // Run Vite build
   console.log('Building project with Vite...');
   execSync('npx vite build', { stdio: 'inherit' });
   

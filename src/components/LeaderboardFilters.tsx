@@ -1,155 +1,82 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from '@/components/ui/select';
-import { Search } from 'lucide-react';
-import { TeamColor, UserTier } from '@/types/mockery-types';
-
-// Define a proper type for the LeaderboardFilter
-interface LeaderboardFilter {
-  team: 'all' | TeamColor;
-  tier: 'all' | UserTier;
-  timeframe: 'all-time' | 'today' | 'week' | 'month' | 'year';
-  search: string;
-  sortBy: 'rank' | 'spent' | 'username';
-  sortDirection: 'asc' | 'desc';
-}
+import { LeaderboardFilters as FilterOptions } from '@/types/leaderboard-unified';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { ArrowUpDown } from 'lucide-react';
 
 interface LeaderboardFiltersProps {
-  filter: LeaderboardFilter;
-  onFilterChange: (filter: Partial<LeaderboardFilter>) => void;
+  filter: FilterOptions;
+  onFilterChange: (newFilters: Partial<FilterOptions>) => void;
 }
 
-const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({
-  filter,
-  onFilterChange
-}) => {
-  // Team options
-  const teamOptions = [
-    { value: 'all', label: 'All Teams' },
-    { value: 'red', label: 'Red Team' },
-    { value: 'blue', label: 'Blue Team' },
-    { value: 'green', label: 'Green Team' },
-    { value: 'gold', label: 'Gold Team' },
-    { value: 'purple', label: 'Purple Team' }
-  ];
-  
-  // Tier options
-  const tierOptions = [
-    { value: 'all', label: 'All Tiers' },
-    { value: 'basic', label: 'Basic' },
-    { value: 'premium', label: 'Premium' },
-    { value: 'elite', label: 'Elite' },
-    { value: 'royal', label: 'Royal' }
-  ];
-  
-  // Time frame options
-  const timeFrameOptions = [
-    { value: 'all-time', label: 'All Time' },
-    { value: 'today', label: 'Today' },
-    { value: 'week', label: 'This Week' },
-    { value: 'month', label: 'This Month' },
-    { value: 'year', label: 'This Year' }
-  ];
-  
-  // Sort options
-  const sortOptions = [
-    { value: 'rank', label: 'Rank' },
-    { value: 'spent', label: 'Total Spent' },
-    { value: 'username', label: 'Username' }
-  ];
-  
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onFilterChange({ search: e.target.value });
-  };
-  
+const LeaderboardFilters: React.FC<LeaderboardFiltersProps> = ({ filter, onFilterChange }) => {
+  const teams = ['all', 'red', 'green', 'blue', 'gold'];
+  const tiers = ['all', 'basic', 'standard', 'premium', 'elite', 'royal'];
+  const timeframes = ['day', 'week', 'month', 'year', 'all-time'];
+
   return (
-    <Card className="bg-black/20 border-white/10">
-      <CardContent className="p-4">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-          <div className="relative">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search users..."
-              value={filter.search || ''}
-              onChange={handleSearchChange}
-              className="pl-8 bg-black/40 border-white/10"
-            />
-          </div>
-          
-          <Select
-            value={filter.team}
-            onValueChange={(value: string) => onFilterChange({ team: value as 'all' | TeamColor })}
-          >
-            <SelectTrigger className="bg-black/40 border-white/10">
-              <SelectValue placeholder="Team" />
-            </SelectTrigger>
-            <SelectContent>
-              {teamOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          
-          <Select
-            value={filter.tier}
-            onValueChange={(value: string) => onFilterChange({ tier: value as 'all' | UserTier })}
-          >
-            <SelectTrigger className="bg-black/40 border-white/10">
-              <SelectValue placeholder="Tier" />
-            </SelectTrigger>
-            <SelectContent>
-              {tierOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          
-          <Select
-            value={filter.timeframe}
-            onValueChange={(value: string) => onFilterChange({ timeframe: value as LeaderboardFilter['timeframe'] })}
-          >
-            <SelectTrigger className="bg-black/40 border-white/10">
-              <SelectValue placeholder="Time Frame" />
-            </SelectTrigger>
-            <SelectContent>
-              {timeFrameOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          
-          <Select
-            value={filter.sortBy}
-            onValueChange={(value: string) => onFilterChange({ sortBy: value as LeaderboardFilter['sortBy'] })}
-          >
-            <SelectTrigger className="bg-black/40 border-white/10">
-              <SelectValue placeholder="Sort By" />
-            </SelectTrigger>
-            <SelectContent>
-              {sortOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex flex-wrap gap-3 bg-black/20 p-3 rounded-lg">
+      <Select
+        value={filter.team as string || 'all'}
+        onValueChange={(value) => onFilterChange({ team: value })}
+      >
+        <SelectTrigger className="w-[140px] bg-black/40">
+          <SelectValue placeholder="Select Team" />
+        </SelectTrigger>
+        <SelectContent>
+          {teams.map((team) => (
+            <SelectItem key={team} value={team} className="capitalize">
+              {team === 'all' ? 'All Teams' : team}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={filter.tier as string || 'all'}
+        onValueChange={(value) => onFilterChange({ tier: value })}
+      >
+        <SelectTrigger className="w-[140px] bg-black/40">
+          <SelectValue placeholder="Select Tier" />
+        </SelectTrigger>
+        <SelectContent>
+          {tiers.map((tier) => (
+            <SelectItem key={tier} value={tier} className="capitalize">
+              {tier === 'all' ? 'All Tiers' : tier}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={filter.timeframe as string || 'all-time'}
+        onValueChange={(value) => onFilterChange({ timeframe: value })}
+      >
+        <SelectTrigger className="w-[140px] bg-black/40">
+          <SelectValue placeholder="Select Timeframe" />
+        </SelectTrigger>
+        <SelectContent>
+          {timeframes.map((time) => (
+            <SelectItem key={time} value={time} className="capitalize">
+              {time === 'all-time' ? 'All Time' : time}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => onFilterChange({
+          sortDirection: filter.sortDirection === 'asc' ? 'desc' : 'asc'
+        })}
+        className="bg-black/40 border-white/20"
+      >
+        <ArrowUpDown className="h-4 w-4 mr-2" />
+        {filter.sortDirection === 'asc' ? 'Ascending' : 'Descending'}
+      </Button>
+    </div>
   );
 };
 

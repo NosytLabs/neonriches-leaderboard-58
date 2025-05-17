@@ -1,50 +1,25 @@
 
-import { ReactNode } from 'react';
+/**
+ * Team colors available in the app
+ */
+export type TeamColor = 'red' | 'green' | 'blue' | 'gold' | 'crimson' | 'navy';
 
-export type MockeryAction = 
-  | 'egg'
-  | 'crown'
-  | 'target'
-  | 'flame'
-  | 'heart'
-  | 'protection'
-  | 'mock';
+/**
+ * User tiers in the app
+ */
+export type UserTier = 'basic' | 'standard' | 'premium' | 'elite' | 'royal';
 
-export type TeamColor = 'red' | 'blue' | 'green' | 'gold' | 'purple';
-export type UserTier = 'basic' | 'premium' | 'elite' | 'royal';
+/**
+ * Shame types
+ */
+export type ShameType = 'tomatoes' | 'eggs' | 'stocks';
 
-export interface MockeryTarget {
-  userId: string;
-  username: string;
-  displayName?: string;
-  profileImage?: string;
-}
+/**
+ * Achievement types
+ */
+export type AchievementType = 'spending' | 'rank' | 'royal' | 'deposit' | 'streak' | 'purchase';
 
-export interface MockeryEvent {
-  id: string;
-  action: MockeryAction;
-  sourceUserId: string;
-  sourceUsername: string;
-  targetUserId: string;
-  targetUsername: string;
-  createdAt: Date;
-  message?: string;
-}
-
-export interface MockeryStats {
-  eggsReceived: number;
-  eggsSent: number;
-  crownsReceived: number;
-  crownsSent: number;
-  totalMockeriesReceived: number;
-  totalMockeriesSent: number;
-  mostCommonMockeryReceived?: MockeryAction;
-  mostCommonMockerySent?: MockeryAction;
-}
-
-export interface MockeryEffectProps {
-  action: MockeryAction;
-  message?: ReactNode;
-  duration?: number;
-  onComplete?: () => void;
-}
+/**
+ * Achievement tiers
+ */
+export type AchievementTier = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';

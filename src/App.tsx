@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ComingSoon from './components/ComingSoon';
 import Home from './pages/Home';
+import Leaderboard from './components/Leaderboard';
 
 const App: React.FC = () => {
   return (
@@ -13,7 +14,7 @@ const App: React.FC = () => {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/leaderboard" element={<ComingSoon title="Leaderboard" />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/features" element={<ComingSoon title="Features" />} />
           <Route path="/teams" element={<ComingSoon title="Teams" />} />
           <Route path="/status-through-history" element={<ComingSoon title="Status Through History" />} />

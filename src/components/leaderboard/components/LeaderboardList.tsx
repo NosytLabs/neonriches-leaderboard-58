@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LeaderboardUser } from '@/types/leaderboard-types';
+import { LeaderboardUser } from '@/types/leaderboard-unified';
 import LeaderboardEntry from './LeaderboardEntry';
 
 export interface LeaderboardListProps {
