@@ -5,7 +5,7 @@ const fs = require('fs');
 try {
   // Run TypeScript type-checking separately without --build flag
   console.log('Running TypeScript check...');
-  execSync('npx tsc --project src/tsconfig.json --skipLibCheck', { stdio: 'inherit' });
+  execSync('npx tsc --project src/tsconfig.json --skipLibCheck --noEmit', { stdio: 'inherit' });
   
   // Run Vite build
   console.log('Building project with Vite...');
