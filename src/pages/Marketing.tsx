@@ -4,9 +4,9 @@ import Layout from '@/components/layout/Layout';
 import PageHeader from '@/components/layout/PageHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Megaphone, TrendingUp, Users, BarChart3 } from 'lucide-react';
-import MarketingHub from '@/components/marketing/MarketingHub';
+import MarketingDashboard from '@/components/marketing/MarketingDashboard';
 import ProfileMarketingFeatures from '@/components/profile/ProfileMarketingFeatures';
-import { useAuth } from '@/contexts/auth';
+import { useAuth } from '@/hooks/useAuth';
 import usePageTracking from '@/hooks/usePageTracking';
 
 const Marketing = () => {
@@ -46,7 +46,7 @@ const Marketing = () => {
           </TabsList>
           
           <TabsContent value="dashboard">
-            <MarketingHub />
+            <MarketingDashboard user={user} />
           </TabsContent>
           
           <TabsContent value="profile">
@@ -70,7 +70,6 @@ const Marketing = () => {
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Strategy cards would go here */}
                 <div className="glass-morphism border-white/10 p-4 rounded-lg">
                   <h3 className="font-bold mb-2">Weekend Spending Boosts</h3>
                   <p className="text-sm text-white/70">
