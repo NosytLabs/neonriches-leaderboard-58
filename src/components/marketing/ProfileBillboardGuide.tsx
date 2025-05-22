@@ -2,129 +2,150 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Lightbulb, TrendingUp, Target, Users, Clock } from 'lucide-react';
+import { ScrollText, Sparkles, Target, TrendingUp, Users } from 'lucide-react';
 
 const ProfileBillboardGuide: React.FC = () => {
   return (
     <div className="space-y-6">
-      <div className="flex items-start space-x-4">
-        <div className="p-2 bg-amber-500/20 rounded-full mt-0.5">
-          <Lightbulb className="h-5 w-5 text-amber-400" />
-        </div>
-        <div>
-          <h3 className="text-lg font-medium">How the Visibility System Works</h3>
-          <p className="text-white/70">
-            SpendThrone's marketing system gives you visibility based on your rank.
-            The higher your rank, the more exposure your profile receives across the platform.
-          </p>
+      <h3 className="text-lg font-medium">Profile Billboard Guide</h3>
+      
+      <div className="bg-gradient-to-r from-indigo-900/20 to-purple-900/20 p-6 rounded-lg border border-indigo-500/20 mb-8">
+        <div className="flex flex-col md:flex-row items-start gap-6">
+          <div className="md:w-3/5">
+            <h2 className="text-xl font-semibold mb-3">Maximize Your Royal Presence</h2>
+            <p className="text-white/70 mb-4">
+              Your profile is your billboard in the royal kingdom. Learn how to optimize your presence, attract more visitors, 
+              and climb the ranks through strategic visibility management.
+            </p>
+            
+            <ul className="space-y-2 mb-4">
+              <li className="flex items-center">
+                <Target className="h-4 w-4 text-royal-gold mr-2" />
+                <span>Higher ranks receive exponentially more profile views</span>
+              </li>
+              <li className="flex items-center">
+                <TrendingUp className="h-4 w-4 text-royal-gold mr-2" />
+                <span>Strategic spending during peak hours boosts visibility</span>
+              </li>
+              <li className="flex items-center">
+                <Users className="h-4 w-4 text-royal-gold mr-2" />
+                <span>Team participation increases your exposure</span>
+              </li>
+              <li className="flex items-center">
+                <Sparkles className="h-4 w-4 text-royal-gold mr-2" />
+                <span>Premium features enhance your profile's appeal</span>
+              </li>
+            </ul>
+            
+            <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
+              <TrendingUp className="h-4 w-4 mr-2" />
+              Boost Your Visibility
+            </Button>
+          </div>
+          
+          <div className="md:w-2/5 glass-morphism border-white/10 p-4 rounded-lg">
+            <h3 className="font-bold mb-3 flex items-center">
+              <ScrollText className="h-4 w-4 mr-2 text-royal-gold" />
+              Did You Know?
+            </h3>
+            <ul className="space-y-3">
+              <li className="text-sm">
+                <span className="font-semibold text-royal-gold">Top 10 ranked profiles</span> receive 
+                <span className="text-royal-gold font-bold"> 20x</span> more views than average.
+              </li>
+              <li className="text-sm">
+                Profiles with <span className="font-semibold text-royal-gold">premium visuals</span> get 
+                <span className="text-royal-gold font-bold"> 45%</span> more engagement.
+              </li>
+              <li className="text-sm">
+                Weekend activity generates <span className="text-royal-gold font-bold">3x</span> more 
+                profile interactions than weekdays.
+              </li>
+              <li className="text-sm">
+                Adding <span className="font-semibold text-royal-gold">social links</span> to your profile 
+                increases cross-platform visibility by <span className="text-royal-gold font-bold">70%</span>.
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="bg-black/20 border-white/10">
-          <CardContent className="p-4 space-y-3">
-            <div className="flex items-center mb-2">
-              <TrendingUp className="h-5 w-5 mr-2 text-royal-gold" />
-              <h3 className="font-medium">Rank-Based Visibility</h3>
-            </div>
+        <Card className="glass-morphism border-white/10">
+          <CardContent className="p-6">
+            <h3 className="font-bold mb-2">Profile Optimization Tips</h3>
             <ul className="space-y-2">
               <li className="flex items-start">
-                <span className="bg-royal-gold/20 text-royal-gold h-5 w-5 rounded-full flex items-center justify-center text-xs mr-2 mt-0.5">1</span>
-                <span className="text-sm">Top 10 ranks: 20x visibility multiplier</span>
+                <div className="bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full h-5 w-5 flex items-center justify-center text-xs text-black mt-0.5 mr-2 font-bold">1</div>
+                <p className="text-sm">Use a distinctive profile image that stands out in the leaderboard</p>
               </li>
               <li className="flex items-start">
-                <span className="bg-royal-gold/20 text-royal-gold h-5 w-5 rounded-full flex items-center justify-center text-xs mr-2 mt-0.5">2</span>
-                <span className="text-sm">Ranks 11-50: 10x visibility multiplier</span>
+                <div className="bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full h-5 w-5 flex items-center justify-center text-xs text-black mt-0.5 mr-2 font-bold">2</div>
+                <p className="text-sm">Craft an engaging bio that showcases your royal ambitions</p>
               </li>
               <li className="flex items-start">
-                <span className="bg-royal-gold/20 text-royal-gold h-5 w-5 rounded-full flex items-center justify-center text-xs mr-2 mt-0.5">3</span>
-                <span className="text-sm">Ranks 51-100: 5x visibility multiplier</span>
+                <div className="bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full h-5 w-5 flex items-center justify-center text-xs text-black mt-0.5 mr-2 font-bold">3</div>
+                <p className="text-sm">Update your status regularly to maintain engagement</p>
               </li>
               <li className="flex items-start">
-                <span className="bg-royal-gold/20 text-royal-gold h-5 w-5 rounded-full flex items-center justify-center text-xs mr-2 mt-0.5">4</span>
-                <span className="text-sm">Ranks 101-500: 2x visibility multiplier</span>
+                <div className="bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full h-5 w-5 flex items-center justify-center text-xs text-black mt-0.5 mr-2 font-bold">4</div>
+                <p className="text-sm">Add custom links to your other platforms for cross-promotion</p>
               </li>
             </ul>
           </CardContent>
         </Card>
         
-        <Card className="bg-black/20 border-white/10">
-          <CardContent className="p-4 space-y-3">
-            <div className="flex items-center mb-2">
-              <Target className="h-5 w-5 mr-2 text-blue-400" />
-              <h3 className="font-medium">Premium Placement Areas</h3>
-            </div>
-            <ul className="space-y-2">
-              <li className="flex items-start">
-                <span className="bg-blue-500/20 text-blue-400 h-5 w-5 rounded-full flex items-center justify-center text-xs mr-2 mt-0.5">1</span>
-                <span className="text-sm">Homepage Featured Section</span>
+        <Card className="glass-morphism border-white/10">
+          <CardContent className="p-6">
+            <h3 className="font-bold mb-2">Visibility Strategy Timeline</h3>
+            <ul className="space-y-3">
+              <li>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm font-semibold">Initial Launch</span>
+                  <span className="text-xs text-white/60">Week 1</span>
+                </div>
+                <div className="h-2 bg-black/20 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" style={{ width: '100%' }}></div>
+                </div>
+                <p className="text-xs mt-1 text-white/70">Focus on establishing your presence with consistent activity</p>
               </li>
-              <li className="flex items-start">
-                <span className="bg-blue-500/20 text-blue-400 h-5 w-5 rounded-full flex items-center justify-center text-xs mr-2 mt-0.5">2</span>
-                <span className="text-sm">Top of Leaderboard Showcase</span>
+              
+              <li>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm font-semibold">Growth Phase</span>
+                  <span className="text-xs text-white/60">Weeks 2-4</span>
+                </div>
+                <div className="h-2 bg-black/20 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full" style={{ width: '75%' }}></div>
+                </div>
+                <p className="text-xs mt-1 text-white/70">Strategic spending during peak hours to climb ranks</p>
               </li>
-              <li className="flex items-start">
-                <span className="bg-blue-500/20 text-blue-400 h-5 w-5 rounded-full flex items-center justify-center text-xs mr-2 mt-0.5">3</span>
-                <span className="text-sm">Search Results Priority</span>
+              
+              <li>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm font-semibold">Engagement Focus</span>
+                  <span className="text-xs text-white/60">Month 2</span>
+                </div>
+                <div className="h-2 bg-black/20 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full" style={{ width: '60%' }}></div>
+                </div>
+                <p className="text-xs mt-1 text-white/70">Interact with other profiles to increase reciprocal visibility</p>
               </li>
-              <li className="flex items-start">
-                <span className="bg-blue-500/20 text-blue-400 h-5 w-5 rounded-full flex items-center justify-center text-xs mr-2 mt-0.5">4</span>
-                <span className="text-sm">User Discovery Feed</span>
+              
+              <li>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm font-semibold">Royal Status</span>
+                  <span className="text-xs text-white/60">Month 3+</span>
+                </div>
+                <div className="h-2 bg-black/20 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-royal-gold to-yellow-500 rounded-full" style={{ width: '40%' }}></div>
+                </div>
+                <p className="text-xs mt-1 text-white/70">Maintain position with premium features and consistent presence</p>
               </li>
             </ul>
           </CardContent>
         </Card>
       </div>
-      
-      <Card className="bg-gradient-to-r from-indigo-900/30 to-purple-900/30 border-indigo-500/20">
-        <CardContent className="p-6 space-y-4">
-          <h3 className="text-lg font-medium flex items-center">
-            <Clock className="h-5 w-5 mr-2 text-indigo-400" />
-            Strategic Timing Tips
-          </h3>
-          
-          <p className="text-white/70 text-sm">
-            Maximize your visibility by strategically timing your spending and profile updates.
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-black/30 p-3 rounded-lg">
-              <h4 className="font-medium text-sm mb-1">Weekend Peaks</h4>
-              <p className="text-xs text-white/70">
-                Weekends see 40% higher platform activity. Spend on Friday to maximize weekend visibility.
-              </p>
-            </div>
-            
-            <div className="bg-black/30 p-3 rounded-lg">
-              <h4 className="font-medium text-sm mb-1">Event Boosts</h4>
-              <p className="text-xs text-white/70">
-                Spending during official events gives a 2x multiplier to your visibility gains.
-              </p>
-            </div>
-            
-            <div className="bg-black/30 p-3 rounded-lg">
-              <h4 className="font-medium text-sm mb-1">Team Coordination</h4>
-              <p className="text-xs text-white/70">
-                Coordinated team spending creates additional visibility for all team members.
-              </p>
-            </div>
-            
-            <div className="bg-black/30 p-3 rounded-lg">
-              <h4 className="font-medium text-sm mb-1">Content Refreshes</h4>
-              <p className="text-xs text-white/70">
-                Update your profile weekly to maintain algorithm relevance and stay in feeds.
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex justify-center mt-4">
-            <Button variant="outline" className="border-indigo-500/50 hover:bg-indigo-950/30">
-              <Users className="h-4 w-4 mr-2" />
-              See Advanced Strategies
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
