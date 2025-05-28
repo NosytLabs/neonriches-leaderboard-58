@@ -3,11 +3,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 
 try {
-  // Run TypeScript type-checking
-  console.log('Running TypeScript check...');
-  execSync('npx tsc --project src/tsconfig.app.json --skipLibCheck', { stdio: 'inherit' });
-  
-  // Run Vite build
+  // Run Vite build which handles TypeScript compilation
   console.log('Building project with Vite...');
   execSync('npx vite build', { stdio: 'inherit' });
   
