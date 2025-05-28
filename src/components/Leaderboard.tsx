@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import CombinedLeaderboard from './leaderboard/CombinedLeaderboard';
 import LeaderboardHeader from './LeaderboardHeader';
