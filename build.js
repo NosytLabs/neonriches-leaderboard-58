@@ -3,9 +3,9 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 
 try {
-  // Run TypeScript type-checking without conflicting flags
+  // Run TypeScript type-checking
   console.log('Running TypeScript check...');
-  execSync('npx tsc --noEmit --skipLibCheck', { stdio: 'inherit' });
+  execSync('npx tsc --project src/tsconfig.app.json --skipLibCheck', { stdio: 'inherit' });
   
   // Run Vite build
   console.log('Building project with Vite...');

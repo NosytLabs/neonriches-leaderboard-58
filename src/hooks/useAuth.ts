@@ -1,29 +1,38 @@
 
-// React is already injected by Vite's jsxInject configuration
-import { useContext } from 'react';
-import { AuthContext, AuthProvider } from '@/contexts/auth/AuthProvider';
+import { useState, useEffect } from 'react';
 
-/**
- * Hook for accessing and managing authentication
- */
-export function useAuth() {
-  const context = useContext(AuthContext);
-
-  if (!context) {
-    console.warn('useAuth must be used within an AuthProvider');
-    // Return a basic fallback to avoid crashing the app
-    return {
-      user: null,
-      isAuthenticated: false,
-      isLoading: false,
-      login: async () => false,
-      logout: async () => {},
-      register: async () => false,
-    };
-  }
-
-  return context;
+interface User {
+  id: string;
+  email: string;
+  profileImage?: string;
+  bio?: string;
+  rank?: number;
+  tier?: 'basic' | 'premium' | 'royal';
+  profileViews?: number;
+  followers?: any[];
+  links?: any[];
+  settings?: any;
 }
 
-export { AuthProvider };
-export default useAuth;
+export const useAuth = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Mock user data for development
+    setTimeout(() => {
+      setUser({
+        id: '1',
+        email: 'user@example.com',
+        rank: 42,
+        tier: 'premium',
+        profileViews: 1247,
+        followers: [],
+        links: []
+      });
+      setIsLoading(false);
+    }, 1000);
+  }, []);
+
+  return { user, isLoading };
+};
