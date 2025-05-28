@@ -1,115 +1,80 @@
 
-/**
- * Marketing helpers for the profile billboard functionality
- */
+import { UserProfile } from '@/types/user-consolidated';
 
-import { UserProfile } from "@/types/user";
-import { UserTier } from "@/types/user";
-
-/**
- * Calculate visibility score based on user rank
- * Higher rank = more visibility across the platform
- */
-export const calculateVisibilityScore = (rank?: number): number => {
-  if (!rank) return 1;
+export function getMarketingPotentialText(user: UserProfile): string {
+  const rank = user.rank || 999;
+  const tier = user.tier || 'basic';
   
-  // Higher ranks get exponentially more visibility
-  if (rank <= 10) return 20;
-  if (rank <= 50) return 10;
-  if (rank <= 100) return 5;
-  if (rank <= 500) return 2;
-  
-  return 1;
-};
-
-/**
- * Get featured time allocation based on user tier
- * Premium tiers get longer featured time on homepage and other high-traffic areas
- */
-export const getFeaturedTimeAllocation = (tier?: UserTier | string): number => {
-  if (!tier) return 0;
-  
-  // Cast string to UserTier for type safety, or use as is if it's already UserTier
-  const userTier = tier as UserTier;
-  
-  switch (userTier) {
-    case 'royal':
-    case 'diamond':
-      return 24; // 24 hours per week
-    case 'platinum':
-    case 'gold':
-      return 12; // 12 hours per week
-    case 'silver':
-    case 'premium':
-    case 'pro':
-      return 6; // 6 hours per week
-    case 'bronze':
-      return 3; // 3 hours per week
-    default:
-      return 0; // No featured time
-  }
-};
-
-/**
- * Get maximum number of links allowed based on user tier
- */
-export const getMaxLinksAllowed = (tier?: UserTier | string): number => {
-  if (!tier) return 1;
-  
-  // Cast string to UserTier for type safety, or use as is if it's already UserTier
-  const userTier = tier as UserTier;
-  
-  switch (userTier) {
-    case 'royal':
-    case 'diamond':
-      return 10;
-    case 'platinum':
-    case 'gold':
-      return 7;
-    case 'silver':
-    case 'premium':
-    case 'pro':
-      return 5;
-    case 'bronze':
-    case 'basic':
-      return 3;
-    default:
-      return 1;
-  }
-};
-
-/**
- * Calculate marketing potential text for display
- */
-export const getMarketingPotentialText = (user: UserProfile): string => {
-  const visibilityScore = calculateVisibilityScore(user.rank);
-  
-  if (visibilityScore >= 10) {
-    return `Your profile has exceptional marketing potential with ${visibilityScore}x visibility boost!`;
-  } else if (visibilityScore >= 5) {
-    return `Your profile has high marketing potential with ${visibilityScore}x visibility boost.`;
-  } else if (visibilityScore >= 2) {
-    return `Your profile has good marketing potential with ${visibilityScore}x visibility boost.`;
+  if (rank <= 10) {
+    return "Elite visibility - Your profile is seen by thousands daily";
+  } else if (rank <= 50) {
+    return "High visibility - Strong presence in the royal kingdom";
+  } else if (rank <= 100) {
+    return "Good visibility - Room for strategic growth";
+  } else if (tier === 'royal' || tier === 'premium') {
+    return "Premium potential - Leverage your tier for better positioning";
   } else {
-    return `Spend more to increase your rank and gain better marketing potential.`;
+    return "Growth opportunity - Enhance your visibility with strategic marketing";
   }
-};
+}
 
-/**
- * Formats user profile information for marketing materials
- */
-export const formatProfileForMarketing = (user: UserProfile) => {
-  return {
-    name: user.displayName || user.username,
-    tier: user.tier || 'basic',
-    rank: user.rank || 0,
-    visibilityScore: calculateVisibilityScore(user.rank),
-    featuredTime: getFeaturedTimeAllocation(user.tier),
-    maxLinks: getMaxLinksAllowed(user.tier),
-    followers: user.followers ? user.followers.length : 0,
-    impressions: user.profileViews || 0,
-    clicks: user.profileClicks || 0,
-    ctr: user.profileViews && user.profileClicks ? 
-      Math.round((user.profileClicks / user.profileViews) * 100) : 0
-  };
-};
+export function calculateVisibilityScore(user: UserProfile): number {
+  let score = 0;
+  
+  // Rank contributes most to visibility
+  const rank = user.rank || 999;
+  if (rank <= 10) score += 40;
+  else if (rank <= 50) score += 30;
+  else if (rank <= 100) score += 20;
+  else if (rank <= 500) score += 10;
+  
+  // Tier contributes to visibility
+  if (user.tier === 'royal') score += 25;
+  else if (user.tier === 'premium') score += 15;
+  else if (user.tier === 'basic') score += 5;
+  
+  // Profile completeness
+  if (user.profileImage) score += 5;
+  if (user.bio && user.bio.length > 20) score += 5;
+  if (user.links && user.links.length > 0) score += 5;
+  
+  // Activity and engagement
+  if (user.profileViews && user.profileViews > 100) score += 10;
+  if (user.followers && user.followers.length > 10) score += 5;
+  
+  return Math.min(score, 100);
+}
+
+export function getOptimalPostingTimes(): string[] {
+  return ['8:00 PM', '9:00 PM', '10:00 PM', 'Saturday afternoon', 'Sunday evening'];
+}
+
+export function getMarketingRecommendations(user: UserProfile): string[] {
+  const recommendations = [];
+  const rank = user.rank || 999;
+  
+  if (rank > 100) {
+    recommendations.push('Increase activity during peak hours (8-10 PM)');
+  }
+  
+  if (!user.profileImage) {
+    recommendations.push('Add a distinctive profile image');
+  }
+  
+  if (!user.bio || user.bio.length < 20) {
+    recommendations.push('Write an engaging bio showcasing your royal ambitions');
+  }
+  
+  if (!user.links || user.links.length === 0) {
+    recommendations.push('Add social media links for cross-platform visibility');
+  }
+  
+  if (user.tier === 'basic') {
+    recommendations.push('Consider upgrading to Premium for enhanced visibility features');
+  }
+  
+  recommendations.push('Participate in royal events for increased exposure');
+  recommendations.push('Interact with other nobles to boost reciprocal visibility');
+  
+  return recommendations;
+}

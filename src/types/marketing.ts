@@ -1,63 +1,42 @@
 
-/**
- * Marketing event interface
- */
 export interface MarketingEvent {
   id: string;
   title: string;
   description: string;
-  type: string;
+  type: 'visibility' | 'contest' | 'promotion' | 'community';
   startDate: string;
   endDate: string;
-  imageUrl?: string;
-  participants?: number;
+  participants: number;
   rewards?: string;
+  imageUrl?: string;
 }
 
-/**
- * Props for the MarketingEvents component
- */
-export interface MarketingEventsProps {
-  events: MarketingEvent[];
+export interface MarketingMetrics {
+  profileViews: number;
+  impressions: number;
+  clickThrough: number;
+  engagement: number;
+  followers: number;
+  conversionRate: number;
+  rankPosition?: number;
+  visibilityScore?: number;
 }
 
-/**
- * Marketing feature interface
- */
 export interface MarketingFeature {
   id: string;
   name: string;
   description: string;
   price: number;
-  tier: string;
-  active: boolean;
-  icon: string;
+  tier: 'basic' | 'premium' | 'royal';
+  category: 'analytics' | 'visibility' | 'customization' | 'protection';
 }
 
-/**
- * Marketing feature price info
- */
-export interface MarketingFeaturePrice {
+export interface VisibilityBoost {
   id: string;
   name: string;
-  description: string;
+  duration: number; // in hours
   price: number;
-  duration: number;
-  benefits: string[];
-}
-
-/**
- * Marketing benefit
- */
-export interface MarketingBenefit {
-  id: string;
-  title: string;
+  multiplier: number;
   description: string;
-  iconName: string;
-  available: boolean;
+  features: string[];
 }
-
-// Export type instances to avoid "used as value" errors
-export const MarketingEvent: any = undefined;
-export const MarketingFeaturePrice: any = undefined;
-export const MarketingBenefit: any = undefined;
